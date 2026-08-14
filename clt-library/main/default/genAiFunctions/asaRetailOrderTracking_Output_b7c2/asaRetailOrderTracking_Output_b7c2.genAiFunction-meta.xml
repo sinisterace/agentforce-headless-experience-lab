@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Registers the Flow as an Agentforce action. Deploying this makes the action
+  appear in Agent Builder's "All Actions" picker (search by masterLabel).
+  invocationTarget must equal the Flow's API name.
+-->
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Use this when the customer wants to track, follow, or check on the status or delivery of an order or shipment that is on its way. Shows a live delivery map with the courier's position, an ETA, a courier row, and a status timeline.</description>
+    <invocationTarget>asaRetailOrderTracking_Output_b7c2</invocationTarget>
+    <invocationTargetType>flow</invocationTargetType>
+    <isConfirmationRequired>false</isConfirmationRequired>
+    <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+    <masterLabel>ASA Retail · Order Tracking</masterLabel>
+    <progressIndicatorMessage>Locating your delivery</progressIndicatorMessage>
+</GenAiFunction>

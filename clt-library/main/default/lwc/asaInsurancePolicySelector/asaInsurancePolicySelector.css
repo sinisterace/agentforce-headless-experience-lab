@@ -1,0 +1,277 @@
+/* ASA Insurance · Policy Selector — framed policy cards with a per-type accent
+   spine, coverage line and a premium/renewal footer. rem units + inherited font
+   so the card matches the host chat theme in Enhanced Chat v2. Accent + neutrals
+   are local custom props for easy theming. */
+:host {
+    --asa-accent: #0b5cab;
+    --asa-line: #e5e7eb;
+    --asa-ink: #101828;
+    --asa-negative: #c0392b;
+    --asa-credit: #1a7f4b;
+    --asa-warn: #b7791f;
+    --asa-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+    --asa-shadow-md: 0 8px 22px rgba(15, 23, 42, 0.12);
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    /* Enhanced Chat v2 renders this in a ~320px column; size the content to the
+       card, not the viewport, so it also reads well on wide desktop GenAi. */
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after {
+    box-sizing: border-box;
+}
+
+.asa-card-title {
+    margin: 0 0 0.7rem 0;
+    font-size: 1.05rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+.asa-pol-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+/* Policy card — the per-type accent lives in --pol and colours the spine + icon. */
+.asa-pol {
+    --pol: var(--asa-accent);
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    width: 100%;
+    padding: 0;
+    border: 1px solid var(--asa-line);
+    border-radius: 14px;
+    background: #fff;
+    color: inherit;
+    cursor: pointer;
+    text-align: left;
+    overflow: hidden;
+    box-shadow: var(--asa-shadow-sm);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.06s ease;
+}
+.asa-pol:hover {
+    border-color: color-mix(in srgb, var(--pol) 45%, var(--asa-line));
+    box-shadow: var(--asa-shadow-md);
+    transform: translateY(-1px);
+}
+.asa-pol.is-selected {
+    border-color: var(--pol);
+    box-shadow: inset 0 0 0 1px var(--pol), var(--asa-shadow-sm);
+}
+/* Per-type hues (auto follows the themeable accent; the rest are fixed, so a
+   wallet of policies reads as visibly different lines of cover). */
+.asa-pol.is-auto { --pol: var(--asa-accent); }
+.asa-pol.is-home { --pol: #1a7f4b; }
+.asa-pol.is-renters { --pol: #0e7490; }
+.asa-pol.is-life { --pol: #b83280; }
+.asa-pol.is-health { --pol: #c0392b; }
+.asa-pol.is-umbrella { --pol: #6b46c1; }
+.asa-pol.is-pet { --pol: #b7791f; }
+.asa-pol.is-travel { --pol: #2563eb; }
+
+.asa-pol-spine {
+    flex: 0 0 5px;
+    background: var(--pol);
+}
+
+.asa-pol-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    flex: 1;
+    min-width: 0;
+    padding: 0.7rem 0.5rem 0.7rem 0.75rem;
+}
+
+.asa-pol-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+}
+.asa-pol-ico {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.3rem;
+    height: 2.3rem;
+    flex-shrink: 0;
+    border-radius: 11px;
+    background: color-mix(in srgb, var(--pol) 13%, transparent);
+    color: var(--pol);
+}
+.asa-pol-ico svg {
+    width: 1.15rem;
+    height: 1.15rem;
+}
+.asa-pol-name-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.12rem;
+    min-width: 0;
+    flex: 1;
+}
+.asa-pol-name {
+    font-weight: 650;
+    font-size: 0.94rem;
+    letter-spacing: -0.005em;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-pol-meta-line {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    font-size: 0.76rem;
+    opacity: 0.7;
+}
+.asa-pol-type {
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+.asa-pol-num {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+/* Status pill */
+.asa-pol-status {
+    flex-shrink: 0;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    line-height: 1.5;
+}
+.asa-pol-status.is-active { background: color-mix(in srgb, var(--asa-credit) 14%, #fff); color: var(--asa-credit); }
+.asa-pol-status.is-pending { background: color-mix(in srgb, var(--asa-warn) 16%, #fff); color: var(--asa-warn); }
+.asa-pol-status.is-lapsed,
+.asa-pol-status.is-cancelled { background: color-mix(in srgb, var(--asa-negative) 12%, #fff); color: var(--asa-negative); }
+.asa-pol-status.is-neutral { background: color-mix(in srgb, var(--asa-ink) 8%, #fff); opacity: 0.75; }
+
+.asa-pol-coverage {
+    font-size: 0.8rem;
+    opacity: 0.78;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+.asa-pol-foot {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.7rem;
+    margin-top: 0.05rem;
+}
+.asa-pol-premium {
+    font-size: 0.86rem;
+    white-space: nowrap;
+}
+.asa-pol-premium b {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+.asa-pol-cadence {
+    font-style: normal;
+    opacity: 0.6;
+    font-weight: 500;
+}
+.asa-pol-renewal {
+    font-size: 0.76rem;
+    opacity: 0.62;
+    white-space: nowrap;
+}
+.asa-pol-badge {
+    margin-left: auto;
+    padding: 0.1rem 0.45rem;
+    border-radius: 6px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    background: color-mix(in srgb, var(--pol) 12%, transparent);
+    color: var(--pol);
+    white-space: nowrap;
+}
+
+/* radio/check affordance — empty ring by default, filled accent when selected */
+.asa-pol-check {
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    flex-shrink: 0;
+    margin: 0 0.7rem 0 0.15rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--asa-line);
+    color: transparent;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.asa-pol-check svg {
+    width: 0.8rem;
+    height: 0.8rem;
+}
+.asa-pol-check.on {
+    background: var(--pol);
+    border-color: var(--pol);
+    color: #fff;
+}
+
+.asa-pol-submit {
+    margin-top: 0.85rem;
+    width: 100%;
+    padding: 0.7rem 1.15rem;
+    border-radius: 12px;
+    border: none;
+    background: var(--asa-accent);
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: filter 0.15s ease;
+}
+.asa-pol-submit:hover {
+    filter: brightness(1.06);
+}
+
+.asa-error {
+    color: var(--asa-negative);
+    font-size: 0.875rem;
+}
+
+/* Tightest chat columns: tighten padding + drop the check so the card body keeps its space. */
+@container (max-width: 300px) {
+    .asa-pol-body {
+        padding: 0.6rem 0.4rem 0.6rem 0.6rem;
+        gap: 0.35rem;
+    }
+    .asa-pol-ico {
+        width: 2rem;
+        height: 2rem;
+    }
+    .asa-pol-name {
+        font-size: 0.9rem;
+    }
+    .asa-pol-check {
+        width: 1.15rem;
+        height: 1.15rem;
+        margin-right: 0.5rem;
+    }
+}

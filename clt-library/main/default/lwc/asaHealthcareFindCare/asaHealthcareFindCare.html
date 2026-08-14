@@ -1,0 +1,114 @@
+<template>
+    <div class="asa-card">
+        <template if:true={title}>
+            <h3 class="asa-card-title">{title}</h3>
+        </template>
+        <template if:true={hasSubtitle}>
+            <p class="asa-card-sub">{subtitle}</p>
+        </template>
+
+        <template if:true={hasFacilities}>
+            <div class="asa-fnd-list">
+                <template for:each={facilities} for:item="fac">
+                    <div key={fac.key} class="asa-fnd-card">
+                        <div class="asa-fnd-head">
+                            <span class={fac.iconClass} aria-hidden="true">
+                                <template if:true={fac.isUrgentcare}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2a2 2 0 0 0-2 2v5H4a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h5v5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-5h5a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-5V4a2 2 0 0 0-2-2z"></path></svg>
+                                </template>
+                                <template if:true={fac.isEr}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 19H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"></path><path d="M12 9v6"></path><path d="M9 12h6"></path><path d="m9 19 3 3 3-3"></path></svg>
+                                </template>
+                                <template if:true={fac.isPrimarycare}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3v7a5 5 0 0 0 10 0V3"></path><path d="M4 3h2"></path><path d="M12 3h2"></path><path d="M14 15a4 4 0 0 0 4 4 3 3 0 0 0 3-3v-2"></path><circle cx="20" cy="10" r="2"></circle></svg>
+                                </template>
+                                <template if:true={fac.isPharmacy}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path><path d="m8.5 8.5 7 7"></path></svg>
+                                </template>
+                                <template if:true={fac.isHospital}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16"></path><path d="M12 7v4"></path><path d="M10 9h4"></path><path d="M9 21v-4h6v4"></path></svg>
+                                </template>
+                                <template if:true={fac.isLab}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6.3a2 2 0 0 1-.4 1.2L3.6 16a2 2 0 0 0 1.6 3.2h13.6a2 2 0 0 0 1.6-3.2l-5-6.5a2 2 0 0 1-.4-1.2V2"></path><path d="M7 2h10"></path><path d="M7.5 14h9"></path></svg>
+                                </template>
+                                <template if:true={fac.isTelehealth}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8z"></path><rect x="2" y="6" width="14" height="12" rx="2"></rect></svg>
+                                </template>
+                                <template if:true={fac.isClinic}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M5 21V7l7-4 7 4v14"></path><path d="M12 9v4"></path><path d="M10 11h4"></path></svg>
+                                </template>
+                            </span>
+
+                            <span class="asa-fnd-headtext">
+                                <span class="asa-fnd-name">{fac.name}</span>
+                                <span class="asa-fnd-meta">
+                                    <span class="asa-fnd-type">{fac.typeLabel}</span>
+                                    <template if:true={fac.hasDistance}>
+                                        <span class="asa-fnd-dot" aria-hidden="true">·</span>
+                                        <span class="asa-fnd-dist">{fac.distance}</span>
+                                    </template>
+                                </span>
+                            </span>
+
+                            <template if:true={fac.showStatus}>
+                                <span class={fac.statusClass}>{fac.statusText}</span>
+                            </template>
+                        </div>
+
+                        <template if:true={fac.hasHours}>
+                            <div class="asa-fnd-line">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+                                <span>{fac.hours}</span>
+                            </div>
+                        </template>
+                        <template if:true={fac.hasWait}>
+                            <div class="asa-fnd-line">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 22h14"></path><path d="M5 2h14"></path><path d="M17 22v-4.2a2 2 0 0 0-.6-1.4L12 12l-4.4 4.4a2 2 0 0 0-.6 1.4V22"></path><path d="M7 2v4.2a2 2 0 0 0 .6 1.4L12 12l4.4-4.4a2 2 0 0 0 .6-1.4V2"></path></svg>
+                                <span>{fac.waitTime}</span>
+                            </div>
+                        </template>
+                        <template if:true={fac.hasAddress}>
+                            <div class="asa-fnd-line">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.4-5.4 9.2-7.3 10.7a1 1 0 0 1-1.4 0C9.4 19.2 4 14.4 4 10a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                                <span>{fac.address}</span>
+                            </div>
+                        </template>
+
+                        <template if:true={fac.hasServices}>
+                            <div class="asa-fnd-chips">
+                                <template for:each={fac.services} for:item="svc">
+                                    <span key={svc.key} class="asa-fnd-chip">{svc.label}</span>
+                                </template>
+                            </div>
+                        </template>
+
+                        <template if:true={fac.hasMaps}>
+                            <div class="asa-fnd-actions">
+                                <a class="asa-fnd-btn is-maps" href={fac.mapsUrl} target="_blank" rel="noopener noreferrer">
+                                    <svg class="asa-fnd-gmaps" viewBox="0 0 24 24" aria-hidden="true"><path fill="#EA4335" d="M12 2c-3.87 0-7 3.13-7 7 0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.6" fill="#fff"></circle></svg>
+                                    <span>Directions</span>
+                                </a>
+                                <template if:true={fac.hasPhone}>
+                                    <a class="asa-fnd-btn" href={fac.telHref}>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.83 19.5a17.9 17.9 0 0 1-9.33-9.33l1.9-1.9a1.5 1.5 0 0 0 .35-1.56L5.8 3.4A1.5 1.5 0 0 0 4.38 2.5H2.5A1.5 1.5 0 0 0 1 4.15 18 18 0 0 0 19.85 23a1.5 1.5 0 0 0 1.65-1.5v-1.88a1.5 1.5 0 0 0-.9-1.42l-3.3-1a1.5 1.5 0 0 0-1.57.36z"></path></svg>
+                                        <span>Call</span>
+                                    </a>
+                                </template>
+                            </div>
+                        </template>
+                        <template if:false={fac.hasMaps}>
+                            <template if:true={fac.hasPhone}>
+                                <div class="asa-fnd-actions">
+                                    <a class="asa-fnd-btn is-primary" href={fac.telHref}>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.83 19.5a17.9 17.9 0 0 1-9.33-9.33l1.9-1.9a1.5 1.5 0 0 0 .35-1.56L5.8 3.4A1.5 1.5 0 0 0 4.38 2.5H2.5A1.5 1.5 0 0 0 1 4.15 18 18 0 0 0 19.85 23a1.5 1.5 0 0 0 1.65-1.5v-1.88a1.5 1.5 0 0 0-.9-1.42l-3.3-1a1.5 1.5 0 0 0-1.57.36z"></path></svg>
+                                        <span>Call</span>
+                                    </a>
+                                </div>
+                            </template>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Insurance · File a Claim",
+  "description" : "Lets a customer start an insurance claim by choosing the type of incident.",
+  "lightning:type" : "@apexClassType/c__AsaInsuranceFileClaimData"
+}

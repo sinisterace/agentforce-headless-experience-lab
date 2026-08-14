@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Healthcare · Find Care Near You",
+  "description" : "Shows nearby care facilities with distance, hours, and directions/call links.",
+  "lightning:type" : "@apexClassType/c__AsaHealthcareFindCareData"
+}

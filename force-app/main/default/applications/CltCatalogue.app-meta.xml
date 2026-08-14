@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>CLT Catalogue</label>
+    <description>Browse and personalize packaged Agentforce Custom Lightning Types.</description>
+    <uiBundle>c__CltCatalogue</uiBundle>
+    <uiType>Lightning</uiType>
+    <formFactors>Large</formFactors>
+    <formFactors>Small</formFactors>
+    <navType>Standard</navType>
+</CustomApplication>

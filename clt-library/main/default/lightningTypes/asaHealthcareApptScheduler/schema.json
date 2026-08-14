@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Healthcare · Appointment Scheduler",
+  "description" : "Lets a customer book a visit by choosing an available provider time slot.",
+  "lightning:type" : "@apexClassType/c__AsaHealthcareApptSchedulerData"
+}

@@ -1,0 +1,70 @@
+<template>
+    <div class="asa-card">
+        <template if:true={title}>
+            <h3 class="asa-card-title">{title}</h3>
+        </template>
+        <template if:true={hasSubtitle}>
+            <p class="asa-card-sub">{subtitle}</p>
+        </template>
+
+        <template if:true={hasMeds}>
+            <div class="asa-rx-list">
+                <template for:each={medications} for:item="med">
+                    <button
+                        key={med.key}
+                        type="button"
+                        class={med.rowClass}
+                        data-key={med.key}
+                        data-index={med.index}
+                        aria-pressed={med.selected}
+                        disabled={med.disabled}
+                        onclick={handleToggle}>
+
+                        <span class="asa-rx-ico" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path><path d="m8.5 8.5 7 7"></path></svg>
+                        </span>
+
+                        <span class="asa-rx-body">
+                            <span class="asa-rx-name">{med.name}</span>
+                            <template if:true={med.hasDosage}>
+                                <span class="asa-rx-dose">{med.dosage}</span>
+                            </template>
+                            <span class="asa-rx-status">
+                                <span class={med.statusPillClass}>{med.supply}</span>
+                                <template if:true={med.hasRefillsNote}>
+                                    <span class="asa-rx-refills">{med.refillsNote}</span>
+                                </template>
+                            </span>
+                        </span>
+
+                        <span class={med.checkClass} aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                        </span>
+                    </button>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={hasPharmacy}>
+            <div class="asa-rx-pharmacy">
+                <span class="asa-rx-ph-ico" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.4-5.4 9.2-7.3 10.7a1 1 0 0 1-1.4 0C9.4 19.2 4 14.4 4 10a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                </span>
+                <span class="asa-rx-ph-text">
+                    <span class="asa-rx-ph-eyebrow">Pickup at</span>
+                    <span class="asa-rx-ph-name">{pharmacyName}</span>
+                    <template if:true={pharmacyAddress}>
+                        <span class="asa-rx-ph-meta">{pharmacyAddress}</span>
+                    </template>
+                    <template if:true={pharmacyHours}>
+                        <span class="asa-rx-ph-hours">{pharmacyHours}</span>
+                    </template>
+                </span>
+            </div>
+        </template>
+
+        <template if:true={showSubmit}>
+            <button type="button" class="asa-rx-submit" onclick={handleSubmit}>{submitLabel}</button>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,227 @@
+/* ASA Healthcare · Care Options — a vertical list of care channels, each a
+   full-width row with a color-coded icon, label/description, an optional meta
+   tag, and a trailing action (call / open link / book). One row can be marked
+   Recommended (accent border + ribbon). A safety disclaimer sits at the foot.
+   The whole row is clickable via a stretched-link CTA. rem units + inherited
+   font so the card matches the host chat theme in Enhanced Chat v2. */
+:host {
+    --asa-accent: #0f766e;
+    --asa-line: #e5e7eb;
+    --asa-ink: #101828;
+    --asa-muted: #667085;
+    --asa-warn: #b45309;
+    --asa-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+    --asa-shadow-md: 0 8px 22px rgba(15, 23, 42, 0.12);
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after {
+    box-sizing: border-box;
+}
+
+.asa-card-title {
+    margin: 0 0 0.2rem 0;
+    font-size: 1.05rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-card-sub {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.78rem;
+    color: var(--asa-muted);
+}
+
+.asa-co-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+.asa-co-opt {
+    --chan: var(--asa-accent);
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 0.7rem;
+    border: 1px solid var(--asa-line);
+    border-radius: 14px;
+    background: #fff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.asa-co-opt:hover {
+    border-color: color-mix(in srgb, var(--chan) 45%, var(--asa-line));
+    box-shadow: var(--asa-shadow-sm);
+}
+.asa-co-opt.is-recommended {
+    border-color: var(--chan);
+    background: color-mix(in srgb, var(--chan) 5%, #fff);
+}
+/* Channel hues so nurse line / video / in-person / ER read apart at a glance. */
+.asa-co-opt.is-nurseline { --chan: #0e7490; }
+.asa-co-opt.is-video { --chan: #2563eb; }
+.asa-co-opt.is-inperson { --chan: #0f766e; }
+.asa-co-opt.is-urgent { --chan: #b45309; }
+.asa-co-opt.is-er { --chan: #c0392b; }
+.asa-co-opt.is-pharmacy { --chan: #15803d; }
+.asa-co-opt.is-message { --chan: #475467; }
+
+/* Inline "Recommended" tag — sits beside the label instead of floating over
+   the card edge, reading as a considered badge rather than a sticker. */
+.asa-co-labelrow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    min-width: 0;
+}
+.asa-co-rec {
+    flex-shrink: 0;
+    padding: 0.08rem 0.4rem;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--chan) 12%, #fff);
+    color: color-mix(in srgb, var(--chan) 82%, #000);
+    border: 1px solid color-mix(in srgb, var(--chan) 30%, transparent);
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.asa-co-ico {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+    border-radius: 11px;
+    background: color-mix(in srgb, var(--chan) 13%, transparent);
+    color: var(--chan);
+}
+.asa-co-ico svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.asa-co-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.12rem;
+    min-width: 0;
+    flex: 1;
+}
+.asa-co-label {
+    font-weight: 640;
+    font-size: 0.88rem;
+    letter-spacing: -0.005em;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-co-desc {
+    font-size: 0.75rem;
+    color: var(--asa-muted);
+    line-height: 1.3;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-co-metatag {
+    align-self: flex-start;
+    margin-top: 0.15rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--chan) 12%, #fff);
+    color: color-mix(in srgb, var(--chan) 75%, #000);
+    font-size: 0.68rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Trailing action button. Its ::after stretches over the whole row so the
+   entire card is one big tap target (the classic "stretched link" pattern). */
+.asa-co-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    flex-shrink: 0;
+    padding: 0.4rem 0.7rem;
+    border-radius: 10px;
+    border: 1px solid color-mix(in srgb, var(--chan) 35%, var(--asa-line));
+    background: color-mix(in srgb, var(--chan) 7%, #fff);
+    color: color-mix(in srgb, var(--chan) 82%, #000);
+    font-family: inherit;
+    font-size: 0.76rem;
+    font-weight: 650;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.asa-co-cta svg {
+    width: 1rem;
+    height: 1rem;
+}
+/* Stretched link: the trailing CTA's hit area covers the whole row so the
+   entire card is one tap target. */
+.asa-co-cta::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+}
+.asa-co-opt:hover .asa-co-cta {
+    background: var(--chan);
+    border-color: var(--chan);
+    color: #fff;
+}
+
+.asa-co-disclaimer {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    margin: 0.8rem 0 0 0;
+    padding: 0.5rem 0.6rem;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--asa-warn) 8%, #fff);
+    border: 1px solid color-mix(in srgb, var(--asa-warn) 20%, var(--asa-line));
+    font-size: 0.72rem;
+    line-height: 1.35;
+    color: color-mix(in srgb, var(--asa-warn) 78%, #000);
+}
+.asa-co-disclaimer svg {
+    width: 0.95rem;
+    height: 0.95rem;
+    flex-shrink: 0;
+    margin-top: 0.06rem;
+    color: var(--asa-warn);
+}
+.asa-co-disclaimer span {
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* Tightest chat columns: drop the CTA label so the button collapses to its
+   icon and the row never crowds. */
+@container (max-width: 300px) {
+    .asa-co-cta {
+        padding: 0.4rem;
+    }
+    .asa-co-cta-text {
+        display: none;
+    }
+}

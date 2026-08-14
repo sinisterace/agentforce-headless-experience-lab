@@ -1,0 +1,16 @@
+{
+  "required": [
+    "Details"
+  ],
+  "unevaluatedProperties": false,
+  "properties": {
+    "Details": {
+      "title": "Details",
+      "description": "The full recent-transactions payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Your recent transactions\",\"accountLabel\":\"Everyday Checking ••1234\",\"transactions\":[{\"id\":\"txn-1\",\"merchant\":\"Whole Foods Market\",\"date\":\"2026-08-09\",\"amount\":-84.23,\"currency\":\"USD\",\"category\":\"Groceries\",\"status\":\"Posted\"},{\"id\":\"txn-2\",\"merchant\":\"Delta Air Lines\",\"date\":\"2026-08-07\",\"amount\":-412.60,\"currency\":\"USD\",\"category\":\"Travel\",\"status\":\"Posted\"},{\"id\":\"txn-3\",\"merchant\":\"Payroll Deposit\",\"date\":\"2026-08-06\",\"amount\":2450.00,\"currency\":\"USD\",\"category\":\"Income\",\"status\":\"Posted\"},{\"id\":\"txn-4\",\"merchant\":\"Corner Bistro\",\"date\":\"2026-08-05\",\"amount\":-56.80,\"currency\":\"USD\",\"category\":\"Dining\",\"status\":\"Pending\",\"disputable\":false}],\"disputeText\":\"Dispute this charge\"}\n\nRules:\n- 'title' (string, optional): the heading shown above the list.\n- 'accountLabel' (string, optional): the account these transactions belong to, e.g. 'Everyday Checking ••1234'.\n- 'transactions' (array, REQUIRED, at least one object): each MUST have 'id' (string, unique, sent back when the customer disputes it), 'merchant' (string), 'date' (string, ISO 'YYYY-MM-DD'), and 'amount' (number; NEGATIVE for money out/debits, POSITIVE for money in/credits). Optional per transaction: 'currency' (ISO code string, defaults to 'USD'), 'category' (string; one of 'Groceries','Dining','Travel','Shopping','Bills','Transfer','Income','Other' — drives the row icon), 'status' (string, e.g. 'Posted' or 'Pending'; 'Pending' shows a pill), and 'disputable' (boolean; set false to show the row but prevent the customer from selecting it — e.g. income or already-disputed items).\n- 'disputeText' (string, optional): the confirm-button label; defaults to 'Dispute this charge'.\n\nNever emit an empty 'transactions' array. Use the customer's real transactions from context; if none are known, ask the customer rather than inventing charges. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type": "lightning__textType",
+      "lightning:isPII": false,
+      "copilotAction:isUserInput": false
+    }
+  },
+  "lightning:type": "lightning__objectType"
+}

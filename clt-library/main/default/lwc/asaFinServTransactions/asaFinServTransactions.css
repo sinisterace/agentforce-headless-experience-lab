@@ -1,0 +1,245 @@
+/* ASA Financial Services · Recent Transactions — "statement ledger".
+   A single framed statement panel: an account header, then hairline-separated
+   ledger rows with a monochrome category token, merchant + date/category, and a
+   right-aligned tabular amount (credits green +, debits neutral −). Selecting a
+   row raises an accent edge; the dispute button appears below. rem units +
+   inherited font so it sits inside the host chat theme in Enhanced Chat v2. */
+:host {
+    --asa-accent: #0b5cab;
+    --asa-line: #e5e7eb;
+    --asa-ink: #101828;
+    --asa-credit: #1a7f4b;
+    --asa-negative: #c0392b;
+    --asa-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after {
+    box-sizing: border-box;
+}
+
+.asa-card-title {
+    margin: 0 0 0.6rem 0;
+    font-size: 1.05rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* ---- statement panel ---- */
+.asa-stmt {
+    border: 1px solid var(--asa-line);
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: var(--asa-shadow-sm);
+}
+
+.asa-stmt-head {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.7rem 0.85rem;
+    border-bottom: 1px solid var(--asa-line);
+    background: color-mix(in srgb, var(--asa-accent) 5%, #fff);
+}
+.asa-stmt-head-ico {
+    display: inline-flex;
+    flex-shrink: 0;
+    color: var(--asa-accent);
+}
+.asa-stmt-head-ico svg {
+    width: 1.05rem;
+    height: 1.05rem;
+}
+.asa-stmt-head-label {
+    font-size: 0.8rem;
+    font-weight: 650;
+    letter-spacing: 0.01em;
+    overflow-wrap: break-word;
+    word-break: normal;
+    min-width: 0;
+}
+
+.asa-stmt-rows {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ---- ledger row ---- */
+.asa-stmt-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.7rem 0.85rem;
+    border: none;
+    border-bottom: 1px solid var(--asa-line);
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.13s ease;
+}
+.asa-stmt-row:last-child {
+    border-bottom: none;
+}
+.asa-stmt-row:hover:not(.is-disabled) {
+    background: color-mix(in srgb, var(--asa-accent) 4%, #fff);
+}
+.asa-stmt-row.selected {
+    background: color-mix(in srgb, var(--asa-accent) 8%, #fff);
+    box-shadow: inset 3px 0 0 0 var(--asa-accent);
+}
+.asa-stmt-row.is-disabled {
+    cursor: default;
+    opacity: 0.55;
+}
+
+.asa-stmt-ico {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    flex-shrink: 0;
+    border-radius: 999px;
+    background: color-mix(in srgb, currentColor 8%, transparent);
+    color: inherit;
+    opacity: 0.85;
+}
+.asa-stmt-ico svg {
+    width: 1.05rem;
+    height: 1.05rem;
+}
+
+.asa-stmt-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+    flex: 1;
+}
+.asa-stmt-merchant {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.3rem 0.4rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: -0.005em;
+}
+.asa-stmt-merchant-text {
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-stmt-badge {
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: 0.58rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.1rem 0.4rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--asa-negative) 12%, transparent);
+    color: var(--asa-negative);
+}
+.asa-stmt-sub {
+    opacity: 0.6;
+    font-size: 0.74rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.asa-stmt-right {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-shrink: 0;
+}
+.asa-stmt-amount {
+    font-size: 0.95rem;
+    font-weight: 650;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+}
+.asa-stmt-amount.is-credit {
+    color: var(--asa-credit);
+}
+
+.asa-stmt-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.3rem;
+    height: 1.3rem;
+    flex-shrink: 0;
+    border-radius: 999px;
+    border: 1.5px solid var(--asa-line);
+    color: transparent;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.asa-stmt-check svg {
+    width: 0.78rem;
+    height: 0.78rem;
+}
+.asa-stmt-check.on {
+    background: var(--asa-accent);
+    border-color: var(--asa-accent);
+    color: #fff;
+}
+
+/* ---- dispute submit ---- */
+.asa-txn-submit {
+    margin-top: 0.7rem;
+    width: 100%;
+    padding: 0.72rem 1.15rem;
+    border-radius: 12px;
+    border: none;
+    background: var(--asa-accent);
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: filter 0.15s ease;
+}
+.asa-txn-submit:hover {
+    filter: brightness(1.06);
+}
+
+.asa-error {
+    color: var(--asa-negative);
+    font-size: 0.875rem;
+}
+
+@container (max-width: 300px) {
+    .asa-stmt-row {
+        gap: 0.55rem;
+        padding: 0.6rem 0.7rem;
+    }
+    .asa-stmt-ico {
+        width: 1.85rem;
+        height: 1.85rem;
+    }
+    .asa-stmt-merchant {
+        font-size: 0.86rem;
+    }
+    .asa-stmt-amount {
+        font-size: 0.88rem;
+    }
+    .asa-stmt-right {
+        gap: 0.45rem;
+    }
+}

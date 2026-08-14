@@ -1,0 +1,16 @@
+{
+  "required": [
+    "Details"
+  ],
+  "unevaluatedProperties": false,
+  "properties": {
+    "Details": {
+      "title": "Details",
+      "description": "The full file-a-claim payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"What happened?\",\"policy\":{\"label\":\"Auto — 2022 Tesla Model 3\",\"policyNumber\":\"8842\",\"imageUrl\":\"/resource/asaInsuranceTeslaModel3\"},\"incidentTypes\":[{\"id\":\"collision\",\"label\":\"Collision\",\"description\":\"Accident with another vehicle or object\",\"icon\":\"collision\"},{\"id\":\"theft\",\"label\":\"Theft or break-in\",\"description\":\"Vehicle or contents stolen\",\"icon\":\"theft\"},{\"id\":\"weather\",\"label\":\"Weather or storm\",\"description\":\"Hail, wind, flood, or fallen tree\",\"icon\":\"weather\"},{\"id\":\"glass\",\"label\":\"Glass or windshield\",\"description\":\"Cracked or shattered glass\",\"icon\":\"glass\"}],\"submitText\":\"Start claim\"}\n\nRules:\n- 'title' (string, optional): the prompt shown at the top of the card. Defaults to 'What happened?'.\n- 'policy' (object, optional but strongly recommended): the policy the claim is filed against. 'label' (string) is the plain-language policy name; 'policyNumber' (string, optional) is shown masked; 'imageUrl' (string, optional) is a photo of the insured item (e.g. the vehicle) shown as a rounded hero image above the policy label. Use a same-origin URL such as a Salesforce static resource ('/resource/<Name>') so it renders in Enhanced Chat v2 without cross-origin issues. Include the policy whenever it is known so the customer sees which policy the claim applies to.\n- 'incidentTypes' (array, REQUIRED, at least two objects): the kinds of incident the customer can choose from. Each MUST have 'id' (string, unique, sent back on selection) and 'label' (string, short). Optional: 'description' (string, one short line under the label) and 'icon' (string; one of 'collision','theft','weather','water','fire','glass','liability','medical','other' — drives the tile icon; defaults to 'other'). Choose incident types that fit the policy type (e.g. collision/theft/weather/glass for auto; water/fire/weather/theft/liability for home).\n- 'submitText' (string, optional): the confirm-button label; defaults to 'Start claim'.\n\nNever emit fewer than two incident types. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type": "lightning__textType",
+      "lightning:isPII": false,
+      "copilotAction:isUserInput": false
+    }
+  },
+  "lightning:type": "lightning__objectType"
+}

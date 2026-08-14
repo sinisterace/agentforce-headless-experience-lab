@@ -1,0 +1,244 @@
+/* ASA Healthcare · Prescription Refill — a multi-select checklist of
+   medications, each with an Rx icon, dosage, and a supply-status pill
+   (green in-stock / amber low / red out), plus a pickup-pharmacy footer and a
+   count-aware confirm button. Out-of-refills rows are shown but disabled.
+   rem units + inherited font so it matches the host chat theme in ECv2. */
+:host {
+    --asa-accent: #0f766e;
+    --asa-line: #e5e7eb;
+    --asa-ink: #101828;
+    --asa-muted: #667085;
+    --asa-ok: #15803d;
+    --asa-low: #b45309;
+    --asa-out: #c0392b;
+    --asa-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+    --asa-shadow-md: 0 8px 22px rgba(15, 23, 42, 0.12);
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after {
+    box-sizing: border-box;
+}
+
+.asa-card-title {
+    margin: 0 0 0.2rem 0;
+    font-size: 1.05rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-card-sub {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.78rem;
+    color: var(--asa-muted);
+}
+
+.asa-rx-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.asa-rx-med {
+    --stat: var(--asa-ok);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 0.65rem;
+    border: 1px solid var(--asa-line);
+    border-radius: 13px;
+    background: #fff;
+    color: inherit;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.asa-rx-med.is-low { --stat: var(--asa-low); }
+.asa-rx-med.is-out { --stat: var(--asa-out); }
+.asa-rx-med:not(.is-disabled):hover {
+    border-color: color-mix(in srgb, var(--asa-accent) 45%, var(--asa-line));
+    box-shadow: var(--asa-shadow-sm);
+}
+.asa-rx-med.is-selected {
+    border-color: var(--asa-accent);
+    background: color-mix(in srgb, var(--asa-accent) 7%, #fff);
+    box-shadow: 0 0 0 1px var(--asa-accent);
+}
+.asa-rx-med.is-disabled {
+    cursor: not-allowed;
+    opacity: 0.62;
+    background: #fafafa;
+}
+
+.asa-rx-ico {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.3rem;
+    height: 2.3rem;
+    flex-shrink: 0;
+    border-radius: 11px;
+    background: color-mix(in srgb, var(--asa-accent) 12%, transparent);
+    color: var(--asa-accent);
+    transform: rotate(45deg);
+}
+.asa-rx-ico svg {
+    width: 1.2rem;
+    height: 1.2rem;
+    transform: rotate(-45deg);
+}
+
+.asa-rx-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.12rem;
+    min-width: 0;
+    flex: 1;
+}
+.asa-rx-name {
+    font-weight: 650;
+    font-size: 0.88rem;
+    letter-spacing: -0.005em;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-rx-dose {
+    font-size: 0.74rem;
+    color: var(--asa-muted);
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-rx-status {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.15rem;
+}
+.asa-rx-pill {
+    padding: 0.1rem 0.45rem;
+    border-radius: 999px;
+    font-size: 0.66rem;
+    font-weight: 700;
+    white-space: nowrap;
+    color: var(--stat);
+    background: color-mix(in srgb, var(--stat) 12%, #fff);
+    border: 1px solid color-mix(in srgb, var(--stat) 28%, transparent);
+}
+.asa-rx-refills {
+    font-size: 0.68rem;
+    color: var(--asa-muted);
+    white-space: nowrap;
+}
+
+.asa-rx-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.4rem;
+    height: 1.4rem;
+    flex-shrink: 0;
+    border-radius: 6px;
+    border: 1.5px solid var(--asa-line);
+    color: transparent;
+    background: #fff;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.asa-rx-check svg {
+    width: 0.82rem;
+    height: 0.82rem;
+}
+.asa-rx-check.on {
+    background: var(--asa-accent);
+    border-color: var(--asa-accent);
+    color: #fff;
+}
+.asa-rx-med.is-disabled .asa-rx-check {
+    visibility: hidden;
+}
+
+/* Pickup-pharmacy footer — a tinted strip that anchors the refill destination. */
+.asa-rx-pharmacy {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    margin-top: 0.75rem;
+    padding: 0.6rem 0.65rem;
+    border: 1px solid color-mix(in srgb, var(--asa-accent) 20%, var(--asa-line));
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--asa-accent) 6%, #fff);
+}
+.asa-rx-ph-ico {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--asa-accent) 15%, transparent);
+    color: var(--asa-accent);
+}
+.asa-rx-ph-ico svg {
+    width: 1.05rem;
+    height: 1.05rem;
+}
+.asa-rx-ph-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.08rem;
+    min-width: 0;
+}
+.asa-rx-ph-eyebrow {
+    font-size: 0.64rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--asa-accent);
+    opacity: 0.85;
+}
+.asa-rx-ph-name {
+    font-weight: 640;
+    font-size: 0.84rem;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-rx-ph-meta,
+.asa-rx-ph-hours {
+    font-size: 0.72rem;
+    color: var(--asa-muted);
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+.asa-rx-submit {
+    margin-top: 0.85rem;
+    width: 100%;
+    padding: 0.7rem 1.15rem;
+    border-radius: 12px;
+    border: none;
+    background: var(--asa-accent);
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: filter 0.15s ease;
+}
+.asa-rx-submit:hover {
+    filter: brightness(1.06);
+}

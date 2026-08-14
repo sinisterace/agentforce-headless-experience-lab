@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>CLT Catalogue Access</label>
+    <hasActivationRequired>false</hasActivationRequired>
+
+    <!-- App visibility (does NOT grant Apex access; classAccesses below do that) -->
+    <applicationVisibilities>
+        <application>CltCatalogue</application>
+        <visible>true</visible>
+    </applicationVisibilities>
+
+    <!-- Tab visibility — surfaces the object in App Launcher search -->
+    <tabSettings>
+        <tab>Onboarding_Profile__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+
+    <!-- Objects -->
+    <objectPermissions>
+        <object>CLT_Catalog_Item__c</object>
+        <allowRead>true</allowRead>
+        <allowCreate>true</allowCreate>
+        <allowEdit>true</allowEdit>
+        <allowDelete>true</allowDelete>
+        <viewAllRecords>true</viewAllRecords>
+        <modifyAllRecords>true</modifyAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <object>Onboarding_Profile__c</object>
+        <allowRead>true</allowRead>
+        <allowCreate>true</allowCreate>
+        <allowEdit>true</allowEdit>
+        <allowDelete>true</allowDelete>
+        <viewAllRecords>true</viewAllRecords>
+        <modifyAllRecords>true</modifyAllRecords>
+    </objectPermissions>
+
+    <!-- CLT_Catalog_Item__c fields (CLT_Api_Name__c + Industry_Key__c are required → always visible, no FLS entry allowed) -->
+    <fieldPermissions><field>CLT_Catalog_Item__c.Capability_Key__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>CLT_Catalog_Item__c.Label__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>CLT_Catalog_Item__c.Description__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>CLT_Catalog_Item__c.Display_Order__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>CLT_Catalog_Item__c.Default_Payload_JSON__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>CLT_Catalog_Item__c.DTO_Field_Name__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+
+    <!-- Onboarding_Profile__c fields -->
+    <fieldPermissions><field>Onboarding_Profile__c.First_Name__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Onboarding_Profile__c.Last_Name__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Onboarding_Profile__c.Email__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Onboarding_Profile__c.Company_Name__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Onboarding_Profile__c.Website__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Onboarding_Profile__c.Industry_Key__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Onboarding_Profile__c.Industry_Confidence__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Onboarding_Profile__c.Company_Summary__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Onboarding_Profile__c.Plan_Narrative__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Onboarding_Profile__c.Accent_Color__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Onboarding_Profile__c.Logo_Url__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Onboarding_Profile__c.Signals_JSON__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Onboarding_Profile__c.Source__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+    <fieldPermissions><field>Onboarding_Profile__c.Status__c</field><readable>true</readable><editable>true</editable></fieldPermissions>
+
+    <!-- Apex classes -->
+    <classAccesses><apexClass>ConsultationCatalogService</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>ConsultationProfileService</apexClass><enabled>true</enabled></classAccesses>
+    <classAccesses><apexClass>CltCatalogRest</apexClass><enabled>true</enabled></classAccesses>
+</PermissionSet>

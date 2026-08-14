@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Financial Services · Money Movement",
+  "description" : "Lets a customer pick who to send money to and how much, then confirm the transfer.",
+  "lightning:type" : "@apexClassType/c__AsaFinServMoneyMovementData"
+}

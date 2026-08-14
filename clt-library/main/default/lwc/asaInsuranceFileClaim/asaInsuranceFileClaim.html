@@ -1,0 +1,87 @@
+<template>
+    <div class="asa-card">
+        <template if:true={title}>
+            <h3 class="asa-card-title">{title}</h3>
+        </template>
+
+        <template if:true={hasImage}>
+            <div class="asa-fc-asset" aria-hidden="true">
+                <img src={policyImageUrl} alt={policyLabel} onerror={handleImageError} />
+            </div>
+        </template>
+
+        <template if:true={hasPolicy}>
+            <div class="asa-fc-policy" aria-label="Claim policy">
+                <span class="asa-fc-policy-ico" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path></svg>
+                </span>
+                <span class="asa-fc-policy-text">
+                    <span class="asa-fc-policy-label">{policyLabel}</span>
+                    <template if:true={policyMask}>
+                        <span class="asa-fc-policy-num">{policyMask}</span>
+                    </template>
+                </span>
+            </div>
+        </template>
+
+        <template if:true={hasIncidents}>
+            <div class="asa-fc-grid">
+                <template for:each={incidentTypes} for:item="inc">
+                    <button
+                        key={inc.key}
+                        type="button"
+                        class={inc.tileClass}
+                        data-index={inc.index}
+                        aria-pressed={inc.selected}
+                        onclick={handleSelect}>
+
+                        <span class="asa-fc-ico" aria-hidden="true">
+                            <template if:true={inc.isCollision}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17H3v-4l2-5h11l3 5h1a2 2 0 0 1 2 2v2h-2"></path><path d="M7 17h8"></path><circle cx="6.5" cy="17.5" r="1.5"></circle><circle cx="16.5" cy="17.5" r="1.5"></circle><path d="m14 4 1.5 2.5L18 5"></path></svg>
+                            </template>
+                            <template if:true={inc.isTheft}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 9.9-1"></path></svg>
+                            </template>
+                            <template if:true={inc.isWeather}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path><path d="M16 14v6"></path><path d="M8 14v6"></path><path d="M12 16v6"></path></svg>
+                            </template>
+                            <template if:true={inc.isWater}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"></path></svg>
+                            </template>
+                            <template if:true={inc.isFire}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+                            </template>
+                            <template if:true={inc.isGlass}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"></rect><path d="M12 4v6l-4 4"></path><path d="M12 10l5 4"></path><path d="M12 10l-2 10"></path></svg>
+                            </template>
+                            <template if:true={inc.isLiability}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.287 1.288L3 12l5.8 1.9a2 2 0 0 1 1.288 1.287L12 21l1.9-5.8a2 2 0 0 1 1.287-1.288L21 12l-5.8-1.9a2 2 0 0 1-1.288-1.287z"></path></svg>
+                            </template>
+                            <template if:true={inc.isMedical}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                            </template>
+                            <template if:true={inc.isOther}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><path d="M12 17h.01"></path></svg>
+                            </template>
+                        </span>
+
+                        <span class="asa-fc-text">
+                            <span class="asa-fc-label">{inc.label}</span>
+                            <template if:true={inc.hasDescription}>
+                                <span class="asa-fc-desc">{inc.description}</span>
+                            </template>
+                        </span>
+
+                        <span class={inc.checkClass} aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                        </span>
+                    </button>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={showSubmit}>
+            <button type="button" class="asa-fc-submit" onclick={handleSubmit}>{submitLabel}</button>
+        </template>
+    </div>
+</template>

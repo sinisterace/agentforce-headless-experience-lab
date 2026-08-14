@@ -1,0 +1,967 @@
+import { FormEvent, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  AlertTriangle,
+  ArrowLeft,
+  ArrowRight,
+  CalendarDays,
+  Check,
+  CheckCircle2,
+  ChevronDown,
+  ChevronRight,
+  Code2,
+  ExternalLink,
+  Globe2,
+  HeartPulse,
+  Layers3,
+  LifeBuoy,
+  LoaderCircle,
+  Monitor,
+  Moon,
+  PackageSearch,
+  RotateCcw,
+  ShieldCheck,
+  ShoppingBag,
+  Sparkles,
+  Sun,
+  Workflow,
+} from 'lucide-react';
+import agentforceLogo from '@/assets/agentforce-logo.png';
+import storySparkle from '@/assets/story-sparkle.png';
+import { fetchCatalog, saveProfile, scanCompany } from '@/api/catalogApi';
+import type { CompanyProfile, IndustryOption, PlanSection, Recommendation } from '@/types/catalog';
+import { CompanyMark, capabilityIcon, hostnameOf, industryIcon, initialsOf } from '@/components/shared';
+import { CltPlayground } from '@/components/playground/CltPlayground';
+import { ChannelViewer } from '@/components/channels/ChannelViewer';
+
+type Stage = 'welcome' | 'intake' | 'confirm' | 'building' | 'preview';
+type Theme = 'dark' | 'light';
+type Intake = { firstName: string; lastName: string; email: string; companyName: string; website: string; industry: string };
+
+/**
+ * Build steps mirror real work: the first three already ran during the scan;
+ * the last two track the live save. (UI spec §6.)
+ */
+const BUILD_STEPS = [
+  { title: 'Reading the public website', detail: 'Finding customer-facing services and language', icon: Globe2 },
+  { title: 'Extracting brand and service signals', detail: 'Mapping identity into accessible interface roles', icon: PackageSearch },
+  { title: 'Selecting the prebuilt experiences', detail: 'Resolving recommended capabilities against the catalog', icon: Layers3 },
+  { title: 'Saving the active consultation profile', detail: 'Writing the researched company data to the org', icon: Workflow },
+  { title: 'Pointing the published agent at this profile', detail: 'The agent reads it on the next request', icon: Sparkles },
+];
+const FIRST_SAVE_STEP = 3;
+
+function normalizeWebsiteInput(input: string) {
+  let value = input.trim().replace(/\s+/g, '');
+  if (/^https?\/\//i.test(value)) value = value.replace(/^(https?)\/\//i, '$1://');
+  else if (/^https?:\/(?!\/)/i.test(value)) value = value.replace(/^(https?):\//i, '$1://');
+  else if (/^https?:[^/]/i.test(value)) value = value.replace(/^(https?):/i, '$1://');
+  return value;
+}
+
+export default function CatalogueApp() {
+  const [stage, setStage] = useState<Stage>('welcome');
+  const [theme, setTheme] = useState<Theme>('light');
+  const [intake, setIntake] = useState<Intake>({ firstName: '', lastName: '', email: '', companyName: '', website: '', industry: '' });
+  const [industries, setIndustries] = useState<IndustryOption[]>([]);
+  const [recsByIndustry, setRecsByIndustry] = useState<Record<string, Recommendation[]>>({});
+  const [profile, setProfile] = useState<CompanyProfile | null>(null);
+  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+  const [selectedCltApiName, setSelectedCltApiName] = useState('');
+  const [scanning, setScanning] = useState(false);
+  const [scanMessage, setScanMessage] = useState('');
+  const [catalogError, setCatalogError] = useState('');
+  const [buildStep, setBuildStep] = useState(0);
+  const [savedName, setSavedName] = useState<string | null>(null);
+  const previewHeading = useRef<HTMLHeadingElement>(null);
+
+  // The chosen industry: facilitator override wins, then AI, then catalog default.
+  const industry = intake.industry || profile?.industryKey || industries[0]?.key || '';
+  const industryLabel = industries.find((i) => i.key === industry)?.label || 'Customer service';
+
+  // Show only the CLTs catalogued for the selected industry (user decision:
+  // each industry surfaces its own set — 4 for Financial Services, 3 for
+  // Insurance, etc.). Prefer the catalogue rows loaded on mount; fall back to
+  // whatever the scan surfaced (already scoped to this industry) if the
+  // catalogue hasn't loaded yet.
+  const activeRecs = useMemo(() => {
+    const forIndustry = recsByIndustry[industry] ?? [];
+    return forIndustry.length ? forIndustry : recommendations;
+  }, [recsByIndustry, recommendations, industry]);
+  const selectedRec = activeRecs.find((r) => r.cltApiName === selectedCltApiName) ?? activeRecs[0] ?? null;
+
+  const companyName = profile?.companyName || intake.companyName || 'Your company';
+  const initials = initialsOf(companyName);
+  const appStyle = useMemo(
+    () => ({ '--customer-accent': profile?.accentColor || '#0b5cab' }) as React.CSSProperties,
+    [profile?.accentColor]
+  );
+
+  useEffect(() => {
+    let active = true;
+    fetchCatalog()
+      .then((catalog) => {
+        if (!active) return;
+        setIndustries(catalog.industries);
+        setRecsByIndustry(catalog.recommendationsByIndustry);
+      })
+      .catch(() => active && setCatalogError('The CLT catalogue could not be loaded from this org.'));
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (stage === 'preview') window.setTimeout(() => previewHeading.current?.focus(), 200);
+  }, [stage]);
+
+  useEffect(() => {
+    document.documentElement.style.colorScheme = theme;
+  }, [theme]);
+
+  // Keep a valid CLT selected as the recommendation set changes.
+  useEffect(() => {
+    if (activeRecs.length && !activeRecs.some((r) => r.cltApiName === selectedCltApiName)) {
+      setSelectedCltApiName(activeRecs[0].cltApiName);
+    }
+  }, [activeRecs, selectedCltApiName]);
+
+  async function analyzeCompany(event: FormEvent) {
+    event.preventDefault();
+    setScanning(true);
+    setScanMessage('');
+    try {
+      const { profile: scanned, recommendations: recs } = await scanCompany({
+        companyName: intake.companyName,
+        website: intake.website,
+        industry: intake.industry || undefined,
+      });
+      setProfile(intake.industry ? { ...scanned, industryKey: intake.industry } : scanned);
+      setRecommendations(recs);
+      if (scanned.source === 'fallback') {
+        setScanMessage('The website could not be read, so we prepared a reliable industry starter instead.');
+      }
+      setStage('confirm');
+    } catch (error) {
+      setScanMessage(error instanceof Error && error.message ? error.message : 'The live scan is unavailable. Check the details and try again.');
+    } finally {
+      setScanning(false);
+    }
+  }
+
+  async function buildExperience() {
+    if (!profile) return;
+    setStage('building');
+    setBuildStep(0);
+    setScanMessage('');
+
+    // Walk visibly through every build step in real time. The real save runs
+    // concurrently; we only reach the preview once BOTH the staged walkthrough
+    // and the save have finished, so the progress never lies about the work.
+    const wait = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
+    const walkthrough = (async () => {
+      for (let step = 1; step < BUILD_STEPS.length; step += 1) {
+        await wait(step < FIRST_SAVE_STEP ? 1400 : 1900);
+        setBuildStep(step);
+      }
+    })();
+
+    const save = saveProfile({
+      firstName: intake.firstName,
+      lastName: intake.lastName,
+      email: intake.email,
+      companyName: profile.companyName,
+      website: profile.website,
+      industryKey: industry,
+      summary: profile.summary,
+      planNarrative: profile.planNarrative,
+      accentColor: profile.accentColor,
+      logoUrl: profile.logoUrl,
+      source: profile.source,
+      confidence: profile.confidence ?? null,
+      signals: profile.signals,
+    });
+
+    try {
+      const [response] = await Promise.all([save, walkthrough]);
+      setSavedName(response.id);
+      setBuildStep(BUILD_STEPS.length - 1);
+      await wait(700);
+      setStage('preview');
+    } catch (error) {
+      setScanMessage(error instanceof Error && error.message ? error.message : 'The experience could not be prepared in this org.');
+      setStage('confirm');
+    }
+  }
+
+  function restart() {
+    setStage('welcome');
+    setIntake({ firstName: '', lastName: '', email: '', companyName: '', website: '', industry: '' });
+    setProfile(null);
+    setRecommendations([]);
+    setSelectedCltApiName('');
+    setScanMessage('');
+    setBuildStep(0);
+    setSavedName(null);
+  }
+
+  const journeyPhase = stage === 'preview' ? 'preview' : stage === 'building' ? 'build' : 'company';
+
+  // Header phase chips double as navigation so the journey is reversible.
+  // Company → the company step (configurator if a profile exists, else intake).
+  // Preview → jump straight to the preview if it's already built, otherwise
+  // build it now. Build stays a status-only indicator (it's a transient phase).
+  const goCompany = () => setStage(profile ? 'confirm' : 'intake');
+  const goPreview = () => {
+    if (savedName) setStage('preview');
+    else if (profile) buildExperience();
+  };
+  const canPreview = !!profile || !!savedName;
+
+  return (
+    <div className={`activation-app theme-${theme}`} style={appStyle}>
+      <a className="skip-link" href="#main">Skip to main content</a>
+      <header className="app-header">
+        <button className="brand-lockup" type="button" onClick={restart} aria-label="Restart experience">
+          <img className="brand-mark" src={agentforceLogo} alt="" aria-hidden="true" />
+          <span>Custom Agentforce Interfaces</span>
+        </button>
+        <nav className={`elastic-toolbar phase-${journeyPhase}`} aria-label={`Current phase: ${journeyPhase}`}>
+          <span className="toolbar-lens" aria-hidden="true" />
+          <button
+            type="button"
+            className={journeyPhase === 'company' ? 'tool-item active' : 'tool-item'}
+            onClick={goCompany}
+            disabled={stage === 'building'}
+            aria-current={journeyPhase === 'company' ? 'step' : undefined}
+          >
+            <Globe2 aria-hidden="true" /><b>Company</b>
+          </button>
+          <span className={journeyPhase === 'build' ? 'tool-item active' : 'tool-item'} aria-current={journeyPhase === 'build' ? 'step' : undefined}><Sparkles aria-hidden="true" /><b>Build</b></span>
+          <button
+            type="button"
+            className={journeyPhase === 'preview' ? 'tool-item active' : 'tool-item'}
+            onClick={goPreview}
+            disabled={!canPreview || stage === 'building'}
+            aria-current={journeyPhase === 'preview' ? 'step' : undefined}
+          >
+            <Monitor aria-hidden="true" /><b>Preview</b>
+          </button>
+        </nav>
+        <div className="header-meta">
+          <i className="header-live-dot" aria-hidden="true" />
+          <span>CLT catalogue lab</span>
+          <button
+            className="theme-toggle"
+            type="button"
+            onClick={() => setTheme((c) => (c === 'dark' ? 'light' : 'dark'))}
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            aria-pressed={theme === 'light'}
+          >
+            <span className="theme-toggle-track" aria-hidden="true"><Sun /><Moon /><i /></span>
+          </button>
+        </div>
+      </header>
+
+      <main id="main" className={`stage stage-${stage}`}>
+        {catalogError && <p className="mock-ribbon" role="alert"><AlertTriangle aria-hidden="true" /> {catalogError}</p>}
+
+        {stage === 'welcome' && <Welcome onContinue={() => setStage('intake')} />}
+
+        {stage === 'intake' && (
+          <IntakeScreen intake={intake} setIntake={setIntake} scanning={scanning} industries={industries} onSubmit={analyzeCompany} onBack={() => setStage('welcome')} scanMessage={scanMessage} />
+        )}
+
+        {stage === 'confirm' && profile && (
+          <ConfirmScreen
+            profile={profile}
+            industry={industry}
+            industryLabel={industryLabel}
+            initials={initials}
+            scanMessage={scanMessage}
+            industries={industries}
+            recommendations={activeRecs}
+            selectedRec={selectedRec}
+            onSelectClt={setSelectedCltApiName}
+            onIndustry={(value) => {
+              setIntake((c) => ({ ...c, industry: value }));
+              setProfile((c) => (c ? { ...c, industryKey: value } : c));
+            }}
+            onBack={() => setStage('intake')}
+            onContinue={buildExperience}
+          />
+        )}
+
+        {stage === 'building' && profile && selectedRec && (
+          <BuildingScreen profile={profile} buildStep={buildStep} industryLabel={industryLabel} initials={initials} selectedRec={selectedRec} />
+        )}
+
+        {stage === 'preview' && profile && selectedRec && (
+          <PreviewScreen
+            profile={profile}
+            initials={initials}
+            industryLabel={industryLabel}
+            selectedRec={selectedRec}
+            savedName={savedName}
+            headingRef={previewHeading}
+            onBack={() => setStage('confirm')}
+            onRestart={restart}
+          />
+        )}
+      </main>
+    </div>
+  );
+}
+
+function Welcome({ onContinue }: { onContinue: () => void }) {
+  return (
+    <div className="welcome-layout">
+      <section className="welcome-copy" aria-labelledby="welcome-title">
+        <h1 id="welcome-title">Design &amp; deploy custom Agentforce interfaces</h1>
+        <p className="welcome-lede">Get hands-on designing custom Agentforce interfaces that match your industry. Learn how to bring your agent to life with a branded, personalized experience for your customers.</p>
+        <button className="primary-action" type="button" onClick={onContinue}>Start designing <ArrowRight aria-hidden="true" /></button>
+        <div className="welcome-proof" aria-label="What you'll do">
+          <span><Sparkles aria-hidden="true" /> A personalized plan</span>
+          <span><Layers3 aria-hidden="true" /> An interactive CLT playground</span>
+          <span><Monitor aria-hidden="true" /> A live agent preview</span>
+        </div>
+      </section>
+      <BuildRibbon mode="welcome" />
+    </div>
+  );
+}
+
+/**
+ * The branded visual panel on the welcome + intake screens: the Agentforce logo at
+ * center, orbited by floating Custom Lightning Type example cards (service picker,
+ * appointment booking, product cards, support routing) that hint at what the agent
+ * will render. Pointer movement gives it a subtle parallax tilt, and a seamless
+ * animated agentic wave flows behind the core.
+ */
+function BuildRibbon({ mode }: { mode: 'welcome' | 'intake' }) {
+  const orbitRef = useRef<HTMLDivElement>(null);
+  function moveOrbit(event: React.PointerEvent<HTMLElement>) {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const x = Math.max(-1, Math.min(1, ((event.clientX - bounds.left) / bounds.width - 0.5) * 2));
+    const y = Math.max(-1, Math.min(1, ((event.clientY - bounds.top) / bounds.height - 0.5) * 2));
+    const s = orbitRef.current?.style;
+    if (!s) return;
+    s.setProperty('--tilt-x', `${(-y * 2.6).toFixed(2)}deg`);
+    s.setProperty('--tilt-y', `${(x * 3.4).toFixed(2)}deg`);
+    s.setProperty('--agent-x', `${(-x * 10).toFixed(1)}px`);
+    s.setProperty('--agent-y', `${(-y * 8).toFixed(1)}px`);
+    s.setProperty('--near-x', `${(x * 24).toFixed(1)}px`);
+    s.setProperty('--near-y', `${(y * 18).toFixed(1)}px`);
+    s.setProperty('--mid-x', `${(x * 15).toFixed(1)}px`);
+    s.setProperty('--mid-y', `${(y * 11).toFixed(1)}px`);
+    s.setProperty('--far-x', `${(x * 7).toFixed(1)}px`);
+    s.setProperty('--far-y', `${(y * 5).toFixed(1)}px`);
+    s.setProperty('--spot-x', `${((x + 1) * 50).toFixed(1)}%`);
+    s.setProperty('--spot-y', `${((y + 1) * 50).toFixed(1)}%`);
+  }
+  function resetOrbit() {
+    const s = orbitRef.current?.style;
+    if (!s) return;
+    ['--tilt-x', '--tilt-y'].forEach((p) => s.setProperty(p, '0deg'));
+    ['--agent-x', '--agent-y', '--near-x', '--near-y', '--mid-x', '--mid-y', '--far-x', '--far-y'].forEach((p) => s.setProperty(p, '0px'));
+    s.setProperty('--spot-x', '50%');
+    s.setProperty('--spot-y', '48%');
+  }
+  return (
+    <aside className={`build-ribbon ribbon-${mode}`} aria-label="Experience overview" onPointerMove={moveOrbit} onPointerLeave={resetOrbit}>
+      <div className="experience-field" aria-hidden="true" ref={orbitRef}>
+        <div className="field-grid" />
+
+        <article className="field-card field-services">
+          <header><HeartPulse /><span><strong>Choose a service</strong><small>Matched to your business</small></span></header>
+          <div className="field-choice selected"><span><i>01</i>Medical care</span><Check /></div>
+          <div className="field-choice"><span><i>02</i>Wellness consult</span><ChevronRight /></div>
+        </article>
+
+        <article className="field-card field-appointment">
+          <header><CalendarDays /><span><strong>Book a consultation</strong><small>Live availability</small></span></header>
+          <div className="field-slot selected"><span><strong>Tomorrow</strong><small>Aug 14</small></span><b>10:30 AM</b><Check /></div>
+          <div className="field-slot"><span><strong>Thursday</strong><small>Aug 15</small></span><b>1:00 PM</b><i /></div>
+          <span className="field-continue">Continue <ArrowRight /></span>
+        </article>
+
+        <article className="field-card field-products">
+          <header><ShoppingBag /><span><strong>Recommended for you</strong><small>Personalized collection</small></span></header>
+          <div className="field-products-grid">
+            <span><i /><strong>Everyday carry</strong><small>$48</small></span>
+            <span><i /><strong>Travel edit</strong><small>$72</small></span>
+          </div>
+        </article>
+
+        <article className="field-card field-support">
+          <header><LifeBuoy /><span><strong>Support request</strong><small>Specialist routing</small></span></header>
+          <div className="field-status"><span><CheckCircle2 /></span><p><strong>Case understood</strong><small>Billing specialist joined</small></p></div>
+        </article>
+
+        <div className="field-payload"><Code2 /><span><strong>CLT payload ready</strong><small>4 surfaces mapped</small></span><i /></div>
+
+        <div className="field-agent-core">
+          <span className="field-agent-halo" />
+          <img src={agentforceLogo} alt="" />
+          <div className="agent-composing"><Sparkles /><span><strong>Agentforce</strong><small>Composing your experience<i className="composing-dots"><b /><b /><b /></i></small></span></div>
+        </div>
+        <div className="field-vignette" />
+      </div>
+    </aside>
+  );
+}
+
+function IntakeScreen({
+  intake,
+  setIntake,
+  scanning,
+  industries,
+  onSubmit,
+  onBack,
+  scanMessage,
+}: {
+  intake: Intake;
+  setIntake: React.Dispatch<React.SetStateAction<Intake>>;
+  scanning: boolean;
+  industries: IndustryOption[];
+  onSubmit: (event: FormEvent) => void;
+  onBack: () => void;
+  scanMessage: string;
+}) {
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(intake.email.trim());
+  const valid =
+    intake.firstName.trim().length > 0 &&
+    intake.lastName.trim().length > 0 &&
+    emailValid &&
+    intake.companyName.trim().length > 1 &&
+    intake.website.trim().length > 3;
+  return (
+    <div className="content-shell intake-layout">
+      <section className="form-section" aria-labelledby="intake-title">
+        <button className="back-action" type="button" onClick={onBack}><ArrowLeft aria-hidden="true" /> Back</button>
+        <div className="section-number">01</div>
+        <h1 id="intake-title">Tell us about your company.</h1>
+        <p>We'll use these details to generate a personalized plan, tailor an interactive CLT playground to your industry, and preview a branded agent experience for your customers.</p>
+        {scanMessage && <div className="fallback-notice" role="status">{scanMessage}</div>}
+        <form onSubmit={onSubmit} className="company-form">
+          <div className="field-row">
+            <label>
+              First name
+              <input autoFocus value={intake.firstName} onChange={(e) => setIntake((c) => ({ ...c, firstName: e.target.value }))} placeholder="Alex" autoComplete="given-name" />
+            </label>
+            <label>
+              Last name
+              <input value={intake.lastName} onChange={(e) => setIntake((c) => ({ ...c, lastName: e.target.value }))} placeholder="Rivera" autoComplete="family-name" />
+            </label>
+          </div>
+          <label>
+            Work email
+            <input type="email" value={intake.email} onChange={(e) => setIntake((c) => ({ ...c, email: e.target.value }))} placeholder="alex@example.com" inputMode="email" autoComplete="email" />
+          </label>
+          <label>
+            Company name
+            <input value={intake.companyName} onChange={(e) => setIntake((c) => ({ ...c, companyName: e.target.value }))} placeholder="Northern Trail Outfitters" autoComplete="organization" />
+          </label>
+          <label>
+            Company website
+            <span className="input-with-icon">
+              <Globe2 aria-hidden="true" />
+              <input value={intake.website} onChange={(e) => setIntake((c) => ({ ...c, website: e.target.value }))} onBlur={(e) => setIntake((c) => ({ ...c, website: normalizeWebsiteInput(e.target.value) }))} placeholder="example.com" inputMode="url" autoComplete="url" />
+            </span>
+          </label>
+          <label>
+            Industry <span className="optional-label">Optional</span>
+            <select value={intake.industry} onChange={(e) => setIntake((c) => ({ ...c, industry: e.target.value }))}>
+              <option value="">Let Agentforce infer it</option>
+              {industries.map((i) => <option value={i.key} key={i.key}>{i.label}</option>)}
+            </select>
+          </label>
+          <button className="primary-action submit-action" type="submit" disabled={!valid || scanning}>
+            {scanning ? <><LoaderCircle className="spin" aria-hidden="true" /> Reading website</> : <>Continue <ArrowRight aria-hidden="true" /></>}
+          </button>
+        </form>
+      </section>
+      <BuildRibbon mode="intake" />
+    </div>
+  );
+}
+
+function ConfirmScreen({
+  profile,
+  industry,
+  industryLabel,
+  initials,
+  scanMessage,
+  industries,
+  recommendations,
+  selectedRec,
+  onSelectClt,
+  onIndustry,
+  onBack,
+  onContinue,
+}: {
+  profile: CompanyProfile;
+  industry: string;
+  industryLabel: string;
+  initials: string;
+  scanMessage: string;
+  industries: IndustryOption[];
+  recommendations: Recommendation[];
+  selectedRec: Recommendation | null;
+  onSelectClt: (apiName: string) => void;
+  onIndustry: (key: string) => void;
+  onBack: () => void;
+  onContinue: () => void;
+}) {
+  const succeeded = profile.source === 'website';
+  return (
+    <div className="content-shell confirm-layout">
+      <button className="back-action" type="button" onClick={onBack}><ArrowLeft aria-hidden="true" /> Back</button>
+      <section className="confirm-copy" aria-labelledby="confirm-title">
+        <div className="confirm-intro">
+          <div className="section-number">02 · {succeeded ? 'PROFILE READY' : 'STARTER PROFILE READY'}</div>
+          <h1 id="confirm-title">Here's your personalized starting point.</h1>
+          <p>{succeeded ? 'We read your public website to tailor the plan below and recommend interactive experiences for your industry.' : 'We prepared an industry-aware plan and recommendations you can tailor before you preview them.'}</p>
+          {scanMessage && <div className="fallback-notice" role="status">{scanMessage}</div>}
+          <div className="extraction-proof">
+            <span><ShieldCheck aria-hidden="true" /> {succeeded ? 'Public website verified' : 'Industry fallback active'}</span>
+            <span><Sparkles aria-hidden="true" /> {profile.signals.length} {succeeded ? 'brand signals mapped' : 'starter signals prepared'}</span>
+          </div>
+        </div>
+
+        <div className="profile-card" style={{ '--profile-accent': profile.accentColor } as React.CSSProperties}>
+          <div className="profile-light" aria-hidden="true" />
+          <div className="profile-card-top">
+            <CompanyMark profile={profile} initials={initials} />
+            <span className="source-label"><i /> {succeeded ? 'Live website profile' : 'Starter profile'}</span>
+          </div>
+          <div className="profile-main">
+            <div className="profile-heading">
+              <div>
+                <h2>{profile.companyName}</h2>
+                <a href={profile.website} target="_blank" rel="noreferrer">{hostnameOf(profile.website)} <ExternalLink aria-hidden="true" /></a>
+              </div>
+            </div>
+            <p>{profile.summary}</p>
+            <div className="signal-list" aria-label="Extracted signals">
+              {profile.signals.map((signal) => <span key={signal}><Check aria-hidden="true" /> {signal}</span>)}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <PlanBand plan={profile.plan} companyName={profile.companyName} succeeded={succeeded} />
+
+      <section className="experience-configurator" aria-label="Experience starting point">
+        <div className="configurator-heading">
+          <div><strong>Choose the service lens</strong><span>Agentforce inferred {industryLabel}; adjust it if needed.</span></div>
+          <span className="liquid-switch"><i /> AI selected</span>
+        </div>
+        <fieldset className="industry-fieldset">
+          <legend className="sr-only">Experience starting point</legend>
+          <div className="industry-options elastic-industry-toolbar">
+            {industries.map((option) => {
+              const Icon = industryIcon(option.key);
+              const selected = industry === option.key;
+              return (
+                <button type="button" className={selected ? 'industry-option selected' : 'industry-option'} key={option.key} onClick={() => onIndustry(option.key)} aria-pressed={selected}>
+                  <Icon aria-hidden="true" /><span>{option.label}</span>{selected && <CheckCircle2 aria-hidden="true" />}
+                </button>
+              );
+            })}
+          </div>
+        </fieldset>
+
+        <div className="template-picker">
+          <span>{industryLabel} experiences — try any of them</span>
+          {recommendations.length === 0 ? (
+            <div className="template-empty" role="status">
+              <PackageSearch aria-hidden="true" />
+              <p><strong>No experiences catalogued yet.</strong><small>The catalogue set is coming soon.</small></p>
+            </div>
+          ) : (
+            <>
+              <div className="template-options">
+                {recommendations.map((rec) => {
+                  const Icon = capabilityIcon(rec.capabilityKey);
+                  const selected = selectedRec?.cltApiName === rec.cltApiName;
+                  return (
+                    <button type="button" className={selected ? 'template-option selected' : 'template-option'} onClick={() => onSelectClt(rec.cltApiName)} aria-pressed={selected} key={rec.cltApiName}>
+                      <Icon aria-hidden="true" />
+                      <span><strong>{rec.label}</strong><small>{rec.description}</small></span>
+                      <i>{selected && <Check aria-hidden="true" />}</i>
+                    </button>
+                  );
+                })}
+              </div>
+              {selectedRec && <CltPlayground key={selectedRec.cltApiName} recommendation={selectedRec} accentColor={profile.accentColor} />}
+            </>
+          )}
+        </div>
+
+        <div className="configurator-footer">
+          <div className="selection-summary">
+            {selectedRec && (() => { const Icon = capabilityIcon(selectedRec.capabilityKey); return <Icon aria-hidden="true" />; })()}
+            <span><strong>{selectedRec?.label ?? 'Experience'}</strong><small>Interactive UI · personalized content · live in Agentforce</small></span>
+          </div>
+          <button className="primary-action" type="button" onClick={onContinue}>Build the experience <ArrowRight aria-hidden="true" /></button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+/** Always-present links to the core Custom Lightning Type documentation. */
+const CLT_RESOURCES = [
+  { label: 'Core concepts', href: 'https://developer.salesforce.com/docs/platform/lightning-types/guide/lightning-types-core.html' },
+  { label: 'Get started', href: 'https://developer.salesforce.com/docs/platform/lightning-types/guide/lightning-types.html' },
+  { label: 'UI configuration', href: 'https://developer.salesforce.com/docs/platform/lightning-types/guide/lightning-types-ui-config.html' },
+  { label: 'Apex-based types', href: 'https://developer.salesforce.com/docs/platform/lightning-types/guide/lightning-types-apex.html' },
+];
+
+/**
+ * The guided consultation plan — a full-width band a Salesforce employee walks the
+ * customer through. Each section carries curated CLT/adoption content (always present),
+ * plus an AI-enriched paragraph specific to the company when the website scan succeeded.
+ * Sections are accordions so the plan can be scanned and collapsed. Resource pills to the
+ * core CLT docs are always shown. The server always returns the full curated spine, so
+ * this never renders empty.
+ */
+function PlanBand({
+  plan,
+  companyName,
+  succeeded,
+}: {
+  plan: PlanSection[];
+  companyName: string;
+  succeeded: boolean;
+}) {
+  // First section open by default; the rest collapsed for scannability.
+  const [open, setOpen] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries((plan ?? []).map((s, i) => [s.key, i === 0]))
+  );
+  if (!plan?.length) return null;
+  const enrichedCount = plan.filter((s) => s.personalized).length;
+  const allOpen = plan.every((s) => open[s.key]);
+  const toggle = (key: string) => setOpen((o) => ({ ...o, [key]: !o[key] }));
+  const setAll = (value: boolean) => setOpen(Object.fromEntries(plan.map((s) => [s.key, value])));
+
+  return (
+    <section className="plan-band" aria-labelledby="plan-band-title">
+      <div className="plan-band-heading">
+        <img className="plan-hero-icon" src={agentforceLogo} alt="" aria-hidden="true" />
+        <div className="plan-band-copy">
+          <span className="plan-kicker"><img src={storySparkle} alt="" aria-hidden="true" /> Agentic plan</span>
+          <h2 id="plan-band-title">Walking {companyName} through interactive service experiences</h2>
+          <p>
+            {succeeded
+              ? enrichedCount > 0
+                ? `A guided walkthrough of Custom Lightning Types — personalized with ${enrichedCount} insight${enrichedCount === 1 ? '' : 's'} from your website.`
+                : 'A guided walkthrough of Custom Lightning Types and why they drive AI service-agent adoption.'
+              : 'A guided walkthrough of Custom Lightning Types and why they drive AI service-agent adoption.'}
+          </p>
+          <button type="button" className="plan-expand-all" onClick={() => setAll(!allOpen)}>
+            {allOpen ? 'Collapse all' : 'Expand all'}
+          </button>
+        </div>
+      </div>
+
+      <TextVsCltContrast />
+
+      <ol className="plan-sections">
+        {plan.map((section, index) => {
+          const isOpen = !!open[section.key];
+          const panelId = `plan-panel-${section.key}`;
+          return (
+            <li className={`plan-section ${isOpen ? 'open' : ''}`} key={section.key}>
+              <button
+                type="button"
+                className="plan-section-head"
+                onClick={() => toggle(section.key)}
+                aria-expanded={isOpen}
+                aria-controls={panelId}
+              >
+                <span className="plan-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                <h3>{section.title}</h3>
+                {section.personalized && <span className="plan-enriched-dot" title="Personalized from your website"><Sparkles aria-hidden="true" /></span>}
+                <ChevronDown className="plan-chevron" aria-hidden="true" />
+              </button>
+              {isOpen && (
+                <div className="plan-section-body" id={panelId}>
+                  <p className="plan-section-copy">{section.body}</p>
+                  {section.personalized && (
+                    <div className="plan-personalized">
+                      <span className="plan-personalized-tag"><Sparkles aria-hidden="true" /> For {companyName}</span>
+                      <p>{section.personalized}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+
+      <div className="plan-resources" aria-label="Custom Lightning Type resources">
+        <span className="plan-resources-label">Learn more</span>
+        {CLT_RESOURCES.map((r) => (
+          <a className="plan-resource-pill" href={r.href} target="_blank" rel="noreferrer" key={r.href}>
+            {r.label} <ExternalLink aria-hidden="true" />
+          </a>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/** A compact side-by-side: a plain-text agent reply vs. the same answer as an interactive CLT. */
+function TextVsCltContrast() {
+  return (
+    <div className="plan-contrast" aria-label="Plain text versus Custom Lightning Type">
+      <div className="contrast-card contrast-text">
+        <span className="contrast-tag">Typical agent · plain text</span>
+        <div className="contrast-bubble">
+          <p>Here are three appointment times: Tuesday 9:00 AM, Tuesday 2:00 PM, or Wednesday 11:00 AM. Please reply with the one you'd like and I'll book it.</p>
+        </div>
+        <small>The customer has to read, decide, and retype.</small>
+      </div>
+      <div className="contrast-arrow" aria-hidden="true"><ArrowRight /></div>
+      <div className="contrast-card contrast-clt">
+        <span className="contrast-tag"><Sparkles aria-hidden="true" /> With a Custom Lightning Type</span>
+        <div className="contrast-bubble">
+          <div className="contrast-slots">
+            <button type="button" disabled>Tue 9:00 AM</button>
+            <button type="button" className="chosen" disabled>Tue 2:00 PM</button>
+            <button type="button" disabled>Wed 11:00 AM</button>
+          </div>
+        </div>
+        <small>One tap. The choice flows straight back to the agent.</small>
+      </div>
+    </div>
+  );
+}
+
+function BuildingScreen({
+  profile,
+  buildStep,
+  industryLabel,
+  initials,
+  selectedRec,
+}: {
+  profile: CompanyProfile;
+  buildStep: number;
+  industryLabel: string;
+  initials: string;
+  selectedRec: Recommendation;
+}) {
+  const progress = Math.round(((buildStep + 1) / BUILD_STEPS.length) * 100);
+  const ActiveIcon = BUILD_STEPS[buildStep].icon;
+  const CltIcon = capabilityIcon(selectedRec.capabilityKey);
+  const detail = BUILD_STEPS[buildStep].detail;
+  return (
+    <div className="build-stage" aria-live="polite">
+      <section className="build-heading">
+        <div className="company-chip"><CompanyMark profile={profile} initials={initials} compact /> <span>{profile.companyName}</span></div>
+        <h1>Agentforce is assembling your service experience.</h1>
+        <p>{detail}</p>
+      </section>
+      <div className="build-canvas">
+        <div className="build-orchestrator">
+          <div className="orchestrator-topline"><span>Agent build</span><strong>{progress}%</strong></div>
+          <div className="build-current-card">
+            <div className="current-step-visual"><span className="current-step-orbit" /><ActiveIcon aria-hidden="true" /></div>
+            <span>Step {buildStep + 1} of {BUILD_STEPS.length}</span>
+            <h2>{BUILD_STEPS[buildStep].title}</h2>
+            <p>{detail}</p>
+            <div className="scan-lines" aria-hidden="true"><i /><i /><i /></div>
+          </div>
+          <div className="elastic-build-dock" aria-label={`Build step ${buildStep + 1} of ${BUILD_STEPS.length}`}>
+            {BUILD_STEPS.map((step, index) => {
+              const Icon = step.icon;
+              const state = index < buildStep ? 'complete' : index === buildStep ? 'active' : 'pending';
+              return <span className={`dock-tool ${state}`} title={step.title} key={step.title}>{state === 'complete' ? <Check aria-hidden="true" /> : <Icon aria-hidden="true" />}</span>;
+            })}
+          </div>
+          <div className="orchestrator-status"><i /><span>{buildStep < BUILD_STEPS.length - 1 ? 'Working in the background' : 'Final checks in progress'}</span><b>{BUILD_STEPS.length - buildStep - 1} remaining</b></div>
+        </div>
+        <div className="assembly-visual">
+          <div className="assembly-grid" aria-hidden="true" />
+          <div className="assembly-live-label"><i /> Agentforce build runtime</div>
+          <div className="assembly-diagram" aria-hidden="true">
+            <div className={`assembly-card website-piece ${buildStep >= 0 ? 'online' : ''}`}><Globe2 /><span>{hostnameOf(profile.website)}</span></div>
+            <div className="assembly-line"><i /></div>
+            <div className={`assembly-agent ${buildStep >= 2 ? 'online' : ''}`}>
+              <span className="agent-halo" /><img src={agentforceLogo} alt="" />
+              <div><strong>Service Agent</strong><span>{industryLabel} specialist</span></div>
+            </div>
+            <div className="assembly-line"><i /></div>
+            <div className={`assembly-card clt-piece ${buildStep >= 3 ? 'online' : ''}`}><CltIcon /><span>{selectedRec.label}</span></div>
+          </div>
+          <div className="build-console" aria-live="polite">
+            <div><span>BUILD LOG</span><span>secure session</span></div>
+            {BUILD_STEPS.slice(0, buildStep + 1).map((step, index) => (
+              <p key={step.title} className={index === buildStep ? 'current' : ''}>
+                <CheckCircle2 aria-hidden="true" /><time>{String(index + 1).padStart(2, '0')}:0{index + 2}</time>{step.title}
+              </p>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function PreviewScreen({
+  profile,
+  initials,
+  industryLabel,
+  selectedRec,
+  savedName,
+  headingRef,
+  onBack,
+  onRestart,
+}: {
+  profile: CompanyProfile;
+  initials: string;
+  industryLabel: string;
+  selectedRec: Recommendation;
+  savedName: string | null;
+  headingRef: React.RefObject<HTMLHeadingElement | null>;
+  onBack: () => void;
+  onRestart: () => void;
+}) {
+  const [previewMode, setPreviewMode] = useState<'experience' | 'code'>('experience');
+  const CltIcon = capabilityIcon(selectedRec.capabilityKey);
+  return (
+    <div className="preview-stage">
+      <button className="back-action" type="button" onClick={onBack}><ArrowLeft aria-hidden="true" /> Back to experiences</button>
+      <div className="preview-topbar">
+        <div>
+          <p className="preview-kicker"><CheckCircle2 aria-hidden="true" /> Experience ready</p>
+          <h1 ref={headingRef} tabIndex={-1}>{profile.companyName} Service Agent</h1>
+        </div>
+        <div className="preview-actions">
+          <div className="preview-mode-switch" role="group" aria-label="Preview mode">
+            <button type="button" className={previewMode === 'experience' ? 'active' : ''} onClick={() => setPreviewMode('experience')}><Monitor aria-hidden="true" /> Experience</button>
+            <button type="button" className={previewMode === 'code' ? 'active' : ''} onClick={() => setPreviewMode('code')}><Code2 aria-hidden="true" /> CLT source</button>
+          </div>
+          <button className="secondary-action" type="button" onClick={onRestart}><RotateCcw aria-hidden="true" /> Start over</button>
+        </div>
+      </div>
+
+      <div className="preview-workspace">
+        <aside className="experience-blueprint" aria-label="Experience blueprint">
+          <div className="blueprint-head">
+            <CompanyMark profile={profile} initials={initials} />
+            <div className="blueprint-company"><strong>{profile.companyName}</strong><span>{industryLabel}</span></div>
+          </div>
+          <div className="blueprint-facts">
+            <div className="blueprint-fact">
+              <span className="blueprint-fact-icon"><CltIcon aria-hidden="true" /></span>
+              <div><dt>Experience</dt><dd>{selectedRec.label}</dd></div>
+            </div>
+            <div className="blueprint-fact">
+              <span className="blueprint-fact-icon"><Layers3 aria-hidden="true" /></span>
+              <div><dt>Capability</dt><dd>{selectedRec.capabilityKey}</dd></div>
+            </div>
+            <div className="blueprint-fact">
+              <span className="blueprint-fact-icon"><Code2 aria-hidden="true" /></span>
+              <div><dt>Custom Lightning Type</dt><dd className="blueprint-mono">c__{selectedRec.cltApiName}</dd></div>
+            </div>
+            <div className="blueprint-fact">
+              <span className="blueprint-fact-icon"><ShieldCheck aria-hidden="true" /></span>
+              <div><dt>Personalization</dt><dd>{profile.source === 'website' ? 'Website profile' : 'Industry starter'}</dd></div>
+            </div>
+            <div className="blueprint-fact">
+              <span className="blueprint-fact-icon"><Workflow aria-hidden="true" /></span>
+              <div><dt>Consultation</dt><dd className="blueprint-mono">{savedName ?? 'Not saved'}</dd></div>
+            </div>
+          </div>
+          <p className="blueprint-note"><Sparkles aria-hidden="true" /> One CLT payload drives every client — switch channel tabs to see it render in each.</p>
+        </aside>
+
+        {previewMode === 'code' ? (
+          <CltCodeInspector recommendation={selectedRec} profile={profile} industryLabel={industryLabel} />
+        ) : (
+          <ChannelViewer recommendation={selectedRec} profile={profile} />
+        )}
+      </div>
+    </div>
+  );
+}
+
+function CltCodeInspector({
+  recommendation,
+  profile,
+  industryLabel,
+}: {
+  recommendation: Recommendation;
+  profile: CompanyProfile;
+  industryLabel: string;
+}) {
+  const [activeFile, setActiveFile] = useState<'schema' | 'renderer' | 'payload'>('schema');
+  const [copied, setCopied] = useState(false);
+
+  const schema = JSON.stringify({ title: recommendation.label, description: recommendation.description, 'lightning:type': `@apexClassType/c__${cltDtoClass(recommendation)}` }, null, 2);
+  const renderer = JSON.stringify({ renderer: { componentOverrides: { $: { definition: `c/${recommendation.cltApiName}` } } } }, null, 2);
+  const payload = JSON.stringify({ [recommendation.dtoFieldName]: recommendation.defaultPayloadJson, companyName: profile.companyName, industryLabel, accentColor: profile.accentColor }, null, 2);
+
+  const files = {
+    schema: { name: `lightningTypes/${recommendation.cltApiName}/schema.json`, content: schema, tag: 'deployed' },
+    renderer: { name: `lightningTypes/${recommendation.cltApiName}/lightningDesktopGenAi/renderer.json`, content: renderer, tag: 'deployed' },
+    payload: { name: `${recommendation.dtoFieldName} (this consultation)`, content: payload, tag: 'live values' },
+  };
+  const current = files[activeFile];
+
+  async function copyCode() {
+    await navigator.clipboard.writeText(current.content);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1200);
+  }
+
+  return (
+    <section className="clt-code-inspector" aria-label="Deployed Custom Lightning Type source">
+      <div className="code-inspector-header">
+        <div><Code2 aria-hidden="true" /><span><strong>Deployed Custom Lightning Type</strong><small>{recommendation.cltApiName} · {recommendation.capabilityKey}</small></span></div>
+        <button type="button" onClick={copyCode}>{copied ? <Check aria-hidden="true" /> : <Code2 aria-hidden="true" />} {copied ? 'Copied' : 'Copy'}</button>
+      </div>
+      <div className="code-inspector-body">
+        <nav className="code-file-list" aria-label="Deployed files">
+          {(Object.keys(files) as Array<keyof typeof files>).map((key) => (
+            <button type="button" className={activeFile === key ? 'active' : ''} onClick={() => setActiveFile(key)} key={key}><Code2 aria-hidden="true" /><span>{files[key].name}</span></button>
+          ))}
+          <div className="bundle-facts">
+            <span>Renderer</span><strong>c/{recommendation.cltApiName}</strong>
+            <span>DTO field</span><strong>{recommendation.dtoFieldName}</strong>
+            <span>Data source</span><strong>Catalogue default</strong>
+          </div>
+        </nav>
+        <div className="code-editor">
+          <div className="code-editor-tab"><span>{current.name}</span><i>{current.tag}</i></div>
+          <pre>{current.content.split('\n').map((line, index) => <code key={`${activeFile}-${index}`}><span>{index + 1}</span>{line || ' '}</code>)}</pre>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/** The DTO Apex class backing a CLT, derived from its DTO field name. */
+function cltDtoClass(rec: Recommendation): string {
+  switch (rec.dtoFieldName) {
+    case 'finServMoneyMovementJSON':
+      return 'AsaFinServMoneyMovementData';
+    case 'finServAdvisorMeetingJSON':
+      return 'AsaFinServAdvisorMeetingData';
+    case 'finServTransactionsJSON':
+      return 'AsaFinServTransactionsData';
+    case 'healthcareApptSchedulerJSON':
+      return 'AsaHealthcareApptSchedulerData';
+    case 'healthcareFindCareJSON':
+      return 'AsaHealthcareFindCareData';
+    case 'healthcareCareOptionsJSON':
+      return 'AsaHealthcareCareOptionsData';
+    case 'healthcareRxRefillJSON':
+      return 'AsaHealthcareRxRefillData';
+    default:
+      return 'AsaFinServAccountSelectorData';
+  }
+}

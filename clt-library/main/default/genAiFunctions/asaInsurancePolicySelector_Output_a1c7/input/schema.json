@@ -1,0 +1,16 @@
+{
+  "required": [
+    "Details"
+  ],
+  "unevaluatedProperties": false,
+  "properties": {
+    "Details": {
+      "title": "Details",
+      "description": "The full policy-selector payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Which policy can I help you with?\",\"mode\":\"single\",\"policies\":[{\"id\":\"pol-8842\",\"name\":\"Auto — 2022 Tesla Model 3\",\"type\":\"Auto\",\"policyNumber\":\"8842\",\"premium\":142.50,\"cadence\":\"monthly\",\"currency\":\"USD\",\"renewalDate\":\"2026-11-01\",\"status\":\"Active\",\"coverage\":\"Collision + Comprehensive · $500 deductible\",\"badge\":\"Primary\"},{\"id\":\"pol-3391\",\"name\":\"Homeowners — 14 Elm St\",\"type\":\"Home\",\"policyNumber\":\"3391\",\"premium\":1820.00,\"cadence\":\"annual\",\"currency\":\"USD\",\"renewalDate\":\"2027-02-15\",\"status\":\"Active\",\"coverage\":\"Dwelling $420k · $1,000 deductible\"},{\"id\":\"pol-5567\",\"name\":\"Term Life — 20yr\",\"type\":\"Life\",\"policyNumber\":\"5567\",\"premium\":48.00,\"cadence\":\"monthly\",\"currency\":\"USD\",\"renewalDate\":\"2038-06-01\",\"status\":\"Active\",\"coverage\":\"$500,000 benefit\"}],\"submitText\":\"Continue\"}\n\nRules:\n- 'title' (string, optional): the prompt shown above the list.\n- 'mode' (string, required): 'single' or 'multiple'. Use 'single' when the customer should pick exactly one policy (the card sends the choice immediately on click). Use 'multiple' when they may pick several (a submit button appears).\n- 'policies' (array, REQUIRED, at least one object): each policy MUST have 'id' (string, unique, sent back on selection), 'name' (string, the plain-language policy name), 'type' (string; one of 'Auto','Home','Renters','Life','Health','Umbrella','Pet','Travel' — drives the card icon), and 'status' (string; one of 'Active','Pending','Lapsed','Cancelled'). Optional per policy: 'policyNumber' (string, shown masked as the last characters of the policy number), 'premium' (number, the recurring premium amount), 'cadence' (string such as 'monthly','annual','6-month' — how often the premium is billed), 'currency' (ISO code string, defaults to 'USD'), 'renewalDate' (string, ISO yyyy-mm-dd), 'coverage' (short string summarising limits/deductible), 'badge' (short string tag such as 'Primary').\n- 'submitText' (string, optional): button label used only in 'multiple' mode; defaults to 'Continue'.\n\nNever emit an empty 'policies' array. Use the customer's real policies from context; if none are known, ask the customer rather than inventing policy numbers. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type": "lightning__textType",
+      "lightning:isPII": false,
+      "copilotAction:isUserInput": false
+    }
+  },
+  "lightning:type": "lightning__objectType"
+}

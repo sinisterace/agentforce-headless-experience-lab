@@ -1,0 +1,16 @@
+{
+  "required": [
+    "Details"
+  ],
+  "unevaluatedProperties": false,
+  "properties": {
+    "Details": {
+      "title": "Details",
+      "description": "The full prescription-refill payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Refill prescriptions\",\"subtitle\":\"Select the medications to refill\",\"medications\":[{\"id\":\"m1\",\"name\":\"Atorvastatin\",\"dosage\":\"20 mg tablet\",\"supplyText\":\"3 days left\",\"status\":\"low\",\"refillsLeft\":2},{\"id\":\"m2\",\"name\":\"Lisinopril\",\"dosage\":\"10 mg tablet\",\"supplyText\":\"In stock\",\"status\":\"ok\",\"refillsLeft\":5},{\"id\":\"m3\",\"name\":\"Metformin\",\"dosage\":\"500 mg tablet\",\"supplyText\":\"No refills left\",\"status\":\"out\",\"refillsLeft\":0}],\"pharmacy\":{\"name\":\"Walgreens · Market St\",\"address\":\"700 Market St\",\"hours\":\"Open until 10 PM\"},\"submitText\":\"Request refill\"}\n\nRules:\n- 'title' (string, optional): heading; defaults to 'Refill prescriptions'.\n- 'subtitle' (string, optional): a short line under the title.\n- 'medications' (array, REQUIRED, at least one object): the medications available to refill. Each MUST have 'id' (string, unique, sent back on selection) and 'name' (string). Optional per medication: 'dosage' (string, e.g. '20 mg tablet'); 'supplyText' (string, a short supply note e.g. '3 days left' or 'In stock'); 'status' (string; one of 'ok','low','out' — drives the supply pill color: ok=green, low=amber, out=red; defaults to 'ok'); 'refillsLeft' (integer). A medication with status 'out' is shown but NOT selectable (the customer must contact their provider to renew it).\n- 'pharmacy' (object, optional but recommended): the pickup pharmacy shown at the foot. 'name' (string), 'address' (string, optional), 'hours' (string, optional).\n- 'submitText' (string, optional): confirm-button label; defaults to 'Request refill'. The button shows the count of selected medications.\n\nKeep the medication list to what the customer is refilling now; do not include broader clinical history. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type": "lightning__textType",
+      "lightning:isPII": false,
+      "copilotAction:isUserInput": false
+    }
+  },
+  "lightning:type": "lightning__objectType"
+}

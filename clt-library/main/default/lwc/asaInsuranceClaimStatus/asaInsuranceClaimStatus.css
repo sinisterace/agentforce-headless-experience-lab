@@ -1,0 +1,310 @@
+/* ASA Insurance · Claim Status Tracker — each claim is a card with a horizontal
+   step tracker (Submitted → Review → Approved → Paid; Denied is terminal). The
+   status bucket colours the header pill + the left accent. rem units + inherited
+   font so it matches the host chat theme in Enhanced Chat v2. */
+:host {
+    --asa-accent: #0b5cab;
+    --asa-line: #e5e7eb;
+    --asa-ink: #101828;
+    --asa-negative: #c0392b;
+    --asa-credit: #1a7f4b;
+    --asa-warn: #b7791f;
+    --asa-muted: #667085;
+    --asa-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+    --asa-shadow-md: 0 8px 22px rgba(15, 23, 42, 0.12);
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    /* Enhanced Chat v2 renders this in a ~320px column; size the content to the
+       card, not the viewport, so it also reads well on wide desktop GenAi. */
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after {
+    box-sizing: border-box;
+}
+
+.asa-card-title {
+    margin: 0 0 0.7rem 0;
+    font-size: 1.05rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+.asa-cs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+/* Claim card — --cs carries the status hue for the accent strip + pill. */
+.asa-cs {
+    --cs: var(--asa-accent);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    width: 100%;
+    padding: 0.8rem 0.85rem 0.8rem 0.95rem;
+    border: 1px solid var(--asa-line);
+    border-radius: 14px;
+    background: #fff;
+    color: inherit;
+    cursor: pointer;
+    text-align: left;
+    overflow: hidden;
+    box-shadow: var(--asa-shadow-sm);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.06s ease;
+}
+.asa-cs::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: var(--cs);
+}
+.asa-cs:hover {
+    border-color: color-mix(in srgb, var(--cs) 45%, var(--asa-line));
+    box-shadow: var(--asa-shadow-md);
+    transform: translateY(-1px);
+}
+.asa-cs.is-submitted { --cs: var(--asa-accent); }
+.asa-cs.is-review { --cs: var(--asa-warn); }
+.asa-cs.is-approved { --cs: #2563eb; }
+.asa-cs.is-paid { --cs: var(--asa-credit); }
+.asa-cs.is-denied { --cs: var(--asa-negative); }
+
+.asa-cs-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+.asa-cs-id-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.14rem;
+    min-width: 0;
+    flex: 1;
+}
+.asa-cs-num {
+    font-weight: 680;
+    font-size: 0.94rem;
+    letter-spacing: -0.005em;
+    font-variant-numeric: tabular-nums;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-cs-meta-line {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    font-size: 0.76rem;
+    color: var(--asa-muted);
+}
+.asa-cs-type {
+    font-weight: 600;
+}
+.asa-cs-type::after {
+    content: "·";
+    margin-left: 0.4rem;
+    opacity: 0.6;
+}
+.asa-cs-policy {
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* Status pill */
+.asa-cs-status {
+    flex-shrink: 0;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    line-height: 1.5;
+    background: color-mix(in srgb, var(--cs) 14%, #fff);
+    color: var(--cs);
+}
+
+/* --- Horizontal step tracker --- */
+.asa-cs-track {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    padding: 0.15rem 0.1rem 0;
+}
+.asa-cs-step {
+    position: relative;
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+}
+/* connector bar — spans from the previous node's centre to this one's */
+.asa-cs-bar {
+    position: absolute;
+    top: 0.62rem;
+    right: 50%;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--asa-line);
+}
+.asa-cs-bar.is-done { background: var(--asa-credit); }
+.asa-cs-bar.is-current { background: linear-gradient(to right, var(--asa-credit), var(--cs)); }
+.asa-cs-bar.is-denied { background: var(--asa-negative); }
+
+.asa-cs-node {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.28rem;
+    min-width: 0;
+}
+.asa-cs-dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 999px;
+    background: #fff;
+    border: 2px solid var(--asa-line);
+    color: transparent;
+}
+.asa-cs-dot svg {
+    width: 0.72rem;
+    height: 0.72rem;
+}
+.asa-cs-dot.is-done {
+    background: var(--asa-credit);
+    border-color: var(--asa-credit);
+    color: #fff;
+}
+.asa-cs-dot.is-current {
+    border-color: var(--cs);
+    background: #fff;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--cs) 20%, transparent);
+}
+.asa-cs-dot.is-current::after {
+    content: "";
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--cs);
+}
+.asa-cs-dot.is-denied {
+    background: var(--asa-negative);
+    border-color: var(--asa-negative);
+    color: #fff;
+}
+
+.asa-cs-step-label {
+    font-size: 0.68rem;
+    line-height: 1.2;
+    text-align: center;
+    color: var(--asa-muted);
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-cs-step-label.is-done { color: var(--asa-ink); }
+.asa-cs-step-label.is-current { color: var(--cs); font-weight: 700; }
+.asa-cs-step-label.is-denied { color: var(--asa-negative); font-weight: 700; }
+
+/* Next-action callout */
+.asa-cs-next {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.45rem;
+    padding: 0.5rem 0.6rem;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--cs) 8%, #fff);
+    border: 1px solid color-mix(in srgb, var(--cs) 20%, var(--asa-line));
+}
+.asa-cs-next-ico {
+    display: inline-flex;
+    flex-shrink: 0;
+    color: var(--cs);
+    margin-top: 0.05rem;
+}
+.asa-cs-next-ico svg {
+    width: 0.95rem;
+    height: 0.95rem;
+}
+.asa-cs-next-text {
+    font-size: 0.78rem;
+    line-height: 1.35;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+.asa-cs-foot {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.3rem 0.7rem;
+    font-size: 0.76rem;
+    color: var(--asa-muted);
+}
+.asa-cs-amount {
+    font-weight: 700;
+    font-size: 0.84rem;
+    color: var(--asa-ink);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+.asa-cs-date {
+    white-space: nowrap;
+}
+
+.asa-cs-submit {
+    margin-top: 0.85rem;
+    width: 100%;
+    padding: 0.7rem 1.15rem;
+    border-radius: 12px;
+    border: 1px solid var(--asa-accent);
+    background: #fff;
+    color: var(--asa-accent);
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.asa-cs-submit:hover {
+    background: var(--asa-accent);
+    color: #fff;
+}
+
+/* Tightest chat columns: shrink dots + labels so a 4-step track still fits. */
+@container (max-width: 300px) {
+    .asa-cs {
+        padding: 0.7rem 0.7rem 0.7rem 0.8rem;
+    }
+    .asa-cs-dot {
+        width: 1.1rem;
+        height: 1.1rem;
+    }
+    .asa-cs-bar {
+        top: 0.55rem;
+    }
+    .asa-cs-step-label {
+        font-size: 0.62rem;
+    }
+}

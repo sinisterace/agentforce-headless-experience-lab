@@ -1,0 +1,221 @@
+/* ASA Retail · Order Tracking — a self-contained SVG delivery map (courier
+   marker positioned by status, destination pin, covered vs. remaining
+   route), an ETA block, a courier row, and a status timeline. rem units +
+   inherited font so the card matches the host chat theme in Enhanced Chat
+   v2. Retail indigo accent + neutrals are local custom props for easy
+   theming. */
+:host {
+    --asa-accent: #4f46e5;
+    --asa-line: #e5e7eb;
+    --asa-ink: #101828;
+    --asa-muted: #667085;
+    --asa-ok: #15803d;
+    --asa-out: #c0392b;
+    --asa-star: #f59e0b;
+    --asa-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+    --asa-shadow-md: 0 10px 26px rgba(15, 23, 42, 0.14);
+    --asa-radius: 14px;
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    /* Enhanced Chat v2 renders this in a ~320px column; size the content to the
+       card, not the viewport, so it also reads well on wide desktop GenAi. */
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after {
+    box-sizing: border-box;
+}
+
+.asa-test-badge {
+    margin: 0 0 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 8px;
+    background: #fff7ed;
+    color: #b45309;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+.selector-title {
+    font-size: 1.05rem;
+    font-weight: 680;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.1rem;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-card-sub {
+    margin: 0 0 0.6rem;
+    font-size: 0.78rem;
+    color: var(--asa-muted);
+}
+
+/* --- Order Tracking --- */
+.asa-ot-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.55rem; }
+.asa-ot-head .selector-title { margin: 0; }
+.asa-ot-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--asa-ok) 12%, #fff);
+    color: var(--asa-ok);
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+.asa-ot-live-dot { width: 0.42rem; height: 0.42rem; border-radius: 999px; background: var(--asa-ok); animation: asaLiveBlink 1.6s ease-in-out infinite; }
+.asa-ot-map { border: 1px solid var(--asa-line); border-radius: var(--asa-radius); overflow: hidden; margin-bottom: 0.7rem; line-height: 0; }
+.asa-ot-svg { width: 100%; height: auto; display: block; }
+.asa-ot-map-bg { fill: #eef1f5; }
+.asa-ot-blocks rect { fill: #e2e6ec; }
+.asa-ot-roads path, .asa-ot-roads line { fill: none; stroke: #ffffff; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+.asa-ot-route-rest { fill: none; stroke: color-mix(in srgb, var(--asa-accent) 32%, #cbd5e1); stroke-width: 3; stroke-dasharray: 0.5 7; stroke-linecap: round; stroke-linejoin: round; }
+.asa-ot-route-done { fill: none; stroke: var(--asa-accent); stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; }
+.asa-ot-origin { fill: #fff; stroke: var(--asa-muted); stroke-width: 2.4; }
+.asa-ot-dest-pin { fill: #ef4444; }
+.asa-ot-dest-dot { fill: #fff; }
+.asa-ot-courier-ring { fill: #fff; filter: drop-shadow(0 1px 2px rgba(15, 23, 42, 0.28)); }
+.asa-ot-courier-dot { fill: var(--asa-accent); }
+.asa-ot-pulse { fill: var(--asa-accent); opacity: 0.28; transform-box: fill-box; transform-origin: center; animation: asaOtPulse 1.8s ease-out infinite; }
+.asa-ot-eta { display: flex; flex-direction: column; gap: 0.08rem; margin-bottom: 0.7rem; }
+.asa-ot-eta-label { font-size: 0.64rem; font-weight: 650; text-transform: uppercase; letter-spacing: 0.05em; color: var(--asa-muted); }
+.asa-ot-eta-time { font-size: 1.08rem; font-weight: 720; letter-spacing: -0.01em; color: var(--asa-ink); }
+.asa-ot-eta-dest { display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 0.15rem; font-size: 0.74rem; color: var(--asa-muted); }
+.asa-ot-eta-dest svg { width: 0.85rem; height: 0.85rem; color: var(--asa-accent); flex-shrink: 0; }
+.asa-ot-courier { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 0; border-top: 1px solid var(--asa-line); border-bottom: 1px solid var(--asa-line); margin-bottom: 0.75rem; }
+.asa-ot-courier-avatar {
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 999px;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--asa-accent) 12%, #fff);
+    color: var(--asa-accent);
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+.asa-ot-courier-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.asa-ot-courier-text { display: flex; flex-direction: column; gap: 0.05rem; flex: 1; min-width: 0; }
+.asa-ot-courier-role { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--asa-muted); }
+.asa-ot-courier-name { font-size: 0.85rem; font-weight: 650; color: var(--asa-ink); }
+.asa-ot-courier-meta { display: inline-flex; align-items: center; gap: 0.4rem; flex-shrink: 0; }
+.asa-ot-vehicle { display: inline-flex; }
+.asa-ot-vehicle svg { width: 1rem; height: 1rem; color: var(--asa-accent); }
+.asa-ot-courier-rating { font-size: 0.74rem; font-weight: 600; color: var(--asa-ink); }
+.asa-ot-steps { list-style: none; margin: 0; padding: 0.1rem 0 0; }
+.asa-ot-step { position: relative; display: flex; align-items: flex-start; gap: 0.6rem; padding: 0 0 0.85rem 0; font-size: 0.8rem; }
+.asa-ot-step:last-child { padding-bottom: 0; }
+.asa-ot-step::before { content: ''; position: absolute; left: 0.4rem; top: 0.9rem; bottom: -0.1rem; width: 2px; background: var(--asa-line); }
+.asa-ot-step:last-child::before { display: none; }
+.asa-ot-node { width: 0.85rem; height: 0.85rem; border-radius: 999px; flex-shrink: 0; margin-top: 0.08rem; background: #fff; border: 2px solid var(--asa-line); position: relative; z-index: 1; }
+.asa-ot-step.is-done .asa-ot-node { background: var(--asa-accent); border-color: var(--asa-accent); }
+.asa-ot-step.is-done::before { background: var(--asa-accent); }
+.asa-ot-step.is-current .asa-ot-node { background: var(--asa-accent); border-color: color-mix(in srgb, var(--asa-accent) 30%, #fff); box-shadow: 0 0 0 3px color-mix(in srgb, var(--asa-accent) 20%, transparent); }
+.asa-ot-step-label { flex: 1; color: var(--asa-ink); font-weight: 560; }
+.asa-ot-step.is-current .asa-ot-step-label { font-weight: 700; }
+.asa-ot-step.is-todo .asa-ot-step-label { color: var(--asa-muted); }
+.asa-ot-step-time { font-size: 0.72rem; color: var(--asa-muted); margin-left: auto; white-space: nowrap; padding-left: 0.4rem; }
+.asa-ot-cta {
+    margin-top: 0.55rem;
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid var(--asa-accent);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--asa-accent);
+    font-size: 0.8rem;
+    font-weight: 650;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.asa-ot-cta:hover { background: var(--asa-accent); color: #fff; }
+
+@keyframes asaOtPulse {
+    from { transform: scale(0.55); opacity: 0.4; }
+    to { transform: scale(1.9); opacity: 0; }
+}
+@keyframes asaLiveBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+/* Live dispatch board. */
+.asa-ot-kicker { display: block; margin-bottom: 0.18rem; color: var(--asa-accent); font-size: 0.6rem; font-weight: 780; letter-spacing: 0.13em; line-height: 1; text-transform: uppercase; }
+.asa-ot-statusbar { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin: 0.48rem 0 0.42rem; padding: 0.42rem 0.55rem; border-left: 3px solid var(--asa-accent); border-radius: 0 9px 9px 0; background: color-mix(in srgb, var(--asa-accent) 6%, #fff); }
+.asa-ot-statusbar span { min-width: 0; color: var(--asa-ink); font-size: 0.72rem; font-weight: 720; overflow-wrap: break-word; }
+.asa-ot-statusbar b { flex-shrink: 0; color: var(--asa-muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.56rem; font-weight: 650; letter-spacing: 0.03em; white-space: nowrap; }
+/* ── Dispatch console redesign ─────────────────────────────────────────── */
+.asa-ot-head { margin-bottom: 0.6rem; }
+.asa-ot-head .selector-title { font-size: 1.18rem; letter-spacing: -0.035em; }
+.asa-ot-live { background: #dcfce7; border: 1px solid #bbf7d0; color: #166534; }
+.asa-ot-statusbar { margin: 0 0 0.5rem; padding: 0.5rem 0.62rem; border: 0; border-radius: 10px; background: #111827; box-shadow: 0 8px 18px rgba(15, 23, 42, 0.14); }
+.asa-ot-statusbar span { color: #f8fafc; }
+.asa-ot-statusbar b { color: #93c5fd; }
+.asa-ot-map { position: relative; min-height: 14.2rem; margin-bottom: 0.65rem; border: 0; border-radius: 18px; overflow: hidden; background: #0b1729; box-shadow: 0 18px 34px rgba(8, 15, 31, 0.23); line-height: 1.2; }
+.asa-ot-map::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(7, 16, 30, 0.06), rgba(7, 16, 30, 0.55)), radial-gradient(circle at 80% 12%, rgba(56, 189, 248, 0.16), transparent 34%); }
+.asa-ot-svg { min-height: 14.2rem; object-fit: cover; }
+.asa-ot-map-bg { fill: #0b1729; }
+.asa-ot-blocks rect { fill: #17263b; stroke: #22344d; stroke-width: 1; }
+.asa-ot-roads path, .asa-ot-roads line { stroke: #26384f; stroke-width: 10; }
+.asa-ot-route-rest { stroke: #7dd3fc; stroke-width: 3; stroke-dasharray: 1 7; opacity: 0.75; }
+.asa-ot-route-done { stroke: #f8fafc; stroke-width: 4; filter: drop-shadow(0 0 3px rgba(56, 189, 248, 0.85)); }
+.asa-ot-origin { fill: #0b1729; stroke: #f8fafc; stroke-width: 3; }
+.asa-ot-dest-pin { fill: #fb7185; filter: drop-shadow(0 5px 7px rgba(251, 113, 133, 0.38)); }
+.asa-ot-courier-ring { fill: #f8fafc; filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.85)); }
+.asa-ot-courier-dot { fill: #0284c7; }
+.asa-ot-pulse { fill: #38bdf8; opacity: 0.38; }
+.asa-ot-map-label { position: absolute; z-index: 2; padding: 0.2rem 0.34rem; border: 1px solid rgba(148, 163, 184, 0.28); border-radius: 5px; background: rgba(15, 23, 42, 0.82); color: #cbd5e1; font-size: 0.5rem; font-weight: 720; letter-spacing: 0.08em; line-height: 1; text-transform: uppercase; backdrop-filter: blur(5px); white-space: nowrap; }
+.asa-ot-map-label.is-origin { left: 0.65rem; top: 0.7rem; }
+.asa-ot-map-label.is-destination { right: 0.65rem; top: 0.7rem; }
+.asa-ot-eta { position: absolute; z-index: 3; left: 0.65rem; right: 0.65rem; bottom: 0.65rem; display: grid; grid-template-columns: auto 1fr; column-gap: 0.55rem; row-gap: 0.06rem; align-items: center; margin: 0; padding: 0.58rem 0.65rem; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 12px; background: rgba(248, 250, 252, 0.93); box-shadow: 0 12px 28px rgba(2, 8, 23, 0.3); backdrop-filter: blur(8px); }
+.asa-ot-eta-label { grid-column: 1; grid-row: 1; color: #64748b; font-size: 0.52rem; }
+.asa-ot-eta-time { grid-column: 1; grid-row: 2; color: #0f172a; font-size: 0.94rem; }
+.asa-ot-eta-dest { grid-column: 2; grid-row: 1 / span 2; align-self: stretch; justify-content: flex-start; min-width: 0; margin: 0; padding-left: 0.55rem; border-left: 1px solid #dbe4ee; color: #475569; font-size: 0.62rem; line-height: 1.3; overflow-wrap: break-word; }
+.asa-ot-courier { position: relative; gap: 0.65rem; margin: 0 0 0.72rem; padding: 0.65rem; border: 1px solid #dbeafe; border-radius: 14px; background: linear-gradient(110deg, #eff6ff, #f8fafc 70%); }
+.asa-ot-courier::before { content: ''; position: absolute; top: 0.55rem; bottom: 0.55rem; left: 0; width: 3px; border-radius: 0 999px 999px 0; background: #0ea5e9; }
+.asa-ot-courier-avatar { width: 2.55rem; height: 2.55rem; background: #0f172a; color: #fff; }
+.asa-ot-courier-role { color: #64748b; font-size: 0.54rem; }
+.asa-ot-courier-name { font-size: 0.88rem; }
+.asa-ot-courier-state { display: inline-flex; align-items: center; gap: 0.28rem; margin-top: 0.08rem; color: #0369a1; font-size: 0.58rem; font-weight: 680; }
+.asa-ot-courier-state i { width: 0.38rem; height: 0.38rem; border-radius: 999px; background: #0ea5e9; box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12); }
+.asa-ot-courier-meta { padding: 0.3rem 0.42rem; border-radius: 9px; background: #fff; box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08); }
+.asa-ot-steps { display: grid; grid-template-columns: repeat(4, minmax(5.3rem, 1fr)); gap: 0.42rem; margin: 0 -0.1rem; padding: 0.1rem 0.1rem 0.45rem; overflow-x: auto; scrollbar-width: thin; scroll-snap-type: x proximity; }
+.asa-ot-step { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto auto; gap: 0.14rem 0.38rem; min-width: 5.3rem; min-height: 5.2rem; padding: 0.52rem; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; font-size: 0.7rem; scroll-snap-align: start; }
+.asa-ot-step:last-child { padding-bottom: 0.52rem; }
+.asa-ot-step::before { display: none; }
+.asa-ot-step.is-done { border-color: #bae6fd; background: #f0f9ff; }
+.asa-ot-step.is-current { border-color: #0ea5e9; background: #0f172a; box-shadow: 0 8px 18px rgba(15, 23, 42, 0.18); }
+.asa-ot-step-index { grid-column: 1 / span 2; color: #94a3b8; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.52rem; font-weight: 700; letter-spacing: 0.08em; }
+.asa-ot-node { grid-column: 1; grid-row: 2; width: 0.62rem; height: 0.62rem; margin-top: 0.12rem; }
+.asa-ot-step-label { grid-column: 2; grid-row: 2; min-width: 0; font-size: 0.66rem; line-height: 1.22; overflow-wrap: break-word; }
+.asa-ot-step-time { grid-column: 1 / span 2; grid-row: 3; margin: auto 0 0; padding: 0; color: #64748b; font-size: 0.56rem; }
+.asa-ot-step.is-current .asa-ot-step-index, .asa-ot-step.is-current .asa-ot-step-time { color: #7dd3fc; }
+.asa-ot-step.is-current .asa-ot-step-label { color: #f8fafc; }
+.asa-ot-step.is-current .asa-ot-node { background: #38bdf8; border-color: #bae6fd; box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18); }
+.asa-ot-cta { margin-top: 0.35rem; border: 0; background: #0f172a; color: #fff; min-height: 2.75rem; }
+.asa-ot-cta:hover { background: #1e293b; }
+@container (max-width: 300px) {
+    .asa-ot-map, .asa-ot-svg { min-height: 13.5rem; }
+    .asa-ot-eta { left: 0.48rem; right: 0.48rem; bottom: 0.48rem; }
+    .asa-ot-eta-time { font-size: 0.82rem; }
+    .asa-ot-steps { margin-inline: 0; }
+}
+
+/* Quieter route-first hierarchy. */
+.asa-card { font-family: "Avenir Next", Avenir, "Century Gothic", sans-serif; }
+.selector-title { font-family: "Avenir Next", Avenir, "Century Gothic", sans-serif; font-weight: 700; }
+.asa-ot-head { margin-bottom: 0.72rem; }
+.asa-ot-head .selector-title { font-size: 1.18rem; }
