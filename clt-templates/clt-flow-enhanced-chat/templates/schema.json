@@ -1,0 +1,5 @@
+{
+  "title" : "<Human Readable Card Title>",
+  "description" : "<One line describing what this card renders>",
+  "lightning:type" : "@apexClassType/c__<DtoClass>"
+}

@@ -1,0 +1,16 @@
+<template>
+    <div class="card-container">
+        <template if:true={title}>
+            <h3 class="card-title">{title}</h3>
+        </template>
+
+        <!-- TODO: render THIS card type's content here. Iterate your data,
+             render buttons/tiles/rows, and wire onclick handlers that call
+             sendMessage(<chosen value>). Keep every interactive element
+             keyboard-accessible (real <button>, aria-label). -->
+
+        <template if:true={errorMessage}>
+            <div class="error-message">{errorMessage}</div>
+        </template>
+    </div>
+</template>

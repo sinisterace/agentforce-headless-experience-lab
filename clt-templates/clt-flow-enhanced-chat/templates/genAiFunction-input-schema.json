@@ -1,0 +1,16 @@
+{
+  "required": [
+    "Details"
+  ],
+  "unevaluatedProperties": false,
+  "properties": {
+    "Details": {
+      "title": "Details",
+      "description": "This is the full detail to send over and format in this way: \n\n{\"<field1>\": \"Example heading\", \"<field2>\": [\"Option A\", \"Option B\", \"Option C\"]}\n\nRules: describe EACH field the card reads — its type, whether it is required or optional, allowed values, and defaults. Use the EXACT field names the LWC parses (<field1>, <field2>, ...). Do not emit empty arrays for required list fields. This description is the single contract the planner follows; keep it identical in meaning to what the LWC reads.",
+      "lightning:type": "lightning__textType",
+      "lightning:isPII": false,
+      "copilotAction:isUserInput": false
+    }
+  },
+  "lightning:type": "lightning__objectType"
+}

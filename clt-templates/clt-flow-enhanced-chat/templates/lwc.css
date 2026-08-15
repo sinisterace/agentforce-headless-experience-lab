@@ -1,0 +1,18 @@
+.card-container {
+    padding: 12px;
+    font-family: inherit;
+}
+
+.card-title {
+    margin: 0 0 12px 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+/* TODO: style THIS card type. Use rem units and inherit fonts so the card
+   matches the host chat theme in Enhanced Chat v2. */
+
+.error-message {
+    color: #c23934;
+    font-size: 0.875rem;
+}
