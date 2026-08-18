@@ -1,0 +1,61 @@
+<template>
+    <div class="asa-card">
+        <template if:true={isTestMode}>
+            <p class="asa-test-badge">Sample data — no part supplied</p>
+        </template>
+
+        <div class="asa-pr-head">
+            <h3 class="selector-title">{title}</h3>
+        </div>
+
+        <div class="asa-pr-part">
+            <span class="asa-pr-thumb">
+                <template if:true={hasImage}>
+                    <img src={imageUrl} alt={partName} onerror={handleImageError} />
+                </template>
+                <template if:false={hasImage}>
+                    <span class="asa-pr-thumb-fallback" aria-hidden="true">{partInitials}</span>
+                </template>
+            </span>
+            <span class="asa-pr-part-text">
+                <span class="asa-pr-name">{partName}</span>
+                <template if:true={hasSku}>
+                    <span class="asa-pr-sku">SKU {sku}</span>
+                </template>
+                <template if:true={hasUnitPrice}>
+                    <span class="asa-pr-unit">{unitPriceText}</span>
+                </template>
+            </span>
+        </div>
+
+        <template if:true={hasStock}>
+            <div class={stockClass}>
+                <div class="asa-pr-stock-row">
+                    <span class="asa-pr-stock-text">{stockText}</span>
+                    <template if:true={hasLeadTime}>
+                        <span class="asa-pr-lead">{leadTime}</span>
+                    </template>
+                </div>
+                <div class="asa-pr-stock-track"><span class="asa-pr-stock-fill" style={stockBarStyle}></span></div>
+            </div>
+        </template>
+
+        <div class="asa-pr-qtyrow">
+            <span class="asa-pr-qty-label">Quantity</span>
+            <div class="asa-pr-stepper">
+                <button type="button" class="asa-pr-step" onclick={handleDecrement} disabled={minusDisabled} aria-label="Decrease quantity">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </button>
+                <span class="asa-pr-qty-value">{quantity}</span>
+                <button type="button" class="asa-pr-step" onclick={handleIncrement} disabled={plusDisabled} aria-label="Increase quantity">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </button>
+            </div>
+        </div>
+
+        <button type="button" class="asa-pr-cta" onclick={handleSubmit}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
+            {ctaLabel}
+        </button>
+    </div>
+</template>

@@ -1,5 +1,5 @@
 import type { InsuranceClaimStatusPayload } from '../payloads';
-import { InsuranceClaimStatusEditor, InsuranceClaimStatusPreview } from '../InsuranceClaimStatusEditor';
+import { InsuranceClaimStatusPreview } from '../InsuranceClaimStatusEditor';
 import type { WidgetDef } from './types';
 
 /** asaInsuranceClaimStatus — track filed claims with a step-by-step progress tracker. */
@@ -31,6 +31,5 @@ export const insuranceClaimStatusDef: WidgetDef = {
     },
     { label: 'Submit', control: 'Button', bind: 'submitText' },
   ],
-  Editor: InsuranceClaimStatusEditor,
   Preview: InsuranceClaimStatusPreview,
 };

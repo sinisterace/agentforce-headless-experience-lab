@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Industry_Key__c</fullName>
-    <description>Resolved industry. V1: financial_services | healthcare | hvac.</description>
+    <description>Resolved industry. Must stay in sync with CLT_Catalog_Item__c.Industry_Key__c and ConsultationCatalogService.INDUSTRY_KEYS.</description>
     <externalId>false</externalId>
     <label>Industry Key</label>
     <required>false</required>
@@ -17,9 +17,34 @@
                 <label>Financial Services</label>
             </value>
             <value>
+                <fullName>insurance</fullName>
+                <default>false</default>
+                <label>Insurance</label>
+            </value>
+            <value>
                 <fullName>healthcare</fullName>
                 <default>false</default>
                 <label>Healthcare</label>
+            </value>
+            <value>
+                <fullName>retail</fullName>
+                <default>false</default>
+                <label>Retail</label>
+            </value>
+            <value>
+                <fullName>technology_comms</fullName>
+                <default>false</default>
+                <label>Technology, Media &amp; Communications</label>
+            </value>
+            <value>
+                <fullName>manufacturing</fullName>
+                <default>false</default>
+                <label>Manufacturing</label>
+            </value>
+            <value>
+                <fullName>energy_utilities</fullName>
+                <default>false</default>
+                <label>Energy &amp; Utilities</label>
             </value>
             <value>
                 <fullName>hvac</fullName>

@@ -1,0 +1,188 @@
+/* ASA Technology, Media & Comms · Service Status — a bespoke dark network
+   console (status hero: glyph + pulse, headline, area + restore-ETA chips) over
+   refined per-service rows with a status rail + pill. rem units + inherited
+   font so the card matches the host chat theme in Enhanced Chat v2. Cyan accent
+   + status hues are local custom props. */
+:host {
+    --asa-accent: #0891b2;
+    --asa-line: #e5e7eb;
+    --asa-ink: #101828;
+    --asa-muted: #667085;
+    --asa-ok: #16a34a;
+    --asa-warn: #d97706;
+    --asa-down: #dc2626;
+    --asa-maint: #2563eb;
+    --asa-radius: 14px;
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after { box-sizing: border-box; }
+
+.asa-test-badge {
+    margin: 0 0 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 8px;
+    background: #ecfeff;
+    color: #0e7490;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.asa-ss-head { margin-bottom: 0.6rem; }
+.selector-title {
+    font-size: 1.12rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* --- Dark status console (hero) --- */
+.asa-ss-hero {
+    --hue: var(--asa-accent);
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 0.7rem;
+    padding: 0.8rem 0.85rem;
+    border-radius: 16px;
+    background: #0b1220;
+    box-shadow: 0 16px 34px rgba(8, 15, 31, 0.26);
+    color: #e5edf7;
+}
+.asa-ss-hero.is-operational { --hue: #22c55e; }
+.asa-ss-hero.is-degraded { --hue: #f59e0b; }
+.asa-ss-hero.is-outage { --hue: #f87171; }
+.asa-ss-hero.is-maintenance { --hue: #60a5fa; }
+.asa-ss-hero-glow {
+    position: absolute;
+    top: -55%;
+    right: -25%;
+    width: 78%;
+    height: 190%;
+    border-radius: 999px;
+    background: radial-gradient(circle, color-mix(in srgb, var(--hue) 42%, transparent), transparent 68%);
+    pointer-events: none;
+}
+.asa-ss-hero-top { position: relative; display: flex; align-items: center; gap: 0.6rem; }
+.asa-ss-hero-badge {
+    position: relative;
+    width: 2.35rem; height: 2.35rem; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--hue) 20%, #0b1220);
+    color: var(--hue);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--hue) 40%, transparent);
+}
+.asa-ss-hero-badge svg { width: 1.25rem; height: 1.25rem; }
+.asa-ss-hero-ping {
+    position: absolute; inset: 0; border-radius: 12px;
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--hue) 55%, transparent);
+    animation: asaSsPing 2.2s ease-out infinite;
+}
+.asa-ss-hero.is-operational .asa-ss-hero-ping { animation: none; }
+.asa-ss-hero-text { display: flex; flex-direction: column; gap: 0.05rem; min-width: 0; flex: 1; }
+.asa-ss-hero-kicker { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: color-mix(in srgb, var(--hue) 60%, #cbd5e1); }
+.asa-ss-hero-label { font-size: 1rem; font-weight: 720; letter-spacing: -0.01em; color: #f8fafc; overflow-wrap: break-word; }
+.asa-ss-hero-updated { flex-shrink: 0; align-self: flex-start; font-size: 0.6rem; font-weight: 600; color: #94a3b8; white-space: nowrap; }
+.asa-ss-hero-headline { position: relative; margin: 0.55rem 0 0; font-size: 0.78rem; line-height: 1.4; color: #cbd5e1; overflow-wrap: break-word; }
+.asa-ss-hero-meta { position: relative; display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; }
+.asa-ss-hero-chip {
+    display: inline-flex; align-items: center; gap: 0.32rem;
+    max-width: 100%;
+    padding: 0.3rem 0.55rem; border-radius: 999px;
+    background: rgba(148, 163, 184, 0.14);
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    font-size: 0.68rem; font-weight: 600; color: #dbe4f0;
+}
+.asa-ss-hero-chip svg { width: 0.82rem; height: 0.82rem; flex-shrink: 0; color: #93a4bb; }
+.asa-ss-hero-chip.is-eta { background: color-mix(in srgb, var(--hue) 22%, #0b1220); border-color: color-mix(in srgb, var(--hue) 40%, transparent); color: #f1f5f9; }
+.asa-ss-hero-chip.is-eta svg { color: var(--hue); }
+.asa-ss-chip-text { min-width: 0; overflow-wrap: break-word; }
+
+/* --- Per-service rows --- */
+.asa-ss-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.42rem; }
+.asa-ss-row {
+    --st: var(--asa-muted);
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.55rem 0.62rem 0.55rem 0.78rem;
+    border: 1px solid var(--asa-line);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+    overflow: hidden;
+}
+.asa-ss-rail { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--st); }
+.asa-ss-row.is-operational { --st: var(--asa-ok); }
+.asa-ss-row.is-degraded { --st: var(--asa-warn); }
+.asa-ss-row.is-down { --st: var(--asa-down); }
+.asa-ss-row.is-maintenance { --st: var(--asa-maint); }
+.asa-ss-ico {
+    width: 2.1rem; height: 2.1rem; border-radius: 10px; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: color-mix(in srgb, var(--st) 12%, #fff);
+    color: var(--st);
+}
+.asa-ss-ico svg { width: 1.05rem; height: 1.05rem; }
+.asa-ss-row-text { display: flex; flex-direction: column; gap: 0.05rem; min-width: 0; flex: 1; }
+.asa-ss-row-name { font-size: 0.87rem; font-weight: 670; color: var(--asa-ink); overflow-wrap: break-word; }
+.asa-ss-row-detail { font-size: 0.72rem; color: var(--asa-muted); overflow-wrap: break-word; }
+.asa-ss-pill {
+    display: inline-flex; align-items: center; gap: 0.32rem; flex-shrink: 0;
+    padding: 0.26rem 0.55rem; border-radius: 999px;
+    background: color-mix(in srgb, var(--st) 12%, #fff);
+    color: var(--st);
+    font-size: 0.66rem; font-weight: 720; white-space: nowrap;
+}
+.asa-ss-pill-dot {
+    width: 0.46rem; height: 0.46rem; border-radius: 999px; flex-shrink: 0; background: var(--st);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--st) 18%, transparent);
+}
+.asa-ss-row.is-down .asa-ss-pill-dot,
+.asa-ss-row.is-degraded .asa-ss-pill-dot { animation: asaSsBlink 1.5s ease-in-out infinite; }
+
+.asa-ss-cta {
+    margin-top: 0.65rem;
+    width: 100%;
+    min-height: 2.7rem;
+    padding: 0.6rem;
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem;
+    border: 0;
+    border-radius: 11px;
+    background: var(--asa-accent);
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 680;
+    cursor: pointer;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--asa-accent) 24%, transparent);
+    transition: filter 0.15s ease;
+}
+.asa-ss-cta:hover { filter: brightness(1.06); }
+.asa-ss-cta svg { width: 1rem; height: 1rem; }
+
+@keyframes asaSsPing {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--hue) 55%, transparent); }
+    70%, 100% { box-shadow: 0 0 0 0.7rem transparent; }
+}
+@keyframes asaSsBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+}
+
+@container (max-width: 300px) {
+    .asa-ss-hero-updated { display: none; }
+    .asa-ss-ico { width: 1.85rem; height: 1.85rem; }
+    .asa-ss-pill { padding: 0.22rem 0.42rem; }
+}

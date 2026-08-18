@@ -1,0 +1,66 @@
+<template>
+    <div class="asa-card">
+        <template if:true={isTestMode}>
+            <p class="asa-test-badge">Sample data — no plan supplied</p>
+        </template>
+
+        <div class="asa-bb-head">
+            <h3 class="selector-title">{title}</h3>
+            <template if:true={hasSubtitle}>
+                <p class="asa-bb-sub">{subtitle}</p>
+            </template>
+        </div>
+
+        <!-- Flat monthly amount -->
+        <div class="asa-bb-amount">
+            <template if:true={hasMonthly}>
+                <span class="asa-bb-amount-eyebrow">Your fixed monthly payment</span>
+                <span class="asa-bb-amount-value">{monthlyAmountText}<span class="asa-bb-amount-per">/mo</span></span>
+            </template>
+            <template if:true={hasCurrentAvg}>
+                <span class="asa-bb-swing">{currentAvgText}</span>
+            </template>
+        </div>
+
+        <!-- Actual-vs-budget chart -->
+        <template if:true={hasChart}>
+            <div class="asa-bb-chart">
+                <svg viewBox="0 0 100 44" preserveAspectRatio="none" role="img" aria-label="Your bills versus a flat budget line">
+                    <path class="asa-bb-actual-area" d={actualArea}></path>
+                    <path class="asa-bb-actual-line" d={actualLine}></path>
+                    <template if:true={hasBudgetLine}>
+                        <path class="asa-bb-budget-line" d={budgetLine}></path>
+                    </template>
+                </svg>
+                <div class="asa-bb-legend">
+                    <span class="asa-bb-leg"><span class="asa-bb-leg-swatch is-actual" aria-hidden="true"></span>Your bills now</span>
+                    <template if:true={hasBudgetLine}>
+                        <span class="asa-bb-leg"><span class="asa-bb-leg-swatch is-budget" aria-hidden="true"></span>Budget Billing</span>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+        <template if:true={hasBullets}>
+            <ul class="asa-bb-bullets">
+                <template for:each={bullets} for:item="b">
+                    <li key={b.key} class="asa-bb-bullet">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+                        <span>{b.text}</span>
+                    </li>
+                </template>
+            </ul>
+        </template>
+
+        <template if:true={hasTerm}>
+            <p class="asa-bb-term">{termText}</p>
+        </template>
+
+        <template if:true={hasSubmit}>
+            <button type="button" class="asa-bb-cta" onclick={handleSubmit}>{submitText}</button>
+        </template>
+        <template if:true={hasSecondary}>
+            <button type="button" class="asa-bb-cta2" onclick={handleSecondary}>{secondaryText}</button>
+        </template>
+    </div>
+</template>

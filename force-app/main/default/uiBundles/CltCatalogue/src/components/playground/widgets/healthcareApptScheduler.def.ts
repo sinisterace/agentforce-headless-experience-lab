@@ -1,5 +1,5 @@
 import type { HealthcareApptSchedulerPayload } from '../payloads';
-import { HealthcareApptSchedulerEditor, HealthcareApptSchedulerPreview } from '../HealthcareApptSchedulerEditor';
+import { HealthcareApptSchedulerPreview } from '../HealthcareApptSchedulerEditor';
 import type { WidgetDef } from './types';
 
 /** asaHealthcareApptScheduler — book a visit by picking a day + time slot for a provider. */
@@ -53,6 +53,5 @@ export const healthcareApptSchedulerDef: WidgetDef = {
     },
     { label: 'Submit', control: 'Button', bind: 'submitText' },
   ],
-  Editor: HealthcareApptSchedulerEditor,
   Preview: HealthcareApptSchedulerPreview,
 };

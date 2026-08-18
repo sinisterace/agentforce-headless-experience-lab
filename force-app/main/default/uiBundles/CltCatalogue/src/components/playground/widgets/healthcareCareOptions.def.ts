@@ -1,5 +1,5 @@
 import type { HealthcareCareOptionsPayload } from '../payloads';
-import { HealthcareCareOptionsEditor, HealthcareCareOptionsPreview } from '../HealthcareCareOptionsEditor';
+import { HealthcareCareOptionsPreview } from '../HealthcareCareOptionsEditor';
 import type { WidgetDef } from './types';
 
 /** asaHealthcareCareOptions — route the customer to the right care channel (nurse line, video, in-person, ER). */
@@ -29,6 +29,5 @@ export const healthcareCareOptionsDef: WidgetDef = {
     },
     { label: 'Disclaimer', control: 'Text', bind: 'disclaimer', note: 'optional footnote' },
   ],
-  Editor: HealthcareCareOptionsEditor,
   Preview: HealthcareCareOptionsPreview,
 };

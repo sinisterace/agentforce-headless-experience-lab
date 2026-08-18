@@ -509,6 +509,327 @@ export type RetailStorePickupPayload = {
   submitText?: string;
 };
 
+/* ── Technology, Media & Communications ──────────────────────────────────── */
+
+export type PlanComparePlan = {
+  /** Stable identifier sent back to the agent when the plan is chosen. */
+  id: string;
+  name: string;
+  /** Price in the payload (or plan) currency; rendered per cadence. */
+  price: number;
+  /** One short line under the name. */
+  tagline?: string;
+  /** Overrides the payload currency for this plan. */
+  currency?: string;
+  /** Short corner tag, e.g. "Most popular" — ignored on the current plan. */
+  badge?: string;
+  /** Accent-highlights this plan (at most one; not the current plan). */
+  recommended?: boolean;
+  /** Short check-marked feature strings (2–5). */
+  features?: string[];
+};
+
+export type TmcPlanComparePayload = {
+  title: string;
+  subtitle?: string;
+  /** ISO currency code for all plans without their own; defaults to USD. */
+  currency?: string;
+  /** Billing-period suffix: mo | yr | wk. Defaults to mo. */
+  cadence?: string;
+  /** id of the plan the customer is on — marked "Current plan", not selectable. */
+  currentPlanId?: string;
+  plans: PlanComparePlan[];
+  /** Confirm-button label; defaults to "Switch plan". */
+  submitText?: string;
+};
+
+export type UsageCategory = {
+  label: string;
+  amount: number;
+  /** Hex color for the segment + dot; auto-assigned from a palette when absent. */
+  color?: string;
+};
+
+export type TmcDataUsagePayload = {
+  title?: string;
+  /** Billing-cycle status line, e.g. "12 days left · resets Sep 30". */
+  cycleText?: string;
+  /** Amount consumed this cycle. Absent → the card shows its test-mode sample. */
+  used?: number;
+  /** The allowance; omit (or 0) for an unlimited plan. */
+  total?: number;
+  /** Unit of measure, e.g. GB | MB | min | texts. Defaults to GB. */
+  unit?: string;
+  /** Usage breakdown shown as a stacked bar + legend. */
+  categories?: UsageCategory[];
+  /** Short callout under the gauge (tinted amber near / red over the limit). */
+  note?: string;
+  /** Optional action-button label, e.g. "Add a data pass". */
+  submitText?: string;
+  submitValue?: string;
+};
+
+export type StatusService = {
+  id?: string;
+  name: string;
+  /** operational | degraded | down | maintenance. Defaults to operational. */
+  status?: string;
+  /** One short line; defaults to the status label. */
+  detail?: string;
+  /** internet | tv | mobile | voice | home — picks the glyph. */
+  icon?: string;
+};
+
+export type TmcServiceStatusPayload = {
+  title?: string;
+  /** operational | degraded | outage | maintenance; derived from services if omitted. */
+  overall?: string;
+  /** Short sentence under the banner label. */
+  headline?: string;
+  /** Affected location, e.g. neighborhood + ZIP. */
+  area?: string;
+  /** Estimated restore time, e.g. "Est. restore by 4:30 PM". */
+  etaText?: string;
+  /** Freshness stamp, e.g. "Updated 2 min ago". */
+  updatedText?: string;
+  services: StatusService[];
+  /** Optional action-button label, e.g. "Notify me when it's fixed". */
+  submitText?: string;
+  submitValue?: string;
+};
+
+export type BillItem = {
+  id?: string;
+  label: string;
+  /** Negative (or category "discount") renders as a credit. */
+  amount: number;
+  /** plan | data | device | streaming | taxes | onetime | discount | other. */
+  category?: string;
+};
+
+export type TmcBillExplainerPayload = {
+  title?: string;
+  /** ISO currency code for all amounts; defaults to USD. */
+  currency?: string;
+  /** Total due; computed from items when omitted. */
+  total?: number;
+  /** Due date shown as a pill, e.g. "Due Sep 28". */
+  dueDateText?: string;
+  /** Billing period, e.g. "Sep 1 – Sep 30". */
+  periodText?: string;
+  items: BillItem[];
+  /** Change vs last month; positive = up (amber), negative = down (green). */
+  deltaAmount?: number;
+  /** Short plain-language reason for the change. */
+  deltaText?: string;
+  /** Small footnote, e.g. an autopay reminder. */
+  note?: string;
+  /** Primary button label, e.g. "Pay now". */
+  submitText?: string;
+  submitValue?: string;
+  /** Secondary button label, e.g. "Set up autopay". */
+  secondaryText?: string;
+  secondaryValue?: string;
+};
+
+/* ── Manufacturing ───────────────────────────────────────────────────────── */
+
+export type EquipmentMetric = {
+  label: string;
+  value: string | number;
+  unit?: string;
+  /** good | warn | bad — colors the tile. */
+  state?: string;
+};
+
+export type MfgEquipmentMonitorPayload = {
+  title?: string;
+  asset: { name: string; model?: string; assetId?: string; location?: string; imageUrl?: string };
+  /** running | idle | fault | maintenance | offline. */
+  status?: string;
+  statusLabel?: string;
+  updatedText?: string;
+  metrics: EquipmentMetric[];
+  trend?: { label?: string; points: number[] };
+  submitText?: string;
+  submitValue?: string;
+};
+
+export type MfgPartReorderPayload = {
+  title?: string;
+  part: {
+    name: string;
+    sku?: string;
+    category?: string;
+    imageUrl?: string;
+    unitPrice?: number;
+    currency?: string;
+    leadTime?: string;
+    inStock?: number;
+    minOrder?: number;
+    incrementStep?: number;
+  };
+  quantity?: number;
+  submitText?: string;
+  submitValue?: string;
+};
+
+export type WorkOrderMilestone = {
+  label: string;
+  /** done | current | todo. */
+  state: string;
+  timeText?: string;
+  owner?: string;
+};
+
+export type MfgWorkOrderPayload = {
+  title?: string;
+  orderNumber?: string;
+  product?: string;
+  /** low | normal | high | urgent. */
+  priority?: string;
+  etaText?: string;
+  updatedText?: string;
+  milestones: WorkOrderMilestone[];
+  submitText?: string;
+  submitValue?: string;
+};
+
+export type QuoteOption = {
+  id: string;
+  label: string;
+  /** Added to the running price; 0 shows as "Included". */
+  priceDelta?: number;
+  detail?: string;
+};
+
+export type QuoteOptionGroup = {
+  id: string;
+  label: string;
+  /** Option id selected by default; falls back to the first option. */
+  selectedId?: string;
+  options: QuoteOption[];
+};
+
+export type MfgQuoteBuilderPayload = {
+  title?: string;
+  product?: string;
+  currency?: string;
+  basePrice?: number;
+  optionGroups: QuoteOptionGroup[];
+  quantity?: number;
+  minQuantity?: number;
+  submitText?: string;
+  submitValue?: string;
+};
+
+/* ── Energy & Utilities ──────────────────────────────────────────────────── */
+
+export type EnergyOutageStep = {
+  label: string;
+  /** done | current | todo. */
+  state: string;
+  timeText?: string;
+};
+
+export type EnergyOutageTrackerPayload = {
+  title?: string;
+  /** investigating | outage | restoring | restored — drives the hero color + label. */
+  status?: string;
+  headline?: string;
+  /** Affected location, e.g. neighborhood + ZIP. */
+  area?: string;
+  cause?: string;
+  affectedText?: string;
+  etaText?: string;
+  updatedText?: string;
+  crew?: string;
+  /** Restoration track; derived from status when omitted. */
+  steps?: EnergyOutageStep[];
+  submitText?: string;
+  submitValue?: string;
+};
+
+export type EnergyUsageBar = {
+  label?: string;
+  value: number;
+};
+
+export type EnergyUsageBreakdown = {
+  label: string;
+  amount: number;
+  /** Hex color for the segment + dot; auto-assigned from a palette when absent. */
+  color?: string;
+};
+
+export type EnergyUsageCostPayload = {
+  title?: string;
+  cycleText?: string;
+  /** Projected bill amount; rendered large. Absent → the card shows its test-mode sample. */
+  projectedCost?: number;
+  currency?: string;
+  /** Label above the projected cost; defaults to "Projected bill". */
+  projectedText?: string;
+  usedUnits?: number;
+  /** Unit of measure; defaults to kWh. */
+  unit?: string;
+  /** Change vs last month as a percent — negative = down (green), positive = up (amber). */
+  deltaPct?: number;
+  deltaText?: string;
+  /** Usage columns rendered as a vertical bar chart. */
+  bars?: EnergyUsageBar[];
+  /** Cost drivers rendered as a segmented meter + legend. */
+  breakdown?: EnergyUsageBreakdown[];
+  submitText?: string;
+  submitValue?: string;
+};
+
+export type EnergyBudgetSeries = {
+  /** 6–12 recent monthly bills → the jagged actual line. */
+  actual: number[];
+  /** The flat budget line. */
+  budget?: number;
+};
+
+export type EnergyBudgetBillingPayload = {
+  title?: string;
+  subtitle?: string;
+  currency?: string;
+  /** Flat monthly payment; rendered large. */
+  monthlyAmount?: number;
+  currentAvgText?: string;
+  termText?: string;
+  series?: EnergyBudgetSeries;
+  bullets?: string[];
+  submitText?: string;
+  submitValue?: string;
+  secondaryText?: string;
+  secondaryValue?: string;
+};
+
+export type EnergyRebateOffer = {
+  /** Stable identifier sent back to the agent on selection. */
+  id: string;
+  name: string;
+  /** thermostat | hvac | heat_pump | ev_charger | solar | insulation | water_heater | appliance. */
+  category?: string;
+  /** Shown large in the voucher stub. */
+  rebateAmount?: number;
+  detail?: string;
+  /** Small corner tag, e.g. "Popular". */
+  badge?: string;
+};
+
+export type EnergyRebateOffersPayload = {
+  title?: string;
+  subtitle?: string;
+  currency?: string;
+  offers: EnergyRebateOffer[];
+  /** Confirm-button label; defaults to "Apply for rebate". */
+  submitText?: string;
+  submitValue?: string;
+};
+
 /** The DTO field name a CLT reads, taken from the catalogue row (dtoFieldName). */
 export type CltKind =
   | 'finServAccountSelectorJSON'
@@ -525,7 +846,19 @@ export type CltKind =
   | 'retailProductCarouselJSON'
   | 'retailOrderTrackingJSON'
   | 'retailReturnsJSON'
-  | 'retailStorePickupJSON';
+  | 'retailStorePickupJSON'
+  | 'tmcPlanCompareJSON'
+  | 'tmcDataUsageJSON'
+  | 'tmcServiceStatusJSON'
+  | 'tmcBillExplainerJSON'
+  | 'mfgEquipmentMonitorJSON'
+  | 'mfgPartReorderJSON'
+  | 'mfgWorkOrderJSON'
+  | 'mfgQuoteBuilderJSON'
+  | 'energyOutageTrackerJSON'
+  | 'energyUsageCostJSON'
+  | 'energyBudgetBillingJSON'
+  | 'energyRebateOffersJSON';
 
 export function safeParse<T>(json: string): T | null {
   try {

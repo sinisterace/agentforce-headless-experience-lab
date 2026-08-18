@@ -21,7 +21,7 @@ export const CHANNELS: ChannelDef[] = [
   { id: 'chatgpt', label: 'ChatGPT', status: 'live' },
   { id: 'agentforce', label: 'Agentforce', status: 'live' },
   { id: 'claude', label: 'Claude', status: 'live' },
-  { id: 'slack', label: 'Slack', status: 'soon' },
+  { id: 'slack', label: 'Slack', status: 'live' },
 ];
 
 /**

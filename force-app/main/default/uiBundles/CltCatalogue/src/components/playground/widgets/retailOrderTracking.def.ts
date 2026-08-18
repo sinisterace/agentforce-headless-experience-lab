@@ -1,5 +1,5 @@
 import type { RetailOrderTrackingPayload } from '../payloads';
-import { RetailOrderTrackingEditor, RetailOrderTrackingPreview } from '../RetailOrderTrackingEditor';
+import { RetailOrderTrackingPreview } from '../RetailOrderTrackingEditor';
 import type { WidgetDef } from './types';
 
 /** asaRetailOrderTracking — live delivery map (self-contained SVG) + ETA + status timeline. */
@@ -50,6 +50,5 @@ export const retailOrderTrackingDef: WidgetDef = {
     { label: 'Action button', control: 'Text', bind: 'submitText', note: 'optional; hands back' },
     { label: 'Action value', control: 'Text', bind: 'submitValue', note: 'defaults to label' },
   ],
-  Editor: RetailOrderTrackingEditor,
   Preview: RetailOrderTrackingPreview,
 };

@@ -1,5 +1,5 @@
 import type { RetailStorePickupPayload } from '../payloads';
-import { RetailStorePickupEditor, RetailStorePickupPreview } from '../RetailStorePickupEditor';
+import { RetailStorePickupPreview } from '../RetailStorePickupEditor';
 import type { WidgetDef } from './types';
 
 /** asaRetailStorePickup — nearby stores with stock + pickup ETA; reserve for pickup. */
@@ -42,6 +42,5 @@ export const retailStorePickupDef: WidgetDef = {
     },
     { label: 'Submit', control: 'Text', bind: 'submitText', note: 'default "Reserve for pickup"' },
   ],
-  Editor: RetailStorePickupEditor,
   Preview: RetailStorePickupPreview,
 };

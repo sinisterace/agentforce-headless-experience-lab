@@ -1,9 +1,9 @@
-import { ArrowDown, ArrowUp, MapPin, Plus, Trash2 } from 'lucide-react';
-import type { RetailOrderTrackingPayload, TrackingStep } from './payloads';
-import { routeProgress, stepsForStatus, trackStatus, trackVehicle } from './retailFormat';
+import { MapPin } from 'lucide-react';
+import type { RetailOrderTrackingPayload } from './payloads';
+import { routeProgress, stepsForStatus, trackStatus } from './retailFormat';
 
 /**
- * Build/Input editor + live preview for the ASA Retail · Order Tracking CLT
+ * Live preview for the ASA Retail · Order Tracking CLT
  * (DTO field retailOrderTrackingJSON). LWC-true fields: title, live?, status?,
  * etaText?, courier?{ name, vehicle?, initials?, photoUrl?, rating? },
  * destination?{ label?, address? }, steps?[]{ label, state, time? },
@@ -15,143 +15,6 @@ import { routeProgress, stepsForStatus, trackStatus, trackVehicle } from './reta
  * payload carries no status / steps / ETA the preview shows a sample so it is
  * never blank — mirroring the LWC.
  */
-
-const STATUSES = [
-  { value: 'submitted', label: 'Order placed' },
-  { value: 'packed', label: 'Packed & ready' },
-  { value: 'out_for_delivery', label: 'Out for delivery' },
-  { value: 'delivered', label: 'Delivered' },
-];
-const VEHICLES = ['bike', 'van', 'car', 'foot'];
-const STEP_STATES = ['done', 'current', 'todo'];
-
-export function RetailOrderTrackingEditor({
-  value,
-  onChange,
-}: {
-  value: RetailOrderTrackingPayload;
-  onChange: (next: RetailOrderTrackingPayload) => void;
-}) {
-  const setCourier = (patch: Partial<NonNullable<RetailOrderTrackingPayload['courier']>>) =>
-    onChange({ ...value, courier: { name: '', ...value.courier, ...patch } });
-  const setDest = (patch: Partial<NonNullable<RetailOrderTrackingPayload['destination']>>) =>
-    onChange({ ...value, destination: { ...value.destination, ...patch } });
-
-  const steps = value.steps ?? [];
-  const setStep = (index: number, patch: Partial<TrackingStep>) => {
-    const next = steps.slice();
-    next[index] = { ...next[index], ...patch };
-    onChange({ ...value, steps: next });
-  };
-  const addStep = () => onChange({ ...value, steps: [...steps, { label: 'New step', state: 'todo' }] });
-  const removeStep = (index: number) => onChange({ ...value, steps: steps.filter((_, i) => i !== index) });
-  const moveStep = (index: number, delta: number) => {
-    const target = index + delta;
-    if (target < 0 || target >= steps.length) return;
-    const next = steps.slice();
-    [next[index], next[target]] = [next[target], next[index]];
-    onChange({ ...value, steps: next });
-  };
-
-  return (
-    <div className="playground-editor">
-      <label className="playground-field">
-        Title
-        <input value={value.title} onChange={(e) => onChange({ ...value, title: e.target.value })} placeholder="Track order #4821" />
-      </label>
-      <label className="playground-check">
-        <input type="checkbox" checked={!!value.live} onChange={(e) => onChange({ ...value, live: e.target.checked })} />
-        Show LIVE badge
-      </label>
-      <div className="playground-field">
-        <span>Status</span>
-        <select value={trackStatus(value.status)} onChange={(e) => onChange({ ...value, status: e.target.value })}>
-          {STATUSES.map((s) => <option value={s.value} key={s.value}>{s.label}</option>)}
-        </select>
-      </div>
-      <label className="playground-field">
-        ETA text <span className="optional-label">Optional</span>
-        <input value={value.etaText ?? ''} onChange={(e) => onChange({ ...value, etaText: e.target.value })} placeholder="Arriving 2:15–2:30 PM" />
-      </label>
-
-      <div className="playground-card">
-        <div className="playground-card-head"><strong>Destination</strong></div>
-        <label className="playground-field">
-          Label <span className="optional-label">Optional</span>
-          <input value={value.destination?.label ?? ''} onChange={(e) => setDest({ label: e.target.value })} placeholder="Home" />
-        </label>
-        <label className="playground-field">
-          Address <span className="optional-label">Optional</span>
-          <input value={value.destination?.address ?? ''} onChange={(e) => setDest({ address: e.target.value })} placeholder="150 4th St, San Francisco" />
-        </label>
-      </div>
-
-      <div className="playground-card">
-        <div className="playground-card-head"><strong>Courier</strong></div>
-        <label className="playground-field">
-          Name <span className="optional-label">Optional</span>
-          <input value={value.courier?.name ?? ''} onChange={(e) => setCourier({ name: e.target.value })} placeholder="Alex Rivera" />
-        </label>
-        <div className="playground-field">
-          <span>Vehicle</span>
-          <select value={trackVehicle(value.courier?.vehicle)} onChange={(e) => setCourier({ vehicle: e.target.value })}>
-            {VEHICLES.map((v) => <option value={v} key={v}>{v}</option>)}
-          </select>
-        </div>
-        <label className="playground-field">
-          Initials <span className="optional-label">auto if blank</span>
-          <input value={value.courier?.initials ?? ''} onChange={(e) => setCourier({ initials: e.target.value })} placeholder="AR" />
-        </label>
-        <label className="playground-field">
-          Rating <span className="optional-label">Optional</span>
-          <input value={value.courier?.rating ?? ''} onChange={(e) => setCourier({ rating: e.target.value })} placeholder="4.9 ★" />
-        </label>
-      </div>
-
-      <div className="playground-list">
-        <div className="playground-list-head">
-          <span>Timeline steps <span className="optional-label">blank → derived from status</span></span>
-          <button type="button" className="playground-add" onClick={addStep}><Plus aria-hidden="true" /> Add step</button>
-        </div>
-        {steps.map((s, index) => (
-          <div className="playground-card" key={index}>
-            <div className="playground-card-head">
-              <strong>Step {index + 1}</strong>
-              <span className="playground-card-actions">
-                <button type="button" onClick={() => moveStep(index, -1)} disabled={index === 0} aria-label="Move up"><ArrowUp aria-hidden="true" /></button>
-                <button type="button" onClick={() => moveStep(index, 1)} disabled={index === steps.length - 1} aria-label="Move down"><ArrowDown aria-hidden="true" /></button>
-                <button type="button" onClick={() => removeStep(index)} aria-label="Remove step"><Trash2 aria-hidden="true" /></button>
-              </span>
-            </div>
-            <label className="playground-field">
-              Label
-              <input value={s.label} onChange={(e) => setStep(index, { label: e.target.value })} placeholder="Out for delivery" />
-            </label>
-            <div className="playground-field">
-              <span>State</span>
-              <select value={s.state} onChange={(e) => setStep(index, { state: e.target.value })}>
-                {STEP_STATES.map((st) => <option value={st} key={st}>{st}</option>)}
-              </select>
-            </div>
-            <label className="playground-field">
-              Time <span className="optional-label">Optional</span>
-              <input value={s.time ?? ''} onChange={(e) => setStep(index, { time: e.target.value })} placeholder="2:04 PM" />
-            </label>
-          </div>
-        ))}
-      </div>
-
-      <label className="playground-field">
-        Action button <span className="optional-label">Optional</span>
-        <input value={value.submitText ?? ''} onChange={(e) => onChange({ ...value, submitText: e.target.value })} placeholder="Message courier" />
-      </label>
-      <label className="playground-field">
-        Action value <span className="optional-label">sent back; defaults to label</span>
-        <input value={value.submitValue ?? ''} onChange={(e) => onChange({ ...value, submitValue: e.target.value })} placeholder="Message the courier about my order" />
-      </label>
-    </div>
-  );
-}
 
 /* ── Self-contained map ─────────────────────────────────────────────────── */
 

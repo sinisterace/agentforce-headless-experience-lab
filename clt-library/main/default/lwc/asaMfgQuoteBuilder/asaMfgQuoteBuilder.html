@@ -1,0 +1,59 @@
+<template>
+    <div class="asa-card">
+        <template if:true={isTestMode}>
+            <p class="asa-test-badge">Sample data — no options supplied</p>
+        </template>
+
+        <div class="asa-qb-head">
+            <h3 class="selector-title">{title}</h3>
+            <template if:true={hasProduct}>
+                <p class="asa-qb-product">{product}<template if:true={hasBase}> · <span class="asa-qb-base">{baseText}</span></template></p>
+            </template>
+        </div>
+
+        <div class="asa-qb-groups">
+            <template for:each={groups} for:item="g">
+                <div key={g.id} class="asa-qb-group">
+                    <span class="asa-qb-group-label">{g.label}</span>
+                    <div class="asa-qb-chips">
+                        <template for:each={g.options} for:item="o">
+                            <button key={o.key} type="button" class={o.chipClass} data-group-id={o.groupId} data-option-id={o.optionId} onclick={handleSelect}>
+                                <span class="asa-qb-chip-main">
+                                    <span class="asa-qb-chip-label">{o.label}</span>
+                                    <template if:true={o.hasDetail}>
+                                        <span class="asa-qb-chip-detail">{o.detail}</span>
+                                    </template>
+                                </span>
+                                <span class="asa-qb-chip-delta">{o.deltaText}</span>
+                            </button>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <div class="asa-qb-qtyrow">
+            <span class="asa-qb-qty-label">Quantity</span>
+            <div class="asa-qb-stepper">
+                <button type="button" class="asa-qb-step" onclick={handleDecrement} disabled={minusDisabled} aria-label="Decrease quantity">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </button>
+                <span class="asa-qb-qty-value">{quantity}</span>
+                <button type="button" class="asa-qb-step" onclick={handleIncrement} aria-label="Increase quantity">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="asa-qb-estimate">
+            <span class="asa-qb-est-label">Estimated total</span>
+            <span class="asa-qb-est-value">{estimateText}</span>
+            <span class="asa-qb-est-note">{estimateNote}</span>
+        </div>
+
+        <button type="button" class="asa-qb-cta" onclick={handleSubmit}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M16 13H8"></path><path d="M16 17H8"></path><path d="M10 9H8"></path></svg>
+            {submitText}
+        </button>
+    </div>
+</template>

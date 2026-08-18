@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Braces, Pencil, RotateCcw, SlidersHorizontal, TreePine, X, Zap } from 'lucide-react';
+import { Braces, RotateCcw, SlidersHorizontal, TreePine, X, Zap } from 'lucide-react';
 import type { Recommendation } from '@/types/catalog';
 import { pretty, safeParse } from './payloads';
 import { StructurePane } from './StructurePane';
@@ -8,17 +8,26 @@ import { resolveWidget } from './widgets/registry';
 /**
  * The CLT playground. The rendered component is the hero: it sits alone on a
  * soft canvas, exactly as a customer would see it in the agent. The authoring
- * detail — Structure | Edit | JSON — is tucked into an inspector that only
- * opens when you ask for it, so the screen stays focused on the CLT itself.
+ * detail — Structure | JSON — is tucked into an inspector that only opens when
+ * you ask for it, so the screen stays focused on the CLT itself.
  *
  * Every CLT is looked up in the widget registry, so this file never grows as
  * the library scales — a new CLT is one *.def.ts file plus a registry line.
  * Fully self-contained: the only data source is the catalogue row (Apex
  * /cltcat/*). Nothing here depends on the MCP server.
  */
-type InspectorView = 'structure' | 'edit' | 'json';
+type InspectorView = 'structure' | 'json';
 
-export function CltPlayground({ recommendation, accentColor }: { recommendation: Recommendation; accentColor: string }) {
+export function CltPlayground({
+  recommendation,
+  accentColor,
+  companyName,
+}: {
+  recommendation: Recommendation;
+  accentColor: string;
+  /** When supplied, the stage reads as this company's own live preview. */
+  companyName?: string;
+}) {
   const def = resolveWidget(recommendation);
 
   const seed = useMemo(() => {
@@ -33,11 +42,15 @@ export function CltPlayground({ recommendation, accentColor }: { recommendation:
   // Re-seed when a different CLT is opened.
   useEffect(() => setPayload(seed), [seed]);
 
-  const { Editor, Preview } = def;
+  const { Preview } = def;
   const jsonString = pretty(payload);
 
   return (
-    <section className={`clt-stage${inspectorOpen ? ' inspecting' : ''}`} aria-label={`${recommendation.label} playground`}>
+    <section
+      className={`clt-stage${inspectorOpen ? ' inspecting' : ''}`}
+      style={{ '--customer-accent': accentColor } as React.CSSProperties}
+      aria-label={`${recommendation.label} playground`}
+    >
       <header className="clt-stage-bar">
         <div className="clt-action-id">
           <span className="clt-action-glyph" aria-hidden="true"><Zap /></span>
@@ -48,6 +61,10 @@ export function CltPlayground({ recommendation, accentColor }: { recommendation:
           </div>
         </div>
         <div className="clt-stage-controls">
+          <span className="clt-live-pill">
+            <i aria-hidden="true" />
+            {companyName ? `Live for ${companyName}` : 'Live preview'}
+          </span>
           <button type="button" className="clt-reset" onClick={() => setPayload(seed)}>
             <RotateCcw aria-hidden="true" /> Reset
           </button>
@@ -76,9 +93,6 @@ export function CltPlayground({ recommendation, accentColor }: { recommendation:
                 <button type="button" role="tab" aria-selected={view === 'structure'} className={view === 'structure' ? 'active' : ''} onClick={() => setView('structure')}>
                   <TreePine aria-hidden="true" /> Structure
                 </button>
-                <button type="button" role="tab" aria-selected={view === 'edit'} className={view === 'edit' ? 'active' : ''} onClick={() => setView('edit')}>
-                  <Pencil aria-hidden="true" /> Edit
-                </button>
                 <button type="button" role="tab" aria-selected={view === 'json'} className={view === 'json' ? 'active' : ''} onClick={() => setView('json')}>
                   <Braces aria-hidden="true" /> JSON
                 </button>
@@ -92,7 +106,6 @@ export function CltPlayground({ recommendation, accentColor }: { recommendation:
             </div>
             <div className="clt-inspector-body">
               {view === 'structure' && <StructurePane nodes={def.structure} payload={payload} />}
-              {view === 'edit' && <Editor value={payload} onChange={(next) => setPayload(next as Record<string, unknown>)} accentColor={accentColor} />}
               {view === 'json' && (
                 <div className="clt-json-view">
                   <pre>

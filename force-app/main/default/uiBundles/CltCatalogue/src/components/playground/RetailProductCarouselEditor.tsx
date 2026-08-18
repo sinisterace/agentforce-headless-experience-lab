@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { ArrowDown, ArrowUp, Check, ChevronLeft, ChevronRight, Plus, ShoppingCart, Trash2 } from 'lucide-react';
+import { Check, ChevronLeft, ChevronRight, ShoppingCart } from 'lucide-react';
 import type { CarouselProduct, RetailProductCarouselPayload } from './payloads';
 import { formatMoney, productCategory, productHue, productIcon, retailProductImage, stockBucket } from './retailFormat';
 
 /**
- * Build/Input editor + live preview for the ASA Retail · Product Carousel CLT
+ * Live preview for the ASA Retail · Product Carousel CLT
  * (DTO field retailProductCarouselJSON). LWC-true fields: title, subtitle?,
  * currency?, products (object[] of { id, name, sku?, price, currency?,
  * compareAtPrice?, rating?, reviewCount?, imageUrl?, category?, badge?,
@@ -14,131 +14,7 @@ import { formatMoney, productCategory, productHue, productIcon, retailProductIma
  * mirroring the LWC.
  */
 
-const CATEGORIES = ['apparel', 'shoes', 'electronics', 'beauty', 'home', 'grocery', 'accessories', 'outdoors', 'toys', 'general'];
-const STOCK_STATES = [
-  { value: 'in_stock', label: 'In stock' },
-  { value: 'low', label: 'Low stock' },
-  { value: 'out', label: 'Out of stock' },
-];
 
-export function RetailProductCarouselEditor({
-  value,
-  onChange,
-}: {
-  value: RetailProductCarouselPayload;
-  onChange: (next: RetailProductCarouselPayload) => void;
-}) {
-  const setProduct = (index: number, patch: Partial<CarouselProduct>) => {
-    const products = value.products.slice();
-    products[index] = { ...products[index], ...patch };
-    onChange({ ...value, products });
-  };
-  const addProduct = () => {
-    if (value.products.length >= 3) return;
-    onChange({
-      ...value,
-      products: [
-        ...value.products,
-        { id: `p-${value.products.length + 1}`, name: 'New product', category: 'general', price: 0, availability: 'in_stock' },
-      ],
-    });
-  };
-  const removeProduct = (index: number) => onChange({ ...value, products: value.products.filter((_, i) => i !== index) });
-  const move = (index: number, delta: number) => {
-    const target = index + delta;
-    if (target < 0 || target >= value.products.length) return;
-    const products = value.products.slice();
-    [products[index], products[target]] = [products[target], products[index]];
-    onChange({ ...value, products });
-  };
-  const num = (raw: string): number | undefined => (raw.trim() === '' ? undefined : Number(raw));
-
-  return (
-    <div className="playground-editor">
-      <label className="playground-field">
-        Title
-        <input value={value.title} onChange={(e) => onChange({ ...value, title: e.target.value })} placeholder="Picked for you" />
-      </label>
-      <label className="playground-field">
-        Subtitle <span className="optional-label">Optional</span>
-        <input value={value.subtitle ?? ''} onChange={(e) => onChange({ ...value, subtitle: e.target.value })} placeholder="Based on your recent views" />
-      </label>
-      <label className="playground-field">
-        Currency <span className="optional-label">ISO code</span>
-        <input value={value.currency ?? ''} onChange={(e) => onChange({ ...value, currency: e.target.value || undefined })} placeholder="USD" />
-      </label>
-
-      <div className="playground-list">
-        <div className="playground-list-head">
-          <span>Products <span className="optional-label">Maximum 3</span></span>
-          <button type="button" className="playground-add" onClick={addProduct} disabled={value.products.length >= 3}><Plus aria-hidden="true" /> Add product</button>
-        </div>
-        {value.products.length === 0 && <p className="playground-empty">No products — the component shows sample test data until you add one.</p>}
-        {value.products.slice(0, 3).map((p, index) => (
-          <div className="playground-card" key={index}>
-            <div className="playground-card-head">
-              <strong>Product {index + 1}</strong>
-              <span className="playground-card-actions">
-                <button type="button" onClick={() => move(index, -1)} disabled={index === 0} aria-label="Move up"><ArrowUp aria-hidden="true" /></button>
-                <button type="button" onClick={() => move(index, 1)} disabled={index === value.products.length - 1} aria-label="Move down"><ArrowDown aria-hidden="true" /></button>
-                <button type="button" onClick={() => removeProduct(index)} aria-label="Remove product"><Trash2 aria-hidden="true" /></button>
-              </span>
-            </div>
-            <label className="playground-field">
-              Name
-              <input value={p.name} onChange={(e) => setProduct(index, { name: e.target.value })} placeholder="Trail Runner 3" />
-            </label>
-            <label className="playground-field">
-              SKU <span className="optional-label">Optional</span>
-              <input value={p.sku ?? ''} onChange={(e) => setProduct(index, { sku: e.target.value })} placeholder="TR3-BLK-10" />
-            </label>
-            <div className="playground-field">
-              <span>Category</span>
-              <select value={productCategory(p.category)} onChange={(e) => setProduct(index, { category: e.target.value })}>
-                {CATEGORIES.map((c) => <option value={c} key={c}>{c}</option>)}
-              </select>
-            </div>
-            <label className="playground-field">
-              Price
-              <input type="number" value={p.price ?? ''} onChange={(e) => setProduct(index, { price: Number(e.target.value) })} placeholder="129.00" />
-            </label>
-            <label className="playground-field">
-              Compare-at price <span className="optional-label">was-price</span>
-              <input type="number" value={p.compareAtPrice ?? ''} onChange={(e) => setProduct(index, { compareAtPrice: num(e.target.value) })} placeholder="159.00" />
-            </label>
-            <label className="playground-field">
-              Rating <span className="optional-label">0–5</span>
-              <input type="number" step="0.1" min="0" max="5" value={p.rating ?? ''} onChange={(e) => setProduct(index, { rating: num(e.target.value) })} placeholder="4.6" />
-            </label>
-            <label className="playground-field">
-              Review count <span className="optional-label">Optional</span>
-              <input type="number" value={p.reviewCount ?? ''} onChange={(e) => setProduct(index, { reviewCount: num(e.target.value) })} placeholder="248" />
-            </label>
-            <label className="playground-field">
-              Image URL <span className="optional-label">blank → category tile</span>
-              <input value={p.imageUrl ?? ''} onChange={(e) => setProduct(index, { imageUrl: e.target.value })} placeholder="https://… or /resource/Name" />
-            </label>
-            <label className="playground-field">
-              Badge <span className="optional-label">corner tag</span>
-              <input value={p.badge ?? ''} onChange={(e) => setProduct(index, { badge: e.target.value })} placeholder="Bestseller" />
-            </label>
-            <div className="playground-field">
-              <span>Availability</span>
-              <select value={stockToValue(p.availability)} onChange={(e) => setProduct(index, { availability: e.target.value })}>
-                {STOCK_STATES.map((s) => <option value={s.value} key={s.value}>{s.label}</option>)}
-              </select>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function stockToValue(a?: string): string {
-  const bucket = stockBucket(a);
-  return bucket === 'in' ? 'in_stock' : bucket;
-}
 
 const TEST_PRODUCTS: CarouselProduct[] = [
   { id: 'p1', name: 'Trailblazer Running Shoe', sku: 'TR3-BLK-10', category: 'shoes', price: 128, compareAtPrice: 160, rating: 4.7, reviewCount: 2140, badge: '-20%', availability: 'in_stock' },

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowDown, ArrowUp, Check, Plus, Trash2 } from 'lucide-react';
+import { Check } from 'lucide-react';
 import type { AccountEntry, FinServAccountSelectorPayload } from './payloads';
 import { accountTypeModifier, formatMoney } from './accountFormat';
 
@@ -14,7 +14,7 @@ function ChipGlyph() {
 }
 
 /**
- * Build/Input editor + live preview for the ASA Financial Services · Account
+ * Live preview for the ASA Financial Services · Account
  * Selector CLT (DTO field finServAccountSelectorJSON). LWC-true fields: title,
  * mode (single|multiple), accounts (object[] with id, name, type, mask, balance,
  * currency?, available?, badge?), submitText?. Empty accounts drops the preview
@@ -22,106 +22,6 @@ function ChipGlyph() {
  * deployed LWC.
  */
 
-const ACCOUNT_TYPES = ['Checking', 'Savings', 'Credit Card', 'Loan', 'Investment'];
-
-export function FinServAccountSelectorEditor({
-  value,
-  onChange,
-}: {
-  value: FinServAccountSelectorPayload;
-  onChange: (next: FinServAccountSelectorPayload) => void;
-}) {
-  const setAcct = (index: number, patch: Partial<AccountEntry>) => {
-    const accounts = value.accounts.slice();
-    accounts[index] = { ...accounts[index], ...patch };
-    onChange({ ...value, accounts });
-  };
-  const addAcct = () =>
-    onChange({
-      ...value,
-      accounts: [
-        ...value.accounts,
-        { id: `acct-${value.accounts.length + 1}`, name: 'New account', type: 'Checking', mask: '0000', balance: 0, currency: 'USD' },
-      ],
-    });
-  const removeAcct = (index: number) => onChange({ ...value, accounts: value.accounts.filter((_, i) => i !== index) });
-  const move = (index: number, delta: number) => {
-    const target = index + delta;
-    if (target < 0 || target >= value.accounts.length) return;
-    const accounts = value.accounts.slice();
-    [accounts[index], accounts[target]] = [accounts[target], accounts[index]];
-    onChange({ ...value, accounts });
-  };
-
-  return (
-    <div className="playground-editor">
-      <label className="playground-field">
-        Title
-        <input value={value.title} onChange={(e) => onChange({ ...value, title: e.target.value })} placeholder="Which account can I help you with?" />
-      </label>
-
-      <div className="playground-field">
-        <span>Selection mode</span>
-        <div className="playground-segment" role="group" aria-label="Selection mode">
-          {(['single', 'multiple'] as const).map((mode) => (
-            <button type="button" key={mode} className={value.mode === mode ? 'active' : ''} aria-pressed={value.mode === mode} onClick={() => onChange({ ...value, mode })}>
-              {mode === 'single' ? 'Single' : 'Multiple'}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {value.mode === 'multiple' && (
-        <label className="playground-field">
-          Submit button text
-          <input value={value.submitText ?? ''} onChange={(e) => onChange({ ...value, submitText: e.target.value })} placeholder="Continue" />
-        </label>
-      )}
-
-      <div className="playground-list">
-        <div className="playground-list-head">
-          <span>Accounts</span>
-          <button type="button" className="playground-add" onClick={addAcct}><Plus aria-hidden="true" /> Add account</button>
-        </div>
-        {value.accounts.length === 0 && <p className="playground-empty">No accounts — the component shows sample test data until you add one.</p>}
-        {value.accounts.map((acct, index) => (
-          <div className="playground-card" key={index}>
-            <div className="playground-card-head">
-              <strong>Account {index + 1}</strong>
-              <span className="playground-card-actions">
-                <button type="button" onClick={() => move(index, -1)} disabled={index === 0} aria-label="Move up"><ArrowUp aria-hidden="true" /></button>
-                <button type="button" onClick={() => move(index, 1)} disabled={index === value.accounts.length - 1} aria-label="Move down"><ArrowDown aria-hidden="true" /></button>
-                <button type="button" onClick={() => removeAcct(index)} aria-label="Remove account"><Trash2 aria-hidden="true" /></button>
-              </span>
-            </div>
-            <label className="playground-field">
-              Name
-              <input value={acct.name} onChange={(e) => setAcct(index, { name: e.target.value })} />
-            </label>
-            <div className="playground-field">
-              <span>Type</span>
-              <select value={acct.type} onChange={(e) => setAcct(index, { type: e.target.value })}>
-                {ACCOUNT_TYPES.map((t) => <option value={t} key={t}>{t}</option>)}
-              </select>
-            </div>
-            <label className="playground-field">
-              Last 4 digits
-              <input value={acct.mask} onChange={(e) => setAcct(index, { mask: e.target.value.replace(/\D/g, '').slice(0, 4) })} inputMode="numeric" placeholder="1234" />
-            </label>
-            <label className="playground-field">
-              Balance
-              <input type="number" value={acct.balance} onChange={(e) => setAcct(index, { balance: Number(e.target.value) })} />
-            </label>
-            <label className="playground-field">
-              Badge <span className="optional-label">Optional</span>
-              <input value={acct.badge ?? ''} onChange={(e) => setAcct(index, { badge: e.target.value })} placeholder="Primary" />
-            </label>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 /** Faithful preview: mirrors the Account Selector LWC, including test-mode fallback. */
 export function FinServAccountSelectorPreview({

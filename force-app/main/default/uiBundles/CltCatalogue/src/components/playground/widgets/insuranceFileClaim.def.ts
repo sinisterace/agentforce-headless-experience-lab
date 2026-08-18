@@ -1,5 +1,5 @@
 import type { InsuranceFileClaimPayload } from '../payloads';
-import { InsuranceFileClaimEditor, InsuranceFileClaimPreview } from '../InsuranceFileClaimEditor';
+import { InsuranceFileClaimPreview } from '../InsuranceFileClaimEditor';
 import type { WidgetDef } from './types';
 
 /** asaInsuranceFileClaim — start a claim by picking the type of incident for a policy. */
@@ -34,6 +34,5 @@ export const insuranceFileClaimDef: WidgetDef = {
     },
     { label: 'Submit', control: 'Button', bind: 'submitText' },
   ],
-  Editor: InsuranceFileClaimEditor,
   Preview: InsuranceFileClaimPreview,
 };

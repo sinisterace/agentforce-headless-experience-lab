@@ -1,0 +1,73 @@
+<template>
+    <div class="asa-card">
+        <template if:true={isTestMode}>
+            <p class="asa-test-badge">Sample data — no usage supplied</p>
+        </template>
+
+        <div class="asa-uc-head">
+            <h3 class="selector-title">{title}</h3>
+            <template if:true={hasCycle}>
+                <span class="asa-uc-cycle">{cycleText}</span>
+            </template>
+        </div>
+
+        <!-- Projected-bill readout -->
+        <div class="asa-uc-projbar">
+            <div class="asa-uc-proj">
+                <template if:true={hasProjected}>
+                    <span class="asa-uc-proj-eyebrow">{projectedText}</span>
+                    <span class="asa-uc-proj-value">{projectedCostText}</span>
+                </template>
+                <template if:true={hasUsed}>
+                    <span class="asa-uc-used">{usedText}</span>
+                </template>
+            </div>
+            <template if:true={hasDelta}>
+                <span class={deltaClass}>
+                    <span class="asa-uc-delta-arrow" aria-hidden="true">{deltaArrow}</span>{deltaLabel}
+                </span>
+            </template>
+        </div>
+
+        <!-- Daily/weekly column chart -->
+        <template if:true={hasBars}>
+            <div class="asa-uc-chart">
+                <template for:each={bars} for:item="b">
+                    <div key={b.key} class="asa-uc-col">
+                        <div class="asa-uc-col-track">
+                            <div class={b.barClass} style={b.style}></div>
+                        </div>
+                        <span class="asa-uc-col-label">{b.label}</span>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <!-- Cost breakdown: segmented meter + legend -->
+        <template if:true={hasBreakdown}>
+            <div class="asa-uc-breakdown">
+                <div class="asa-uc-meter">
+                    <template for:each={breakdown} for:item="s">
+                        <span key={s.key} class="asa-uc-seg" style={s.segStyle}></span>
+                    </template>
+                </div>
+                <ul class="asa-uc-legend">
+                    <template for:each={breakdown} for:item="s">
+                        <li key={s.key} class="asa-uc-leg">
+                            <span class="asa-uc-leg-dot" style={s.dotStyle} aria-hidden="true"></span>
+                            <span class="asa-uc-leg-label">{s.label}</span>
+                            <span class="asa-uc-leg-amt">{s.amountText}</span>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </template>
+
+        <template if:true={hasSubmit}>
+            <button type="button" class="asa-uc-cta" onclick={handleSubmit}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v4"></path><path d="m6.3 6.3 2.9 2.9"></path><path d="M2 12h4"></path><path d="M12 12l4.2 4.2"></path><circle cx="12" cy="12" r="2"></circle><path d="M17.7 6.3 14.8 9.2"></path><path d="M22 12h-4"></path></svg>
+                {submitText}
+            </button>
+        </template>
+    </div>
+</template>

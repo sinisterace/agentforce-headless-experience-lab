@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>ASA Technology, Media &amp; Comms · Service Status</masterLabel>
+    <description>Shows a live service-health board: an overall banner, per-service status rows, the affected area, an estimated restore time, and an optional notify-me action.</description>
+    <targets>
+        <target>lightning__AgentforceOutput</target>
+        <target>lightningSnapin__ChatMessage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AgentforceOutput">
+            <sourceType name="c__asaTmcServiceStatus"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

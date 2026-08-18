@@ -20,13 +20,6 @@ export type StructureNode = {
   children?: StructureNode[];
 };
 
-/** Props every CLT editor accepts (all current editors already match this). */
-export type EditorProps = {
-  value: any;
-  onChange: (next: any) => void;
-  accentColor: string;
-};
-
 /** Props every CLT preview accepts. */
 export type PreviewProps = {
   value: any;
@@ -47,6 +40,5 @@ export type WidgetDef = {
   defaults: unknown;
   /** Authored structure breakdown shown in the middle pane. */
   structure: StructureNode[];
-  Editor: ComponentType<EditorProps>;
   Preview: ComponentType<PreviewProps>;
 };

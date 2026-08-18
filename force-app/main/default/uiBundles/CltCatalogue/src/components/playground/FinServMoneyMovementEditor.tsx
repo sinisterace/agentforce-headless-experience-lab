@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { ArrowDown, ArrowDownToLine, ArrowUp, Check, Landmark, Plus, Trash2 } from 'lucide-react';
+import { ArrowDownToLine, Check, Landmark } from 'lucide-react';
 import type { Recipient, AmountPreset, FinServMoneyMovementPayload } from './payloads';
 import { recipientTypeIcon, formatMoney, buildFromLabel, buildFromParts, recipientDetail } from './moneyMovementFormat';
 
 /**
- * Build/Input editor + live preview for the ASA Financial Services · Money
+ * Live preview for the ASA Financial Services · Money
  * Movement CLT (DTO field finServMoneyMovementJSON). LWC-true fields: title,
  * fromAccount ({ label, mask? }), recipients (object[] with id, name, type?,
  * mask?, detail?), amountPresets (object[] with id, label?, amount), currency?,
@@ -13,154 +13,6 @@ import { recipientTypeIcon, formatMoney, buildFromLabel, buildFromParts, recipie
  */
 
 const OTHER_KEY = '__other__';
-const RECIPIENT_TYPES = ['person', 'card', 'account', 'business', 'external'];
-
-export function FinServMoneyMovementEditor({
-  value,
-  onChange,
-}: {
-  value: FinServMoneyMovementPayload;
-  onChange: (next: FinServMoneyMovementPayload) => void;
-}) {
-  const setRecipient = (index: number, patch: Partial<Recipient>) => {
-    const recipients = value.recipients.slice();
-    recipients[index] = { ...recipients[index], ...patch };
-    onChange({ ...value, recipients });
-  };
-  const addRecipient = () =>
-    onChange({
-      ...value,
-      recipients: [
-        ...value.recipients,
-        { id: `rcp-${value.recipients.length + 1}`, name: 'New recipient', type: 'person', mask: '', detail: '' },
-      ],
-    });
-  const removeRecipient = (index: number) =>
-    onChange({ ...value, recipients: value.recipients.filter((_, i) => i !== index) });
-  const moveRecipient = (index: number, delta: number) => {
-    const target = index + delta;
-    if (target < 0 || target >= value.recipients.length) return;
-    const recipients = value.recipients.slice();
-    [recipients[index], recipients[target]] = [recipients[target], recipients[index]];
-    onChange({ ...value, recipients });
-  };
-
-  const setAmount = (index: number, patch: Partial<AmountPreset>) => {
-    const amountPresets = value.amountPresets.slice();
-    amountPresets[index] = { ...amountPresets[index], ...patch };
-    onChange({ ...value, amountPresets });
-  };
-  const addAmount = () =>
-    onChange({
-      ...value,
-      amountPresets: [...value.amountPresets, { id: `amt-${value.amountPresets.length + 1}`, label: '', amount: 50 }],
-    });
-  const removeAmount = (index: number) =>
-    onChange({ ...value, amountPresets: value.amountPresets.filter((_, i) => i !== index) });
-
-  return (
-    <div className="playground-editor">
-      <label className="playground-field">
-        Title
-        <input value={value.title} onChange={(e) => onChange({ ...value, title: e.target.value })} placeholder="Send money" />
-      </label>
-
-      <div className="playground-card">
-        <div className="playground-card-head">
-          <strong>From account</strong>
-        </div>
-        <label className="playground-field">
-          Label
-          <input value={value.fromAccount?.label ?? ''} onChange={(e) => onChange({ ...value, fromAccount: { ...value.fromAccount, label: e.target.value } })} placeholder="Everyday Checking" />
-        </label>
-        <label className="playground-field">
-          Mask <span className="optional-label">last 4</span>
-          <input value={value.fromAccount?.mask ?? ''} onChange={(e) => onChange({ ...value, fromAccount: { label: value.fromAccount?.label ?? '', mask: e.target.value } })} placeholder="1234" />
-        </label>
-      </div>
-
-      <div className="playground-list">
-        <div className="playground-list-head">
-          <span>Recipients</span>
-          <button type="button" className="playground-add" onClick={addRecipient}><Plus aria-hidden="true" /> Add recipient</button>
-        </div>
-        {value.recipients.length === 0 && <p className="playground-empty">No recipients — the component shows sample test data until you add one.</p>}
-        {value.recipients.map((rcp, index) => (
-          <div className="playground-card" key={index}>
-            <div className="playground-card-head">
-              <strong>Recipient {index + 1}</strong>
-              <span className="playground-card-actions">
-                <button type="button" onClick={() => moveRecipient(index, -1)} disabled={index === 0} aria-label="Move up"><ArrowUp aria-hidden="true" /></button>
-                <button type="button" onClick={() => moveRecipient(index, 1)} disabled={index === value.recipients.length - 1} aria-label="Move down"><ArrowDown aria-hidden="true" /></button>
-                <button type="button" onClick={() => removeRecipient(index)} aria-label="Remove recipient"><Trash2 aria-hidden="true" /></button>
-              </span>
-            </div>
-            <label className="playground-field">
-              Name
-              <input value={rcp.name} onChange={(e) => setRecipient(index, { name: e.target.value })} />
-            </label>
-            <div className="playground-field">
-              <span>Type</span>
-              <select value={rcp.type ?? 'person'} onChange={(e) => setRecipient(index, { type: e.target.value })}>
-                {RECIPIENT_TYPES.map((t) => <option value={t} key={t}>{t}</option>)}
-              </select>
-            </div>
-            <label className="playground-field">
-              Mask <span className="optional-label">last 4</span>
-              <input value={rcp.mask ?? ''} onChange={(e) => setRecipient(index, { mask: e.target.value })} placeholder="4821" />
-            </label>
-            <label className="playground-field">
-              Detail <span className="optional-label">Optional</span>
-              <input value={rcp.detail ?? ''} onChange={(e) => setRecipient(index, { detail: e.target.value })} placeholder="Checking" />
-            </label>
-          </div>
-        ))}
-      </div>
-
-      <div className="playground-list">
-        <div className="playground-list-head">
-          <span>Amount presets</span>
-          <button type="button" className="playground-add" onClick={addAmount}><Plus aria-hidden="true" /> Add amount</button>
-        </div>
-        {value.amountPresets.length === 0 && <p className="playground-empty">No preset amounts.</p>}
-        {value.amountPresets.map((amt, index) => (
-          <div className="playground-card" key={index}>
-            <div className="playground-card-head">
-              <strong>Amount {index + 1}</strong>
-              <span className="playground-card-actions">
-                <button type="button" onClick={() => removeAmount(index)} aria-label="Remove amount"><Trash2 aria-hidden="true" /></button>
-              </span>
-            </div>
-            <label className="playground-field">
-              Amount
-              <input type="number" step="0.01" value={amt.amount} onChange={(e) => setAmount(index, { amount: Number(e.target.value) })} />
-            </label>
-            <label className="playground-field">
-              Label <span className="optional-label">Optional — else formatted amount</span>
-              <input value={amt.label ?? ''} onChange={(e) => setAmount(index, { label: e.target.value })} placeholder="Minimum" />
-            </label>
-          </div>
-        ))}
-      </div>
-
-      <label className="playground-check">
-        <input type="checkbox" checked={value.allowOther === true} onChange={(e) => onChange({ ...value, allowOther: e.target.checked })} />
-        Show "Other amount" chip
-      </label>
-      {value.allowOther && (
-        <label className="playground-field">
-          Other amount text
-          <input value={value.otherText ?? ''} onChange={(e) => onChange({ ...value, otherText: e.target.value })} placeholder="Other amount" />
-        </label>
-      )}
-
-      <label className="playground-field">
-        Continue button text
-        <input value={value.submitText ?? ''} onChange={(e) => onChange({ ...value, submitText: e.target.value })} placeholder="Continue" />
-      </label>
-    </div>
-  );
-}
 
 const TEST_RECIPIENTS: Recipient[] = [
   { id: 'test-1', name: 'Alex Rivera', type: 'person', mask: '4821', detail: 'Checking' },

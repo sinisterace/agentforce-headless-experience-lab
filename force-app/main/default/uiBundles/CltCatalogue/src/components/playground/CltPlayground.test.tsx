@@ -39,16 +39,6 @@ describe('CltPlayground — account selector', () => {
     expect(screen.getByText('Rewards Card')).toBeInTheDocument();
   });
 
-  it('re-renders the preview as accounts are edited in the inspector', () => {
-    render(<CltPlayground recommendation={rec()} accentColor="#0b5cab" />);
-    // Editing lives behind the inspector toggle → open it, switch to Edit.
-    fireEvent.click(screen.getByRole('button', { name: /Structure & data/i }));
-    fireEvent.click(screen.getByRole('tab', { name: /Edit/i }));
-    fireEvent.click(screen.getByRole('button', { name: /Add account/i }));
-    // New account appears in the preview.
-    expect(screen.getByText('New account')).toBeInTheDocument();
-  });
-
   it('exposes the live JSON payload with the LWC-true field name', () => {
     render(<CltPlayground recommendation={rec()} accentColor="#0b5cab" />);
     fireEvent.click(screen.getByRole('button', { name: /Structure & data/i }));
@@ -56,10 +46,18 @@ describe('CltPlayground — account selector', () => {
     // The DTO field name is called out in the inspector subheader.
     expect(screen.getByText('finServAccountSelectorJSON')).toBeInTheDocument();
   });
+
+  it('offers only Structure and JSON inspector views (no Edit)', () => {
+    render(<CltPlayground recommendation={rec()} accentColor="#0b5cab" />);
+    fireEvent.click(screen.getByRole('button', { name: /Structure & data/i }));
+    expect(screen.getByRole('tab', { name: /Structure/i })).toBeInTheDocument();
+    expect(screen.getByRole('tab', { name: /JSON/i })).toBeInTheDocument();
+    expect(screen.queryByRole('tab', { name: /Edit/i })).not.toBeInTheDocument();
+  });
 });
 
 describe('CltPlayground — dispatch by dtoFieldName', () => {
-  it('renders the recent-transactions editor for finServTransactionsJSON', () => {
+  it('renders the recent-transactions preview for finServTransactionsJSON', () => {
     render(
       <CltPlayground
         recommendation={rec({
@@ -74,13 +72,9 @@ describe('CltPlayground — dispatch by dtoFieldName', () => {
     );
     // Empty transactions => transactions test-mode fallback (preview is always on stage).
     expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
-    // The transactions editor is reachable via the inspector's Edit tab.
-    fireEvent.click(screen.getByRole('button', { name: /Structure & data/i }));
-    fireEvent.click(screen.getByRole('tab', { name: /Edit/i }));
-    expect(screen.getByRole('button', { name: /Add transaction/i })).toBeInTheDocument();
   });
 
-  it('renders the advisor-appointment editor for finServAdvisorMeetingJSON', () => {
+  it('renders the advisor-appointment preview for finServAdvisorMeetingJSON', () => {
     render(
       <CltPlayground
         recommendation={rec({
@@ -93,15 +87,10 @@ describe('CltPlayground — dispatch by dtoFieldName', () => {
         accentColor="#0b5cab"
       />
     );
-    // No bookable slots => test-mode fallback (preview is always on stage).
     expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
-    // The appointment editor is reachable via the inspector's Edit tab.
-    fireEvent.click(screen.getByRole('button', { name: /Structure & data/i }));
-    fireEvent.click(screen.getByRole('tab', { name: /Edit/i }));
-    expect(screen.getByRole('button', { name: /Add day/i })).toBeInTheDocument();
   });
 
-  it('renders the money-movement editor for finServMoneyMovementJSON', () => {
+  it('renders the money-movement preview for finServMoneyMovementJSON', () => {
     render(
       <CltPlayground
         recommendation={rec({
@@ -114,17 +103,12 @@ describe('CltPlayground — dispatch by dtoFieldName', () => {
         accentColor="#0b5cab"
       />
     );
-    // No recipients => test-mode fallback (preview is always on stage).
     expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
-    // The money-movement editor is reachable via the inspector's Edit tab.
-    fireEvent.click(screen.getByRole('button', { name: /Structure & data/i }));
-    fireEvent.click(screen.getByRole('tab', { name: /Edit/i }));
-    expect(screen.getByRole('button', { name: /Add recipient/i })).toBeInTheDocument();
   });
 });
 
 describe('CltPlayground — healthcare dispatch by dtoFieldName', () => {
-  it('renders the appointment-scheduler editor for healthcareApptSchedulerJSON', () => {
+  it('renders the appointment-scheduler preview for healthcareApptSchedulerJSON', () => {
     render(
       <CltPlayground
         recommendation={rec({
@@ -138,14 +122,10 @@ describe('CltPlayground — healthcare dispatch by dtoFieldName', () => {
         accentColor="#0f766e"
       />
     );
-    // No days with slots => test-mode fallback (preview is always on stage).
     expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /Structure & data/i }));
-    fireEvent.click(screen.getByRole('tab', { name: /Edit/i }));
-    expect(screen.getByRole('button', { name: /Add day/i })).toBeInTheDocument();
   });
 
-  it('renders the find-care editor for healthcareFindCareJSON', () => {
+  it('renders the find-care preview for healthcareFindCareJSON', () => {
     render(
       <CltPlayground
         recommendation={rec({
@@ -160,12 +140,9 @@ describe('CltPlayground — healthcare dispatch by dtoFieldName', () => {
       />
     );
     expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /Structure & data/i }));
-    fireEvent.click(screen.getByRole('tab', { name: /Edit/i }));
-    expect(screen.getByRole('button', { name: /Add facility/i })).toBeInTheDocument();
   });
 
-  it('renders the care-options editor for healthcareCareOptionsJSON', () => {
+  it('renders the care-options preview for healthcareCareOptionsJSON', () => {
     render(
       <CltPlayground
         recommendation={rec({
@@ -180,12 +157,9 @@ describe('CltPlayground — healthcare dispatch by dtoFieldName', () => {
       />
     );
     expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /Structure & data/i }));
-    fireEvent.click(screen.getByRole('tab', { name: /Edit/i }));
-    expect(screen.getByRole('button', { name: /Add option/i })).toBeInTheDocument();
   });
 
-  it('renders the prescription-refill editor for healthcareRxRefillJSON', () => {
+  it('renders the prescription-refill preview for healthcareRxRefillJSON', () => {
     render(
       <CltPlayground
         recommendation={rec({
@@ -200,8 +174,191 @@ describe('CltPlayground — healthcare dispatch by dtoFieldName', () => {
       />
     );
     expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: /Structure & data/i }));
-    fireEvent.click(screen.getByRole('tab', { name: /Edit/i }));
-    expect(screen.getByRole('button', { name: /Add medication/i })).toBeInTheDocument();
+  });
+});
+
+describe('CltPlayground — Technology, Media & Comms', () => {
+  it('renders the plan-comparison preview for tmcPlanCompareJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaTmcPlanCompare',
+          industryKey: 'technology_comms',
+          capabilityKey: 'plan_compare',
+          dtoFieldName: 'tmcPlanCompareJSON',
+          label: 'Plan Comparison',
+          defaultPayloadJson: JSON.stringify({ title: 'Compare plans', plans: [] }),
+        })}
+        accentColor="#0891b2"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+
+  it('renders the data-usage preview for tmcDataUsageJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaTmcDataUsage',
+          industryKey: 'technology_comms',
+          capabilityKey: 'data_usage',
+          dtoFieldName: 'tmcDataUsageJSON',
+          label: 'Data Usage Meter',
+          defaultPayloadJson: JSON.stringify({ title: 'Your data this cycle' }),
+        })}
+        accentColor="#0891b2"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+
+  it('renders the service-status preview for tmcServiceStatusJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaTmcServiceStatus',
+          industryKey: 'technology_comms',
+          capabilityKey: 'service_status',
+          dtoFieldName: 'tmcServiceStatusJSON',
+          label: 'Service Status',
+          defaultPayloadJson: JSON.stringify({ title: 'Service status', services: [] }),
+        })}
+        accentColor="#0891b2"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+
+  it('renders the bill-explainer preview for tmcBillExplainerJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaTmcBillExplainer',
+          industryKey: 'technology_comms',
+          capabilityKey: 'bill_explainer',
+          dtoFieldName: 'tmcBillExplainerJSON',
+          label: 'Bill Explainer',
+          defaultPayloadJson: JSON.stringify({ title: 'Your bill', items: [] }),
+        })}
+        accentColor="#0891b2"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+});
+
+describe('CltPlayground — Manufacturing', () => {
+  it('renders the equipment-monitor preview for mfgEquipmentMonitorJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaMfgEquipmentMonitor', industryKey: 'manufacturing', capabilityKey: 'equipment_monitor',
+          dtoFieldName: 'mfgEquipmentMonitorJSON', label: 'Equipment Monitor',
+          defaultPayloadJson: JSON.stringify({ title: 'Machine health', asset: { name: '' }, metrics: [] }),
+        })}
+        accentColor="#334155"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+
+  it('renders the part-reorder preview for mfgPartReorderJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaMfgPartReorder', industryKey: 'manufacturing', capabilityKey: 'part_reorder',
+          dtoFieldName: 'mfgPartReorderJSON', label: 'Part Reorder',
+          defaultPayloadJson: JSON.stringify({ title: 'Reorder part', part: { name: '' } }),
+        })}
+        accentColor="#334155"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+
+  it('renders the work-order preview for mfgWorkOrderJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaMfgWorkOrder', industryKey: 'manufacturing', capabilityKey: 'work_order',
+          dtoFieldName: 'mfgWorkOrderJSON', label: 'Work Order Tracker',
+          defaultPayloadJson: JSON.stringify({ title: 'Work order', milestones: [] }),
+        })}
+        accentColor="#334155"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+
+  it('renders the quote-builder preview for mfgQuoteBuilderJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaMfgQuoteBuilder', industryKey: 'manufacturing', capabilityKey: 'quote_builder',
+          dtoFieldName: 'mfgQuoteBuilderJSON', label: 'Quote Builder',
+          defaultPayloadJson: JSON.stringify({ title: 'Configure your quote', optionGroups: [] }),
+        })}
+        accentColor="#334155"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+});
+
+describe('CltPlayground — Energy & Utilities', () => {
+  it('renders the outage-tracker preview for energyOutageTrackerJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaEnergyOutageTracker', industryKey: 'energy_utilities', capabilityKey: 'outage_tracker',
+          dtoFieldName: 'energyOutageTrackerJSON', label: 'Outage Tracker',
+          defaultPayloadJson: JSON.stringify({ title: 'Outage status', steps: [] }),
+        })}
+        accentColor="#d97706"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+
+  it('renders the usage-cost preview for energyUsageCostJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaEnergyUsageCost', industryKey: 'energy_utilities', capabilityKey: 'usage_cost',
+          dtoFieldName: 'energyUsageCostJSON', label: 'Usage & Cost',
+          defaultPayloadJson: JSON.stringify({ title: 'Your energy this cycle', bars: [], breakdown: [] }),
+        })}
+        accentColor="#d97706"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+
+  it('renders the budget-billing preview for energyBudgetBillingJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaEnergyBudgetBilling', industryKey: 'energy_utilities', capabilityKey: 'budget_billing',
+          dtoFieldName: 'energyBudgetBillingJSON', label: 'Budget Billing',
+          defaultPayloadJson: JSON.stringify({ title: 'Smooth out your bill', bullets: [] }),
+        })}
+        accentColor="#d97706"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+
+  it('renders the rebate-offers preview for energyRebateOffersJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaEnergyRebateOffers', industryKey: 'energy_utilities', capabilityKey: 'rebate_offers',
+          dtoFieldName: 'energyRebateOffersJSON', label: 'Rebate Offers',
+          defaultPayloadJson: JSON.stringify({ title: 'Rebates you qualify for', offers: [] }),
+        })}
+        accentColor="#d97706"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
   });
 });

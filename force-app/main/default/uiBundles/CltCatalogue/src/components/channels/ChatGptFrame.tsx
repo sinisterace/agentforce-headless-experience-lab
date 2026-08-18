@@ -195,8 +195,8 @@ export function ChatGptFrame({ recommendation, profile }: { recommendation: Reco
             <div className="cg-composer">
               <span className="cg-composer-plus" aria-hidden="true"><Plus /></span>
               <span className="cg-composer-placeholder">
-                Ask anything
                 <span className="cg-caret" aria-hidden="true" />
+                Ask anything
               </span>
               <span className="cg-composer-tools" aria-hidden="true">
                 <Mic className="cg-composer-icon" />

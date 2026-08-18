@@ -1,0 +1,100 @@
+/* ASA Manufacturing · Equipment Monitor — an asset hero (machine photo +
+   identity + live status), a grid of metric tiles, and a self-contained SVG
+   trend sparkline. rem units + inherited font so the card matches the host chat
+   theme in Enhanced Chat v2. Steel-slate accent + metric-state hues are local
+   custom props for easy theming. */
+:host {
+    --asa-accent: #334155;
+    --asa-line: #e2e8f0;
+    --asa-ink: #0f172a;
+    --asa-muted: #64748b;
+    --asa-good: #15803d;
+    --asa-warn: #b45309;
+    --asa-bad: #c0392b;
+    --asa-radius: 14px;
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after { box-sizing: border-box; }
+
+.asa-test-badge {
+    margin: 0 0 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 8px;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.asa-eq-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.6rem; }
+.selector-title { font-size: 1.12rem; font-weight: 700; letter-spacing: -0.02em; margin: 0; overflow-wrap: break-word; word-break: normal; }
+.asa-eq-updated { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.64rem; font-weight: 650; color: var(--asa-muted); white-space: nowrap; flex-shrink: 0; }
+.asa-eq-live-dot { width: 0.42rem; height: 0.42rem; border-radius: 999px; background: var(--asa-good); box-shadow: 0 0 0 3px color-mix(in srgb, var(--asa-good) 18%, transparent); animation: asaEqBlink 1.6s ease-in-out infinite; }
+
+/* Asset hero — a prominent machine-photo banner with an identity/status caption. */
+.asa-eq-asset { margin-bottom: 0.7rem; border: 1px solid var(--asa-line); border-radius: 14px; overflow: hidden; background: #fff; box-shadow: var(--asa-shadow-sm); }
+.asa-eq-media { display: block; width: 100%; aspect-ratio: 16 / 9; background: radial-gradient(circle at 70% 20%, #1e293b, #0b1220 70%); }
+.asa-eq-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.asa-eq-media-fallback { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #cbd5e1; font-size: 1.7rem; font-weight: 700; letter-spacing: 0.02em; }
+.asa-eq-asset-body { display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 0.7rem; }
+.asa-eq-asset-text { display: flex; flex-direction: column; gap: 0.12rem; min-width: 0; flex: 1; }
+.asa-eq-asset-name { font-size: 0.95rem; font-weight: 700; letter-spacing: -0.01em; color: var(--asa-ink); overflow-wrap: break-word; }
+.asa-eq-asset-meta { font-size: 0.68rem; color: var(--asa-muted); overflow-wrap: break-word; }
+.asa-eq-status { --st: var(--asa-good); display: inline-flex; align-items: center; gap: 0.32rem; flex-shrink: 0; padding: 0.24rem 0.55rem; border-radius: 999px; background: color-mix(in srgb, var(--st) 12%, #fff); color: var(--st); font-size: 0.64rem; font-weight: 750; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; }
+.asa-eq-status-dot { width: 0.4rem; height: 0.4rem; border-radius: 999px; background: var(--st); }
+.asa-eq-status.is-running { --st: var(--asa-good); }
+.asa-eq-status.is-idle { --st: var(--asa-muted); }
+.asa-eq-status.is-maintenance { --st: #2563eb; }
+.asa-eq-status.is-fault { --st: var(--asa-bad); }
+.asa-eq-status.is-fault .asa-eq-status-dot, .asa-eq-status.is-offline .asa-eq-status-dot { animation: asaEqBlink 1.2s ease-in-out infinite; }
+.asa-eq-status.is-offline { --st: #94a3b8; }
+
+/* Metric readout — a dark HMI "instrument cluster" (deliberately NOT the
+   rounded, color-bordered cards used elsewhere): one seamless panel split by
+   hairline dividers, monospace values, and glowing status LEDs. */
+.asa-eq-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; margin-bottom: 0.7rem; border-radius: 14px; overflow: hidden; background: #24334a; box-shadow: 0 10px 24px rgba(15, 23, 42, 0.22); }
+.asa-eq-tile { --st: #22c55e; position: relative; display: flex; flex-direction: column; gap: 0.22rem; padding: 0.62rem 0.72rem; background: #0f172a; min-width: 0; }
+.asa-eq-tile.is-good { --st: #22c55e; }
+.asa-eq-tile.is-warn { --st: #f59e0b; }
+.asa-eq-tile.is-bad { --st: #f87171; }
+.asa-eq-tile-label { display: flex; align-items: center; gap: 0.38rem; min-width: 0; font-size: 0.56rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: #8194ad; overflow-wrap: break-word; }
+.asa-eq-tile-label::before { content: ''; width: 0.42rem; height: 0.42rem; border-radius: 999px; background: var(--st); box-shadow: 0 0 7px var(--st); flex-shrink: 0; }
+.asa-eq-tile-value { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1.28rem; font-weight: 750; letter-spacing: -0.01em; color: #f1f5f9; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.asa-eq-tile.is-warn .asa-eq-tile-value { color: #fbbf24; }
+.asa-eq-tile.is-bad .asa-eq-tile-value { color: #fca5a5; }
+.asa-eq-tile-unit { font-family: var(--asa-font, inherit); font-size: 0.7rem; font-weight: 600; margin-left: 0.15rem; color: #8194ad; }
+
+/* Trend sparkline */
+.asa-eq-trend { padding: 0.5rem 0.6rem 0.4rem; border: 1px solid var(--asa-line); border-radius: 12px; background: #f8fafc; margin-bottom: 0.2rem; }
+.asa-eq-trend-label { display: block; font-size: 0.62rem; font-weight: 650; text-transform: uppercase; letter-spacing: 0.04em; color: var(--asa-muted); margin-bottom: 0.3rem; }
+.asa-eq-spark { display: block; width: 100%; height: 2.4rem; }
+.asa-eq-spark-line { fill: none; stroke: var(--asa-accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.asa-eq-spark-area { fill: color-mix(in srgb, var(--asa-accent) 12%, transparent); stroke: none; }
+.asa-eq-spark-dot { fill: var(--asa-accent); }
+
+.asa-eq-cta {
+    margin-top: 0.6rem; width: 100%; min-height: 2.7rem; padding: 0.6rem;
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem;
+    border: 0; border-radius: 11px; background: var(--asa-accent); color: #fff;
+    font-size: 0.82rem; font-weight: 680; cursor: pointer;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--asa-accent) 26%, transparent);
+    transition: filter 0.15s ease;
+}
+.asa-eq-cta:hover { filter: brightness(1.12); }
+.asa-eq-cta svg { width: 1rem; height: 1rem; }
+
+@keyframes asaEqBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+@container (max-width: 300px) {
+    .asa-eq-tile-value { font-size: 1.12rem; }
+}

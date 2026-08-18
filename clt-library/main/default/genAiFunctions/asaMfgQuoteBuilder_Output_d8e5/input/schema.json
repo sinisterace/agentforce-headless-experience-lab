@@ -1,0 +1,16 @@
+{
+  "required": [
+    "Details"
+  ],
+  "unevaluatedProperties": false,
+  "properties": {
+    "Details": {
+      "title": "Details",
+      "description": "The full quote-builder payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Configure your quote\",\"product\":\"TB-9000 Assembly Cell\",\"currency\":\"USD\",\"basePrice\":48000,\"optionGroups\":[{\"id\":\"material\",\"label\":\"Frame material\",\"selectedId\":\"steel\",\"options\":[{\"id\":\"steel\",\"label\":\"Powder-coated steel\",\"priceDelta\":0},{\"id\":\"stainless\",\"label\":\"Stainless 304\",\"priceDelta\":3200,\"detail\":\"Washdown-rated\"}]},{\"id\":\"controls\",\"label\":\"Control package\",\"options\":[{\"id\":\"standard\",\"label\":\"Standard PLC\",\"priceDelta\":0},{\"id\":\"advanced\",\"label\":\"Advanced PLC + HMI\",\"priceDelta\":5400}]},{\"id\":\"warranty\",\"label\":\"Warranty\",\"options\":[{\"id\":\"1yr\",\"label\":\"1 year\",\"priceDelta\":0},{\"id\":\"3yr\",\"label\":\"3 years\",\"priceDelta\":2600}]}],\"quantity\":1,\"submitText\":\"Request quote\",\"submitValue\":\"Request a formal quote for the configured TB-9000 Assembly Cell\"}\n\nRules:\n- 'title' (string, optional): heading. Defaults to 'Configure your quote'.\n- 'product' (string, optional): the product being configured.\n- 'currency' (string, optional): ISO code (default USD). Prices are shown with no cents.\n- 'basePrice' (number, optional): the starting price before options. The live estimate is (basePrice + sum of selected option priceDeltas) × quantity.\n- 'optionGroups' (array, REQUIRED, 1 to 5 objects): each has 'id' (string), 'label' (string, REQUIRED), optional 'selectedId' (the option 'id' chosen by default — defaults to the first option), and 'options' (array, 2+ objects). Each option has 'id' (string, REQUIRED), 'label' (string, REQUIRED), optional 'priceDelta' (number, added to the price; 0 shows as 'Included'), and 'detail' (string, one short line). Exactly one option per group is selected at a time.\n- 'quantity' (number, optional): starting quantity (min 1); the customer adjusts it with the stepper.\n- 'minQuantity' (number, optional): minimum quantity (default 1).\n- 'submitText' (string, optional): action-button label; defaults to 'Request quote'.\n- 'submitValue' (string, optional): a base message; the card appends the chosen options, quantity, and estimated total when sending back.\n\nUse these EXACT field names — they are the single contract the card reads.",
+      "lightning:type": "lightning__textType",
+      "lightning:isPII": false,
+      "copilotAction:isUserInput": false
+    }
+  },
+  "lightning:type": "lightning__objectType"
+}

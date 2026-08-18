@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Energy & Utilities · Usage & Cost",
+  "description" : "Shows this cycle's energy usage as a daily/weekly column chart, a projected bill amount, the change vs last month, and a cost breakdown by category.",
+  "lightning:type" : "@apexClassType/c__AsaEnergyUsageCostData"
+}

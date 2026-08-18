@@ -1,5 +1,5 @@
 import type { RetailProductCarouselPayload } from '../payloads';
-import { RetailProductCarouselEditor, RetailProductCarouselPreview } from '../RetailProductCarouselEditor';
+import { RetailProductCarouselPreview } from '../RetailProductCarouselEditor';
 import type { WidgetDef } from './types';
 
 /** asaRetailProductCarousel — up to three products, shown one at a time. */
@@ -32,6 +32,5 @@ export const retailProductCarouselDef: WidgetDef = {
       ],
     },
   ],
-  Editor: RetailProductCarouselEditor,
   Preview: RetailProductCarouselPreview,
 };

@@ -517,7 +517,7 @@
   display: inline-block;
   width: 1px;
   height: 1.15em;
-  margin-left: 1px;
+  margin-right: 2px;
   vertical-align: text-bottom;
   background: #0d0d0d;
   animation: caret-blink 1.1s steps(1) infinite;
@@ -1046,7 +1046,7 @@
   display: inline-block;
   width: 1px;
   height: 1.15em;
-  margin-left: 1px;
+  margin-right: 2px;
   vertical-align: text-bottom;
   background: #1f1e1c;
   animation: caret-blink 1.1s steps(1) infinite;
@@ -1313,4 +1313,151 @@
   .cg-sidebar {
     display: none;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Slack frame — aubergine chrome (top bar + workspace rail + channel sidebar)
+   with a white main pane where "Slackbot · AGENT" replies. The CLT renders as a
+   BuilderKit tile card (see TileRenderer / financialServicesTiles), not the LWC.
+   Modeled on the Slackbot Design System Figma.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.slack-surface { display: flex; flex: 1; min-height: 0; background: #fff; }
+.slk-app {
+  display: flex; flex-direction: column; width: 100%; min-width: 0; min-height: 34rem;
+  background: #3f0e40; color: #1d1c1d;
+  font-family: "Lato", "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* top bar */
+.slk-topbar { display: flex; align-items: center; gap: 0.75rem; height: 2.6rem; padding: 0 0.75rem; background: #350d36; color: #d7c9d7; flex-shrink: 0; }
+.slk-traffic { display: inline-flex; gap: 0.4rem; }
+.slk-traffic i { width: 0.7rem; height: 0.7rem; border-radius: 999px; display: block; }
+.slk-traffic .is-r { background: #ff5f57; } .slk-traffic .is-y { background: #febc2e; } .slk-traffic .is-g { background: #28c840; }
+.slk-search { flex: 1; max-width: 34rem; margin: 0 auto; display: inline-flex; align-items: center; gap: 0.4rem; height: 1.7rem; padding: 0 0.7rem; border-radius: 0.5rem; background: rgba(255, 255, 255, 0.12); color: #d7c9d7; font-size: 0.8rem; }
+.slk-search svg { width: 0.9rem; height: 0.9rem; }
+.slk-topbar-right { flex-shrink: 0; }
+.slk-ws-chip { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.2rem 0.5rem; border-radius: 0.4rem; background: rgba(255, 255, 255, 0.1); font-size: 0.78rem; font-weight: 700; color: #f5eef5; }
+.slk-ws-chip svg { width: 0.85rem; height: 0.85rem; }
+.slk-ws-avatar { width: 1.15rem; height: 1.15rem; border-radius: 0.25rem; object-fit: cover; }
+
+.slk-body { display: grid; grid-template-columns: 3.6rem 12.5rem 1fr; flex: 1; min-height: 0; }
+
+/* workspace rail */
+.slk-rail { display: flex; flex-direction: column; align-items: center; gap: 0.55rem; padding: 0.6rem 0.3rem; background: #2c082d; }
+.slk-rail-ws { width: 2.1rem; height: 2.1rem; border-radius: 0.6rem; background: linear-gradient(135deg, #36c5f0, #2eb67d 40%, #ecb22e 70%, #e01e5a); margin-bottom: 0.3rem; }
+.slk-rail-item { display: flex; flex-direction: column; align-items: center; gap: 0.1rem; width: 100%; padding: 0.35rem 0; border: 0; background: transparent; color: #c6b3c6; font-size: 0.56rem; font-weight: 600; cursor: pointer; border-radius: 0.5rem; }
+.slk-rail-item svg { width: 1.25rem; height: 1.25rem; }
+.slk-rail-item.is-active { color: #fff; }
+.slk-rail-item.is-active svg { background: rgba(255, 255, 255, 0.16); border-radius: 0.5rem; padding: 0.15rem; box-sizing: content-box; }
+
+/* channel sidebar */
+.slk-sidebar { display: flex; flex-direction: column; background: #3f0e40; color: #cdbccd; overflow-y: auto; }
+.slk-sidebar-head { display: flex; align-items: center; gap: 0.35rem; padding: 0.7rem 0.8rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08); color: #fff; }
+.slk-sidebar-head strong { font-size: 0.95rem; }
+.slk-sidebar-head svg { width: 0.8rem; height: 0.8rem; }
+.slk-sidebar-head-actions { margin-left: auto; }
+.slk-sidebar-head-actions svg { width: 0.95rem; height: 0.95rem; }
+.slk-chan-nav { display: flex; flex-direction: column; padding: 0.4rem 0.4rem; gap: 0.05rem; }
+.slk-chan { display: flex; align-items: center; gap: 0.45rem; padding: 0.32rem 0.5rem; border: 0; background: transparent; color: #cdbccd; font-size: 0.82rem; text-align: left; cursor: pointer; border-radius: 0.4rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.slk-chan svg { width: 0.9rem; height: 0.9rem; flex-shrink: 0; opacity: 0.85; }
+.slk-chan:hover { background: rgba(255, 255, 255, 0.06); }
+.slk-chan.is-active { background: rgba(255, 255, 255, 0.16); color: #fff; font-weight: 700; }
+.slk-chan-section { margin: 0.55rem 0.5rem 0.15rem; font-size: 0.68rem; font-weight: 700; color: #a98fa9; }
+.slk-dot { width: 0.6rem; height: 0.6rem; border-radius: 999px; flex-shrink: 0; }
+.slk-dot.is-green { background: #2eb67d; } .slk-dot.is-coral { background: #e8622d; } .slk-dot.is-blue { background: #36c5f0; }
+.slk-chan-bot { width: 0.95rem; height: 0.95rem; }
+
+/* main pane */
+.slk-main { display: flex; flex-direction: column; min-width: 0; background: #fff; }
+.slk-main-head { display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 1rem; border-bottom: 1px solid #e2e2e2; }
+.slk-main-title { display: inline-flex; align-items: center; gap: 0.45rem; font-size: 1rem; color: #1d1c1d; }
+.slk-main-title strong { font-weight: 800; }
+.slk-main-head-icons { display: inline-flex; gap: 0.7rem; color: #616061; }
+.slk-main-head-icons svg { width: 1.05rem; height: 1.05rem; }
+
+.slk-thread { flex: 1; min-height: 0; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 1.1rem; }
+.slk-msg { display: flex; gap: 0.6rem; }
+.slk-avatar { width: 2.2rem; height: 2.2rem; border-radius: 0.55rem; flex-shrink: 0; }
+.slk-avatar-user { background: #001639; object-fit: cover; }
+.slk-msg-body { min-width: 0; flex: 1; }
+.slk-msg-meta { margin: 0 0 0.15rem; font-size: 0.82rem; color: #616061; }
+.slk-msg-meta strong { color: #1d1c1d; font-weight: 800; }
+.slk-agent-tag { display: inline-block; margin-left: 0.15rem; padding: 0.02rem 0.28rem; border-radius: 0.25rem; background: #e8e8e8; color: #616061; font-size: 0.6rem; font-weight: 800; letter-spacing: 0.03em; vertical-align: middle; }
+.slk-time { margin-left: 0.25rem; font-size: 0.72rem; color: #8d8d8d; font-weight: 400; }
+.slk-msg-text { margin: 0 0 0.5rem; font-size: 0.9rem; line-height: 1.46; color: #1d1c1d; overflow-wrap: break-word; }
+
+.slk-starters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.2rem; }
+.slk-starter { padding: 0.4rem 0.7rem; border: 1px solid #d1d1d1; border-radius: 0.5rem; background: #fff; color: #1d1c1d; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: background 0.12s ease, border-color 0.12s ease; }
+.slk-starter:hover { background: #f6f6f6; border-color: #b9b9b9; }
+
+.slk-typing { display: inline-flex; align-items: center; gap: 0.5rem; margin: 0.1rem 0 0.4rem; font-size: 0.84rem; color: #616061; }
+.slk-typing span { width: 0.35rem; height: 0.35rem; border-radius: 999px; background: #b0b0b0; display: inline-block; animation: slkBlink 1.2s infinite; }
+.slk-typing span:nth-child(2) { animation-delay: 0.2s; } .slk-typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes slkBlink { 0%, 60%, 100% { opacity: 0.25; } 30% { opacity: 1; } }
+
+/* --- BuilderKit tile card --- */
+.slk-tile-card { max-width: 32rem; }
+.slk-tile-mosaic { display: block; }
+.slk-tile-container { border: 1px solid #e2e2e2; border-radius: 0.5rem; background: #fff; }
+.slk-tile-col { display: flex; flex-direction: column; min-width: 0; }
+.slk-tile-row { display: flex; flex-direction: row; min-width: 0; }
+.slk-tile-text { display: block; overflow-wrap: break-word; min-width: 0; color: #1d1c1d; line-height: 1.4; }
+.slk-text-h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.slk-text-h2 { font-size: 1.12rem; font-weight: 700; letter-spacing: -0.01em; }
+.slk-text-h4 { font-size: 0.92rem; font-weight: 600; }
+.slk-text-body { font-size: 0.86rem; }
+.slk-text-caption { font-size: 0.74rem; color: #616061; }
+.slk-weight-bold { font-weight: 700; } .slk-weight-semibold { font-weight: 600; }
+.slk-color-muted { color: #616061; } .slk-color-primary { color: #611f69; } .slk-color-success { color: #007a5a; } .slk-color-info { color: #1264a3; } .slk-color-danger { color: #e01e5a; }
+
+.slk-tile-badge { display: inline-flex; align-items: center; align-self: flex-start; padding: 0.1rem 0.45rem; border-radius: 0.35rem; font-size: 0.68rem; font-weight: 700; white-space: nowrap; }
+.slk-badge-success { background: #e7f5ec; color: #007a5a; }
+.slk-badge-info { background: #e8f1fb; color: #1264a3; }
+.slk-badge-secondary { background: #f2f2f2; color: #616061; }
+.slk-badge-warning { background: #fdf0e3; color: #b45309; }
+.slk-badge-danger { background: #fdeaef; color: #e01e5a; }
+
+.slk-tile-progress { display: flex; align-items: center; gap: 0.5rem; }
+.slk-tile-progress-track { flex: 1; height: 0.5rem; border-radius: 999px; background: #e8e8e8; overflow: hidden; }
+.slk-tile-progress-fill { height: 100%; border-radius: 999px; }
+.slk-fill-primary { background: #611f69; } .slk-fill-success { background: #2eb67d; } .slk-fill-info { background: #1264a3; }
+.slk-tile-progress-val { font-size: 0.74rem; font-weight: 700; color: #616061; }
+
+.slk-tile-table-wrap { width: 100%; overflow-x: auto; }
+.slk-tile-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.slk-tile-table th { text-align: left; padding: 0.35rem 0.5rem; font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em; color: #8d8d8d; border-bottom: 1px solid #e2e2e2; white-space: nowrap; }
+.slk-tile-table td { padding: 0.4rem 0.5rem; border-top: 1px solid #f0f0f0; color: #1d1c1d; overflow-wrap: break-word; }
+.slk-tile-table.is-striped tbody tr:nth-child(even) { background: #f8f8f8; }
+.slk-tile-table.is-hover tbody tr:hover { background: #f2f7fb; }
+.slk-cell-credit { color: #007a5a; font-weight: 700; white-space: nowrap; }
+.slk-cell-debit { color: #1d1c1d; white-space: nowrap; }
+
+.slk-tile-btn { align-self: flex-start; padding: 0.42rem 0.85rem; border-radius: 0.4rem; font-size: 0.82rem; font-weight: 700; cursor: pointer; border: 1px solid transparent; transition: filter 0.12s ease, background 0.12s ease; }
+.slk-btn-primary { background: #007a5a; color: #fff; }
+.slk-btn-primary:hover { background: #148567; }
+.slk-btn-default { background: #fff; color: #1d1c1d; border-color: #d1d1d1; }
+.slk-btn-default:hover { background: #f6f6f6; }
+.slk-tile-divider { border: 0; border-top: 1px solid #eee; margin: 0; }
+
+/* composer */
+.slk-composer-wrap { padding: 0.5rem 1rem 0.85rem; background: #fff; }
+.slk-composer { border: 1px solid #cfcfcf; border-radius: 0.65rem; padding: 0.55rem 0.7rem 0.4rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04); }
+.slk-composer-input { display: flex; align-items: center; font-size: 0.9rem; color: #8d8d8d; padding-bottom: 0.4rem; }
+.slk-caret { display: inline-block; width: 1px; height: 1.1em; margin-right: 2px; background: #1d1c1d; vertical-align: text-bottom; animation: caret-blink 1.1s steps(1) infinite; }
+.slk-composer-tools { display: flex; align-items: center; justify-content: space-between; }
+.slk-composer-left { display: inline-flex; gap: 0.75rem; color: #616061; }
+.slk-composer-left svg { width: 1.05rem; height: 1.05rem; }
+.slk-composer-right { display: inline-flex; align-items: center; gap: 0.6rem; color: #616061; }
+.slk-composer-right svg { width: 1.05rem; height: 1.05rem; }
+.slk-composer-send { display: inline-flex; align-items: center; justify-content: center; width: 1.6rem; height: 1.6rem; border-radius: 0.4rem; background: #f4f4f4; color: #8d8d8d; }
+.slk-composer-send svg { width: 0.9rem; height: 0.9rem; }
+
+/* Slackbot app logo mark */
+.slk-bot-mark { display: inline-block; width: 1.4rem; height: 1.4rem; border-radius: 0.3rem; object-fit: cover; vertical-align: middle; }
+.slk-avatar.slk-bot-mark { width: 2.2rem; height: 2.2rem; border-radius: 0.55rem; }
+
+@media (max-width: 720px) {
+  .slk-body { grid-template-columns: 12rem 1fr; }
+  .slk-rail { display: none; }
 }

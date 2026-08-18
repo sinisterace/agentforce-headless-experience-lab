@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StaticResource xmlns="http://soap.sforce.com/2006/04/metadata">
+    <cacheControl>Public</cacheControl>
+    <contentType>image/jpeg</contentType>
+    <description>ASA Manufacturing · Equipment Monitor asset image — the "trailblazer" assembly cell (sample machine). Referenced by asset.imageUrl as /resource/asaMfgTrailblazerCell.</description>
+</StaticResource>

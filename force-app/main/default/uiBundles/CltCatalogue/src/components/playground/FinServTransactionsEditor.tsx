@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowDown, ArrowUp, Check, FileText, Plus, Trash2 } from 'lucide-react';
+import { Check, FileText } from 'lucide-react';
 import type { TransactionEntry, FinServTransactionsPayload } from './payloads';
 import {
   transactionCategoryIcon,
@@ -8,7 +8,7 @@ import {
 } from './transactionFormat';
 
 /**
- * Build/Input editor + live preview for the ASA Financial Services · Recent
+ * Live preview for the ASA Financial Services · Recent
  * Transactions CLT (DTO field finServTransactionsJSON). LWC-true fields: title,
  * accountLabel?, transactions (object[] with id, merchant, date, amount,
  * currency?, category?, status?, disputable?), disputeText?. Empty transactions
@@ -16,114 +16,6 @@ import {
  * payload — mirroring the deployed LWC.
  */
 
-const CATEGORIES = ['Groceries', 'Dining', 'Travel', 'Shopping', 'Bills', 'Transfer', 'Income', 'Other'];
-
-export function FinServTransactionsEditor({
-  value,
-  onChange,
-}: {
-  value: FinServTransactionsPayload;
-  onChange: (next: FinServTransactionsPayload) => void;
-}) {
-  const setTxn = (index: number, patch: Partial<TransactionEntry>) => {
-    const transactions = value.transactions.slice();
-    transactions[index] = { ...transactions[index], ...patch };
-    onChange({ ...value, transactions });
-  };
-  const addTxn = () =>
-    onChange({
-      ...value,
-      transactions: [
-        ...value.transactions,
-        {
-          id: `txn-${value.transactions.length + 1}`,
-          merchant: 'New merchant',
-          date: '2026-08-09',
-          amount: -0,
-          currency: 'USD',
-          category: 'Other',
-          status: 'Posted',
-        },
-      ],
-    });
-  const removeTxn = (index: number) =>
-    onChange({ ...value, transactions: value.transactions.filter((_, i) => i !== index) });
-  const move = (index: number, delta: number) => {
-    const target = index + delta;
-    if (target < 0 || target >= value.transactions.length) return;
-    const transactions = value.transactions.slice();
-    [transactions[index], transactions[target]] = [transactions[target], transactions[index]];
-    onChange({ ...value, transactions });
-  };
-
-  return (
-    <div className="playground-editor">
-      <label className="playground-field">
-        Title
-        <input value={value.title} onChange={(e) => onChange({ ...value, title: e.target.value })} placeholder="Your recent transactions" />
-      </label>
-
-      <label className="playground-field">
-        Account label <span className="optional-label">Optional</span>
-        <input value={value.accountLabel ?? ''} onChange={(e) => onChange({ ...value, accountLabel: e.target.value })} placeholder="Everyday Checking ••1234" />
-      </label>
-
-      <label className="playground-field">
-        Dispute button text
-        <input value={value.disputeText ?? ''} onChange={(e) => onChange({ ...value, disputeText: e.target.value })} placeholder="Dispute this charge" />
-      </label>
-
-      <div className="playground-list">
-        <div className="playground-list-head">
-          <span>Transactions</span>
-          <button type="button" className="playground-add" onClick={addTxn}><Plus aria-hidden="true" /> Add transaction</button>
-        </div>
-        {value.transactions.length === 0 && <p className="playground-empty">No transactions — the component shows sample test data until you add one.</p>}
-        {value.transactions.map((txn, index) => (
-          <div className="playground-card" key={index}>
-            <div className="playground-card-head">
-              <strong>Transaction {index + 1}</strong>
-              <span className="playground-card-actions">
-                <button type="button" onClick={() => move(index, -1)} disabled={index === 0} aria-label="Move up"><ArrowUp aria-hidden="true" /></button>
-                <button type="button" onClick={() => move(index, 1)} disabled={index === value.transactions.length - 1} aria-label="Move down"><ArrowDown aria-hidden="true" /></button>
-                <button type="button" onClick={() => removeTxn(index)} aria-label="Remove transaction"><Trash2 aria-hidden="true" /></button>
-              </span>
-            </div>
-            <label className="playground-field">
-              Merchant
-              <input value={txn.merchant} onChange={(e) => setTxn(index, { merchant: e.target.value })} />
-            </label>
-            <label className="playground-field">
-              Date
-              <input type="date" value={txn.date} onChange={(e) => setTxn(index, { date: e.target.value })} />
-            </label>
-            <label className="playground-field">
-              Amount <span className="optional-label">negative = debit</span>
-              <input type="number" step="0.01" value={txn.amount} onChange={(e) => setTxn(index, { amount: Number(e.target.value) })} />
-            </label>
-            <div className="playground-field">
-              <span>Category</span>
-              <select value={txn.category ?? 'Other'} onChange={(e) => setTxn(index, { category: e.target.value })}>
-                {CATEGORIES.map((c) => <option value={c} key={c}>{c}</option>)}
-              </select>
-            </div>
-            <div className="playground-field">
-              <span>Status</span>
-              <select value={txn.status ?? 'Posted'} onChange={(e) => setTxn(index, { status: e.target.value })}>
-                <option value="Posted">Posted</option>
-                <option value="Pending">Pending</option>
-              </select>
-            </div>
-            <label className="playground-check">
-              <input type="checkbox" checked={txn.disputable !== false} onChange={(e) => setTxn(index, { disputable: e.target.checked })} />
-              Disputable
-            </label>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 /** Faithful preview: mirrors the Recent Transactions LWC, including test-mode fallback. */
 export function FinServTransactionsPreview({

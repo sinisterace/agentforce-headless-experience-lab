@@ -11,4 +11,4 @@
 - [MCP Apps external render](mcp-apps-external-render.md) — render CLT cards for real in ChatGPT/Claude/Slack via MCP Apps (mcp-ui); ChatGPT-first, Item Selector, sibling MCP server
 - [CLT Catalogue FS build plan](cltcat-fs-clt-build-plan.md) — 4 CLTs/industry, FS first; ASA [industry] naming (FinServ code); harness at #preview; deployable bundle in clt-library/; design sign-off gate before bundling
 - [CLT independent actions per industry](clt-independent-actions-per-industry.md) — keep an industry's CLTs conceptually independent so the agent doesn't chain them in ECv2 (Insurance set left as-is; rule for future)
-- [CLTcat Industry_Key restricted picklist](cltcat-industry-key-restricted-picklist.md) — add+deploy the Industry_Key__c picklist value before seeding a new industry; Retail set (4 CLTs, indigo) deployed
+- [CLTcat Industry_Key restricted picklist](cltcat-industry-key-restricted-picklist.md) — add+deploy the Industry_Key__c picklist value before seeding a new industry; Retail (4, indigo) + Technology/Media/Comms (4, cyan `technology_comms`) + Manufacturing (4, steel slate `manufacturing`) deployed

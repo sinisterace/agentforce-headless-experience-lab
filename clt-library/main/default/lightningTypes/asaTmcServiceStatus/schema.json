@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Technology, Media & Comms · Service Status",
+  "description" : "Shows a live service-health board: an overall banner, per-service status rows, the affected area, an estimated restore time, and an optional notify-me action.",
+  "lightning:type" : "@apexClassType/c__AsaTmcServiceStatusData"
+}

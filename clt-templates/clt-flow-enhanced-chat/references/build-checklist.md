@@ -67,6 +67,33 @@ past the card edge):
 
 Verify in the ECv2 Live Test at real width, not just a wide preview.
 
+## Step 1c — Check spacing on BOTH surfaces (the card has two homes)
+
+A CLT renders in two places and the spacing MUST be verified in each — they use
+different CSS pipelines and a layout that looks right in one can be broken in the
+other:
+
+1. **The deployed LWC in ECv2** (~320px column). The LWC's `.css` is
+   **component-scoped** — its class names never collide with anything else.
+2. **The React catalogue preview** (if the project has one, e.g. `cltcat-app`).
+   Here every CLT's styles live in ONE global stylesheet (`playground.css`), so
+   class names DO collide across CLTs.
+
+**Namespace rule (hard-won):** give every CLT a **unique** `asa-<code>-` class
+prefix and use it verbatim in both the LWC and the React preview. Reusing another
+CLT's prefix silently inherits its rules in the shared React stylesheet. Real bug:
+a "Plan Compare" card used `asa-pc-*`, which the "Product Carousel" (`pc`) already
+owned — the plan cards inherited `width:10.4rem; min-height:18.6rem; background:cream`
+and rendered as narrow, cream-gapped boxes. The deployed LWC looked fine (scoped),
+so the collision was invisible until viewed in the catalogue. Before shipping a new
+CLT, grep the shared stylesheet for your prefix and confirm zero pre-existing hits.
+
+**Screenshot both.** Don't eyeball only a wide desktop preview. Render each card at
+**exactly 320px** (an outlined 320px box inside a wide window catches real spill vs.
+viewport cropping) AND in the ECv2 Live Test. A quick local proxy for the React
+preview: dump the component's DOM, wrap it in the container class + the real CSS,
+and screenshot with headless Chrome at 320px.
+
 ## Step 2 — Wire the field contract
 
 In `genAiFunctions/<FlowApiName>/input/schema.json`, the `Details.description` MUST:

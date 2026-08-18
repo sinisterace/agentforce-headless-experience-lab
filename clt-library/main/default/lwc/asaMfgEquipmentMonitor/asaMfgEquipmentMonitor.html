@@ -1,0 +1,69 @@
+<template>
+    <div class="asa-card">
+        <template if:true={isTestMode}>
+            <p class="asa-test-badge">Sample data — no asset supplied</p>
+        </template>
+
+        <div class="asa-eq-head">
+            <h3 class="selector-title">{title}</h3>
+            <template if:true={hasUpdated}>
+                <span class="asa-eq-updated"><span class="asa-eq-live-dot" aria-hidden="true"></span>{updatedText}</span>
+            </template>
+        </div>
+
+        <!-- Asset hero: prominent machine photo banner + identity + status -->
+        <div class="asa-eq-asset">
+            <span class="asa-eq-media">
+                <template if:true={hasImage}>
+                    <img src={imageUrl} alt={assetName} onerror={handleImageError} />
+                </template>
+                <template if:false={hasImage}>
+                    <span class="asa-eq-media-fallback" aria-hidden="true">{assetInitials}</span>
+                </template>
+            </span>
+            <div class="asa-eq-asset-body">
+                <span class="asa-eq-asset-text">
+                    <span class="asa-eq-asset-name">{assetName}</span>
+                    <template if:true={assetMeta}>
+                        <span class="asa-eq-asset-meta">{assetMeta}</span>
+                    </template>
+                </span>
+                <span class={statusClass}>
+                    <span class="asa-eq-status-dot" aria-hidden="true"></span>
+                    {statusLabel}
+                </span>
+            </div>
+        </div>
+
+        <!-- Metric tiles -->
+        <div class="asa-eq-metrics">
+            <template for:each={metrics} for:item="m">
+                <div key={m.key} class={m.tileClass}>
+                    <span class="asa-eq-tile-label">{m.label}</span>
+                    <span class="asa-eq-tile-value">{m.value}<template if:true={m.hasUnit}><span class="asa-eq-tile-unit">{m.unit}</span></template></span>
+                </div>
+            </template>
+        </div>
+
+        <!-- Trend sparkline -->
+        <template if:true={hasTrend}>
+            <div class="asa-eq-trend">
+                <template if:true={trendLabel}>
+                    <span class="asa-eq-trend-label">{trendLabel}</span>
+                </template>
+                <svg class="asa-eq-spark" viewBox="0 0 100 32" preserveAspectRatio="none" role="img" aria-label="Trend">
+                    <path class="asa-eq-spark-area" d={sparkArea}></path>
+                    <path class="asa-eq-spark-line" d={sparkLine}></path>
+                    <circle class="asa-eq-spark-dot" cx={sparkDotX} cy={sparkDotY} r="2.4"></circle>
+                </svg>
+            </div>
+        </template>
+
+        <template if:true={hasSubmit}>
+            <button type="button" class="asa-eq-cta" onclick={handleSubmit}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M12 18v-6"></path><path d="M9 15h6"></path></svg>
+                {submitText}
+            </button>
+        </template>
+    </div>
+</template>

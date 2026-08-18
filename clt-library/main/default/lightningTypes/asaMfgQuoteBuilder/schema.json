@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Manufacturing · Quote Builder",
+  "description" : "Configure-to-order card: pick options across groups (material, controls, etc.) and see a live-updating estimated price, then request a formal quote.",
+  "lightning:type" : "@apexClassType/c__AsaMfgQuoteBuilderData"
+}

@@ -1,0 +1,75 @@
+<template>
+    <div class="asa-card">
+        <template if:true={isTestMode}>
+            <p class="asa-test-badge">Sample data — no outage supplied</p>
+        </template>
+
+        <!-- Control-room hero -->
+        <div class={heroClass}>
+            <div class="asa-out-hero-top">
+                <span class={statusPillClass}>
+                    <span class="asa-out-status-dot" aria-hidden="true"></span>{statusLabel}
+                </span>
+                <template if:true={hasUpdated}>
+                    <span class="asa-out-updated">{updatedText}</span>
+                </template>
+            </div>
+            <template if:true={hasHeadline}>
+                <p class="asa-out-headline">{headline}</p>
+            </template>
+            <template if:true={hasArea}>
+                <p class="asa-out-area">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    {area}
+                </p>
+            </template>
+
+            <!-- Restoration power-line track -->
+            <template if:true={hasSteps}>
+                <ol class="asa-out-track">
+                    <template for:each={steps} for:item="s">
+                        <li key={s.key} class={s.nodeClass}>
+                            <span class="asa-out-node-mark" aria-hidden="true">
+                                <template if:true={s.isDone}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+                                </template>
+                                <template if:true={s.isCurrent}>
+                                    <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"></path></svg>
+                                </template>
+                            </span>
+                            <span class="asa-out-node-label">{s.label}</span>
+                            <template if:true={s.hasTime}>
+                                <span class="asa-out-node-time">{s.timeText}</span>
+                            </template>
+                        </li>
+                    </template>
+                </ol>
+            </template>
+        </div>
+
+        <!-- Hairline info panel (squared, ledger-style rows) -->
+        <template if:true={hasInfo}>
+            <div class="asa-out-info">
+                <template if:true={hasCause}>
+                    <div class="asa-out-row"><span class="asa-out-row-k">Cause</span><span class="asa-out-row-v">{cause}</span></div>
+                </template>
+                <template if:true={hasAffected}>
+                    <div class="asa-out-row"><span class="asa-out-row-k">Affected</span><span class="asa-out-row-v">{affectedText}</span></div>
+                </template>
+                <template if:true={hasCrew}>
+                    <div class="asa-out-row"><span class="asa-out-row-k">Crew</span><span class="asa-out-row-v">{crew}</span></div>
+                </template>
+                <template if:true={hasEta}>
+                    <div class="asa-out-row is-eta"><span class="asa-out-row-k">Est. restore</span><span class="asa-out-row-v">{etaText}</span></div>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={hasSubmit}>
+            <button type="button" class="asa-out-cta" onclick={handleSubmit}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                {submitText}
+            </button>
+        </template>
+    </div>
+</template>

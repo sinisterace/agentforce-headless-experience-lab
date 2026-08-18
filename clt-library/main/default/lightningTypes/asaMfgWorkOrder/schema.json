@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Manufacturing · Work Order Tracker",
+  "description" : "Tracks a production or repair work order through a vertical milestone timeline with owner, timestamp, priority, and estimated ship date.",
+  "lightning:type" : "@apexClassType/c__AsaMfgWorkOrderData"
+}

@@ -251,8 +251,8 @@ function Composer({ placeholder }: { placeholder: string }) {
       {/* A focused-composer look: greyed placeholder trailed by a blinking caret,
           so the frame reads as an active chat waiting for input — nothing sends. */}
       <span className="cl-composer-placeholder">
-        {placeholder}
         <span className="cl-caret" aria-hidden="true" />
+        {placeholder}
       </span>
       <div className="cl-composer-row">
         <span className="cl-composer-plus" aria-hidden="true"><Plus /></span>

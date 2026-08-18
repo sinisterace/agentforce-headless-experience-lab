@@ -251,6 +251,206 @@ function sampleFor(kind: CltKind): Record<string, unknown> {
         ],
         submitText: 'Reserve for pickup',
       };
+    case 'tmcPlanCompareJSON':
+      return {
+        title: 'Compare plans',
+        subtitle: 'Pick the plan that fits how you use your phone',
+        currency: 'USD',
+        cadence: 'mo',
+        currentPlanId: 'essential',
+        plans: [
+          { id: 'essential', name: 'Essential', price: 45, tagline: 'For light users', features: ['10 GB premium data', '5G nationwide', 'SD streaming'] },
+          { id: 'unlimited', name: 'Unlimited Plus', price: 70, tagline: 'Our most popular plan', badge: 'Most popular', recommended: true, features: ['Unlimited premium data', 'HD streaming', '50 GB hotspot', '5G Ultra Capacity'] },
+          { id: 'premium', name: 'Premium 5G', price: 90, tagline: 'Everything, maxed out', features: ['Unlimited premium data', '4K UHD streaming', '100 GB hotspot', 'Global roaming'] },
+        ],
+        submitText: 'Switch plan',
+      };
+    case 'tmcDataUsageJSON':
+      return {
+        title: 'Your data this cycle',
+        cycleText: '12 days left · resets Sep 30',
+        used: 42.1,
+        total: 50,
+        unit: 'GB',
+        categories: [
+          { label: 'Streaming', amount: 24.6 },
+          { label: 'Social', amount: 9.8 },
+          { label: 'Other', amount: 7.7 },
+        ],
+        note: "You're on track to stay under your limit.",
+        submitText: 'Add a data pass',
+        submitValue: "I'd like to add a data pass to my plan",
+      };
+    case 'tmcServiceStatusJSON':
+      return {
+        title: 'Service status',
+        overall: 'degraded',
+        headline: "We're aware of an issue affecting your area",
+        area: 'SoMa, San Francisco 94103',
+        etaText: 'Est. restore by 4:30 PM',
+        updatedText: 'Updated 2 min ago',
+        services: [
+          { id: 'internet', name: 'Internet', status: 'down', detail: 'Fiber node offline', icon: 'internet' },
+          { id: 'tv', name: 'TV', status: 'degraded', detail: 'Some channels affected', icon: 'tv' },
+          { id: 'mobile', name: 'Mobile', status: 'operational', icon: 'mobile' },
+          { id: 'voice', name: 'Home phone', status: 'operational', icon: 'voice' },
+        ],
+        submitText: "Notify me when it's fixed",
+        submitValue: 'Please text me when service is restored',
+      };
+    case 'tmcBillExplainerJSON':
+      return {
+        title: 'Your September bill',
+        currency: 'USD',
+        total: 118.4,
+        dueDateText: 'Due Sep 28',
+        periodText: 'Sep 1 – Sep 30',
+        items: [
+          { id: 'plan', label: 'Unlimited Plus plan', amount: 70, category: 'plan' },
+          { id: 'device', label: 'iPhone installment', amount: 27.08, category: 'device' },
+          { id: 'stream', label: 'Streaming add-on', amount: 9.99, category: 'streaming' },
+          { id: 'taxes', label: 'Taxes & fees', amount: 11.33, category: 'taxes' },
+        ],
+        deltaAmount: 12.4,
+        deltaText: 'Higher than last month — you added the Streaming add-on.',
+        note: 'Autopay is on. This amount will be charged automatically.',
+        submitText: 'Pay now',
+        submitValue: "I'd like to pay my bill now",
+        secondaryText: 'Set up autopay',
+        secondaryValue: 'Help me set up autopay',
+      };
+    case 'mfgEquipmentMonitorJSON':
+      return {
+        title: 'Machine health',
+        asset: { name: 'Trailblazer Assembly Cell', model: 'TB-9000', assetId: 'LINE-3', location: 'Plant 2 · Bay 4', imageUrl: '/resource/asaMfgTrailblazerCell' },
+        status: 'running',
+        statusLabel: 'Running',
+        updatedText: 'Live · updated 12s ago',
+        metrics: [
+          { label: 'OEE', value: '87', unit: '%', state: 'good' },
+          { label: 'Spindle temp', value: '62', unit: '°C', state: 'warn' },
+          { label: 'Throughput', value: '142', unit: '/hr', state: 'good' },
+          { label: 'Uptime', value: '6d 4h', state: 'good' },
+        ],
+        trend: { label: 'OEE · last 12h', points: [72, 78, 74, 80, 83, 81, 85, 84, 86, 88, 87, 87] },
+        submitText: 'Create work order',
+        submitValue: 'Open a work order for the Trailblazer Assembly Cell (LINE-3)',
+      };
+    case 'mfgPartReorderJSON':
+      return {
+        title: 'Reorder part',
+        part: { name: 'Industrial I/O Controller', sku: 'IOC-4820-DIN', category: 'controller', imageUrl: '/resource/asaMfgIoController', unitPrice: 486, currency: 'USD', leadTime: 'Ships in 3–5 business days', inStock: 142, minOrder: 1, incrementStep: 1 },
+        quantity: 2,
+        submitText: 'Reorder',
+      };
+    case 'mfgWorkOrderJSON':
+      return {
+        title: 'Work order WO-4821',
+        orderNumber: 'WO-4821',
+        product: 'Trailblazer Assembly Cell · 2 units',
+        priority: 'high',
+        etaText: 'Est. ship Oct 2',
+        updatedText: 'Updated 1h ago',
+        milestones: [
+          { label: 'Order received', state: 'done', timeText: 'Sep 18', owner: 'Intake' },
+          { label: 'Machining', state: 'done', timeText: 'Sep 22', owner: 'Cell A' },
+          { label: 'Assembly', state: 'current', timeText: 'In progress', owner: 'Bay 4' },
+          { label: 'Quality check', state: 'todo' },
+          { label: 'Ready to ship', state: 'todo' },
+        ],
+        submitText: 'Message production team',
+        submitValue: 'I have a question about work order WO-4821',
+      };
+    case 'mfgQuoteBuilderJSON':
+      return {
+        title: 'Configure your quote',
+        product: 'TB-9000 Assembly Cell',
+        currency: 'USD',
+        basePrice: 48000,
+        optionGroups: [
+          { id: 'material', label: 'Frame material', selectedId: 'steel', options: [{ id: 'steel', label: 'Powder-coated steel', priceDelta: 0 }, { id: 'stainless', label: 'Stainless 304', priceDelta: 3200, detail: 'Washdown-rated' }] },
+          { id: 'controls', label: 'Control package', options: [{ id: 'standard', label: 'Standard PLC', priceDelta: 0 }, { id: 'advanced', label: 'Advanced PLC + HMI', priceDelta: 5400 }] },
+          { id: 'warranty', label: 'Warranty', options: [{ id: '1yr', label: '1 year', priceDelta: 0 }, { id: '3yr', label: '3 years', priceDelta: 2600 }, { id: '5yr', label: '5 years', priceDelta: 4200 }] },
+        ],
+        quantity: 1,
+        submitText: 'Request quote',
+        submitValue: 'Request a formal quote for the configured TB-9000 Assembly Cell',
+      };
+    case 'energyOutageTrackerJSON':
+      return {
+        title: 'Outage status',
+        status: 'restoring',
+        headline: 'Crews are on site restoring power',
+        area: 'Maple Grove · ZIP 55311',
+        cause: 'Storm — downed line',
+        affectedText: '1,240 customers affected',
+        etaText: 'Est. restore by 6:45 PM',
+        updatedText: 'Updated 4 min ago',
+        crew: 'Crew #17 on site',
+        steps: [
+          { label: 'Outage detected', state: 'done', timeText: '3:02 PM' },
+          { label: 'Crew dispatched', state: 'done', timeText: '3:40 PM' },
+          { label: 'On site — repairing', state: 'current', timeText: '5:15 PM' },
+          { label: 'Power restored', state: 'todo' },
+        ],
+        submitText: 'Text me when power is back',
+        submitValue: 'Please text me when power is restored',
+      };
+    case 'energyUsageCostJSON':
+      return {
+        title: 'Your energy this cycle',
+        cycleText: 'Sep 1–30 · 8 days left',
+        projectedCost: 142.5,
+        currency: 'USD',
+        projectedText: 'Projected bill',
+        usedUnits: 612,
+        unit: 'kWh',
+        deltaPct: -8,
+        deltaText: 'less than last month',
+        bars: [
+          { label: 'Wk1', value: 158 },
+          { label: 'Wk2', value: 171 },
+          { label: 'Wk3', value: 149 },
+          { label: 'Wk4', value: 134 },
+        ],
+        breakdown: [
+          { label: 'Heating & cooling', amount: 74.2, color: '#d97706' },
+          { label: 'Water heating', amount: 31.0 },
+          { label: 'Always-on', amount: 22.4 },
+          { label: 'Other', amount: 14.9 },
+        ],
+        submitText: 'See ways to save',
+        submitValue: 'Show me ways to lower my energy bill',
+      };
+    case 'energyBudgetBillingJSON':
+      return {
+        title: 'Smooth out your bill',
+        subtitle: 'Budget Billing keeps your payment the same every month',
+        currency: 'USD',
+        monthlyAmount: 118,
+        currentAvgText: 'Your bills now swing $64–$210',
+        termText: 'Recalculated every 12 months',
+        series: { actual: [96, 120, 168, 210, 150, 88, 64, 72, 110, 175, 190, 140], budget: 118 },
+        bullets: ['No surprises in peak season', 'Cancel anytime', 'Settles up once a year'],
+        submitText: 'Enroll in Budget Billing',
+        submitValue: 'Enroll me in Budget Billing',
+        secondaryText: 'Maybe later',
+        secondaryValue: "I'd like to think about Budget Billing",
+      };
+    case 'energyRebateOffersJSON':
+      return {
+        title: 'Rebates you qualify for',
+        subtitle: 'Save on energy-efficient upgrades',
+        currency: 'USD',
+        offers: [
+          { id: 'thermostat', name: 'Smart thermostat', category: 'thermostat', rebateAmount: 75, detail: 'ENERGY STAR models', badge: 'Popular' },
+          { id: 'heatpump', name: 'Heat pump HVAC', category: 'heat_pump', rebateAmount: 1200, detail: 'Whole-home system' },
+          { id: 'evcharger', name: 'Level 2 EV charger', category: 'ev_charger', rebateAmount: 500, detail: 'Install included' },
+          { id: 'insulation', name: 'Attic insulation', category: 'insulation', rebateAmount: 350, detail: 'Up to R-49' },
+        ],
+        submitText: 'Apply for rebate',
+        submitValue: 'Apply for the rebate',
+      };
     default: // finServAccountSelectorJSON
       return {
         title: 'Which account can I help you with?',
@@ -336,7 +536,31 @@ export default function CltHarness() {
                                   ? 'returns'
                                   : kind === 'retailStorePickupJSON'
                                     ? 'store_pickup'
-                                    : 'account_selector',
+                                    : kind === 'tmcPlanCompareJSON'
+                                      ? 'plan_compare'
+                                      : kind === 'tmcDataUsageJSON'
+                                        ? 'data_usage'
+                                        : kind === 'tmcServiceStatusJSON'
+                                          ? 'service_status'
+                                          : kind === 'tmcBillExplainerJSON'
+                                            ? 'bill_explainer'
+                                            : kind === 'mfgEquipmentMonitorJSON'
+                                              ? 'equipment_monitor'
+                                              : kind === 'mfgPartReorderJSON'
+                                                ? 'part_reorder'
+                                                : kind === 'mfgWorkOrderJSON'
+                                                  ? 'work_order'
+                                                  : kind === 'mfgQuoteBuilderJSON'
+                                                    ? 'quote_builder'
+                                                    : kind === 'energyOutageTrackerJSON'
+                                                      ? 'outage_tracker'
+                                                      : kind === 'energyUsageCostJSON'
+                                                        ? 'usage_cost'
+                                                        : kind === 'energyBudgetBillingJSON'
+                                                          ? 'budget_billing'
+                                                          : kind === 'energyRebateOffersJSON'
+                                                            ? 'rebate_offers'
+                                                            : 'account_selector',
       label: WIDGET_REGISTRY[kind].label,
       description: 'Dev-harness preview',
       displayOrder: 0,

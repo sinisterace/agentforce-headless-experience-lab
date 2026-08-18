@@ -1,5 +1,5 @@
 import type { FinServAdvisorMeetingPayload } from '../payloads';
-import { FinServAdvisorMeetingEditor, FinServAdvisorMeetingPreview } from '../FinServAdvisorMeetingEditor';
+import { FinServAdvisorMeetingPreview } from '../FinServAdvisorMeetingEditor';
 import type { WidgetDef } from './types';
 
 /** asaFinServAdvisorMeeting — matched advisor + day/time slots; pick one to book. */
@@ -48,6 +48,5 @@ export const finServAdvisorMeetingDef: WidgetDef = {
     },
     { label: 'Book', control: 'Button', bind: 'submitText', note: 'appears once a slot is selected' },
   ],
-  Editor: FinServAdvisorMeetingEditor,
   Preview: FinServAdvisorMeetingPreview,
 };

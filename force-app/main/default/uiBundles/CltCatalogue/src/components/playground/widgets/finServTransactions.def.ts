@@ -1,5 +1,5 @@
 import type { FinServTransactionsPayload } from '../payloads';
-import { FinServTransactionsEditor, FinServTransactionsPreview } from '../FinServTransactionsEditor';
+import { FinServTransactionsPreview } from '../FinServTransactionsEditor';
 import type { WidgetDef } from './types';
 
 /** asaFinServTransactions — show recent transactions; pick one to dispute. */
@@ -29,6 +29,5 @@ export const finServTransactionsDef: WidgetDef = {
     },
     { label: 'Dispute', control: 'Button', bind: 'disputeText', note: 'appears once a row is selected' },
   ],
-  Editor: FinServTransactionsEditor,
   Preview: FinServTransactionsPreview,
 };

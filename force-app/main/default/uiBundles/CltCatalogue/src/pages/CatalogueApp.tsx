@@ -30,6 +30,7 @@ import storySparkle from '@/assets/story-sparkle.png';
 import { fetchCatalog, saveProfile, scanCompany } from '@/api/catalogApi';
 import type { CompanyProfile, IndustryOption, PlanSection, Recommendation } from '@/types/catalog';
 import { CompanyMark, capabilityIcon, hostnameOf, industryIcon, initialsOf } from '@/components/shared';
+import { derivePalette, sameHex } from '@/lib/palette';
 import { CltPlayground } from '@/components/playground/CltPlayground';
 import { ChannelViewer } from '@/components/channels/ChannelViewer';
 
@@ -40,15 +41,26 @@ type Intake = { firstName: string; lastName: string; email: string; companyName:
 /**
  * Build steps mirror real work: the first three already ran during the scan;
  * the last two track the live save. (UI spec §6.)
+ *
+ * The icons/order/timing are fixed here; the copy is generated per company in
+ * {@link buildStepCopy} so every line names the customer's own brand, site,
+ * industry, and chosen experience — the build must feel bespoke, never like a
+ * catalogue being handed out.
  */
-const BUILD_STEPS = [
-  { title: 'Reading the public website', detail: 'Finding customer-facing services and language', icon: Globe2 },
-  { title: 'Extracting brand and service signals', detail: 'Mapping identity into accessible interface roles', icon: PackageSearch },
-  { title: 'Selecting the prebuilt experiences', detail: 'Resolving recommended capabilities against the catalog', icon: Layers3 },
-  { title: 'Saving the active consultation profile', detail: 'Writing the researched company data to the org', icon: Workflow },
-  { title: 'Pointing the published agent at this profile', detail: 'The agent reads it on the next request', icon: Sparkles },
-];
+const BUILD_STEP_ICONS = [Globe2, PackageSearch, Layers3, Workflow, Sparkles];
+const BUILD_STEP_COUNT = BUILD_STEP_ICONS.length;
 const FIRST_SAVE_STEP = 3;
+
+function buildStepCopy(ctx: { company: string; hostname: string; industryLabel: string; experience: string }) {
+  const industry = ctx.industryLabel.toLowerCase();
+  return [
+    { title: `Reading ${ctx.hostname}`, detail: `Finding the services and language ${ctx.company} customers see` },
+    { title: `Learning the ${ctx.company} brand`, detail: 'Mapping your identity into accessible interface roles' },
+    { title: `Tailoring your ${ctx.experience} experience`, detail: `Shaping a ${industry} experience around ${ctx.company}` },
+    { title: `Saving the ${ctx.company} service profile`, detail: 'Writing your researched company data to the org' },
+    { title: `Connecting your ${ctx.company} agent`, detail: 'Your agent reads this profile on the next request' },
+  ];
+}
 
 function normalizeWebsiteInput(input: string) {
   let value = input.trim().replace(/\s+/g, '');
@@ -135,6 +147,11 @@ export default function CatalogueApp() {
         website: intake.website,
         industry: intake.industry || undefined,
       });
+      // accentColor is the brand's real primary color, resolved server-side by the
+      // scan (web-retriever prompt template, with a knowledge-only fallback) and
+      // used verbatim to seed the palette. It's native to the platform — no logo
+      // pixel-reading, which the browser can't do cross-origin without the host's
+      // CORS cooperation anyway.
       setProfile(intake.industry ? { ...scanned, industryKey: intake.industry } : scanned);
       setRecommendations(recs);
       if (scanned.source === 'fallback') {
@@ -159,7 +176,7 @@ export default function CatalogueApp() {
     // and the save have finished, so the progress never lies about the work.
     const wait = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
     const walkthrough = (async () => {
-      for (let step = 1; step < BUILD_STEPS.length; step += 1) {
+      for (let step = 1; step < BUILD_STEP_COUNT; step += 1) {
         await wait(step < FIRST_SAVE_STEP ? 1400 : 1900);
         setBuildStep(step);
       }
@@ -184,7 +201,7 @@ export default function CatalogueApp() {
     try {
       const [response] = await Promise.all([save, walkthrough]);
       setSavedName(response.id);
-      setBuildStep(BUILD_STEPS.length - 1);
+      setBuildStep(BUILD_STEP_COUNT - 1);
       await wait(700);
       setStage('preview');
     } catch (error) {
@@ -288,6 +305,7 @@ export default function CatalogueApp() {
             }}
             onBack={() => setStage('intake')}
             onContinue={buildExperience}
+            onPickAccent={(hex) => setProfile((c) => (c ? { ...c, accentColor: hex } : c))}
           />
         )}
 
@@ -316,8 +334,8 @@ function Welcome({ onContinue }: { onContinue: () => void }) {
   return (
     <div className="welcome-layout">
       <section className="welcome-copy" aria-labelledby="welcome-title">
-        <h1 id="welcome-title">Design &amp; deploy custom Agentforce interfaces</h1>
-        <p className="welcome-lede">Get hands-on designing custom Agentforce interfaces that match your industry. Learn how to bring your agent to life with a branded, personalized experience for your customers.</p>
+        <h1 id="welcome-title">Design custom Agentforce interfaces for your industry</h1>
+        <p className="welcome-lede">Custom Lightning Types let you design rich, interactive experiences for Agentforce. Now let&rsquo;s explore the most effective patterns for your company.</p>
         <button className="primary-action" type="button" onClick={onContinue}>Start designing <ArrowRight aria-hidden="true" /></button>
         <div className="welcome-proof" aria-label="What you'll do">
           <span><Sparkles aria-hidden="true" /> A personalized plan</span>
@@ -498,6 +516,7 @@ function ConfirmScreen({
   onIndustry,
   onBack,
   onContinue,
+  onPickAccent,
 }: {
   profile: CompanyProfile;
   industry: string;
@@ -511,8 +530,15 @@ function ConfirmScreen({
   onIndustry: (key: string) => void;
   onBack: () => void;
   onContinue: () => void;
+  onPickAccent: (hex: string) => void;
 }) {
   const succeeded = profile.source === 'website';
+  // Palette is derived from the ORIGINAL scanned accent, captured once on mount,
+  // so the swatches stay stable even as the picked accent (profile.accentColor)
+  // changes. ConfirmScreen unmounts when leaving the confirm stage, so a new scan
+  // recaptures the base.
+  const [baseAccent] = useState(() => profile.accentColor);
+  const palette = useMemo(() => derivePalette(baseAccent), [baseAccent]);
   return (
     <div className="content-shell confirm-layout">
       <button className="back-action" type="button" onClick={onBack}><ArrowLeft aria-hidden="true" /> Back</button>
@@ -544,6 +570,28 @@ function ConfirmScreen({
             <p>{profile.summary}</p>
             <div className="signal-list" aria-label="Extracted signals">
               {profile.signals.map((signal) => <span key={signal}><Check aria-hidden="true" /> {signal}</span>)}
+            </div>
+            <div className="brand-palette" role="group" aria-label="Brand palette — choose the accent applied to your experiences">
+              <span className="brand-palette-label">Brand palette</span>
+              <div className="brand-swatches">
+                {palette.map((sw) => {
+                  const active = sameHex(sw.hex, profile.accentColor);
+                  return (
+                    <button
+                      type="button"
+                      key={sw.hex}
+                      className={active ? 'brand-swatch is-active' : 'brand-swatch'}
+                      style={{ '--sw': sw.hex } as React.CSSProperties}
+                      aria-pressed={active}
+                      aria-label={`${sw.name} ${sw.hex}${active ? ' (applied)' : ''}`}
+                      title={`${sw.name} · ${sw.hex}`}
+                      onClick={() => onPickAccent(sw.hex)}
+                    >
+                      {active && <Check aria-hidden="true" />}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
@@ -593,7 +641,7 @@ function ConfirmScreen({
                   );
                 })}
               </div>
-              {selectedRec && <CltPlayground key={selectedRec.cltApiName} recommendation={selectedRec} accentColor={profile.accentColor} />}
+              {selectedRec && <CltPlayground key={selectedRec.cltApiName} recommendation={selectedRec} accentColor={profile.accentColor} companyName={profile.companyName} />}
             </>
           )}
         </div>
@@ -753,10 +801,16 @@ function BuildingScreen({
   initials: string;
   selectedRec: Recommendation;
 }) {
-  const progress = Math.round(((buildStep + 1) / BUILD_STEPS.length) * 100);
-  const ActiveIcon = BUILD_STEPS[buildStep].icon;
+  const steps = buildStepCopy({
+    company: profile.companyName,
+    hostname: hostnameOf(profile.website),
+    industryLabel,
+    experience: selectedRec.label,
+  });
+  const progress = Math.round(((buildStep + 1) / BUILD_STEP_COUNT) * 100);
+  const ActiveIcon = BUILD_STEP_ICONS[buildStep];
   const CltIcon = capabilityIcon(selectedRec.capabilityKey);
-  const detail = BUILD_STEPS[buildStep].detail;
+  const detail = steps[buildStep].detail;
   return (
     <div className="build-stage" aria-live="polite">
       <section className="build-heading">
@@ -769,19 +823,18 @@ function BuildingScreen({
           <div className="orchestrator-topline"><span>Agent build</span><strong>{progress}%</strong></div>
           <div className="build-current-card">
             <div className="current-step-visual"><span className="current-step-orbit" /><ActiveIcon aria-hidden="true" /></div>
-            <span>Step {buildStep + 1} of {BUILD_STEPS.length}</span>
-            <h2>{BUILD_STEPS[buildStep].title}</h2>
+            <span>Step {buildStep + 1} of {BUILD_STEP_COUNT}</span>
+            <h2>{steps[buildStep].title}</h2>
             <p>{detail}</p>
             <div className="scan-lines" aria-hidden="true"><i /><i /><i /></div>
           </div>
-          <div className="elastic-build-dock" aria-label={`Build step ${buildStep + 1} of ${BUILD_STEPS.length}`}>
-            {BUILD_STEPS.map((step, index) => {
-              const Icon = step.icon;
+          <div className="elastic-build-dock" aria-label={`Build step ${buildStep + 1} of ${BUILD_STEP_COUNT}`}>
+            {BUILD_STEP_ICONS.map((Icon, index) => {
               const state = index < buildStep ? 'complete' : index === buildStep ? 'active' : 'pending';
-              return <span className={`dock-tool ${state}`} title={step.title} key={step.title}>{state === 'complete' ? <Check aria-hidden="true" /> : <Icon aria-hidden="true" />}</span>;
+              return <span className={`dock-tool ${state}`} title={steps[index].title} key={index}>{state === 'complete' ? <Check aria-hidden="true" /> : <Icon aria-hidden="true" />}</span>;
             })}
           </div>
-          <div className="orchestrator-status"><i /><span>{buildStep < BUILD_STEPS.length - 1 ? 'Working in the background' : 'Final checks in progress'}</span><b>{BUILD_STEPS.length - buildStep - 1} remaining</b></div>
+          <div className="orchestrator-status"><i /><span>{buildStep < BUILD_STEP_COUNT - 1 ? 'Working in the background' : 'Final checks in progress'}</span><b>{BUILD_STEP_COUNT - buildStep - 1} remaining</b></div>
         </div>
         <div className="assembly-visual">
           <div className="assembly-grid" aria-hidden="true" />
@@ -798,8 +851,8 @@ function BuildingScreen({
           </div>
           <div className="build-console" aria-live="polite">
             <div><span>BUILD LOG</span><span>secure session</span></div>
-            {BUILD_STEPS.slice(0, buildStep + 1).map((step, index) => (
-              <p key={step.title} className={index === buildStep ? 'current' : ''}>
+            {steps.slice(0, buildStep + 1).map((step, index) => (
+              <p key={index} className={index === buildStep ? 'current' : ''}>
                 <CheckCircle2 aria-hidden="true" /><time>{String(index + 1).padStart(2, '0')}:0{index + 2}</time>{step.title}
               </p>
             ))}
@@ -961,6 +1014,38 @@ function cltDtoClass(rec: Recommendation): string {
       return 'AsaHealthcareCareOptionsData';
     case 'healthcareRxRefillJSON':
       return 'AsaHealthcareRxRefillData';
+    case 'retailProductCarouselJSON':
+      return 'AsaRetailProductCarouselData';
+    case 'retailOrderTrackingJSON':
+      return 'AsaRetailOrderTrackingData';
+    case 'retailReturnsJSON':
+      return 'AsaRetailReturnsData';
+    case 'retailStorePickupJSON':
+      return 'AsaRetailStorePickupData';
+    case 'tmcPlanCompareJSON':
+      return 'AsaTmcPlanCompareData';
+    case 'tmcDataUsageJSON':
+      return 'AsaTmcDataUsageData';
+    case 'tmcServiceStatusJSON':
+      return 'AsaTmcServiceStatusData';
+    case 'tmcBillExplainerJSON':
+      return 'AsaTmcBillExplainerData';
+    case 'mfgEquipmentMonitorJSON':
+      return 'AsaMfgEquipmentMonitorData';
+    case 'mfgPartReorderJSON':
+      return 'AsaMfgPartReorderData';
+    case 'mfgWorkOrderJSON':
+      return 'AsaMfgWorkOrderData';
+    case 'mfgQuoteBuilderJSON':
+      return 'AsaMfgQuoteBuilderData';
+    case 'energyOutageTrackerJSON':
+      return 'AsaEnergyOutageTrackerData';
+    case 'energyUsageCostJSON':
+      return 'AsaEnergyUsageCostData';
+    case 'energyBudgetBillingJSON':
+      return 'AsaEnergyBudgetBillingData';
+    case 'energyRebateOffersJSON':
+      return 'AsaEnergyRebateOffersData';
     default:
       return 'AsaFinServAccountSelectorData';
   }

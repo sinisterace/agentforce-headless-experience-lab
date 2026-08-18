@@ -1,0 +1,71 @@
+<template>
+    <div class="asa-card">
+        <template if:true={isTestMode}>
+            <p class="asa-test-badge">Sample data — no bill supplied</p>
+        </template>
+
+        <div class="asa-be-head">
+            <h3 class="selector-title">{title}</h3>
+            <template if:true={hasPeriod}>
+                <span class="asa-be-period">{periodText}</span>
+            </template>
+        </div>
+
+        <div class="asa-be-total">
+            <span class="asa-be-total-amt">{totalLabel}</span>
+            <template if:true={hasDueDate}>
+                <span class="asa-be-due">{dueDateText}</span>
+            </template>
+        </div>
+
+        <template if:true={hasBar}>
+            <div class="asa-be-bar">
+                <template for:each={segments} for:item="s">
+                    <span key={s.key} class="asa-be-seg" style={s.style}></span>
+                </template>
+            </div>
+        </template>
+
+        <ul class="asa-be-items">
+            <template for:each={items} for:item="i">
+                <li key={i.key} class="asa-be-item">
+                    <span class="asa-be-dot" style={i.dotStyle}></span>
+                    <span class="asa-be-label">{i.label}</span>
+                    <span class={i.amountClass}>{i.amount}</span>
+                </li>
+            </template>
+        </ul>
+
+        <template if:true={hasDelta}>
+            <div class={deltaClass}>
+                <span class="asa-be-trend" aria-hidden="true">
+                    <template if:true={deltaUp}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"></path><path d="M9 7h8v8"></path></svg>
+                    </template>
+                    <template if:false={deltaUp}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7 17 17"></path><path d="M17 9v8H9"></path></svg>
+                    </template>
+                </span>
+                <span class="asa-be-delta-body">
+                    <template if:true={hasDeltaLead}>
+                        <span class="asa-be-delta-lead"><b class="asa-be-delta-amt">{deltaMoney}</b> {deltaDir}</span>
+                    </template>
+                    <template if:true={hasDeltaReason}>
+                        <span class="asa-be-delta-reason">{deltaText}</span>
+                    </template>
+                </span>
+            </div>
+        </template>
+
+        <template if:true={hasNote}>
+            <p class="asa-be-note">{note}</p>
+        </template>
+
+        <template if:true={hasSubmit}>
+            <button type="button" class="asa-be-cta" onclick={handleSubmit}>{submitText}</button>
+        </template>
+        <template if:true={hasSecondary}>
+            <button type="button" class="asa-be-cta-secondary" onclick={handleSecondary}>{secondaryText}</button>
+        </template>
+    </div>
+</template>

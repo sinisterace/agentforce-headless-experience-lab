@@ -1,5 +1,5 @@
 import type { RetailReturnsPayload } from '../payloads';
-import { RetailReturnsEditor, RetailReturnsPreview } from '../RetailReturnsEditor';
+import { RetailReturnsPreview } from '../RetailReturnsEditor';
 import type { WidgetDef } from './types';
 
 /** asaRetailReturns — pick items + reason + resolution to start a return/exchange. */
@@ -50,6 +50,5 @@ export const retailReturnsDef: WidgetDef = {
     },
     { label: 'Submit', control: 'Text', bind: 'submitText', note: 'default "Continue return"' },
   ],
-  Editor: RetailReturnsEditor,
   Preview: RetailReturnsPreview,
 };

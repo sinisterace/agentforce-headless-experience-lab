@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>ASA Energy &amp; Utilities · Usage &amp; Cost</masterLabel>
+    <description>Shows this cycle's energy usage as a column chart, a projected bill, the change vs last month, and a cost breakdown by category.</description>
+    <targets>
+        <target>lightning__AgentforceOutput</target>
+        <target>lightningSnapin__ChatMessage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AgentforceOutput">
+            <sourceType name="c__asaEnergyUsageCost"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

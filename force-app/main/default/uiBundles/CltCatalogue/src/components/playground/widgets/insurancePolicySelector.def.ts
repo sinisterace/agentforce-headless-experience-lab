@@ -1,5 +1,5 @@
 import type { InsurancePolicySelectorPayload } from '../payloads';
-import { InsurancePolicySelectorEditor, InsurancePolicySelectorPreview } from '../InsurancePolicySelectorEditor';
+import { InsurancePolicySelectorPreview } from '../InsurancePolicySelectorEditor';
 import type { WidgetDef } from './types';
 
 /** asaInsurancePolicySelector — pick an insurance policy (single or multiple), with coverage + renewal. */
@@ -31,6 +31,5 @@ export const insurancePolicySelectorDef: WidgetDef = {
     },
     { label: 'Submit', control: 'Button', bind: 'submitText', note: 'multiple mode only' },
   ],
-  Editor: InsurancePolicySelectorEditor,
   Preview: InsurancePolicySelectorPreview,
 };

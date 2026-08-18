@@ -1,5 +1,5 @@
 import type { FinServAccountSelectorPayload } from '../payloads';
-import { FinServAccountSelectorEditor, FinServAccountSelectorPreview } from '../FinServAccountSelectorEditor';
+import { FinServAccountSelectorPreview } from '../FinServAccountSelectorEditor';
 import type { WidgetDef } from './types';
 
 /** asaFinServAccountSelector — pick a financial account (single or multiple), with balances. */
@@ -29,6 +29,5 @@ export const finServAccountSelectorDef: WidgetDef = {
     },
     { label: 'Submit', control: 'Button', bind: 'submitText', note: 'multiple mode only' },
   ],
-  Editor: FinServAccountSelectorEditor,
   Preview: FinServAccountSelectorPreview,
 };

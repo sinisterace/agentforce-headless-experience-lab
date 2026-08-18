@@ -1,0 +1,88 @@
+/* ASA Manufacturing · Quote Builder — a configure-to-order card: product header,
+   single-select option chips per group (each with a price delta), a quantity
+   stepper, and a live estimated total. rem units + inherited font so the card
+   matches the host chat theme in Enhanced Chat v2. Steel-slate accent + neutrals
+   are local props. */
+:host {
+    --asa-accent: #334155;
+    --asa-line: #e2e8f0;
+    --asa-ink: #0f172a;
+    --asa-muted: #64748b;
+    --asa-radius: 14px;
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after { box-sizing: border-box; }
+
+.asa-test-badge { margin: 0 0 0.5rem; padding: 0.3rem 0.5rem; border-radius: 8px; background: #f1f5f9; color: #475569; font-size: 0.68rem; font-weight: 600; }
+
+.asa-qb-head { margin-bottom: 0.7rem; }
+.selector-title { font-size: 1.12rem; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 0.12rem; overflow-wrap: break-word; word-break: normal; }
+.asa-qb-product { margin: 0; font-size: 0.78rem; color: var(--asa-muted); overflow-wrap: break-word; }
+.asa-qb-base { font-weight: 650; color: var(--asa-ink); }
+
+/* Option groups */
+.asa-qb-groups { display: flex; flex-direction: column; gap: 0.7rem; }
+.asa-qb-group { min-width: 0; }
+.asa-qb-group-label { display: block; font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--asa-muted); margin-bottom: 0.35rem; }
+.asa-qb-chips { display: flex; flex-direction: column; gap: 0.4rem; }
+.asa-qb-chip {
+    display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; width: 100%;
+    padding: 0.55rem 0.65rem; border: 1.5px solid var(--asa-line); border-radius: 11px;
+    background: #fff; color: inherit; font-family: inherit; text-align: left; cursor: pointer;
+    transition: border-color 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+}
+.asa-qb-chip:hover { border-color: color-mix(in srgb, var(--asa-accent) 45%, var(--asa-line)); }
+.asa-qb-chip.is-selected { border-color: var(--asa-accent); background: color-mix(in srgb, var(--asa-accent) 6%, #fff); box-shadow: 0 0 0 3px color-mix(in srgb, var(--asa-accent) 14%, transparent); }
+.asa-qb-chip-main { display: flex; flex-direction: column; gap: 0.05rem; min-width: 0; flex: 1; }
+.asa-qb-chip-label { font-size: 0.84rem; font-weight: 620; color: var(--asa-ink); overflow-wrap: break-word; }
+.asa-qb-chip.is-selected .asa-qb-chip-label { font-weight: 720; }
+.asa-qb-chip-detail { font-size: 0.68rem; color: var(--asa-muted); overflow-wrap: break-word; }
+.asa-qb-chip-delta { flex-shrink: 0; font-size: 0.74rem; font-weight: 700; color: var(--asa-muted); white-space: nowrap; }
+.asa-qb-chip.is-selected .asa-qb-chip-delta { color: var(--asa-accent); }
+
+/* Quantity stepper */
+.asa-qb-qtyrow { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; margin-top: 0.85rem; padding-top: 0.75rem; border-top: 1px solid var(--asa-line); }
+.asa-qb-qty-label { font-size: 0.82rem; font-weight: 650; color: var(--asa-ink); }
+.asa-qb-stepper { display: inline-flex; align-items: center; gap: 0.15rem; border: 1px solid var(--asa-line); border-radius: 11px; padding: 0.15rem; }
+.asa-qb-step { width: 2.1rem; height: 2.1rem; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 9px; background: #f1f5f9; color: var(--asa-accent); cursor: pointer; transition: background 0.12s ease, color 0.12s ease; }
+.asa-qb-step:hover:not(:disabled) { background: var(--asa-accent); color: #fff; }
+.asa-qb-step:disabled { opacity: 0.4; cursor: default; }
+.asa-qb-step svg { width: 1.05rem; height: 1.05rem; }
+.asa-qb-qty-value { min-width: 2.4rem; text-align: center; font-size: 1.05rem; font-weight: 750; color: var(--asa-ink); font-variant-numeric: tabular-nums; }
+
+/* Live estimate */
+.asa-qb-estimate {
+    display: grid; grid-template-columns: 1fr auto; align-items: baseline; column-gap: 0.6rem; row-gap: 0.1rem;
+    margin-top: 0.75rem; padding: 0.65rem 0.75rem; border-radius: 12px;
+    background: #0f172a; color: #f8fafc;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.2);
+}
+.asa-qb-est-label { grid-column: 1; grid-row: 1; font-size: 0.66rem; font-weight: 650; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; }
+.asa-qb-est-value { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-size: 1.5rem; font-weight: 780; letter-spacing: -0.02em; white-space: nowrap; }
+.asa-qb-est-note { grid-column: 1; grid-row: 2; font-size: 0.68rem; color: #94a3b8; overflow-wrap: break-word; }
+
+.asa-qb-cta {
+    margin-top: 0.6rem; width: 100%; min-height: 2.8rem; padding: 0.6rem;
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem;
+    border: 0; border-radius: 11px; background: var(--asa-accent); color: #fff;
+    font-size: 0.86rem; font-weight: 680; cursor: pointer;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--asa-accent) 26%, transparent);
+    transition: filter 0.15s ease;
+}
+.asa-qb-cta:hover { filter: brightness(1.12); }
+.asa-qb-cta svg { width: 1.05rem; height: 1.05rem; }
+
+@container (max-width: 300px) {
+    .asa-qb-est-value { font-size: 1.3rem; }
+    .asa-qb-step { width: 1.95rem; height: 1.95rem; }
+}

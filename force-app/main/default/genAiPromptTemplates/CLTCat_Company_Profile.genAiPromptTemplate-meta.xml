@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <GenAiPromptTemplate xmlns="http://soap.sforce.com/2006/04/metadata">
-    <activeVersionIdentifier>q4MjUTxed1Qnfgb3a3j/GinLPxjdq4N4fEapYyuQCyU=_2</activeVersionIdentifier>
+    <activeVersionIdentifier>q4MjUTxed1Qnfgb3a3j/GinLPxjdq4N4fEapYyuQCyU=_3</activeVersionIdentifier>
     <developerName>CLTCat_Company_Profile</developerName>
     <masterLabel>CLTCat Company Profile</masterLabel>
     <overridable>false</overridable>
@@ -26,7 +26,7 @@ Return one valid JSON object and no markdown. Use exactly these keys:
   &quot;planNarrative&quot;: &quot;two to three sentences on how AI service agents help this company&quot;,
   &quot;industryKey&quot;: &quot;exactly one value copied verbatim from the allowed industry keys above&quot;,
   &quot;confidence&quot;: &quot;decimal between 0 and 1 for how well the evidence supports that key&quot;,
-  &quot;accentColor&quot;: &quot;#RRGGBB&quot;,
+  &quot;accentColor&quot;: &quot;this brand's ACTUAL primary color as a #RRGGBB hex, taken from the retrieved pages and logo (e.g. a nature/eco or 'Sapling'-style brand skews green); never a generic blue unless blue is genuinely this brand's dominant color&quot;,
   &quot;logoUrl&quot;: &quot;absolute HTTPS URL to the public company logo, or null&quot;,
   &quot;signals&quot;: [&quot;two to four concise, evidence-based customer experience signals&quot;],
   &quot;planEnrichment&quot;: {
@@ -38,6 +38,8 @@ Return one valid JSON object and no markdown. Use exactly these keys:
     &quot;getting_started&quot;: &quot;one sentence naming a concrete first experience to launch for them&quot;
   }
 }
+
+For &quot;accentColor&quot;, use the brand&apos;s real dominant color as shown by its logo and site branding in the retrieved evidence; infer from the brand name and industry when the pages are thin, and never fall back to a generic house blue.
 
 The &quot;planEnrichment&quot; object layers company-specific context onto a fixed educational plan the consultant will walk through. Each value is ONE sentence, grounded strictly in the retrieved evidence about this company&apos;s real products, services, and audience. Do not restate the summary. Omit any key you cannot ground in real evidence rather than guessing.
 
@@ -84,7 +86,7 @@ Do not invent facts. If the public results are insufficient, preserve the suppli
             </parameters>
             <referenceName>EinsteinSearch:sfdc_ai__WebRetrievalAction</referenceName>
         </templateDataProviders>
-        <versionIdentifier>q4MjUTxed1Qnfgb3a3j/GinLPxjdq4N4fEapYyuQCyU=_2</versionIdentifier>
+        <versionIdentifier>q4MjUTxed1Qnfgb3a3j/GinLPxjdq4N4fEapYyuQCyU=_3</versionIdentifier>
     </templateVersions>
     <type>einstein_gpt__flex</type>
     <visibility>Global</visibility>

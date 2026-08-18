@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { ArrowDown, ArrowUp, Check, MapPin, Pill, Plus, Trash2 } from 'lucide-react';
+import { Check, MapPin, Pill } from 'lucide-react';
 import type { HealthcareRxRefillPayload, RxMedication } from './payloads';
 import { refillsNote, statusBucket, statusText } from './rxRefillFormat';
 
 /**
- * Build/Input editor + live preview for the ASA Healthcare · Prescription Refill
+ * Live preview for the ASA Healthcare · Prescription Refill
  * CLT (DTO field healthcareRxRefillJSON). LWC-true fields: title, subtitle?,
  * medications (object[] of { id, name, dosage?, supplyText?, status?,
  * refillsLeft? }), pharmacy? ({ name, address?, hours? }), submitText?. A
@@ -13,125 +13,6 @@ import { refillsNote, statusBucket, statusText } from './rxRefillFormat';
  * payload — mirroring the LWC.
  */
 
-const STATUSES = ['ok', 'low', 'out'];
-
-export function HealthcareRxRefillEditor({
-  value,
-  onChange,
-}: {
-  value: HealthcareRxRefillPayload;
-  onChange: (next: HealthcareRxRefillPayload) => void;
-}) {
-  const pharmacy = value.pharmacy ?? { name: '', address: '', hours: '' };
-  const setPharmacy = (patch: Partial<NonNullable<HealthcareRxRefillPayload['pharmacy']>>) =>
-    onChange({ ...value, pharmacy: { ...pharmacy, ...patch } });
-
-  const setMed = (index: number, patch: Partial<RxMedication>) => {
-    const medications = value.medications.slice();
-    medications[index] = { ...medications[index], ...patch };
-    onChange({ ...value, medications });
-  };
-  const addMed = () =>
-    onChange({
-      ...value,
-      medications: [
-        ...value.medications,
-        { id: `m-${value.medications.length + 1}`, name: 'New medication', dosage: '', status: 'ok' },
-      ],
-    });
-  const removeMed = (index: number) => onChange({ ...value, medications: value.medications.filter((_, i) => i !== index) });
-  const move = (index: number, delta: number) => {
-    const target = index + delta;
-    if (target < 0 || target >= value.medications.length) return;
-    const medications = value.medications.slice();
-    [medications[index], medications[target]] = [medications[target], medications[index]];
-    onChange({ ...value, medications });
-  };
-
-  return (
-    <div className="playground-editor">
-      <label className="playground-field">
-        Title
-        <input value={value.title} onChange={(e) => onChange({ ...value, title: e.target.value })} placeholder="Refill prescriptions" />
-      </label>
-      <label className="playground-field">
-        Subtitle <span className="optional-label">Optional</span>
-        <input value={value.subtitle ?? ''} onChange={(e) => onChange({ ...value, subtitle: e.target.value })} placeholder="Select the medications to refill" />
-      </label>
-      <label className="playground-field">
-        Submit button text
-        <input value={value.submitText ?? ''} onChange={(e) => onChange({ ...value, submitText: e.target.value })} placeholder="Request refill" />
-      </label>
-
-      <div className="playground-card">
-        <div className="playground-card-head">
-          <strong>Pickup pharmacy</strong>
-          <span className="optional-label">Optional</span>
-        </div>
-        <label className="playground-field">
-          Name
-          <input value={pharmacy.name ?? ''} onChange={(e) => setPharmacy({ name: e.target.value })} placeholder="Walgreens · Market St" />
-        </label>
-        <label className="playground-field">
-          Address <span className="optional-label">Optional</span>
-          <input value={pharmacy.address ?? ''} onChange={(e) => setPharmacy({ address: e.target.value })} placeholder="700 Market St" />
-        </label>
-        <label className="playground-field">
-          Hours <span className="optional-label">Optional</span>
-          <input value={pharmacy.hours ?? ''} onChange={(e) => setPharmacy({ hours: e.target.value })} placeholder="Open until 10 PM" />
-        </label>
-      </div>
-
-      <div className="playground-list">
-        <div className="playground-list-head">
-          <span>Medications</span>
-          <button type="button" className="playground-add" onClick={addMed}><Plus aria-hidden="true" /> Add medication</button>
-        </div>
-        {value.medications.length === 0 && <p className="playground-empty">No medications — the component shows sample test data until you add one.</p>}
-        {value.medications.map((med, index) => (
-          <div className="playground-card" key={index}>
-            <div className="playground-card-head">
-              <strong>Medication {index + 1}</strong>
-              <span className="playground-card-actions">
-                <button type="button" onClick={() => move(index, -1)} disabled={index === 0} aria-label="Move up"><ArrowUp aria-hidden="true" /></button>
-                <button type="button" onClick={() => move(index, 1)} disabled={index === value.medications.length - 1} aria-label="Move down"><ArrowDown aria-hidden="true" /></button>
-                <button type="button" onClick={() => removeMed(index)} aria-label="Remove medication"><Trash2 aria-hidden="true" /></button>
-              </span>
-            </div>
-            <label className="playground-field">
-              Name
-              <input value={med.name} onChange={(e) => setMed(index, { name: e.target.value })} placeholder="Atorvastatin" />
-            </label>
-            <label className="playground-field">
-              Dosage <span className="optional-label">Optional</span>
-              <input value={med.dosage ?? ''} onChange={(e) => setMed(index, { dosage: e.target.value })} placeholder="20 mg tablet" />
-            </label>
-            <label className="playground-field">
-              Supply text <span className="optional-label">Optional</span>
-              <input value={med.supplyText ?? ''} onChange={(e) => setMed(index, { supplyText: e.target.value })} placeholder="3 days left" />
-            </label>
-            <div className="playground-field">
-              <span>Status</span>
-              <select value={statusBucket(med.status)} onChange={(e) => setMed(index, { status: e.target.value })}>
-                {STATUSES.map((s) => <option value={s} key={s}>{s}</option>)}
-              </select>
-            </div>
-            <label className="playground-field">
-              Refills left <span className="optional-label">Optional</span>
-              <input
-                type="number"
-                min={0}
-                value={med.refillsLeft ?? ''}
-                onChange={(e) => setMed(index, { refillsLeft: e.target.value === '' ? undefined : Number(e.target.value) })}
-                placeholder="2"
-              />
-            </label>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 const TEST_PAYLOAD: HealthcareRxRefillPayload = {
   title: 'Refill prescriptions',

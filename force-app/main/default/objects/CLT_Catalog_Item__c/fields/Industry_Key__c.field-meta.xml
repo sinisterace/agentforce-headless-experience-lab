@@ -32,6 +32,21 @@
                 <label>Retail</label>
             </value>
             <value>
+                <fullName>technology_comms</fullName>
+                <default>false</default>
+                <label>Technology, Media &amp; Communications</label>
+            </value>
+            <value>
+                <fullName>manufacturing</fullName>
+                <default>false</default>
+                <label>Manufacturing</label>
+            </value>
+            <value>
+                <fullName>energy_utilities</fullName>
+                <default>false</default>
+                <label>Energy &amp; Utilities</label>
+            </value>
+            <value>
                 <fullName>hvac</fullName>
                 <default>false</default>
                 <label>HVAC</label>

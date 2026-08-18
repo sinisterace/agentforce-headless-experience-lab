@@ -1,9 +1,9 @@
-import { ArrowDown, ArrowUp, Clock, ExternalLink, MapPin, Phone, Plus, Timer, Trash2 } from 'lucide-react';
+import { Clock, ExternalLink, MapPin, Phone, Timer } from 'lucide-react';
 import type { CareFacility, HealthcareFindCarePayload } from './payloads';
 import { facilityBucket, facilityIcon, facilityLabel, telHref } from './findCareFormat';
 
 /**
- * Build/Input editor + live preview for the ASA Healthcare · Find Care Near You
+ * Live preview for the ASA Healthcare · Find Care Near You
  * CLT (DTO field healthcareFindCareJSON). LWC-true fields: title, subtitle?,
  * facilities (object[] of { id, name, type?, distance?, openNow?, hours?,
  * waitTime?, address?, phone?, services?[], mapsUrl? }). Wayfinding only — the
@@ -23,142 +23,7 @@ function GoogleMapsPin() {
   );
 }
 
-const FACILITY_TYPES = ['urgent_care', 'er', 'primary_care', 'pharmacy', 'clinic', 'hospital', 'lab', 'telehealth'];
-const OPEN_STATES = [
-  { value: 'unset', label: 'No status' },
-  { value: 'open', label: 'Open now' },
-  { value: 'closed', label: 'Closed' },
-];
 
-function openStateOf(openNow?: boolean): string {
-  if (openNow === true) return 'open';
-  if (openNow === false) return 'closed';
-  return 'unset';
-}
-
-export function HealthcareFindCareEditor({
-  value,
-  onChange,
-}: {
-  value: HealthcareFindCarePayload;
-  onChange: (next: HealthcareFindCarePayload) => void;
-}) {
-  const setFacility = (index: number, patch: Partial<CareFacility>) => {
-    const facilities = value.facilities.slice();
-    facilities[index] = { ...facilities[index], ...patch };
-    onChange({ ...value, facilities });
-  };
-  const addFacility = () =>
-    onChange({
-      ...value,
-      facilities: [
-        ...value.facilities,
-        { id: `f-${value.facilities.length + 1}`, name: 'New facility', type: 'clinic', distance: '', openNow: true },
-      ],
-    });
-  const removeFacility = (index: number) => onChange({ ...value, facilities: value.facilities.filter((_, i) => i !== index) });
-  const move = (index: number, delta: number) => {
-    const target = index + delta;
-    if (target < 0 || target >= value.facilities.length) return;
-    const facilities = value.facilities.slice();
-    [facilities[index], facilities[target]] = [facilities[target], facilities[index]];
-    onChange({ ...value, facilities });
-  };
-  const setOpen = (index: number, state: string) =>
-    setFacility(index, { openNow: state === 'open' ? true : state === 'closed' ? false : undefined });
-  const setServices = (index: number, raw: string) =>
-    setFacility(index, { services: raw.split(',').map((s) => s.trim()).filter(Boolean) });
-
-  return (
-    <div className="playground-editor">
-      <label className="playground-field">
-        Title
-        <input value={value.title} onChange={(e) => onChange({ ...value, title: e.target.value })} placeholder="Care near you" />
-      </label>
-      <label className="playground-field">
-        Subtitle <span className="optional-label">Optional</span>
-        <input value={value.subtitle ?? ''} onChange={(e) => onChange({ ...value, subtitle: e.target.value })} placeholder="Based on your location" />
-      </label>
-
-      <div className="playground-list">
-        <div className="playground-list-head">
-          <span>Facilities</span>
-          <button type="button" className="playground-add" onClick={addFacility}><Plus aria-hidden="true" /> Add facility</button>
-        </div>
-        {value.facilities.length === 0 && <p className="playground-empty">No facilities — the component shows sample test data until you add one.</p>}
-        {value.facilities.map((fac, index) => (
-          <div className="playground-card" key={index}>
-            <div className="playground-card-head">
-              <strong>Facility {index + 1}</strong>
-              <span className="playground-card-actions">
-                <button type="button" onClick={() => move(index, -1)} disabled={index === 0} aria-label="Move up"><ArrowUp aria-hidden="true" /></button>
-                <button type="button" onClick={() => move(index, 1)} disabled={index === value.facilities.length - 1} aria-label="Move down"><ArrowDown aria-hidden="true" /></button>
-                <button type="button" onClick={() => removeFacility(index)} aria-label="Remove facility"><Trash2 aria-hidden="true" /></button>
-              </span>
-            </div>
-            <label className="playground-field">
-              Name
-              <input value={fac.name} onChange={(e) => setFacility(index, { name: e.target.value })} placeholder="CityMed Urgent Care" />
-            </label>
-            <div className="playground-field">
-              <span>Type</span>
-              <select value={facilityBucketToType(fac.type)} onChange={(e) => setFacility(index, { type: e.target.value })}>
-                {FACILITY_TYPES.map((t) => <option value={t} key={t}>{t}</option>)}
-              </select>
-            </div>
-            <div className="playground-field">
-              <span>Status</span>
-              <select value={openStateOf(fac.openNow)} onChange={(e) => setOpen(index, e.target.value)}>
-                {OPEN_STATES.map((s) => <option value={s.value} key={s.value}>{s.label}</option>)}
-              </select>
-            </div>
-            <label className="playground-field">
-              Distance <span className="optional-label">Optional</span>
-              <input value={fac.distance ?? ''} onChange={(e) => setFacility(index, { distance: e.target.value })} placeholder="0.8 mi" />
-            </label>
-            <label className="playground-field">
-              Hours <span className="optional-label">Optional</span>
-              <input value={fac.hours ?? ''} onChange={(e) => setFacility(index, { hours: e.target.value })} placeholder="Open until 9:00 PM" />
-            </label>
-            <label className="playground-field">
-              Wait time <span className="optional-label">Optional</span>
-              <input value={fac.waitTime ?? ''} onChange={(e) => setFacility(index, { waitTime: e.target.value })} placeholder="12 min wait" />
-            </label>
-            <label className="playground-field">
-              Address <span className="optional-label">Optional</span>
-              <input value={fac.address ?? ''} onChange={(e) => setFacility(index, { address: e.target.value })} placeholder="220 Pine St" />
-            </label>
-            <label className="playground-field">
-              Phone <span className="optional-label">Optional</span>
-              <input value={fac.phone ?? ''} onChange={(e) => setFacility(index, { phone: e.target.value })} placeholder="+14155550142" />
-            </label>
-            <label className="playground-field">
-              Services <span className="optional-label">comma-separated</span>
-              <input value={(fac.services ?? []).join(', ')} onChange={(e) => setServices(index, e.target.value)} placeholder="X-ray, Labs, Stitches" />
-            </label>
-            <label className="playground-field">
-              Maps URL <span className="optional-label">Directions link</span>
-              <input value={fac.mapsUrl ?? ''} onChange={(e) => setFacility(index, { mapsUrl: e.target.value })} placeholder="https://www.google.com/maps/dir/?api=1&destination=..." />
-            </label>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/** Snap a stored free-text type back onto one of the select's canonical values. */
-function facilityBucketToType(type?: string): string {
-  const bucket = facilityBucket(type);
-  switch (bucket) {
-    case 'urgentcare':
-      return 'urgent_care';
-    case 'primarycare':
-      return 'primary_care';
-    default:
-      return bucket;
-  }
-}
 
 const TEST_FACILITIES: CareFacility[] = [
   { id: 'f1', name: 'GoHealth Urgent Care – SoMa', type: 'urgent_care', distance: '0.3 mi', openNow: true, hours: 'Open until 8:00 PM', waitTime: '15 min wait', address: '876 Folsom St, San Francisco', phone: '+14155550142', services: ['X-ray', 'Labs', 'Stitches'], mapsUrl: 'https://www.google.com/maps/dir/?api=1&destination=876%20Folsom%20St%2C%20San%20Francisco%2C%20CA%2094107' },

@@ -1,5 +1,5 @@
 import type { FinServMoneyMovementPayload } from '../payloads';
-import { FinServMoneyMovementEditor, FinServMoneyMovementPreview } from '../FinServMoneyMovementEditor';
+import { FinServMoneyMovementPreview } from '../FinServMoneyMovementEditor';
 import type { WidgetDef } from './types';
 
 /** asaFinServMoneyMovement — pick a recipient, then a preset amount, to send money. */
@@ -56,6 +56,5 @@ export const finServMoneyMovementDef: WidgetDef = {
     { label: 'Other text', control: 'Text', bind: 'otherText', note: 'Other amount chip label' },
     { label: 'Continue', control: 'Button', bind: 'submitText', note: 'appears once a recipient + amount are selected' },
   ],
-  Editor: FinServMoneyMovementEditor,
   Preview: FinServMoneyMovementPreview,
 };

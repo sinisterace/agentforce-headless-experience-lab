@@ -107,3 +107,5 @@ new card types (product card, seat map, appointment, selection, map) against.
 | Output shows `formatType=Text`, no card | output not bound as displayable CLT | output/schema.json: `lightning:type: c__<lwcName>`, `copilotAction:isDisplayable: true` |
 | Input form never appears on Service Agent | input CLTs unsupported (W-22250928) | redesign as output card; collect choices via sendTextMessage |
 | Schema edit didn't take effect | agent caches action schema per version | republish the agent version / start a fresh Live Test session |
+| Card narrow / cream gaps / wrong sizing in a React catalogue but fine in ECv2 | class-name collision in the shared (global) preview stylesheet — another CLT owns your `asa-<code>-` prefix | give each CLT a UNIQUE `asa-<code>-` prefix; grep the shared stylesheet for it before shipping (LWC CSS is scoped, so the collision only bites the catalogue) |
+| Text breaks mid-word / rows spill / chips stack in ECv2 | spacing verified only in a wide preview | verify spacing on BOTH surfaces at ~320px — deployed LWC in ECv2 Live Test AND the React catalogue preview (see build-checklist Step 1c) |

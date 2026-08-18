@@ -1,5 +1,5 @@
 import type { HealthcareFindCarePayload } from '../payloads';
-import { HealthcareFindCareEditor, HealthcareFindCarePreview } from '../HealthcareFindCareEditor';
+import { HealthcareFindCarePreview } from '../HealthcareFindCareEditor';
 import type { WidgetDef } from './types';
 
 /** asaHealthcareFindCare — list nearby care facilities with Directions + Call links (wayfinding only). */
@@ -31,6 +31,5 @@ export const healthcareFindCareDef: WidgetDef = {
       ],
     },
   ],
-  Editor: HealthcareFindCareEditor,
   Preview: HealthcareFindCarePreview,
 };

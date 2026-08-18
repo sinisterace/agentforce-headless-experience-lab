@@ -1,5 +1,5 @@
 import type { HealthcareRxRefillPayload } from '../payloads';
-import { HealthcareRxRefillEditor, HealthcareRxRefillPreview } from '../HealthcareRxRefillEditor';
+import { HealthcareRxRefillPreview } from '../HealthcareRxRefillEditor';
 import type { WidgetDef } from './types';
 
 /** asaHealthcareRxRefill — multi-select medications to refill and confirm a pickup pharmacy. */
@@ -38,6 +38,5 @@ export const healthcareRxRefillDef: WidgetDef = {
     },
     { label: 'Submit', control: 'Button', bind: 'submitText' },
   ],
-  Editor: HealthcareRxRefillEditor,
   Preview: HealthcareRxRefillPreview,
 };
