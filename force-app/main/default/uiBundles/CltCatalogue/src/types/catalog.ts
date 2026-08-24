@@ -94,3 +94,25 @@ export type SaveResponse = {
   id: string;
   status: string;
 };
+
+/** POST /cltcat/deployAgent — ground the FAQ agent on this company + re-skin the widget. */
+export type DeployRequest = {
+  companyName: string;
+  website: string;
+  industryKey: string;
+  summary: string;
+  planNarrative: string;
+  accentColor: string;
+  logoUrl: string | null;
+  signals: string[];
+};
+
+export type DeployResponse = {
+  knowledgeId: string;
+  companyName: string;
+  faqCount: number;
+  faqIsFallback: boolean;
+  brandingUpdated: boolean;
+  brandingNote: string | null;
+  siteUrl: string | null;
+};

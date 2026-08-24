@@ -6,6 +6,8 @@ import './styles/consultation.css';
 import './styles/playground.css';
 import './styles/channels.css';
 import './styles/harness.css';
+import './styles/agentic-glass.css';
+import './styles/service-agent.css';
 
 /** Subscribe to hash changes so the root swaps between the app and the harness. */
 function subscribeHash(callback: () => void) {

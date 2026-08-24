@@ -1,0 +1,16 @@
+{
+  "required": [
+    "query"
+  ],
+  "unevaluatedProperties": false,
+  "properties": {
+    "query": {
+      "title": "Customer Question",
+      "description": "The customer's question about the company, its products, services, policies, hours, or how to get help.",
+      "lightning:type": "lightning__textType",
+      "lightning:isPII": false,
+      "copilotAction:isUserInput": true
+    }
+  },
+  "lightning:type": "lightning__objectType"
+}

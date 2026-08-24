@@ -3,12 +3,14 @@ import {
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
+  Bot,
   CalendarDays,
   Check,
   CheckCircle2,
   ChevronDown,
   ChevronRight,
   Code2,
+  CodeXml,
   ExternalLink,
   Globe2,
   HeartPulse,
@@ -27,12 +29,15 @@ import {
 } from 'lucide-react';
 import agentforceLogo from '@/assets/agentforce-logo.png';
 import storySparkle from '@/assets/story-sparkle.png';
-import { fetchCatalog, saveProfile, scanCompany } from '@/api/catalogApi';
-import type { CompanyProfile, IndustryOption, PlanSection, Recommendation } from '@/types/catalog';
-import { CompanyMark, capabilityIcon, hostnameOf, industryIcon, initialsOf } from '@/components/shared';
+import agentforceFront from '@/assets/brand/agentforce-front.png';
+import { deployAgent, fetchCatalog, saveProfile, scanCompany } from '@/api/catalogApi';
+import type { CompanyProfile, DeployResponse, IndustryOption, PlanSection, Recommendation } from '@/types/catalog';
+import { CompanyMark, capabilityIcon, hostnameOf, industryArtwork, industryIcon, initialsOf } from '@/components/shared';
 import { derivePalette, sameHex } from '@/lib/palette';
 import { CltPlayground } from '@/components/playground/CltPlayground';
 import { ChannelViewer } from '@/components/channels/ChannelViewer';
+import BorderGlow from '@/components/BorderGlow';
+import Dock, { type DockItemData } from '@/components/Dock';
 
 type Stage = 'welcome' | 'intake' | 'confirm' | 'building' | 'preview';
 type Theme = 'dark' | 'light';
@@ -84,6 +89,8 @@ export default function CatalogueApp() {
   const [catalogError, setCatalogError] = useState('');
   const [buildStep, setBuildStep] = useState(0);
   const [savedName, setSavedName] = useState<string | null>(null);
+  const [deployResult, setDeployResult] = useState<DeployResponse | null>(null);
+  const [deployError, setDeployError] = useState<string | null>(null);
   const previewHeading = useRef<HTMLHeadingElement>(null);
 
   // The chosen industry: facilitator override wins, then AI, then catalog default.
@@ -198,8 +205,28 @@ export default function CatalogueApp() {
       signals: profile.signals,
     });
 
+    // Deploy the FAQ Service Agent in parallel: generate + ground its knowledge on this
+    // company and re-skin the chat widget to the brand. Non-fatal — if it fails the CLT
+    // preview still renders; we surface the outcome on the preview screen.
+    setDeployResult(null);
+    setDeployError(null);
+    const deploy = deployAgent({
+      companyName: profile.companyName,
+      website: profile.website,
+      industryKey: industry,
+      summary: profile.summary,
+      planNarrative: profile.planNarrative,
+      accentColor: profile.accentColor,
+      logoUrl: profile.logoUrl,
+      signals: profile.signals,
+    })
+      .then((result) => setDeployResult(result))
+      .catch((error) =>
+        setDeployError(error instanceof Error && error.message ? error.message : 'The FAQ agent could not be deployed.')
+      );
+
     try {
-      const [response] = await Promise.all([save, walkthrough]);
+      const [response] = await Promise.all([save, walkthrough, deploy]);
       setSavedName(response.id);
       setBuildStep(BUILD_STEP_COUNT - 1);
       await wait(700);
@@ -219,6 +246,8 @@ export default function CatalogueApp() {
     setScanMessage('');
     setBuildStep(0);
     setSavedName(null);
+    setDeployResult(null);
+    setDeployError(null);
   }
 
   const journeyPhase = stage === 'preview' ? 'preview' : stage === 'building' ? 'build' : 'company';
@@ -233,6 +262,29 @@ export default function CatalogueApp() {
     else if (profile) buildExperience();
   };
   const canPreview = !!profile || !!savedName;
+  const dockItems: DockItemData[] = [
+    {
+      icon: <Globe2 aria-hidden="true" />,
+      label: 'Company',
+      onClick: goCompany,
+      disabled: stage === 'building',
+      active: journeyPhase === 'company',
+    },
+    {
+      icon: <Sparkles aria-hidden="true" />,
+      label: 'Build',
+      onClick: () => undefined,
+      disabled: true,
+      active: journeyPhase === 'build',
+    },
+    {
+      icon: <Monitor aria-hidden="true" />,
+      label: 'Preview',
+      onClick: goPreview,
+      disabled: !canPreview || stage === 'building',
+      active: journeyPhase === 'preview',
+    },
+  ];
 
   return (
     <div className={`activation-app theme-${theme}`} style={appStyle}>
@@ -242,40 +294,61 @@ export default function CatalogueApp() {
           <img className="brand-mark" src={agentforceLogo} alt="" aria-hidden="true" />
           <span>Custom Agentforce Interfaces</span>
         </button>
-        <nav className={`elastic-toolbar phase-${journeyPhase}`} aria-label={`Current phase: ${journeyPhase}`}>
-          <span className="toolbar-lens" aria-hidden="true" />
-          <button
-            type="button"
-            className={journeyPhase === 'company' ? 'tool-item active' : 'tool-item'}
-            onClick={goCompany}
-            disabled={stage === 'building'}
-            aria-current={journeyPhase === 'company' ? 'step' : undefined}
+        <div className="header-dock-shell">
+          <BorderGlow
+            className="header-dock-glow"
+            edgeSensitivity={18}
+            glowColor="205 92 66"
+            backgroundColor="rgba(247,251,255,.62)"
+            borderRadius={18}
+            glowRadius={24}
+            glowIntensity={0.72}
+            coneSpread={22}
+            colors={['#38cfe1', '#5876e2', '#b94bc0']}
+            fillOpacity={0.14}
+            animated={stage === 'welcome'}
           >
-            <Globe2 aria-hidden="true" /><b>Company</b>
-          </button>
-          <span className={journeyPhase === 'build' ? 'tool-item active' : 'tool-item'} aria-current={journeyPhase === 'build' ? 'step' : undefined}><Sparkles aria-hidden="true" /><b>Build</b></span>
-          <button
-            type="button"
-            className={journeyPhase === 'preview' ? 'tool-item active' : 'tool-item'}
-            onClick={goPreview}
-            disabled={!canPreview || stage === 'building'}
-            aria-current={journeyPhase === 'preview' ? 'step' : undefined}
-          >
-            <Monitor aria-hidden="true" /><b>Preview</b>
-          </button>
-        </nav>
+            <Dock
+              items={dockItems}
+              className="header-dock"
+              distance={112}
+              panelHeight={48}
+              baseItemSize={36}
+              baseItemWidth={96}
+              dockHeight={50}
+              magnification={41}
+              magnificationWidth={108}
+              labelMode="inline"
+              spring={{ mass: 0.12, stiffness: 220, damping: 17 }}
+              ariaLabel={`Experience phases; current phase: ${journeyPhase}`}
+            />
+          </BorderGlow>
+        </div>
         <div className="header-meta">
           <i className="header-live-dot" aria-hidden="true" />
           <span>CLT catalogue lab</span>
-          <button
-            className="theme-toggle"
-            type="button"
-            onClick={() => setTheme((c) => (c === 'dark' ? 'light' : 'dark'))}
-            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-            aria-pressed={theme === 'light'}
+          <BorderGlow
+            className="theme-toggle-glow"
+            edgeSensitivity={16}
+            glowColor="205 90 67"
+            backgroundColor="rgba(247,251,255,.6)"
+            borderRadius={12}
+            glowRadius={16}
+            glowIntensity={0.58}
+            coneSpread={20}
+            colors={['#38cfe1', '#6078e4', '#bb5cc6']}
+            fillOpacity={0.12}
           >
-            <span className="theme-toggle-track" aria-hidden="true"><Sun /><Moon /><i /></span>
-          </button>
+            <button
+              className="theme-toggle"
+              type="button"
+              onClick={() => setTheme((c) => (c === 'dark' ? 'light' : 'dark'))}
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              aria-pressed={theme === 'light'}
+            >
+              <span className="theme-toggle-track" aria-hidden="true"><Sun /><Moon /><i /></span>
+            </button>
+          </BorderGlow>
         </div>
       </header>
 
@@ -292,7 +365,6 @@ export default function CatalogueApp() {
           <ConfirmScreen
             profile={profile}
             industry={industry}
-            industryLabel={industryLabel}
             initials={initials}
             scanMessage={scanMessage}
             industries={industries}
@@ -320,6 +392,8 @@ export default function CatalogueApp() {
             industryLabel={industryLabel}
             selectedRec={selectedRec}
             savedName={savedName}
+            deployResult={deployResult}
+            deployError={deployError}
             headingRef={previewHeading}
             onBack={() => setStage('confirm')}
             onRestart={restart}
@@ -331,99 +405,111 @@ export default function CatalogueApp() {
 }
 
 function Welcome({ onContinue }: { onContinue: () => void }) {
+  const pageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let frame = 0;
+    let resizeObserver: ResizeObserver | undefined;
+    let mutationObserver: MutationObserver | undefined;
+    const syncAvailableHeight = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const page = pageRef.current;
+        if (!page) return;
+        const top = Math.max(0, page.getBoundingClientRect().top);
+        const viewport = window.visualViewport;
+        const viewportBottom = viewport ? viewport.offsetTop + viewport.height : window.innerHeight;
+        page.style.setProperty('--welcome-available-height', `${Math.max(0, Math.floor(viewportBottom - top))}px`);
+      });
+    };
+    syncAvailableHeight();
+    if (pageRef.current?.parentElement) {
+      resizeObserver = new ResizeObserver(syncAvailableHeight);
+      resizeObserver.observe(pageRef.current.parentElement);
+      mutationObserver = new MutationObserver(syncAvailableHeight);
+      mutationObserver.observe(pageRef.current.parentElement, { childList: true });
+    }
+    window.addEventListener('resize', syncAvailableHeight);
+    window.visualViewport?.addEventListener('resize', syncAvailableHeight);
+    return () => {
+      cancelAnimationFrame(frame);
+      resizeObserver?.disconnect();
+      mutationObserver?.disconnect();
+      window.removeEventListener('resize', syncAvailableHeight);
+      window.visualViewport?.removeEventListener('resize', syncAvailableHeight);
+    };
+  }, []);
+
   return (
-    <div className="welcome-layout">
-      <section className="welcome-copy" aria-labelledby="welcome-title">
-        <h1 id="welcome-title">Design custom Agentforce interfaces for your industry</h1>
-        <p className="welcome-lede">Custom Lightning Types let you design rich, interactive experiences for Agentforce. Now let&rsquo;s explore the most effective patterns for your company.</p>
-        <button className="primary-action" type="button" onClick={onContinue}>Start designing <ArrowRight aria-hidden="true" /></button>
-        <div className="welcome-proof" aria-label="What you'll do">
-          <span><Sparkles aria-hidden="true" /> A personalized plan</span>
-          <span><Layers3 aria-hidden="true" /> An interactive CLT playground</span>
-          <span><Monitor aria-hidden="true" /> A live agent preview</span>
-        </div>
-      </section>
-      <BuildRibbon mode="welcome" />
+    <div className="sa-page" ref={pageRef}>
+      <div className="sa-welcome-layout">
+        <section className="sa-welcome-copy" aria-labelledby="welcome-title">
+          <h1 id="welcome-title">Design custom Agentforce interfaces for your industry</h1>
+          <p className="sa-welcome-lede">Custom Lightning Types let you design rich, interactive experiences for Agentforce. Now let&rsquo;s explore the most effective patterns for your company.</p>
+          <button className="sa-primary-action" type="button" onClick={onContinue}>Start designing <ArrowRight aria-hidden="true" /></button>
+          <div className="sa-welcome-proof" aria-label="What will be created">
+            <span><Globe2 aria-hidden="true" /> Website context</span>
+            <span><Bot aria-hidden="true" /> Service agent</span>
+            <span><Layers3 aria-hidden="true" /> Adaptive service experience</span>
+          </div>
+          <p className="sa-privacy-note">We&rsquo;ll only read public content from your company website.</p>
+        </section>
+        <SaExperiencePanel variant="welcome" />
+      </div>
     </div>
   );
 }
 
 /**
- * The branded visual panel on the welcome + intake screens: the Agentforce logo at
- * center, orbited by floating Custom Lightning Type example cards (service picker,
- * appointment booking, product cards, support routing) that hint at what the agent
- * will render. Pointer movement gives it a subtle parallax tilt, and a seamless
- * animated agentic wave flows behind the core.
+ * Shared V1 "experience" collage — a static, inert mockup (aria-hidden) of the
+ * Agentforce agent composing an experience: floating glass Custom Lightning Type
+ * cards around the Agentforce mark, over a read → shape → render stepper. Reused
+ * on the welcome and company-form stages. Presentation only; no app behavior.
  */
-function BuildRibbon({ mode }: { mode: 'welcome' | 'intake' }) {
-  const orbitRef = useRef<HTMLDivElement>(null);
-  function moveOrbit(event: React.PointerEvent<HTMLElement>) {
-    const bounds = event.currentTarget.getBoundingClientRect();
-    const x = Math.max(-1, Math.min(1, ((event.clientX - bounds.left) / bounds.width - 0.5) * 2));
-    const y = Math.max(-1, Math.min(1, ((event.clientY - bounds.top) / bounds.height - 0.5) * 2));
-    const s = orbitRef.current?.style;
-    if (!s) return;
-    s.setProperty('--tilt-x', `${(-y * 2.6).toFixed(2)}deg`);
-    s.setProperty('--tilt-y', `${(x * 3.4).toFixed(2)}deg`);
-    s.setProperty('--agent-x', `${(-x * 10).toFixed(1)}px`);
-    s.setProperty('--agent-y', `${(-y * 8).toFixed(1)}px`);
-    s.setProperty('--near-x', `${(x * 24).toFixed(1)}px`);
-    s.setProperty('--near-y', `${(y * 18).toFixed(1)}px`);
-    s.setProperty('--mid-x', `${(x * 15).toFixed(1)}px`);
-    s.setProperty('--mid-y', `${(y * 11).toFixed(1)}px`);
-    s.setProperty('--far-x', `${(x * 7).toFixed(1)}px`);
-    s.setProperty('--far-y', `${(y * 5).toFixed(1)}px`);
-    s.setProperty('--spot-x', `${((x + 1) * 50).toFixed(1)}%`);
-    s.setProperty('--spot-y', `${((y + 1) * 50).toFixed(1)}%`);
-  }
-  function resetOrbit() {
-    const s = orbitRef.current?.style;
-    if (!s) return;
-    ['--tilt-x', '--tilt-y'].forEach((p) => s.setProperty(p, '0deg'));
-    ['--agent-x', '--agent-y', '--near-x', '--near-y', '--mid-x', '--mid-y', '--far-x', '--far-y'].forEach((p) => s.setProperty(p, '0px'));
-    s.setProperty('--spot-x', '50%');
-    s.setProperty('--spot-y', '48%');
-  }
+function SaExperiencePanel({ variant, showFlow = true }: { variant: 'welcome' | 'intake'; showFlow?: boolean }) {
   return (
-    <aside className={`build-ribbon ribbon-${mode}`} aria-label="Experience overview" onPointerMove={moveOrbit} onPointerLeave={resetOrbit}>
-      <div className="experience-field" aria-hidden="true" ref={orbitRef}>
-        <div className="field-grid" />
-
-        <article className="field-card field-services">
-          <header><HeartPulse /><span><strong>Choose a service</strong><small>Matched to your business</small></span></header>
-          <div className="field-choice selected"><span><i>01</i>Medical care</span><Check /></div>
-          <div className="field-choice"><span><i>02</i>Wellness consult</span><ChevronRight /></div>
+    <aside className={`sa-build-ribbon sa-ribbon-${variant}`} aria-label="Experience overview">
+      <div className="sa-experience-field" aria-hidden="true">
+        <div className="sa-field-grid" />
+        <article className="sa-field-card sa-field-services">
+          <header><HeartPulse aria-hidden="true" /><span><strong>Choose a service</strong><small>Matched to your business</small></span></header>
+          <div className="sa-field-choice selected"><span><i>01</i>Medical care</span><Check aria-hidden="true" /></div>
+          <div className="sa-field-choice"><span><i>02</i>Wellness consult</span><ChevronRight aria-hidden="true" /></div>
         </article>
-
-        <article className="field-card field-appointment">
-          <header><CalendarDays /><span><strong>Book a consultation</strong><small>Live availability</small></span></header>
-          <div className="field-slot selected"><span><strong>Tomorrow</strong><small>Aug 14</small></span><b>10:30 AM</b><Check /></div>
-          <div className="field-slot"><span><strong>Thursday</strong><small>Aug 15</small></span><b>1:00 PM</b><i /></div>
-          <span className="field-continue">Continue <ArrowRight /></span>
+        <article className="sa-field-card sa-field-appointment">
+          <header><CalendarDays aria-hidden="true" /><span><strong>Book a consultation</strong><small>Live availability</small></span></header>
+          <div className="sa-field-slot selected"><span><strong>Tomorrow</strong><small>Aug 14</small></span><b>10:30 AM</b><Check aria-hidden="true" /></div>
+          <div className="sa-field-slot"><span><strong>Thursday</strong><small>Aug 15</small></span><b>1:00 PM</b><i /></div>
+          <span className="sa-field-continue">Continue <ArrowRight aria-hidden="true" /></span>
         </article>
-
-        <article className="field-card field-products">
-          <header><ShoppingBag /><span><strong>Recommended for you</strong><small>Personalized collection</small></span></header>
-          <div className="field-products-grid">
+        <article className="sa-field-card sa-field-products">
+          <header><ShoppingBag aria-hidden="true" /><span><strong>Recommended for you</strong><small>Personalized collection</small></span></header>
+          <div className="sa-field-products-grid">
             <span><i /><strong>Everyday carry</strong><small>$48</small></span>
             <span><i /><strong>Travel edit</strong><small>$72</small></span>
           </div>
         </article>
-
-        <article className="field-card field-support">
-          <header><LifeBuoy /><span><strong>Support request</strong><small>Specialist routing</small></span></header>
-          <div className="field-status"><span><CheckCircle2 /></span><p><strong>Case understood</strong><small>Billing specialist joined</small></p></div>
+        <article className="sa-field-card sa-field-support">
+          <header><LifeBuoy aria-hidden="true" /><span><strong>Support request</strong><small>Specialist routing</small></span></header>
+          <div className="sa-field-status"><span><CheckCircle2 aria-hidden="true" /></span><p><strong>Case understood</strong><small>Billing specialist joined</small></p></div>
         </article>
-
-        <div className="field-payload"><Code2 /><span><strong>CLT payload ready</strong><small>4 surfaces mapped</small></span><i /></div>
-
-        <div className="field-agent-core">
-          <span className="field-agent-halo" />
-          <img src={agentforceLogo} alt="" />
-          <div className="agent-composing"><Sparkles /><span><strong>Agentforce</strong><small>Composing your experience<i className="composing-dots"><b /><b /><b /></i></small></span></div>
+        <div className="sa-field-payload"><CodeXml aria-hidden="true" /><span><strong>CLT payload ready</strong><small>4 surfaces mapped</small></span><i /></div>
+        <div className="sa-field-agent-core">
+          <span className="sa-field-agent-halo" />
+          <img src={agentforceFront} alt="" />
+          <div><Sparkles aria-hidden="true" /><span><strong>Agentforce</strong><small>Composing your experience</small></span></div>
         </div>
-        <div className="field-vignette" />
+        <div className="sa-field-vignette" />
       </div>
+      {showFlow && (
+        <div className="sa-ribbon-flow">
+          <div><span>01</span><strong>Read your website</strong></div>
+          <ChevronRight aria-hidden="true" />
+          <div><span>02</span><strong>Shape the agent</strong></div>
+          <ChevronRight aria-hidden="true" />
+          <div><span>03</span><strong>Render the experience</strong></div>
+        </div>
+      )}
     </aside>
   );
 }
@@ -453,52 +539,54 @@ function IntakeScreen({
     intake.companyName.trim().length > 1 &&
     intake.website.trim().length > 3;
   return (
-    <div className="content-shell intake-layout">
-      <section className="form-section" aria-labelledby="intake-title">
-        <button className="back-action" type="button" onClick={onBack}><ArrowLeft aria-hidden="true" /> Back</button>
-        <div className="section-number">01</div>
-        <h1 id="intake-title">Tell us about your company.</h1>
-        <p>We'll use these details to generate a personalized plan, tailor an interactive CLT playground to your industry, and preview a branded agent experience for your customers.</p>
-        {scanMessage && <div className="fallback-notice" role="status">{scanMessage}</div>}
-        <form onSubmit={onSubmit} className="company-form">
-          <div className="field-row">
+    <div className="sa-intake-page">
+      <div className="sa-intake-layout">
+        <section className="sa-form-section" aria-labelledby="intake-title">
+          <button className="sa-back-action" type="button" onClick={onBack}><ArrowLeft aria-hidden="true" /> Back</button>
+          <div className="sa-section-number">01</div>
+          <h1 id="intake-title">Tell us about your company.</h1>
+          <p>We'll use these details to generate a personalized plan, tailor an interactive CLT playground to your industry, and preview a branded agent experience for your customers.</p>
+          {scanMessage && <div className="fallback-notice" role="status">{scanMessage}</div>}
+          <form onSubmit={onSubmit} className="sa-company-form">
+            <div className="sa-field-row">
+              <label>
+                First name
+                <input autoFocus value={intake.firstName} onChange={(e) => setIntake((c) => ({ ...c, firstName: e.target.value }))} placeholder="Alex" autoComplete="given-name" />
+              </label>
+              <label>
+                Last name
+                <input value={intake.lastName} onChange={(e) => setIntake((c) => ({ ...c, lastName: e.target.value }))} placeholder="Rivera" autoComplete="family-name" />
+              </label>
+            </div>
             <label>
-              First name
-              <input autoFocus value={intake.firstName} onChange={(e) => setIntake((c) => ({ ...c, firstName: e.target.value }))} placeholder="Alex" autoComplete="given-name" />
+              Work email
+              <input type="email" value={intake.email} onChange={(e) => setIntake((c) => ({ ...c, email: e.target.value }))} placeholder="alex@example.com" inputMode="email" autoComplete="email" />
             </label>
             <label>
-              Last name
-              <input value={intake.lastName} onChange={(e) => setIntake((c) => ({ ...c, lastName: e.target.value }))} placeholder="Rivera" autoComplete="family-name" />
+              Company name
+              <input value={intake.companyName} onChange={(e) => setIntake((c) => ({ ...c, companyName: e.target.value }))} placeholder="Northern Trail Outfitters" autoComplete="organization" />
             </label>
-          </div>
-          <label>
-            Work email
-            <input type="email" value={intake.email} onChange={(e) => setIntake((c) => ({ ...c, email: e.target.value }))} placeholder="alex@example.com" inputMode="email" autoComplete="email" />
-          </label>
-          <label>
-            Company name
-            <input value={intake.companyName} onChange={(e) => setIntake((c) => ({ ...c, companyName: e.target.value }))} placeholder="Northern Trail Outfitters" autoComplete="organization" />
-          </label>
-          <label>
-            Company website
-            <span className="input-with-icon">
-              <Globe2 aria-hidden="true" />
-              <input value={intake.website} onChange={(e) => setIntake((c) => ({ ...c, website: e.target.value }))} onBlur={(e) => setIntake((c) => ({ ...c, website: normalizeWebsiteInput(e.target.value) }))} placeholder="example.com" inputMode="url" autoComplete="url" />
-            </span>
-          </label>
-          <label>
-            Industry <span className="optional-label">Optional</span>
-            <select value={intake.industry} onChange={(e) => setIntake((c) => ({ ...c, industry: e.target.value }))}>
-              <option value="">Let Agentforce infer it</option>
-              {industries.map((i) => <option value={i.key} key={i.key}>{i.label}</option>)}
-            </select>
-          </label>
-          <button className="primary-action submit-action" type="submit" disabled={!valid || scanning}>
-            {scanning ? <><LoaderCircle className="spin" aria-hidden="true" /> Reading website</> : <>Continue <ArrowRight aria-hidden="true" /></>}
-          </button>
-        </form>
-      </section>
-      <BuildRibbon mode="intake" />
+            <label>
+              Company website
+              <span className="sa-input-with-icon">
+                <Globe2 aria-hidden="true" />
+                <input value={intake.website} onChange={(e) => setIntake((c) => ({ ...c, website: e.target.value }))} onBlur={(e) => setIntake((c) => ({ ...c, website: normalizeWebsiteInput(e.target.value) }))} placeholder="example.com" inputMode="url" autoComplete="url" />
+              </span>
+            </label>
+            <label>
+              Industry <span className="sa-optional-label">Optional</span>
+              <select value={intake.industry} onChange={(e) => setIntake((c) => ({ ...c, industry: e.target.value }))}>
+                <option value="">Let Agentforce infer it</option>
+                {industries.map((i) => <option value={i.key} key={i.key}>{i.label}</option>)}
+              </select>
+            </label>
+            <button className="sa-primary-action sa-submit-action" type="submit" disabled={!valid || scanning}>
+              {scanning ? <><LoaderCircle className="spin" aria-hidden="true" /> Reading website</> : <>Continue <ArrowRight aria-hidden="true" /></>}
+            </button>
+          </form>
+        </section>
+        <SaExperiencePanel variant="intake" showFlow={false} />
+      </div>
     </div>
   );
 }
@@ -506,7 +594,6 @@ function IntakeScreen({
 function ConfirmScreen({
   profile,
   industry,
-  industryLabel,
   initials,
   scanMessage,
   industries,
@@ -520,7 +607,6 @@ function ConfirmScreen({
 }: {
   profile: CompanyProfile;
   industry: string;
-  industryLabel: string;
   initials: string;
   scanMessage: string;
   industries: IndustryOption[];
@@ -601,7 +687,6 @@ function ConfirmScreen({
 
       <section className="experience-configurator" aria-label="Experience starting point">
         <div className="configurator-heading">
-          <div><strong>Choose the service lens</strong><span>Agentforce inferred {industryLabel}; adjust it if needed.</span></div>
           <span className="liquid-switch"><i /> AI selected</span>
         </div>
         <fieldset className="industry-fieldset">
@@ -609,10 +694,16 @@ function ConfirmScreen({
           <div className="industry-options elastic-industry-toolbar">
             {industries.map((option) => {
               const Icon = industryIcon(option.key);
+              const artwork = industryArtwork(option.key);
               const selected = industry === option.key;
               return (
-                <button type="button" className={selected ? 'industry-option selected' : 'industry-option'} key={option.key} onClick={() => onIndustry(option.key)} aria-pressed={selected}>
-                  <Icon aria-hidden="true" /><span>{option.label}</span>{selected && <CheckCircle2 aria-hidden="true" />}
+                <button type="button" className={`${selected ? 'industry-option selected' : 'industry-option'} industry-${option.key}`} key={option.key} onClick={() => onIndustry(option.key)} aria-pressed={selected}>
+                  <span className="industry-art" aria-hidden="true">
+                    {artwork ? <img src={artwork} alt="" /> : <Icon />}
+                    <i />
+                  </span>
+                  <span className="industry-card-copy"><strong>{option.label}</strong></span>
+                  <span className="industry-card-state" aria-hidden="true">{selected ? <CheckCircle2 /> : <ArrowRight />}</span>
                 </button>
               );
             })}
@@ -620,7 +711,6 @@ function ConfirmScreen({
         </fieldset>
 
         <div className="template-picker">
-          <span>{industryLabel} experiences — try any of them</span>
           {recommendations.length === 0 ? (
             <div className="template-empty" role="status">
               <PackageSearch aria-hidden="true" />
@@ -629,14 +719,15 @@ function ConfirmScreen({
           ) : (
             <>
               <div className="template-options">
-                {recommendations.map((rec) => {
+                {recommendations.map((rec, index) => {
                   const Icon = capabilityIcon(rec.capabilityKey);
                   const selected = selectedRec?.cltApiName === rec.cltApiName;
                   return (
                     <button type="button" className={selected ? 'template-option selected' : 'template-option'} onClick={() => onSelectClt(rec.cltApiName)} aria-pressed={selected} key={rec.cltApiName}>
-                      <Icon aria-hidden="true" />
-                      <span><strong>{rec.label}</strong><small>{rec.description}</small></span>
-                      <i>{selected && <Check aria-hidden="true" />}</i>
+                      <span className="template-option-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                      <span className="template-option-icon" aria-hidden="true"><Icon /></span>
+                      <span className="template-option-copy"><strong>{rec.label}</strong><small>{rec.description}</small></span>
+                      <span className="template-option-state" aria-hidden="true">{selected ? <Check /> : <ArrowRight />}</span>
                     </button>
                   );
                 })}
@@ -869,6 +960,8 @@ function PreviewScreen({
   industryLabel,
   selectedRec,
   savedName,
+  deployResult,
+  deployError,
   headingRef,
   onBack,
   onRestart,
@@ -878,6 +971,8 @@ function PreviewScreen({
   industryLabel: string;
   selectedRec: Recommendation;
   savedName: string | null;
+  deployResult: DeployResponse | null;
+  deployError: string | null;
   headingRef: React.RefObject<HTMLHeadingElement | null>;
   onBack: () => void;
   onRestart: () => void;
@@ -930,6 +1025,7 @@ function PreviewScreen({
             </div>
           </div>
           <p className="blueprint-note"><Sparkles aria-hidden="true" /> One CLT payload drives every client — switch channel tabs to see it render in each.</p>
+          <AgentDeployPanel profile={profile} deployResult={deployResult} deployError={deployError} />
         </aside>
 
         {previewMode === 'code' ? (
@@ -938,6 +1034,60 @@ function PreviewScreen({
           <ChannelViewer recommendation={selectedRec} profile={profile} />
         )}
       </div>
+    </div>
+  );
+}
+
+/**
+ * Preview-screen panel reporting the live FAQ Service Agent deployment: whether the
+ * agent was grounded on this company's FAQ and whether the chat widget was re-skinned
+ * to the brand. Non-blocking — if deploy failed the rest of the preview still works.
+ */
+function AgentDeployPanel({
+  profile,
+  deployResult,
+  deployError,
+}: {
+  profile: CompanyProfile;
+  deployResult: DeployResponse | null;
+  deployError: string | null;
+}) {
+  if (deployError && !deployResult) {
+    return (
+      <div className="agent-deploy-panel is-error" role="status">
+        <div className="agent-deploy-head"><AlertTriangle aria-hidden="true" /> <strong>FAQ agent not deployed</strong></div>
+        <p>{deployError}</p>
+        <small>Your interactive experiences above are unaffected.</small>
+      </div>
+    );
+  }
+  if (!deployResult) {
+    return (
+      <div className="agent-deploy-panel is-pending" role="status">
+        <div className="agent-deploy-head"><LoaderCircle className="spin" aria-hidden="true" /> <strong>Deploying your FAQ agent…</strong></div>
+      </div>
+    );
+  }
+  return (
+    <div className="agent-deploy-panel is-live" role="status" style={{ '--deploy-accent': profile.accentColor } as React.CSSProperties}>
+      <div className="agent-deploy-head"><Bot aria-hidden="true" /> <strong>{profile.companyName} FAQ agent is live</strong></div>
+      <ul className="agent-deploy-facts">
+        <li>
+          <CheckCircle2 aria-hidden="true" />
+          <span>Grounded on {deployResult.faqCount} FAQ answer{deployResult.faqCount === 1 ? '' : 's'}{deployResult.faqIsFallback ? ' (industry starter)' : ' from your website'}</span>
+        </li>
+        <li>
+          <CheckCircle2 aria-hidden="true" />
+          <span>Personalized site branded to your colors, logo &amp; FAQ</span>
+        </li>
+      </ul>
+      {deployResult.siteUrl ? (
+        <a className="agent-deploy-site" href={deployResult.siteUrl} target="_blank" rel="noreferrer">
+          <ExternalLink aria-hidden="true" /> Open your personalized site
+        </a>
+      ) : (
+        <p className="agent-deploy-note"><Sparkles aria-hidden="true" /> Embedded on your personalized site. The branded site link appears here once your site is published.</p>
+      )}
     </div>
   );
 }

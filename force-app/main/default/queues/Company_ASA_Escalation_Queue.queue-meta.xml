@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Queue xmlns="http://soap.sforce.com/2006/04/metadata">
+    <name>Company ASA Escalation Queue</name>
+    <doesSendEmailToMembers>false</doesSendEmailToMembers>
+    <!-- Routing Configuration is assigned in the UI (RoutingConfiguration isn't CLI-deployable);
+         it travels via the Trialforce org snapshot. -->
+    <queueSobject>
+        <sobjectType>MessagingSession</sobjectType>
+    </queueSobject>
+</Queue>

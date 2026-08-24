@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Faq_Json__c</fullName>
+    <description>Structured FAQ as a JSON array of {q,a} objects. Read by the site's Popular Questions section. The plain-text Faq_Content__c is what grounds the agent.</description>
+    <externalId>false</externalId>
+    <label>FAQ JSON</label>
+    <length>131072</length>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>10</visibleLines>
+</CustomField>

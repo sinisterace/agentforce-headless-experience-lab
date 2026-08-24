@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Whitelists this org's own My Domain so Apex can make a synchronous self-callout to the
+  Tooling API (used by SiteBrandingService to re-skin the embedded agent widget at runtime).
+  Auth is the running user's session (UserInfo.getSessionId()) - no stored secret.
+
+  TEMPLATIZATION: <url> is org-specific. Each Trialforce-cloned org has a different My Domain,
+  so this URL must be updated to the new org's My Domain post-clone (a small first-run/
+  post-creation automation step). Derive it from URL.getOrgDomainUrl() at runtime.
+-->
+<RemoteSiteSetting xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Self-callout to org My Domain for runtime Tooling API branding updates.</description>
+    <disableProtocolSecurity>false</disableProtocolSecurity>
+    <isActive>true</isActive>
+    <url>https://orgfarm-dc4809d077.my.salesforce.com</url>
+</RemoteSiteSetting>

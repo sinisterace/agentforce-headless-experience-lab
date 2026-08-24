@@ -27,6 +27,16 @@ global with sharing class CltCatalogRest {
         public String status;
     }
 
+    global class DeployResponse {
+        public String knowledgeId;      // the Company_Knowledge__c record grounding the agent
+        public String companyName;
+        public Integer faqCount;        // number of Q&A pairs in the generated FAQ
+        public Boolean faqIsFallback;   // true if the model was unavailable and we used the deterministic FAQ
+        public Boolean brandingUpdated; // true if the widget was re-skinned
+        public String brandingNote;     // populated when branding could not be applied (non-fatal)
+        public String siteUrl;          // the personalized Experience site to open (once published)
+    }
+
     global class ErrorResponse {
         public String message;
         public ErrorResponse(String m) { this.message = m; }
@@ -67,6 +77,8 @@ global with sharing class CltCatalogRest {
                 handleScan(res, body);
             } else if (path == 'save') {
                 handleSave(res, body);
+            } else if (path == 'deployagent') {
+                handleDeployAgent(res, body);
             } else {
                 write(res, 404, new ErrorResponse('Unknown POST endpoint: ' + path));
             }
@@ -120,6 +132,94 @@ global with sharing class CltCatalogRest {
         out.id = rec.Id;
         out.status = rec.Status__c;
         write(res, 200, out);
+    }
+
+    /**
+     * Deploy the FAQ Service Agent for this company: generate the grounding FAQ, re-skin the
+     * chat widget, and write the record the agent answers from. All callouts (FAQ model +
+     * branding Tooling PATCH) run BEFORE any DML, or Apex throws "uncommitted work pending".
+     * Branding failure is non-fatal — grounding is the critical part.
+     */
+    private static void handleDeployAgent(RestResponse res, Map<String, Object> body) {
+        String companyName = str(body.get('companyName'));
+        String website = str(body.get('website'));
+        String industryKey = ConsultationCatalogService.resolveIndustryKey(str(body.get('industryKey')));
+        if (String.isBlank(companyName) && String.isBlank(website)) {
+            throw new BadRequestException('Provide at least a company name or website.');
+        }
+
+        // Reconstruct the profile from the prior scan (the client already has these fields).
+        ConsultationProfileService.Profile p = new ConsultationProfileService.Profile();
+        p.companyName = companyName;
+        p.website = website;
+        p.industryKey = industryKey;
+        p.industryLabel = ConsultationCatalogService.labelFor(industryKey);
+        p.summary = str(body.get('summary'));
+        p.planNarrative = str(body.get('planNarrative'));
+        p.accentColor = str(body.get('accentColor'));
+        p.logoUrl = str(body.get('logoUrl'));
+
+        // --- 1. Generate the FAQ (Models API callout) ---
+        AgentFaqContentService.FaqDocument doc = AgentFaqContentService.generate(p);
+
+        // Page branding is data-driven: the accent/logo are stored on the record below and the
+        // Experience site's companyBrandHero LWC reads them at render time (no callout, no
+        // Named Credential). The chat widget keeps its default colors inside the branded page.
+
+        // --- 2. Persist the grounding + brand record (DML AFTER all callouts) ---
+        List<Company_Knowledge__c> current = [
+            SELECT Id FROM Company_Knowledge__c WHERE Is_Active__c = true WITH USER_MODE
+        ];
+        for (Company_Knowledge__c k : current) {
+            k.Is_Active__c = false;
+        }
+        if (!current.isEmpty()) {
+            update as user current;
+        }
+        Object signalsObj = body.get('signals');
+        String signalsJson = (signalsObj != null) ? clip(JSON.serialize(signalsObj), 2000) : null;
+
+        Company_Knowledge__c rec = new Company_Knowledge__c(
+            Name = clip(String.isBlank(companyName) ? 'Company FAQ' : companyName, 80),
+            Company_Name__c = clip(companyName, 255),
+            Website__c = website,
+            Accent_Color__c = clip(p.accentColor, 9),
+            Logo_Url__c = p.logoUrl,
+            Summary__c = clip(p.summary, 2000),
+            Signals_JSON__c = signalsJson,
+            Faq_Content__c = clip(doc.body, 131072),
+            Faq_Json__c = clip(doc.faqsJson, 131072),
+            Is_Active__c = true
+        );
+        insert as user rec;
+
+        DeployResponse out = new DeployResponse();
+        out.knowledgeId = rec.Id;
+        out.companyName = doc.title;
+        out.faqCount = doc.faqCount;
+        out.faqIsFallback = doc.isFallback;
+        out.brandingUpdated = true;   // page branding is data-driven (companyBrandHero reads the record)
+        out.brandingNote = null;
+        out.siteUrl = personalizedSiteUrl();
+        write(res, 200, out);
+    }
+
+    /** URL prefix of the personalized Experience site (Option B) hosting the branded page + chat. */
+    private static final String PERSONALIZED_SITE_PREFIX = 'agentforceservice';
+
+    /**
+     * Best-effort public URL of the personalized Experience site. Enhanced-domain orgs serve
+     * Experience sites at <mydomain>.my.site.com/<prefix>. Returns null if it can't be derived;
+     * the site must be published (one-time) before the URL resolves.
+     */
+    private static String personalizedSiteUrl() {
+        try {
+            String host = new Url(URL.getOrgDomainUrl().toExternalForm()).getHost();
+            String base = host.replace('.my.salesforce.com', '.my.site.com');
+            return 'https://' + base + '/' + PERSONALIZED_SITE_PREFIX;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     // ---- helpers ----

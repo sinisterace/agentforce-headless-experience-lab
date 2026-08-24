@@ -11,6 +11,10 @@
 
     <!-- Tab visibility — surfaces the object in App Launcher search -->
     <tabSettings>
+        <tab>CLT_Catalog_Item__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
+    <tabSettings>
         <tab>Onboarding_Profile__c</tab>
         <visibility>Visible</visibility>
     </tabSettings>

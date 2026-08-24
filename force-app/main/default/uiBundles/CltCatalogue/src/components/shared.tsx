@@ -43,6 +43,18 @@ import {
   Zap,
 } from 'lucide-react';
 import type { CompanyProfile } from '@/types/catalog';
+import financialServicesArtwork from '@/assets/brand/industry-financial-services.png';
+import healthcareArtwork from '@/assets/brand/industry-healthcare.png';
+import insuranceArtwork from '@/assets/brand/industry-insurance.png';
+import retailArtwork from '@/assets/brand/industry-retail.png';
+import manufacturingArtwork from '@/assets/brand/industry-manufacturing.png';
+import energyArtwork from '@/assets/brand/industry-energy.png';
+import technologyCommsArtwork from '@/assets/brand/industry-technology-comms.png';
+import automotiveArtwork from '@/assets/brand/industry-automotive.png';
+import travelHospitalityArtwork from '@/assets/brand/industry-travel-hospitality.png';
+import legalArtwork from '@/assets/brand/industry-legal.png';
+import hvacArtwork from '@/assets/brand/industry-hvac.png';
+import publicSectorArtwork from '@/assets/brand/industry-public-sector.png';
 
 type IconType = typeof Store;
 
@@ -65,6 +77,21 @@ const INDUSTRY_ICONS: Record<string, IconType> = {
   public_sector: Building2,
   legal: Gavel,
   general_customer_service: LifeBuoy,
+};
+
+const INDUSTRY_ARTWORK: Record<string, string> = {
+  financial_services: financialServicesArtwork,
+  healthcare: healthcareArtwork,
+  insurance: insuranceArtwork,
+  retail: retailArtwork,
+  manufacturing: manufacturingArtwork,
+  energy_utilities: energyArtwork,
+  technology_comms: technologyCommsArtwork,
+  automotive: automotiveArtwork,
+  travel_hospitality: travelHospitalityArtwork,
+  legal: legalArtwork,
+  hvac: hvacArtwork,
+  public_sector: publicSectorArtwork,
 };
 
 const CAPABILITY_ICONS: Record<string, IconType> = {
@@ -104,6 +131,10 @@ const CAPABILITY_ICONS: Record<string, IconType> = {
 
 export function industryIcon(key: string): IconType {
   return INDUSTRY_ICONS[key] ?? Building2;
+}
+
+export function industryArtwork(key: string): string | undefined {
+  return INDUSTRY_ARTWORK[key];
 }
 
 export function capabilityIcon(key: string): IconType {

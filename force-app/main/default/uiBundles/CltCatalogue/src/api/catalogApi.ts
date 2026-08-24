@@ -6,6 +6,8 @@
 import { createDataSDK } from '@salesforce/platform-sdk';
 import type {
   CatalogResponse,
+  DeployRequest,
+  DeployResponse,
   SaveRequest,
   SaveResponse,
   ScanRequest,
@@ -39,6 +41,18 @@ export async function saveProfile(body: SaveRequest): Promise<SaveResponse> {
       body: JSON.stringify(body),
     },
     'Unable to save the consultation profile.'
+  );
+}
+
+export async function deployAgent(body: DeployRequest): Promise<DeployResponse> {
+  return request<DeployResponse>(
+    '/deployAgent',
+    {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(body),
+    },
+    'Unable to deploy the FAQ service agent.'
   );
 }
 

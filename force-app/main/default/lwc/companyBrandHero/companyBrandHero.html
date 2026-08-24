@@ -1,0 +1,82 @@
+<template>
+  <div class="hub" style={rootStyle}>
+    <!-- Nav -->
+    <header class="hub-nav">
+      <div class="hub-brand">
+        <template lwc:if={hasLogo}>
+          <span class="hub-logo-wrap"><img class="hub-logo" src={logoUrl} alt={companyName} /></span>
+        </template>
+        <span class="hub-name">{companyName}</span>
+      </div>
+      <template lwc:if={hasWebsite}>
+        <a class="hub-visit" href={website} target="_blank" rel="noopener">Visit {websiteLabel}<span class="hub-visit-arrow" aria-hidden="true">↗</span></a>
+      </template>
+    </header>
+
+    <!-- Hero -->
+    <section class="hub-hero">
+      <div class="hub-hero-glow" aria-hidden="true"></div>
+      <div class="hub-hero-inner">
+        <span class="hub-eyebrow">AI-Powered Support</span>
+        <h1 class="hub-hero-title">{companyName}</h1>
+        <p class="hub-hero-sub">{subtitle}</p>
+        <p class="hub-hero-hint"><span class="hub-hint-dot" aria-hidden="true"></span>Chat with our AI assistant using the button in the corner.</p>
+      </div>
+    </section>
+
+    <div class="hub-body">
+      <!-- About -->
+      <template lwc:if={hasSummary}>
+        <section class="hub-card">
+          <span class="hub-kicker">About</span>
+          <h2 class="hub-h2">About {companyName}</h2>
+          <p class="hub-summary">{summary}</p>
+          <template lwc:if={hasSignals}>
+            <ul class="hub-chips">
+              <template for:each={signals} for:item="s">
+                <li key={s} class="hub-chip"><span class="hub-chip-dot" aria-hidden="true"></span>{s}</li>
+              </template>
+            </ul>
+          </template>
+        </section>
+      </template>
+
+      <!-- Popular questions -->
+      <template lwc:if={hasFaqs}>
+        <section class="hub-faq-section">
+          <span class="hub-kicker">FAQ</span>
+          <h2 class="hub-h2">Popular questions</h2>
+          <div class="hub-faq-search">
+            <span class="hub-faq-search-icon" aria-hidden="true"></span>
+            <input type="search" placeholder="Search questions..." value={faqQuery} oninput={handleSearch} aria-label="Search questions" />
+          </div>
+          <ul class="hub-faq-list">
+            <template for:each={filteredFaqs} for:item="f">
+              <li key={f.id} class={f.itemClass}>
+                <button class="hub-faq-q" type="button" data-id={f.id} onclick={toggleFaq} aria-expanded={f.open}>
+                  <span class="hub-faq-qtext">{f.question}</span>
+                  <span class="hub-faq-icon" aria-hidden="true"></span>
+                </button>
+                <div class="hub-faq-a-wrap">
+                  <div class="hub-faq-a">{f.answer}</div>
+                </div>
+              </li>
+            </template>
+          </ul>
+          <template lwc:if={noResults}>
+            <p class="hub-faq-empty">No questions match your search.</p>
+          </template>
+        </section>
+      </template>
+
+      <!-- Still need help -->
+      <section class="hub-footer">
+        <h2 class="hub-footer-title">Still need help?</h2>
+        <p class="hub-footer-sub">Chat with our AI assistant using the button in the corner — it's here anytime.</p>
+        <template lwc:if={hasWebsite}>
+          <a class="hub-footer-link" href={website} target="_blank" rel="noopener">Visit {websiteLabel}<span aria-hidden="true"> ↗</span></a>
+        </template>
+      </section>
+    </div>
+  </div>
+</template>

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Braces, RotateCcw, SlidersHorizontal, TreePine, X, Zap } from 'lucide-react';
+import { Braces, MousePointer2, RotateCcw, SlidersHorizontal, Sparkles, TreePine, X, Zap } from 'lucide-react';
 import type { Recommendation } from '@/types/catalog';
 import { pretty, safeParse } from './payloads';
 import { StructurePane } from './StructurePane';
@@ -51,6 +51,11 @@ export function CltPlayground({
       style={{ '--customer-accent': accentColor } as React.CSSProperties}
       aria-label={`${recommendation.label} playground`}
     >
+      <div className="clt-workbench-label" aria-hidden="true">
+        <span><i /><i /><i /></span>
+        <strong>Interactive component laboratory</strong>
+        <b>CLT / LIVE</b>
+      </div>
       <header className="clt-stage-bar">
         <div className="clt-action-id">
           <span className="clt-action-glyph" aria-hidden="true"><Zap /></span>
@@ -81,8 +86,14 @@ export function CltPlayground({
 
       <div className="clt-stage-body">
         <div className="clt-canvas">
+          <div className="clt-canvas-orbit" aria-hidden="true"><i /><i /><i /></div>
+          <div className="clt-canvas-label" aria-hidden="true"><Sparkles /> Customer-facing render</div>
           <div className="clt-canvas-mount">
             <Preview value={payload} accentColor={accentColor} />
+          </div>
+          <div className="clt-canvas-meta" aria-hidden="true">
+            <span><i /><MousePointer2 /> Interaction ready</span>
+            <code>c/{recommendation.cltApiName}</code>
           </div>
         </div>
 

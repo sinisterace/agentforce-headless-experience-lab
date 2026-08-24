@@ -1,0 +1,8 @@
+<svg width="560" height="360" viewBox="0 0 560 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="1" y="1" width="558" height="358" rx="28" fill="#FFFFFF" stroke="#DDE8F5" stroke-width="2"/>
+  <rect x="34" y="32" width="52" height="52" rx="16" fill="#F0EDFF"/><rect x="49" y="49" width="22" height="22" rx="4" stroke="#6554C0" stroke-width="3"/><path d="M49 56h22M55 45v8M65 45v8" stroke="#6554C0" stroke-width="3" stroke-linecap="round"/>
+  <text x="104" y="57" fill="#102A43" font-family="Arial" font-size="23" font-weight="700">Book a consultation</text><text x="104" y="82" fill="#6B7F93" font-family="Arial" font-size="15">Live availability</text>
+  <rect x="34" y="116" width="492" height="82" rx="18" fill="#F7F5FF" stroke="#A99AEB" stroke-width="2"/><text x="57" y="149" fill="#102A43" font-family="Arial" font-size="18" font-weight="700">Tomorrow</text><text x="57" y="175" fill="#71869A" font-family="Arial" font-size="15">August 20</text><text x="388" y="165" fill="#5542AD" font-family="Arial" font-size="20" font-weight="700">10:30 AM</text>
+  <rect x="34" y="214" width="492" height="82" rx="18" fill="#FFFFFF" stroke="#DDE8F5" stroke-width="2"/><text x="57" y="247" fill="#102A43" font-family="Arial" font-size="18" font-weight="700">Thursday</text><text x="57" y="273" fill="#71869A" font-family="Arial" font-size="15">August 21</text><text x="407" y="263" fill="#294C6E" font-family="Arial" font-size="20" font-weight="700">1:00 PM</text>
+  <circle cx="499" cy="157" r="13" fill="#6554C0"/><path d="m493 157 4 4 8-10" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

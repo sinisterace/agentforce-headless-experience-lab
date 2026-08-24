@@ -277,7 +277,14 @@ public with sharing class ConsultationProfileService {
         try {
             String host = website.replaceFirst('^https?://', '').replaceFirst('/.*$', '');
             if (String.isBlank(host)) return null;
-            return 'https://logo.clearbit.com/' + host;
+            // logo.dev with fallback=monogram never returns a broken image (auto monogram when
+            // no logo is found). The publishable key is public by design and shipped via a
+            // Custom Label so it clones to every templated org. No logo if the key is unset.
+            String key = System.Label.Logo_Dev_Publishable_Key;
+            if (String.isNotBlank(key)) {
+                return 'https://img.logo.dev/' + host + '?token=' + key + '&size=128&format=png&fallback=monogram';
+            }
+            return null;
         } catch (Exception e) {
             return null;
         }
