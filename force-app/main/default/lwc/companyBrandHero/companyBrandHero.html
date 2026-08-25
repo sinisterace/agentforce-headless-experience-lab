@@ -24,24 +24,20 @@
     <div class="hub-body">
       <!-- About -->
       <template lwc:if={hasSummary}>
-        <section class="hub-card">
+        <section class="hub-card hub-card-about">
           <span class="hub-kicker hub-about-kicker">About {companyName}</span>
-          <div class="hub-about-grid">
-            <p class="hub-summary">{summary}</p>
-            <div class="hub-about-side">
-              <template lwc:if={hasSignals}>
-                <span class="hub-signals-label">Highlights</span>
-                <ul class="hub-signals">
-                  <template for:each={signals} for:item="s">
-                    <li key={s} class="hub-signal">
-                      <span class="hub-signal-check" aria-hidden="true"></span>
-                      <span class="hub-signal-text">{s}</span>
-                    </li>
-                  </template>
-                </ul>
+          <p class="hub-summary">{summary}</p>
+          <template lwc:if={hasSignals}>
+            <span class="hub-signals-label">Highlights</span>
+            <ul class="hub-signals">
+              <template for:each={signals} for:item="s">
+                <li key={s} class="hub-signal">
+                  <span class="hub-signal-check" aria-hidden="true"></span>
+                  <span class="hub-signal-text">{s}</span>
+                </li>
               </template>
-            </div>
-          </div>
+            </ul>
+          </template>
         </section>
       </template>
 
