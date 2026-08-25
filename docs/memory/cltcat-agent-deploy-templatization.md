@@ -44,13 +44,31 @@ Agentforce Service Agents, Experience Cloud, Enhanced Messaging for Web, and the
 2. Assign `Company_Knowledge_Access` to the ASA bot user (`agentforce_service_agent@...ext`) — done.
 3. In the ASA: ensure the **custom "Answer Company FAQ" topic** has the `AnswerCompanyFaq` action; set the **Escalation Flow**; **Activate** the agent version.
 4. Omni-Channel (UI): create `Company ASA Routing Config`, attach to `Company ASA Escalation Queue` (supports MessagingSession); set the `Company_ASA` channel Routing Type = Omni-Flow → the routing flow.
-5. Experience Builder on `companyagentforceserviceagent`: add `Company Support Hub` + native **Embedded Messaging** component (Deployment = `Company_ASA`); Settings → Security = **Relaxed CSP**; add Trusted URL for `*.my.salesforce-scrt.com`; **Publish**.
+5. Experience Builder on `companyagentforceserviceagent`: add `Company Support Hub` + native **Embedded Messaging** component (Embedded Web Deployment = `Company_ASA`); **Publish**. Then apply the **frame-ancestors fix** in the next section — the widget renders in Builder but stays blank on the live `/s/` URL without it.
 6. Run `/deployAgent` once so a real branded example exists.
+
+## Embedded Messaging on the Experience site — the frame-ancestors fix (live-verified 2026-08-25)
+**Symptom:** the Embedded Messaging widget shows in Experience Builder but is blank on the live `…/s/` URL. Console shows `Framing 'https://<domain>.my.site.com/' violates … frame-ancestors <internal domains>` and a failed `ESW…/_/commcsp` load.
+
+**Why:** the widget's iframe is served by the auto-provisioned **ESW host Salesforce Site** — for us `ESW_Company_ASA_17875511332811` (Site URL path `/ESWCompanyASA1787551133281`), the deployment's `<site>`. That ESW site is the *child*; its CSP `frame-ancestors` header only lists the internal `*.my.salesforce.com` / `vf.force.com` domains, so it refuses to be framed by the Experience site (`<domain>.my.site.com`, the *parent*). The **child** controls this — the parent site's own CSP / Trusted URLs (Experience Builder → Security) do NOT.
+
+**Fix (Salesforce Setup, NOT Experience Builder):**
+1. Setup → **Sites** (User Interface → Sites and Domains → Sites). If the list is hidden behind the "Register…" gate, click **Register My Salesforce Site Domain** once (safe) to reveal the Sites list.
+2. Click the ESW host site **`ESW_Company_ASA_17875511332811`** (URL ends `/ESWCompanyASA1787551133281`).
+3. **Trusted Domains for Inline Frames → Add Domain →** add the Experience site origin `https://<domain>.my.site.com` (add the `…vforcesite` sibling too, to be safe). Save.
+4. **Republish** the Experience site — a stale publish keeps loading the OLD ESW host (`ESWAgentforceServiceAge…`) and stays blocked; hard-refresh / incognito.
+- Also required: the `Company_ASA` **messaging channel = Active** (Setup → Messaging Settings). Strict CSP on the parent is fine; only if the console later shows `connect-src` errors to `*.my.salesforce-scrt.com`, add `https://…my.salesforce-scrt.com` + `wss://…my.salesforce-scrt.com` under Experience Builder → Settings → Security & Privacy → **Trusted Sites for Scripts**.
+
+**Scaling across OrgFarm clones (each org has a DIFFERENT domain):**
+- The trusted-domain value is org-specific (`orgfarm-<id>.my.site.com`); a snapshot carries the SOURCE org's literal value, which won't match a clone → block returns. **Use a wildcard** so it survives cloning: in the ESW site's Trusted Domains for Inline Frames add **`https://*.my.site.com`** (and, if needed for scripts, `https://*.my.salesforce-scrt.com` + `wss://*.my.salesforce-scrt.com`). A wildcard matches any clone's `orgfarm-<newid>.my.site.com`. **Set the wildcard in the SOURCE org before creating the TTID.**
+- **Still verify per clone:** the native Embedded Messaging component stores literal `scrtUrl` / `siteEndpoint` (`orgfarm-<id>.my.salesforce-scrt.com` / `…my.site.com/ESWCompanyASA…`) in the page config (ExperienceBundle `views/home.json`). Confirm on a test-clone whether Salesforce rewrites these to the clone's domain; if NOT, re-select `Company_ASA` in the component (regenerates the endpoints) and republish.
+- Per-clone steps regardless of wildcard: (a) register the Salesforce Sites domain if the list is gated, (b) confirm the ESW site's Trusted Domains for Inline Frames holds the wildcard, (c) `Company_ASA` channel Active, (d) **republish** the Experience site.
 
 ## OrgFarm test-clone verification checklist
 - [ ] ASA present + **published** with the custom FAQ topic firing (chat answers concisely, no raw dump).
 - [ ] `companyagentforceserviceagent` site **published**, Relaxed CSP + Trusted URL present, chat launcher renders on the live `my.site.com` link (not just Builder preview).
 - [ ] `Company_ASA` channel **Active**; `RoutingConfiguration` + queue + Omni-Flow present.
+- [ ] **Embedded Messaging renders on the live `/s/` URL** (not just Builder): ESW host site `ESW_Company_ASA` has `https://*.my.site.com` in **Trusted Domains for Inline Frames**, and the console shows no `frame-ancestors` block. See the frame-ancestors section above.
 - [ ] Agentforce / Experience Cloud / Messaging / Models API enabled (Data Cloud NOT needed).
 - [ ] End-to-end: enter a website in the app → `/deployAgent` succeeds → hub re-brands → agent answers that company's FAQ.
 
