@@ -89,36 +89,10 @@ private class CltCatalogRestTest {
         System.assertEquals('alex@chime.com', saved.Email__c);
     }
 
-    /** Mocks the Tooling API branding calls SiteBrandingService makes during deploy. */
-    private class BrandingMock implements HttpCalloutMock {
-        public HttpResponse respond(HttpRequest req) {
-            HttpResponse res = new HttpResponse();
-            if (req.getMethod() == 'PATCH') {
-                res.setStatusCode(204);
-                res.setBody('');
-                return res;
-            }
-            res.setStatusCode(200);
-            if (req.getEndpoint().contains('BrandingSetProperty')) {
-                res.setBody(JSON.serialize(new Map<String, Object>{
-                    'records' => new List<Object>{
-                        new Map<String, Object>{ 'Id' => 'p1', 'PropertyName' => 'chatButton', 'PropertyValue' => '#2E2E2E' }
-                    }
-                }));
-            } else {
-                res.setBody(JSON.serialize(new Map<String, Object>{
-                    'records' => new List<Object>{ new Map<String, Object>{ 'Id' => '0LwX' } }
-                }));
-            }
-            return res;
-        }
-    }
-
     @IsTest
     static void postDeployAgentGroundsAndBrands() {
         AgentFaqContentService.testCannedJson =
             '{"overview":"Chime is a fintech.","faqs":[{"q":"Hours?","a":"24/7"},{"q":"Reset?","a":"In app"}]}';
-        Test.setMock(HttpCalloutMock.class, new BrandingMock());
         req('POST', '/services/apexrest/cltcat/deployagent',
             '{"companyName":"Chime","website":"https://chime.com","industryKey":"financial_services",'
             + '"summary":"Chime is a fintech.","accentColor":"#0B5CAB","logoUrl":"https://logo.clearbit.com/chime.com",'
