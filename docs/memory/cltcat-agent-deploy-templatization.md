@@ -63,7 +63,7 @@ Agentforce Service Agents, Experience Cloud, Enhanced Messaging for Web, and the
 - Deployments `Help_Agent_1_G`, `Company_Agentforce_Service_Agent`, `Agentforce_Service_Agent` (old WebV1).
 - ESW host sites `ESW_Help_Agent_1_G`, `ESW_Agentforce_Service_Age_*` (both), `ESW_Service_Agent_Portal_*`.
 - Experience sites `agentforceservice` (old hub attempt) and `HelpSite` (unused).
-- Old genAiPlannerBundle versions of the ASA (`Agentforce_Service_Agent_v3/v4/v5`) once v6/v7 is confirmed active.
-- Repo: the unused `remoteSiteSettings/OrgSelf` + `SiteBrandingService` (branding callout was dropped) can be removed if you're sure you won't do Phase-2 widget branding.
+- Old genAiPlannerBundle versions of the ASA (`Agentforce_Service_Agent_v3/v4/v5`) once v6/v7 is confirmed active — these live ONLY in the org (not in git); delete via Setup, not a deploy.
+- Repo: `remoteSiteSettings/OrgSelf` + `SiteBrandingService` (+ its test) — **removed from git 2026-08-24** (branding self-callout was dropped; Phase-2 widget branding not pursued). Still present (inert) in the org; can be destructively removed later if desired. `CltCatalogRestTest.BrandingMock` remains as now-dead but harmless test scaffolding.
 
 **Rule:** if unsure whether something is referenced, DEACTIVATE instead of delete; an inactive leftover is harmless and still clones. Delete only what you've confirmed is unused.
