@@ -1,43 +1,47 @@
 <template>
   <div class="hub" style={rootStyle}>
-    <!-- Nav -->
-    <header class="hub-nav">
-      <div class="hub-brand">
-        <template lwc:if={hasLogo}>
-          <span class="hub-logo-wrap"><img class="hub-logo" src={logoUrl} alt={companyName} /></span>
+    <!-- Website-style accent header (logo + name + visit sit ON the colored bar) -->
+    <header class="hub-header">
+      <div class="hub-header-inner">
+        <div class="hub-brand">
+          <template lwc:if={hasLogo}>
+            <span class="hub-logo-wrap"><img class="hub-logo" src={logoUrl} alt={companyName} /></span>
+          </template>
+          <span class="hub-name">{companyName}</span>
+        </div>
+        <template lwc:if={hasWebsite}>
+          <a class="hub-visit" href={website} target="_blank" rel="noopener">Visit {websiteLabel}<span class="hub-visit-arrow" aria-hidden="true">↗</span></a>
         </template>
-        <span class="hub-name">{companyName}</span>
       </div>
-      <template lwc:if={hasWebsite}>
-        <a class="hub-visit" href={website} target="_blank" rel="noopener">Visit {websiteLabel}<span class="hub-visit-arrow" aria-hidden="true">↗</span></a>
-      </template>
     </header>
 
-    <!-- Hero -->
-    <section class="hub-hero">
-      <div class="hub-hero-glow" aria-hidden="true"></div>
-      <div class="hub-hero-inner">
-        <span class="hub-eyebrow">AI-Powered Support</span>
-        <h1 class="hub-hero-title">{companyName}</h1>
-        <p class="hub-hero-sub">{subtitle}</p>
-        <p class="hub-hero-hint"><span class="hub-hint-dot" aria-hidden="true"></span>Chat with our AI assistant using the button in the corner.</p>
-      </div>
+    <!-- Welcome -->
+    <section class="hub-welcome">
+      <h1 class="hub-welcome-title">Welcome to <span class="hub-welcome-name">{companyName}</span> Support</h1>
+      <div class="hub-welcome-rule" aria-hidden="true"></div>
     </section>
 
     <div class="hub-body">
       <!-- About -->
       <template lwc:if={hasSummary}>
         <section class="hub-card">
-          <span class="hub-kicker">About</span>
-          <h2 class="hub-h2">About {companyName}</h2>
-          <p class="hub-summary">{summary}</p>
-          <template lwc:if={hasSignals}>
-            <ul class="hub-chips">
-              <template for:each={signals} for:item="s">
-                <li key={s} class="hub-chip"><span class="hub-chip-dot" aria-hidden="true"></span>{s}</li>
+          <span class="hub-kicker hub-about-kicker">About {companyName}</span>
+          <div class="hub-about-grid">
+            <p class="hub-summary">{summary}</p>
+            <div class="hub-about-side">
+              <template lwc:if={hasSignals}>
+                <span class="hub-signals-label">Highlights</span>
+                <ul class="hub-signals">
+                  <template for:each={signals} for:item="s">
+                    <li key={s} class="hub-signal">
+                      <span class="hub-signal-check" aria-hidden="true"></span>
+                      <span class="hub-signal-text">{s}</span>
+                    </li>
+                  </template>
+                </ul>
               </template>
-            </ul>
-          </template>
+            </div>
+          </div>
         </section>
       </template>
 
@@ -50,6 +54,7 @@
             <span class="hub-faq-search-icon" aria-hidden="true"></span>
             <input type="search" placeholder="Search questions..." value={faqQuery} oninput={handleSearch} aria-label="Search questions" />
           </div>
+          <p class="hub-faq-count">{faqResultLabel}</p>
           <ul class="hub-faq-list">
             <template for:each={filteredFaqs} for:item="f">
               <li key={f.id} class={f.itemClass}>

@@ -67,9 +67,6 @@ export default class CompanyBrandHero extends LightningElement {
   get rootStyle() {
     return `--brand-accent: ${this.accent};`;
   }
-  get subtitle() {
-    return `Welcome to ${this.companyName} support — find quick answers below, or chat with our AI assistant anytime.`;
-  }
   get filteredFaqs() {
     const q = (this.faqQuery || '').trim().toLowerCase();
     if (!q) return this.faqItems;
@@ -81,6 +78,15 @@ export default class CompanyBrandHero extends LightningElement {
   }
   get noResults() {
     return !!(this.faqQuery && this.faqQuery.trim()) && this.filteredFaqs.length === 0;
+  }
+  get faqResultLabel() {
+    const total = this.faqItems.length;
+    const shown = this.filteredFaqs.length;
+    const noun = total === 1 ? 'question' : 'questions';
+    if (this.faqQuery && this.faqQuery.trim()) {
+      return `Showing ${shown} of ${total} ${noun}`;
+    }
+    return `${total} ${noun}`;
   }
 
   handleSearch(event) {
