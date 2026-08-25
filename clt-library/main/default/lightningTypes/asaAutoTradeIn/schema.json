@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Automotive · Trade-In Estimator",
+  "description" : "Shows a vehicle trade-in valuation: an estimated value with a low–high value-range bar, the factors driving it (mileage, condition, market demand), an optional instant-offer note, and actions to apply the trade-in or book an appraisal.",
+  "lightning:type" : "@apexClassType/c__AsaAutoTradeInData"
+}

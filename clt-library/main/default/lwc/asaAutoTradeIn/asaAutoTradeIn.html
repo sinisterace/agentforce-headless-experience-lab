@@ -1,0 +1,80 @@
+<template>
+    <div class="asa-card">
+        <template if:true={isTestMode}>
+            <p class="asa-test-badge">Sample data — no estimate supplied</p>
+        </template>
+
+        <h3 class="selector-title">{title}</h3>
+
+        <!-- Vehicle identity -->
+        <div class="asa-ti-vehicle">
+            <span class="asa-ti-avatar">
+                <template if:true={hasImage}>
+                    <img src={imageUrl} alt={vehicleName} onerror={handleImageError} />
+                </template>
+                <template if:false={hasImage}>
+                    <span class="asa-ti-avatar-fallback" aria-hidden="true">{initials}</span>
+                </template>
+            </span>
+            <span class="asa-ti-vehicle-text">
+                <span class="asa-ti-vehicle-name">{vehicleName}</span>
+                <template if:true={hasVehicleDetail}>
+                    <span class="asa-ti-vehicle-detail">{vehicleDetail}</span>
+                </template>
+            </span>
+        </div>
+
+        <!-- Estimate + value-range bar -->
+        <div class="asa-ti-estimate">
+            <span class="asa-ti-estimate-eyebrow">Estimated trade-in value</span>
+            <span class="asa-ti-estimate-value">{estimateLabel}</span>
+        </div>
+        <div class="asa-ti-range">
+            <div class="asa-ti-range-track">
+                <span class="asa-ti-range-marker" style={markerStyle} aria-hidden="true"></span>
+            </div>
+            <div class="asa-ti-range-ends">
+                <span class="asa-ti-range-low">{lowLabel}</span>
+                <span class="asa-ti-range-high">{highLabel}</span>
+            </div>
+        </div>
+
+        <template if:true={hasOffer}>
+            <p class="asa-ti-offer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+                {offerText}
+            </p>
+        </template>
+
+        <!-- Factors -->
+        <template if:true={factors.length}>
+            <ul class="asa-ti-factors">
+                <template for:each={factors} for:item="f">
+                    <li key={f.key} class={f.rowClass}>
+                        <span class="asa-ti-factor-mark" aria-hidden="true">
+                            <template if:true={f.isPositive}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"></path></svg>
+                            </template>
+                            <template if:true={f.isNegative}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+                            </template>
+                        </span>
+                        <span class="asa-ti-factor-text">
+                            <span class="asa-ti-factor-label">{f.label}</span>
+                            <template if:true={f.hasDetail}>
+                                <span class="asa-ti-factor-detail">{f.detail}</span>
+                            </template>
+                        </span>
+                    </li>
+                </template>
+            </ul>
+        </template>
+
+        <template if:true={hasPrimary}>
+            <button type="button" class="asa-ti-cta" onclick={handlePrimary}>{submitText}</button>
+        </template>
+        <template if:true={hasSecondary}>
+            <button type="button" class="asa-ti-cta is-ghost" onclick={handleSecondary}>{secondaryText}</button>
+        </template>
+    </div>
+</template>

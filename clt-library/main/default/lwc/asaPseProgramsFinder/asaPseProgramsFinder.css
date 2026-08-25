@@ -1,0 +1,160 @@
+/* ASA Public Sector & Education · Programs & Benefits Finder — a vertical stack
+   of clean selectable cards, each with a category glyph tile, name/detail, and an
+   eligibility pill; tap to select, then apply. Civic-navy accent + cool-slate
+   neutrals as local custom props. rem units + inherited font so the card matches
+   the host chat theme in Enhanced Chat v2. */
+:host {
+    --asa-accent: #1e3a8a;
+    --asa-line: #e2e8f0;
+    --asa-ink: #0f172a;
+    --asa-muted: #64748b;
+    --asa-good: #15803d;
+    --asa-radius: 14px;
+    --asa-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after { box-sizing: border-box; }
+
+.asa-test-badge {
+    margin: 0 0 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 8px;
+    background: #eef2ff;
+    color: #3730a3;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.asa-pf-head { margin-bottom: 0.6rem; }
+.selector-title { font-size: 1.12rem; font-weight: 700; letter-spacing: -0.02em; margin: 0; overflow-wrap: break-word; word-break: normal; }
+.asa-pf-sub { margin: 0.2rem 0 0; font-size: 0.74rem; color: var(--asa-muted); overflow-wrap: break-word; }
+
+.asa-pf-list { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.asa-pf-card {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    min-width: 0;
+    padding: 0.62rem 0.7rem;
+    border: 1.5px solid var(--asa-line);
+    border-radius: var(--asa-radius);
+    background: #fff;
+    cursor: pointer;
+    box-shadow: var(--asa-shadow-sm);
+    transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+.asa-pf-card:hover { border-color: color-mix(in srgb, var(--asa-accent) 45%, var(--asa-line)); }
+.asa-pf-card:focus-visible { outline: 2px solid var(--asa-accent); outline-offset: 2px; }
+.asa-pf-card.is-selected {
+    border-color: var(--asa-accent);
+    background: color-mix(in srgb, var(--asa-accent) 5%, #fff);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--asa-accent) 16%, transparent);
+}
+
+/* Category glyph tile */
+.asa-pf-icon {
+    --st: var(--asa-accent);
+    flex-shrink: 0;
+    width: 2.2rem;
+    height: 2.2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--st) 12%, #fff);
+    color: var(--st);
+}
+.asa-pf-icon svg { width: 1.15rem; height: 1.15rem; }
+.asa-pf-icon.is-assistance { --st: #1e3a8a; }
+.asa-pf-icon.is-education { --st: #6d28d9; }
+.asa-pf-icon.is-health { --st: #0f766e; }
+.asa-pf-icon.is-housing { --st: #b45309; }
+.asa-pf-icon.is-tax { --st: #475569; }
+.asa-pf-icon.is-employment { --st: #0369a1; }
+.asa-pf-icon.is-utility { --st: #a16207; }
+.asa-pf-icon.is-other { --st: var(--asa-accent); }
+
+.asa-pf-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.12rem; padding-right: 1.1rem; }
+.asa-pf-cat { font-size: 0.55rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.09em; color: var(--asa-muted); }
+.asa-pf-name { font-size: 0.86rem; font-weight: 700; color: var(--asa-ink); overflow-wrap: break-word; }
+.asa-pf-detail { font-size: 0.7rem; color: var(--asa-muted); overflow-wrap: break-word; }
+.asa-pf-elig {
+    align-self: flex-start;
+    margin-top: 0.15rem;
+    padding: 0.1rem 0.42rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--asa-good) 12%, #fff);
+    color: var(--asa-good);
+    font-size: 0.6rem;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+.asa-pf-badge {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.12rem 0.36rem;
+    border-radius: 999px;
+    background: var(--asa-accent);
+    color: #fff;
+    font-size: 0.52rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+.asa-pf-check {
+    position: absolute;
+    right: 0.55rem;
+    bottom: 0.55rem;
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--asa-accent);
+    color: #fff;
+    opacity: 0;
+    transform: scale(0.6);
+    transition: opacity 0.15s ease, transform 0.15s ease;
+}
+.asa-pf-check svg { width: 0.72rem; height: 0.72rem; }
+.asa-pf-card.is-selected .asa-pf-check { opacity: 1; transform: scale(1); }
+
+.asa-pf-cta {
+    margin-top: 0.7rem;
+    width: 100%;
+    min-height: 2.7rem;
+    padding: 0.6rem;
+    border: 0;
+    border-radius: 11px;
+    background: var(--asa-accent);
+    color: #fff;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--asa-accent) 26%, transparent);
+    transition: filter 0.15s ease;
+}
+.asa-pf-cta:hover:not(:disabled) { filter: brightness(1.1); }
+.asa-pf-cta:disabled { background: #cbd5e1; color: #64748b; cursor: not-allowed; box-shadow: none; }
+
+@container (max-width: 300px) {
+    .asa-pf-icon { width: 1.95rem; height: 1.95rem; }
+    .asa-pf-name { font-size: 0.82rem; }
+}

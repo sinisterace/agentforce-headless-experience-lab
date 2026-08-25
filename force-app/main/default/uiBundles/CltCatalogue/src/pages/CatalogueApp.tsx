@@ -1196,6 +1196,30 @@ function cltDtoClass(rec: Recommendation): string {
       return 'AsaEnergyBudgetBillingData';
     case 'energyRebateOffersJSON':
       return 'AsaEnergyRebateOffersData';
+    case 'hvacThermostatJSON':
+      return 'AsaHvacThermostatData';
+    case 'hvacTechTrackerJSON':
+      return 'AsaHvacTechTrackerData';
+    case 'hvacSystemHealthJSON':
+      return 'AsaHvacSystemHealthData';
+    case 'hvacServicePlanJSON':
+      return 'AsaHvacServicePlanData';
+    case 'autoConfiguratorJSON':
+      return 'AsaAutoConfiguratorData';
+    case 'autoTestDriveJSON':
+      return 'AsaAutoTestDriveData';
+    case 'autoVehicleStatusJSON':
+      return 'AsaAutoVehicleStatusData';
+    case 'autoTradeInJSON':
+      return 'AsaAutoTradeInData';
+    case 'pseAppStatusJSON':
+      return 'AsaPseAppStatusData';
+    case 'pseProgramsFinderJSON':
+      return 'AsaPseProgramsFinderData';
+    case 'pseServiceRequestJSON':
+      return 'AsaPseServiceRequestData';
+    case 'pseDocsChecklistJSON':
+      return 'AsaPseDocsChecklistData';
     default:
       return 'AsaFinServAccountSelectorData';
   }

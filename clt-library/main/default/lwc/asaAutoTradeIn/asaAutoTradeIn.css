@@ -1,0 +1,125 @@
+/* ASA Automotive · Trade-In Estimator — a vehicle identity row, a big estimated
+   value, a low–high value-range bar with an estimate marker, an optional
+   instant-offer note, the factors driving the estimate, and primary + secondary
+   actions. rem units + inherited font so the card matches the host chat theme in
+   Enhanced Chat v2. Racing-red BRAND accent (used for the marker + CTA, never as
+   an error color); impact hues are separate. */
+:host {
+    --asa-accent: #dc2626;
+    --asa-line: #e2e8f0;
+    --asa-ink: #0f172a;
+    --asa-muted: #64748b;
+    --asa-track: #eef2f6;
+    --asa-good: #15803d;
+    --asa-warn: #b45309;
+    --asa-radius: 14px;
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after { box-sizing: border-box; }
+
+.asa-test-badge {
+    margin: 0 0 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 8px;
+    background: #fef2f2;
+    color: #b91c1c;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.selector-title {
+    font-size: 1.12rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.6rem;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* Vehicle identity */
+.asa-ti-vehicle { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.75rem; }
+.asa-ti-avatar {
+    flex-shrink: 0; width: 2.6rem; height: 2.6rem; border-radius: 10px; overflow: hidden;
+    background: color-mix(in srgb, var(--asa-accent) 10%, #fff);
+    border: 1px solid color-mix(in srgb, var(--asa-accent) 26%, var(--asa-line));
+    display: inline-flex; align-items: center; justify-content: center;
+}
+.asa-ti-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.asa-ti-avatar-fallback { font-size: 0.82rem; font-weight: 750; color: var(--asa-accent); letter-spacing: 0.02em; }
+.asa-ti-vehicle-text { display: flex; flex-direction: column; gap: 0.08rem; min-width: 0; flex: 1; }
+.asa-ti-vehicle-name { font-size: 0.92rem; font-weight: 700; color: var(--asa-ink); overflow-wrap: break-word; }
+.asa-ti-vehicle-detail { font-size: 0.7rem; color: var(--asa-muted); overflow-wrap: break-word; }
+
+/* Estimate + range bar */
+.asa-ti-estimate { display: flex; flex-direction: column; align-items: center; gap: 0.1rem; margin-bottom: 0.6rem; }
+.asa-ti-estimate-eyebrow { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--asa-muted); }
+.asa-ti-estimate-value { font-size: 2.05rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; color: var(--asa-ink); white-space: nowrap; }
+
+.asa-ti-range { margin-bottom: 0.75rem; }
+.asa-ti-range-track {
+    position: relative; height: 0.5rem; border-radius: 999px;
+    background: linear-gradient(90deg, var(--asa-track), color-mix(in srgb, var(--asa-accent) 22%, var(--asa-track)));
+    margin: 0.55rem 0 0.3rem;
+}
+.asa-ti-range-marker {
+    position: absolute; top: 50%; width: 1rem; height: 1rem; border-radius: 999px;
+    background: var(--asa-accent); border: 2px solid #fff;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--asa-accent) 24%, transparent);
+}
+.asa-ti-range-ends { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; }
+.asa-ti-range-low, .asa-ti-range-high { font-size: 0.68rem; font-weight: 650; color: var(--asa-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+.asa-ti-offer {
+    display: flex; align-items: center; gap: 0.4rem;
+    margin: 0 0 0.7rem; padding: 0.45rem 0.6rem; border-radius: 9px;
+    background: color-mix(in srgb, var(--asa-accent) 7%, #fff);
+    border: 1px solid color-mix(in srgb, var(--asa-accent) 22%, var(--asa-line));
+    color: var(--asa-ink); font-size: 0.72rem; font-weight: 620; overflow-wrap: break-word;
+}
+.asa-ti-offer svg { width: 0.9rem; height: 0.9rem; flex-shrink: 0; color: var(--asa-accent); }
+
+/* Factors */
+.asa-ti-factors { list-style: none; margin: 0 0 0.2rem; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.asa-ti-factor { --st: var(--asa-muted); display: flex; align-items: flex-start; gap: 0.5rem; min-width: 0; }
+.asa-ti-factor.is-positive { --st: var(--asa-good); }
+.asa-ti-factor.is-negative { --st: var(--asa-warn); }
+.asa-ti-factor-mark {
+    flex-shrink: 0; width: 1.15rem; height: 1.15rem; margin-top: 0.05rem; border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: color-mix(in srgb, var(--st) 14%, #fff); color: var(--st);
+}
+.asa-ti-factor-mark svg { width: 0.72rem; height: 0.72rem; }
+.asa-ti-factor.is-neutral .asa-ti-factor-mark::after { content: ''; width: 0.34rem; height: 0.34rem; border-radius: 999px; background: var(--st); }
+.asa-ti-factor-text { display: flex; flex-direction: column; gap: 0.04rem; min-width: 0; flex: 1; }
+.asa-ti-factor-label { font-size: 0.78rem; font-weight: 660; color: var(--asa-ink); overflow-wrap: break-word; }
+.asa-ti-factor-detail { font-size: 0.68rem; color: var(--asa-muted); overflow-wrap: break-word; }
+
+.asa-ti-cta {
+    margin-top: 0.65rem; width: 100%; min-height: 2.7rem; padding: 0.6rem;
+    border: 0; border-radius: 11px; background: var(--asa-accent); color: #fff;
+    font-size: 0.84rem; font-weight: 680; cursor: pointer;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--asa-accent) 24%, transparent);
+    transition: filter 0.15s ease;
+}
+.asa-ti-cta:hover { filter: brightness(1.06); }
+.asa-ti-cta.is-ghost {
+    margin-top: 0.45rem; background: #fff; color: var(--asa-accent);
+    border: 1px solid var(--asa-line); box-shadow: none;
+}
+.asa-ti-cta.is-ghost:hover { filter: none; background: color-mix(in srgb, var(--asa-accent) 6%, #fff); border-color: color-mix(in srgb, var(--asa-accent) 40%, var(--asa-line)); }
+
+@container (max-width: 300px) {
+    .asa-ti-estimate-value { font-size: 1.75rem; }
+    .asa-ti-range-low, .asa-ti-range-high { font-size: 0.62rem; }
+}

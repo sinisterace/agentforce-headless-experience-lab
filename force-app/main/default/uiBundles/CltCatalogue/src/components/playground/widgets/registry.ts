@@ -28,6 +28,18 @@ import { energyOutageTrackerDef } from './energyOutageTracker.def';
 import { energyUsageCostDef } from './energyUsageCost.def';
 import { energyBudgetBillingDef } from './energyBudgetBilling.def';
 import { energyRebateOffersDef } from './energyRebateOffers.def';
+import { hvacThermostatDef } from './hvacThermostat.def';
+import { hvacTechTrackerDef } from './hvacTechTracker.def';
+import { hvacSystemHealthDef } from './hvacSystemHealth.def';
+import { hvacServicePlanDef } from './hvacServicePlan.def';
+import { autoConfiguratorDef } from './autoConfigurator.def';
+import { autoTestDriveDef } from './autoTestDrive.def';
+import { autoVehicleStatusDef } from './autoVehicleStatus.def';
+import { autoTradeInDef } from './autoTradeIn.def';
+import { pseAppStatusDef } from './pseAppStatus.def';
+import { pseProgramsFinderDef } from './pseProgramsFinder.def';
+import { pseServiceRequestDef } from './pseServiceRequest.def';
+import { pseDocsChecklistDef } from './pseDocsChecklist.def';
 
 /**
  * The one place the playground learns about CLTs. Adding a CLT means adding a
@@ -61,6 +73,18 @@ export const WIDGET_REGISTRY: Record<CltKind, WidgetDef> = {
   energyUsageCostJSON: energyUsageCostDef,
   energyBudgetBillingJSON: energyBudgetBillingDef,
   energyRebateOffersJSON: energyRebateOffersDef,
+  hvacThermostatJSON: hvacThermostatDef,
+  hvacTechTrackerJSON: hvacTechTrackerDef,
+  hvacSystemHealthJSON: hvacSystemHealthDef,
+  hvacServicePlanJSON: hvacServicePlanDef,
+  autoConfiguratorJSON: autoConfiguratorDef,
+  autoTestDriveJSON: autoTestDriveDef,
+  autoVehicleStatusJSON: autoVehicleStatusDef,
+  autoTradeInJSON: autoTradeInDef,
+  pseAppStatusJSON: pseAppStatusDef,
+  pseProgramsFinderJSON: pseProgramsFinderDef,
+  pseServiceRequestJSON: pseServiceRequestDef,
+  pseDocsChecklistJSON: pseDocsChecklistDef,
 };
 
 /** Resolve a catalogue row's DTO field to its WidgetDef (Account Selector default). */

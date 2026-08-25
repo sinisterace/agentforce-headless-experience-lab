@@ -830,6 +830,378 @@ export type EnergyRebateOffersPayload = {
   submitValue?: string;
 };
 
+/* ── HVAC ────────────────────────────────────────────────────────────────── */
+
+export type HvacThermostatPreset = {
+  /** Stable id sent back on selection. */
+  id: string;
+  label: string;
+  targetTemp: number;
+  /** heat | cool | auto | off | fan — optional; inherits the card mode when absent. */
+  mode?: string;
+};
+
+export type HvacThermostatPayload = {
+  title?: string;
+  /** Current indoor temperature; shown large in the dial center. Absent → test-mode sample. */
+  currentTemp?: number;
+  /** Target setpoint; defaults to currentTemp. */
+  targetTemp?: number;
+  /** heat | cool | auto | off | fan — drives the dial + accent color. Defaults to auto. */
+  mode?: string;
+  /** F | C. Defaults to F. */
+  unit?: string;
+  /** Indoor humidity percent, shown as a chip. */
+  humidity?: number;
+  statusText?: string;
+  /** Dial + stepper bounds. Default 50 / 90 (F). */
+  minTemp?: number;
+  maxTemp?: number;
+  presets?: HvacThermostatPreset[];
+  submitText?: string;
+  submitValue?: string;
+};
+
+export type HvacTechStep = {
+  label: string;
+  /** done | current | todo. */
+  state: string;
+  timeText?: string;
+};
+
+export type HvacTechnician = {
+  name: string;
+  role?: string;
+  /** Numeric rating, rendered as a star + value. */
+  rating?: number;
+  /** Falls back to initials if it fails to load. */
+  photoUrl?: string;
+  /** 1–2 letters; derived from name when absent. */
+  initials?: string;
+  /** Short specialties line. */
+  skills?: string;
+};
+
+export type HvacJob = {
+  number?: string;
+  /** The service reason, e.g. "AC not cooling". */
+  type?: string;
+  address?: string;
+};
+
+export type HvacTechTrackerPayload = {
+  title?: string;
+  /** scheduled | dispatched | enroute | arriving | onsite | complete — drives the hero + derived track. */
+  status?: string;
+  headline?: string;
+  etaText?: string;
+  windowText?: string;
+  updatedText?: string;
+  technician?: HvacTechnician;
+  job?: HvacJob;
+  /** En-route track; derived from status when omitted. */
+  steps?: HvacTechStep[];
+  submitText?: string;
+  submitValue?: string;
+  secondaryText?: string;
+  secondaryValue?: string;
+};
+
+export type HvacSystemRow = {
+  label: string;
+  /** good | watch | due | fault — drives the pill + left-rail color. */
+  status: string;
+  detail?: string;
+  /** furnace | ac | thermostat | ductwork | filter | heatpump | water_heater. */
+  icon?: string;
+};
+
+export type HvacFilterLife = {
+  /** 0–100 bar fill; green >50, amber 20–50, red <20. */
+  lifePct: number;
+  daysLeft?: number;
+  label?: string;
+};
+
+export type HvacSystemHealthPayload = {
+  title?: string;
+  /** 0–100 overall health; rendered as a radial gauge. Absent → test-mode sample. */
+  score?: number;
+  scoreLabel?: string;
+  statusText?: string;
+  updatedText?: string;
+  systems?: HvacSystemRow[];
+  filter?: HvacFilterLife;
+  nextServiceText?: string;
+  recommendationText?: string;
+  submitText?: string;
+  submitValue?: string;
+};
+
+export type HvacPlan = {
+  /** Stable identifier sent back to the agent on selection. */
+  id: string;
+  name: string;
+  /** Shown large; formatted as currency. */
+  price?: number;
+  tagline?: string;
+  /** Small ribbon tag, e.g. "Most popular". */
+  badge?: string;
+  /** Adds an accent highlight border. */
+  recommended?: boolean;
+  /** Included benefits rendered as a checklist. */
+  features?: string[];
+  /** Per-plan currency override; falls back to the payload currency. */
+  currency?: string;
+};
+
+export type HvacServicePlanPayload = {
+  title?: string;
+  subtitle?: string;
+  currency?: string;
+  /** mo | yr | wk — rendered as a price suffix (/mo, /yr, /wk). */
+  cadence?: string;
+  /** id of the customer's current plan; that card is locked, not selectable. */
+  currentPlanId?: string;
+  plans: HvacPlan[];
+  /** Confirm-button label; defaults to "Enroll in plan". */
+  submitText?: string;
+  submitValue?: string;
+};
+
+/* ── Automotive ──────────────────────────────────────────────────────────── */
+
+/** Shared vehicle reference across the Automotive cards. */
+export type AutoVehicleRef = {
+  name: string;
+  /** Trim/color line (Configurator, Test Drive, Connected Car Status). */
+  trim?: string;
+  /** Condition/mileage line (Trade-In). */
+  detail?: string;
+  /** Full image URL; falls back to initials if it fails to load. */
+  imageUrl?: string;
+  /** 1–2 letters shown when there is no image. */
+  initials?: string;
+};
+
+/* Vehicle Configurator */
+export type AutoColor = {
+  id: string;
+  label: string;
+  /** CSS color for the swatch, e.g. "#dc2626". */
+  hex?: string;
+  /** Added to the estimate; default 0. */
+  priceDelta?: number;
+  /** The default color. */
+  selected?: boolean;
+};
+
+export type AutoConfigOption = {
+  id: string;
+  label: string;
+  priceDelta?: number;
+  detail?: string;
+};
+
+export type AutoOptionGroup = {
+  id: string;
+  label: string;
+  /** Default option id; else the first option. */
+  selectedId?: string;
+  options: AutoConfigOption[];
+};
+
+export type AutoConfiguratorPayload = {
+  title?: string;
+  model?: string;
+  currency?: string;
+  basePrice?: number;
+  colors?: AutoColor[];
+  optionGroups?: AutoOptionGroup[];
+  submitText?: string;
+  submitValue?: string;
+};
+
+/* Test Drive Scheduler */
+export type AutoLocation = {
+  name?: string;
+  address?: string;
+};
+
+export type AutoTestDriveSlot = {
+  /** Stable id sent back on selection. */
+  id: string;
+  /** 24h "HH:MM"; rendered as "1:30 PM". */
+  time: string;
+  /** showroom | at_home — drives the slot glyph + hue. */
+  driveType?: string;
+};
+
+export type AutoTestDriveDay = {
+  /** ISO "YYYY-MM-DD". */
+  date: string;
+  slots: AutoTestDriveSlot[];
+};
+
+export type AutoTestDrivePayload = {
+  title?: string;
+  vehicle?: AutoVehicleRef;
+  location?: AutoLocation;
+  days: AutoTestDriveDay[];
+  submitText?: string;
+};
+
+/* Connected Car Status */
+export type AutoRange = {
+  value: number;
+  total?: number;
+  /** mi | km. */
+  unit?: string;
+};
+
+export type AutoTire = {
+  /** FL | FR | RL | RR. */
+  pos: string;
+  psi?: number;
+  /** good | low | high. */
+  status?: string;
+};
+
+export type AutoStatusItem = {
+  label: string;
+  value?: string;
+  /** good | watch | bad. */
+  status?: string;
+};
+
+export type AutoVehicleStatusPayload = {
+  title?: string;
+  vehicle?: AutoVehicleRef;
+  isElectric?: boolean;
+  range?: AutoRange;
+  battery?: number;
+  odometer?: number;
+  odometerUnit?: string;
+  tires?: AutoTire[];
+  items?: AutoStatusItem[];
+  alerts?: string[];
+  updatedText?: string;
+  submitText?: string;
+  submitValue?: string;
+};
+
+/* Trade-In Estimator */
+export type AutoTradeInFactor = {
+  label: string;
+  detail?: string;
+  /** positive | neutral | negative — drives the up/down glyph + color. */
+  impact?: string;
+};
+
+export type AutoTradeInPayload = {
+  title?: string;
+  vehicle?: AutoVehicleRef;
+  currency?: string;
+  /** Estimated trade-in value, shown large. Absent → test-mode sample. */
+  estimate?: number;
+  /** Range floor; defaults to estimate × 0.9. */
+  low?: number;
+  /** Range ceiling; defaults to estimate × 1.1. Marker sits at estimate. */
+  high?: number;
+  offerText?: string;
+  factors?: AutoTradeInFactor[];
+  submitText?: string;
+  submitValue?: string;
+  secondaryText?: string;
+  secondaryValue?: string;
+};
+
+/* ── Public Sector & Education ───────────────────────────────────────────── */
+
+export type PseAppStep = {
+  label: string;
+  /** done | current | todo | denied. */
+  state?: string;
+  /** Optional short date shown under the step, e.g. "Sep 3". */
+  timeText?: string;
+};
+
+export type PseAppStatusPayload = {
+  title?: string;
+  /** What the application is for, e.g. "Building permit", "Admission application". */
+  applicationType?: string;
+  /** The case/reference id, shown prominently. */
+  referenceNumber?: string;
+  /** submitted | review | approved | issued | denied — drives the tracker + pill. */
+  status?: string;
+  statusLabel?: string;
+  submittedText?: string;
+  updatedText?: string;
+  /** Progress track; derived from status when omitted. */
+  steps?: PseAppStep[];
+  nextActionText?: string;
+  submitText?: string;
+  submitValue?: string;
+};
+
+export type PseProgram = {
+  /** Stable id sent back on selection. */
+  id: string;
+  name: string;
+  /** assistance | education | health | housing | tax | employment | utility — drives the card glyph. */
+  category?: string;
+  detail?: string;
+  /** Short pill, e.g. "Likely eligible". */
+  eligibility?: string;
+  /** Small corner tag, e.g. "Popular". */
+  badge?: string;
+};
+
+export type PseProgramsFinderPayload = {
+  title?: string;
+  subtitle?: string;
+  programs: PseProgram[];
+  /** Confirm-button label; defaults to "Apply for selected". */
+  submitText?: string;
+  submitValue?: string;
+};
+
+export type PseRequestType = {
+  /** Stable id sent back on selection. */
+  id: string;
+  label: string;
+  description?: string;
+  /** road | light | graffiti | trash | water | building | tree | sidewalk | noise | other. */
+  icon?: string;
+};
+
+export type PseServiceRequestPayload = {
+  title?: string;
+  subtitle?: string;
+  /** Optional context banner (address / intersection) above the grid. */
+  locationText?: string;
+  requestTypes: PseRequestType[];
+  submitText?: string;
+  submitValue?: string;
+};
+
+export type PseDocument = {
+  /** Stable id sent back on selection. */
+  id: string;
+  name: string;
+  detail?: string;
+  /** required | received | optional. 'received' → shown checked, not selectable. */
+  status?: string;
+};
+
+export type PseDocsChecklistPayload = {
+  title?: string;
+  subtitle?: string;
+  documents: PseDocument[];
+  submitText?: string;
+  submitValue?: string;
+};
+
 /** The DTO field name a CLT reads, taken from the catalogue row (dtoFieldName). */
 export type CltKind =
   | 'finServAccountSelectorJSON'
@@ -858,7 +1230,19 @@ export type CltKind =
   | 'energyOutageTrackerJSON'
   | 'energyUsageCostJSON'
   | 'energyBudgetBillingJSON'
-  | 'energyRebateOffersJSON';
+  | 'energyRebateOffersJSON'
+  | 'hvacThermostatJSON'
+  | 'hvacTechTrackerJSON'
+  | 'hvacSystemHealthJSON'
+  | 'hvacServicePlanJSON'
+  | 'autoConfiguratorJSON'
+  | 'autoTestDriveJSON'
+  | 'autoVehicleStatusJSON'
+  | 'autoTradeInJSON'
+  | 'pseAppStatusJSON'
+  | 'pseProgramsFinderJSON'
+  | 'pseServiceRequestJSON'
+  | 'pseDocsChecklistJSON';
 
 export function safeParse<T>(json: string): T | null {
   try {

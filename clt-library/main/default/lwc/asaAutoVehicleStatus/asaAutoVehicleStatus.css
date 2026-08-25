@@ -1,0 +1,131 @@
+/* ASA Automotive · Connected Car Status — a self-contained SVG ring gauge
+   (270° arc) for range/charge, a vehicle masthead, a four-corner tire-pressure
+   diagram, a service-item grid, an alerts banner, and a schedule-service CTA.
+   rem units + inherited font so the card matches the host chat theme in ECv2.
+   Racing-red brand accent is the BRAND color (selection/CTA), NOT an error hue —
+   alerts/critical use the deeper --asa-bad crimson so they never blend in. */
+:host {
+    --asa-accent: #dc2626;
+    --asa-line: #e2e8f0;
+    --asa-track: #eef2f6;
+    --asa-ink: #0f172a;
+    --asa-muted: #64748b;
+    --asa-good: #15803d;
+    --asa-warn: #b45309;
+    --asa-bad: #991b1b;
+    --asa-radius: 14px;
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after { box-sizing: border-box; }
+
+.asa-test-badge {
+    margin: 0 0 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 8px;
+    background: #fef2f2;
+    color: #991b1b;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.selector-title { font-size: 1.12rem; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 0.5rem; overflow-wrap: break-word; word-break: normal; }
+
+/* Masthead */
+.asa-vs-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.5rem; }
+.asa-vs-veh { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
+.asa-vs-avatar { flex-shrink: 0; width: 2.3rem; height: 2.3rem; border-radius: 10px; overflow: hidden; background: color-mix(in srgb, var(--asa-accent) 10%, #fff); border: 1px solid color-mix(in srgb, var(--asa-accent) 24%, var(--asa-line)); display: inline-flex; align-items: center; justify-content: center; }
+.asa-vs-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.asa-vs-avatar-fallback { font-size: 0.8rem; font-weight: 750; color: var(--asa-accent); letter-spacing: 0.02em; }
+.asa-vs-veh-text { display: flex; flex-direction: column; gap: 0.05rem; min-width: 0; }
+.asa-vs-veh-name { font-size: 0.98rem; font-weight: 700; letter-spacing: -0.01em; color: var(--asa-ink); overflow-wrap: break-word; word-break: normal; }
+.asa-vs-veh-trim { font-size: 0.7rem; font-weight: 600; color: var(--asa-muted); overflow-wrap: break-word; }
+.asa-vs-updated { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.62rem; font-weight: 650; color: var(--asa-muted); white-space: nowrap; flex-shrink: 0; }
+.asa-vs-live-dot { width: 0.42rem; height: 0.42rem; border-radius: 999px; background: var(--asa-good); box-shadow: 0 0 0 3px color-mix(in srgb, var(--asa-good) 18%, transparent); animation: asaVsBlink 1.6s ease-in-out infinite; }
+
+/* Ring gauge */
+.asa-vs-meter { position: relative; width: 12rem; max-width: 100%; margin: 0.3rem auto 0.1rem; }
+.asa-vs-gauge { display: block; width: 100%; height: auto; }
+.asa-vs-track { fill: none; stroke: var(--asa-track); stroke-width: 11; stroke-linecap: round; }
+.asa-vs-value { fill: none; stroke: var(--asa-accent); stroke-width: 11; stroke-linecap: round; transition: stroke-dasharray 0.6s ease; }
+.asa-vs-gauge.is-warn .asa-vs-value { stroke: var(--asa-warn); }
+.asa-vs-center { position: absolute; top: 46%; left: 0; right: 0; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.05rem; pointer-events: none; }
+.asa-vs-main { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 2rem; font-weight: 780; letter-spacing: -0.03em; line-height: 1; color: var(--asa-ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.asa-vs-unit { font-size: 0.85rem; font-weight: 640; margin-left: 0.12rem; color: var(--asa-muted); }
+.asa-vs-sub { font-size: 0.72rem; font-weight: 600; color: var(--asa-muted); }
+.asa-vs-gauge.is-warn ~ .asa-vs-center .asa-vs-main { color: var(--asa-warn); }
+.asa-vs-subline { margin: 0.1rem 0 0.7rem; text-align: center; font-size: 0.76rem; font-weight: 640; color: var(--asa-muted); overflow-wrap: break-word; font-variant-numeric: tabular-nums; }
+
+/* Four-corner tire diagram — flat, squared, hairline (Energy design language) */
+.asa-vs-tires { display: grid; grid-template-columns: 1fr auto 1fr; grid-template-rows: auto auto; gap: 0.4rem 0.55rem; align-items: center; margin-bottom: 0.7rem; }
+.asa-vs-tire { --st: var(--asa-ink); display: flex; flex-direction: column; align-items: flex-start; gap: 0.05rem; min-width: 0; padding: 0.35rem 0.5rem; border: 1px solid var(--asa-line); border-radius: 6px; background: #fff; }
+.asa-vs-tire.is-fl { grid-column: 1; grid-row: 1; }
+.asa-vs-tire.is-fr { grid-column: 3; grid-row: 1; align-items: flex-end; }
+.asa-vs-tire.is-rl { grid-column: 1; grid-row: 2; }
+.asa-vs-tire.is-rr { grid-column: 3; grid-row: 2; align-items: flex-end; }
+.asa-vs-tire.is-good { --st: var(--asa-ink); }
+.asa-vs-tire.is-watch { --st: var(--asa-warn); }
+.asa-vs-tire.is-bad { --st: var(--asa-bad); background: color-mix(in srgb, var(--asa-bad) 5%, #fff); }
+.asa-vs-tire-pos { font-size: 0.56rem; font-weight: 750; text-transform: uppercase; letter-spacing: 0.06em; color: var(--asa-muted); white-space: nowrap; }
+.asa-vs-tire-psi { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1.02rem; font-weight: 700; color: var(--st); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.asa-vs-tire-unit { font-family: inherit; font-size: 0.6rem; font-weight: 600; margin-left: 0.12rem; color: var(--asa-muted); }
+.asa-vs-car { grid-column: 2; grid-row: 1 / span 2; display: flex; align-items: center; justify-content: center; padding: 0.1rem; color: color-mix(in srgb, var(--asa-ink) 34%, #fff); }
+.asa-vs-car-img { display: block; width: 100%; max-width: 5.5rem; height: auto; object-fit: contain; border-radius: 10px; border: 1px solid var(--asa-line); }
+.asa-vs-car-fallback { width: 2rem; height: 3.2rem; }
+
+/* Service items — one squared hairline ledger panel (Energy design language) */
+.asa-vs-items { border: 1px solid var(--asa-line); border-radius: 6px; overflow: hidden; background: #fff; margin-bottom: 0.65rem; }
+.asa-vs-item { --st: var(--asa-good); display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; padding: 0.5rem 0.72rem; border-top: 1px solid var(--asa-line); min-width: 0; }
+.asa-vs-item:first-child { border-top: 0; }
+.asa-vs-item.is-good { --st: var(--asa-good); }
+.asa-vs-item.is-watch { --st: var(--asa-warn); }
+.asa-vs-item.is-bad { --st: var(--asa-bad); }
+.asa-vs-item-label { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--asa-muted); min-width: 0; overflow-wrap: break-word; }
+.asa-vs-dot { width: 0.44rem; height: 0.44rem; border-radius: 999px; background: var(--st); flex-shrink: 0; }
+.asa-vs-item-value { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.8rem; font-weight: 700; color: var(--asa-ink); text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; flex-shrink: 0; }
+
+/* Alerts — squared hairline row with a left rail (Energy design language) */
+.asa-vs-alerts { list-style: none; margin: 0 0 0.15rem; padding: 0; display: flex; flex-direction: column; gap: 0.35rem; }
+.asa-vs-alert { display: flex; align-items: flex-start; gap: 0.45rem; padding: 0.5rem 0.6rem; border: 1px solid var(--asa-line); border-left: 3px solid var(--asa-warn); border-radius: 6px; background: color-mix(in srgb, var(--asa-warn) 6%, #fff); color: var(--asa-ink); font-size: 0.74rem; line-height: 1.35; }
+.asa-vs-alert svg { width: 0.95rem; height: 0.95rem; flex-shrink: 0; margin-top: 0.06rem; color: var(--asa-warn); }
+.asa-vs-alert-text { min-width: 0; overflow-wrap: break-word; }
+
+.asa-vs-cta {
+    margin-top: 0.65rem;
+    width: 100%;
+    min-height: 2.7rem;
+    padding: 0.6rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    border: 0;
+    border-radius: 11px;
+    background: var(--asa-accent);
+    color: #fff;
+    font-size: 0.84rem;
+    font-weight: 680;
+    cursor: pointer;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--asa-accent) 24%, transparent);
+    transition: filter 0.15s ease;
+}
+.asa-vs-cta:hover { filter: brightness(1.06); }
+.asa-vs-cta svg { width: 1rem; height: 1rem; flex-shrink: 0; }
+
+@keyframes asaVsBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+@container (max-width: 300px) {
+    .asa-vs-meter { width: 10.5rem; }
+    .asa-vs-main { font-size: 1.7rem; }
+    .asa-vs-car-img { max-width: 4.5rem; }
+    .asa-vs-car-fallback { width: 1.7rem; }
+}

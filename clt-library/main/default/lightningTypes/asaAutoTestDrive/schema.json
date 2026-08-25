@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Automotive · Test Drive Scheduler",
+  "description" : "Lets a customer book a test drive by choosing an available day and time slot at a dealership (in showroom or at home).",
+  "lightning:type" : "@apexClassType/c__AsaAutoTestDriveData"
+}

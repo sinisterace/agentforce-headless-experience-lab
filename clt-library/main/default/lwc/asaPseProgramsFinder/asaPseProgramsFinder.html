@@ -1,0 +1,70 @@
+<template>
+    <div class="asa-card">
+        <template if:true={isTestMode}>
+            <p class="asa-test-badge">Sample data — no programs supplied</p>
+        </template>
+
+        <div class="asa-pf-head">
+            <h3 class="selector-title">{title}</h3>
+            <template if:true={hasSubtitle}>
+                <p class="asa-pf-sub">{subtitle}</p>
+            </template>
+        </div>
+
+        <template if:true={hasPrograms}>
+            <div class="asa-pf-list">
+                <template for:each={programs} for:item="p">
+                    <div key={p.key} class={p.cardClass} data-id={p.id} role="button" tabindex="0"
+                         aria-pressed={p.selected} onclick={handleSelect} onkeydown={handleKey}>
+                        <span class={p.iconClass} aria-hidden="true">
+                            <template if:true={p.iAssistance}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path><path d="M3 20a7 7 0 0 1 14 0"></path><path d="m19 7 2 2-2 2"></path></svg>
+                            </template>
+                            <template if:true={p.iEducation}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"></path><path d="M6 12v5c0 1 2.5 3 6 3s6-2 6-3v-5"></path></svg>
+                            </template>
+                            <template if:true={p.iHealth}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.35-9.5-8.5C1 9.5 2.5 6 6 6c2 0 3 1 4 2 1-1 2-2 4-2 3.5 0 5 3.5 3.5 6.5C19 16.65 12 21 12 21Z"></path></svg>
+                            </template>
+                            <template if:true={p.iHousing}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7"></path><path d="M5 9v11h14V9"></path><path d="M10 20v-6h4v6"></path></svg>
+                            </template>
+                            <template if:true={p.iTax}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"></path><path d="M14 2v6h6"></path><path d="m9 15 6-6"></path><path d="M9.5 10.5h.01"></path><path d="M14.5 14.5h.01"></path></svg>
+                            </template>
+                            <template if:true={p.iEmployment}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z"></path><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            </template>
+                            <template if:true={p.iUtility}>
+                                <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"></path></svg>
+                            </template>
+                            <template if:true={p.iOther}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5L12 3Z"></path></svg>
+                            </template>
+                        </span>
+                        <div class="asa-pf-body">
+                            <template if:true={p.hasCategory}>
+                                <span class="asa-pf-cat">{p.categoryLabel}</span>
+                            </template>
+                            <span class="asa-pf-name">{p.name}</span>
+                            <template if:true={p.hasDetail}>
+                                <span class="asa-pf-detail">{p.detail}</span>
+                            </template>
+                            <template if:true={p.hasEligibility}>
+                                <span class="asa-pf-elig">{p.eligibility}</span>
+                            </template>
+                        </div>
+                        <template if:true={p.hasBadge}>
+                            <span class="asa-pf-badge">{p.badge}</span>
+                        </template>
+                        <span class="asa-pf-check" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+                        </span>
+                    </div>
+                </template>
+            </div>
+
+            <button type="button" class="asa-pf-cta" onclick={handleSubmit} disabled={ctaDisabled}>{submitText}</button>
+        </template>
+    </div>
+</template>

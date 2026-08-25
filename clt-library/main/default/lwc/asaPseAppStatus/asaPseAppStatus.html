@@ -1,0 +1,73 @@
+<template>
+    <div class="asa-card">
+        <template if:true={isTestMode}>
+            <p class="asa-test-badge">Sample data — no application supplied</p>
+        </template>
+
+        <template if:true={title}>
+            <h3 class="asa-card-title">{title}</h3>
+        </template>
+
+        <div class={cardClass}>
+            <div class="asa-ast-head">
+                <span class="asa-ast-id-wrap">
+                    <template if:true={referenceNumber}>
+                        <span class="asa-ast-num">{referenceNumber}</span>
+                    </template>
+                    <template if:true={applicationType}>
+                        <span class="asa-ast-type">{applicationType}</span>
+                    </template>
+                </span>
+                <span class={statusClass}>{statusLabel}</span>
+            </div>
+
+            <div class="asa-ast-track">
+                <template for:each={steps} for:item="step">
+                    <span key={step.key} class="asa-ast-step">
+                        <template if:true={step.index}>
+                            <span class={step.barClass} aria-hidden="true"></span>
+                        </template>
+                        <span class="asa-ast-node">
+                            <span class={step.dotClass} aria-hidden="true">
+                                <template if:true={step.isDone}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                                </template>
+                                <template if:true={step.isDenied}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                                </template>
+                            </span>
+                            <span class={step.labelClass}>{step.label}</span>
+                            <template if:true={step.hasTime}>
+                                <span class="asa-ast-step-time">{step.timeText}</span>
+                            </template>
+                        </span>
+                    </span>
+                </template>
+            </div>
+
+            <template if:true={hasNextAction}>
+                <span class="asa-ast-next">
+                    <span class="asa-ast-next-ico" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
+                    </span>
+                    <span class="asa-ast-next-text">{nextActionText}</span>
+                </span>
+            </template>
+
+            <template if:true={hasFoot}>
+                <span class="asa-ast-foot">
+                    <template if:true={submittedText}>
+                        <span class="asa-ast-date">{submittedText}</span>
+                    </template>
+                    <template if:true={updatedText}>
+                        <span class="asa-ast-date">{updatedText}</span>
+                    </template>
+                </span>
+            </template>
+        </div>
+
+        <template if:true={hasSubmit}>
+            <button type="button" class="asa-ast-submit" onclick={handleSubmit}>{submitText}</button>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,169 @@
+/* ASA HVAC · Technician ETA Tracker — a dark field-service dispatch hero
+   (status + headline + ETA/window chips) over a horizontal en-route track,
+   then a technician identity row and a squared hairline job-detail panel.
+   HVAC design language: comfort-blue accent (#0369a1) + cool-slate neutrals,
+   squared 6px geometry + hairline ledger rows. rem units + inherited font so
+   the card matches the host chat theme in Enhanced Chat v2. */
+:host {
+    --asa-accent: #0369a1;
+    --asa-line: #e2e8f0;
+    --asa-ink: #0f172a;
+    --asa-muted: #64748b;
+    --asa-good: #15803d;
+    --asa-warn: #b45309;
+    --asa-bad: #c0392b;
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after { box-sizing: border-box; }
+
+.asa-test-badge {
+    margin: 0 0 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 6px;
+    background: #eff6ff;
+    color: #0369a1;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.selector-title {
+    font-size: 1.12rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.55rem;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* Dispatch hero */
+.asa-tt-hero {
+    --hue: var(--asa-accent);
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+    padding: 0.82rem 0.85rem 0.95rem;
+    background: #0f172a;
+    color: #e8eef6;
+}
+.asa-tt-hero.is-enroute, .asa-tt-hero.is-arriving { --hue: #38bdf8; }
+.asa-tt-hero.is-onsite, .asa-tt-hero.is-complete { --hue: #34d399; }
+.asa-tt-hero.is-scheduled, .asa-tt-hero.is-dispatched { --hue: #7dd3fc; }
+.asa-tt-hero::before {
+    content: '';
+    position: absolute;
+    inset: -40% -30% auto auto;
+    width: 70%;
+    height: 120%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--hue) 42%, transparent), transparent 68%);
+    pointer-events: none;
+}
+.asa-tt-hero-top { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.asa-tt-status { display: inline-flex; align-items: center; gap: 0.36rem; font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; color: var(--hue); }
+.asa-tt-status-dot { width: 0.5rem; height: 0.5rem; border-radius: 999px; background: var(--hue); box-shadow: 0 0 9px var(--hue); flex-shrink: 0; }
+.asa-tt-hero:not(.is-complete):not(.is-onsite) .asa-tt-status-dot { animation: asaTtBlink 1.4s ease-in-out infinite; }
+.asa-tt-updated { font-size: 0.6rem; color: #94a3b8; white-space: nowrap; flex-shrink: 0; }
+.asa-tt-headline { position: relative; margin: 0.5rem 0 0; font-size: 0.92rem; font-weight: 700; line-height: 1.32; overflow-wrap: break-word; }
+
+.asa-tt-chips { position: relative; margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.asa-tt-chip { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.24rem 0.5rem; border-radius: 6px; background: rgba(255, 255, 255, 0.08); color: #cbd5e1; font-size: 0.66rem; font-weight: 650; white-space: nowrap; flex-shrink: 0; }
+.asa-tt-chip svg { width: 0.8rem; height: 0.8rem; flex-shrink: 0; }
+.asa-tt-chip.is-eta { background: color-mix(in srgb, var(--hue) 24%, transparent); color: #fff; }
+.asa-tt-chip.is-eta svg { color: var(--hue); }
+
+/* En-route track */
+.asa-tt-track { position: relative; list-style: none; margin: 0.95rem 0 0; padding: 0; display: flex; }
+.asa-tt-node { flex: 1; min-width: 0; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.3rem; padding: 0 0.12rem; }
+.asa-tt-node::before {
+    content: '';
+    position: absolute;
+    top: 0.52rem;
+    left: -50%;
+    width: 100%;
+    height: 2px;
+    background: #33415a;
+    z-index: 0;
+}
+.asa-tt-node:first-child::before { display: none; }
+.asa-tt-node.is-done::before, .asa-tt-node.is-current::before { background: var(--asa-accent); }
+.asa-tt-node-mark {
+    position: relative;
+    z-index: 1;
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #3b4a63;
+    background: #1a2438;
+    color: transparent;
+}
+.asa-tt-node-mark svg { width: 0.68rem; height: 0.68rem; }
+.asa-tt-node.is-done .asa-tt-node-mark { background: var(--asa-accent); border-color: var(--asa-accent); color: #fff; }
+.asa-tt-node.is-current .asa-tt-node-mark { background: var(--asa-accent); border-color: var(--asa-accent); color: #fff; box-shadow: 0 0 0 4px color-mix(in srgb, var(--asa-accent) 30%, transparent); animation: asaTtPulse 1.8s ease-in-out infinite; }
+.asa-tt-node-label { font-size: 0.6rem; font-weight: 650; line-height: 1.2; color: #d5deeb; overflow-wrap: break-word; word-break: normal; }
+.asa-tt-node.is-todo .asa-tt-node-label { color: #75839a; }
+.asa-tt-node-time { font-size: 0.55rem; font-weight: 600; color: #93a1b8; font-variant-numeric: tabular-nums; }
+
+/* Technician identity row */
+.asa-tt-tech { margin-top: 0.72rem; display: flex; align-items: center; gap: 0.6rem; padding: 0.62rem 0.7rem; border: 1px solid var(--asa-line); border-radius: 12px; background: #fff; }
+.asa-tt-avatar { flex-shrink: 0; width: 2.75rem; height: 2.75rem; border-radius: 999px; overflow: hidden; background: color-mix(in srgb, var(--asa-accent) 12%, #fff); border: 2px solid color-mix(in srgb, var(--asa-accent) 30%, #fff); display: inline-flex; align-items: center; justify-content: center; }
+.asa-tt-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.asa-tt-avatar-fallback { font-size: 0.95rem; font-weight: 750; color: var(--asa-accent); letter-spacing: 0.02em; }
+.asa-tt-tech-body { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; flex: 1; }
+.asa-tt-tech-line { display: flex; align-items: center; gap: 0.45rem; min-width: 0; }
+.asa-tt-tech-name { font-size: 0.92rem; font-weight: 700; color: var(--asa-ink); min-width: 0; overflow-wrap: break-word; }
+.asa-tt-rating { display: inline-flex; align-items: center; gap: 0.18rem; font-size: 0.72rem; font-weight: 700; color: #b45309; white-space: nowrap; flex-shrink: 0; }
+.asa-tt-rating svg { width: 0.8rem; height: 0.8rem; color: #f59e0b; }
+.asa-tt-tech-role { font-size: 0.7rem; font-weight: 600; color: var(--asa-muted); overflow-wrap: break-word; }
+.asa-tt-tech-skills { font-size: 0.68rem; color: var(--asa-muted); overflow-wrap: break-word; }
+
+/* Job-detail panel (squared hairline ledger rows) */
+.asa-tt-info { margin-top: 0.6rem; border: 1px solid var(--asa-line); border-radius: 6px; overflow: hidden; background: #fff; }
+.asa-tt-row { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; padding: 0.5rem 0.72rem; border-top: 1px solid var(--asa-line); }
+.asa-tt-row:first-child { border-top: 0; }
+.asa-tt-row-k { font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--asa-muted); flex-shrink: 0; }
+.asa-tt-row-v { font-size: 0.74rem; font-weight: 600; color: var(--asa-ink); text-align: right; min-width: 0; overflow-wrap: break-word; }
+
+.asa-tt-cta {
+    margin-top: 0.62rem;
+    width: 100%;
+    min-height: 2.7rem;
+    padding: 0.6rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    border: 0;
+    border-radius: 8px;
+    background: var(--asa-accent);
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 680;
+    cursor: pointer;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--asa-accent) 26%, transparent);
+    transition: filter 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.asa-tt-cta:hover { filter: brightness(1.08); }
+.asa-tt-cta svg { width: 1rem; height: 1rem; flex-shrink: 0; }
+.asa-tt-cta.is-ghost { background: #fff; color: var(--asa-accent); border: 1px solid var(--asa-line); box-shadow: none; }
+.asa-tt-cta.is-ghost:hover { filter: none; background: color-mix(in srgb, var(--asa-accent) 6%, #fff); border-color: color-mix(in srgb, var(--asa-accent) 40%, var(--asa-line)); }
+
+@keyframes asaTtBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+@keyframes asaTtPulse { 0%, 100% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--asa-accent) 30%, transparent); } 50% { box-shadow: 0 0 0 7px color-mix(in srgb, var(--asa-accent) 12%, transparent); } }
+
+@container (max-width: 300px) {
+    .asa-tt-node-label { font-size: 0.54rem; }
+    .asa-tt-node-time { display: none; }
+    .asa-tt-avatar { width: 2.4rem; height: 2.4rem; }
+}

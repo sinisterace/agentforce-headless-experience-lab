@@ -1,0 +1,49 @@
+<template>
+    <div class="asa-card">
+        <template if:true={title}>
+            <h3 class="asa-card-title">{title}</h3>
+        </template>
+        <template if:true={hasSubtitle}>
+            <p class="asa-card-sub">{subtitle}</p>
+        </template>
+
+        <template if:true={hasDocs}>
+            <div class="asa-dc-list">
+                <template for:each={documents} for:item="doc">
+                    <button
+                        key={doc.key}
+                        type="button"
+                        class={doc.rowClass}
+                        data-key={doc.key}
+                        data-index={doc.index}
+                        aria-pressed={doc.selected}
+                        disabled={doc.disabled}
+                        onclick={handleToggle}>
+
+                        <span class="asa-dc-ico" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M9 13h6"></path><path d="M9 17h4"></path></svg>
+                        </span>
+
+                        <span class="asa-dc-body">
+                            <span class="asa-dc-name">{doc.name}</span>
+                            <template if:true={doc.hasDetail}>
+                                <span class="asa-dc-detail">{doc.detail}</span>
+                            </template>
+                            <span class="asa-dc-status">
+                                <span class={doc.statusPillClass}>{doc.statusLabel}</span>
+                            </span>
+                        </span>
+
+                        <span class={doc.checkClass} aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                        </span>
+                    </button>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={showSubmit}>
+            <button type="button" class="asa-dc-submit" onclick={handleSubmit}>{submitLabel}</button>
+        </template>
+    </div>
+</template>

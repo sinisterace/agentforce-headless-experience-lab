@@ -1,0 +1,5 @@
+{
+  "title" : "ASA HVAC · Smart Thermostat Control",
+  "description" : "Shows a smart thermostat as a circular climate dial — current temperature, target setpoint, mode (heat/cool/auto/off), and humidity — with mode chips, a target stepper, and quick-set presets the customer can apply.",
+  "lightning:type" : "@apexClassType/c__AsaHvacThermostatData"
+}

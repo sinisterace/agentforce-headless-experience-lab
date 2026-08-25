@@ -1,0 +1,59 @@
+<template>
+    <div class="asa-card">
+        <template if:true={isTestMode}>
+            <p class="asa-test-badge">Sample data — no build supplied</p>
+        </template>
+
+        <div class="asa-cfg-head">
+            <h3 class="selector-title">{title}</h3>
+            <template if:true={hasModel}>
+                <p class="asa-cfg-model">{model}<template if:true={hasBase}> · <span class="asa-cfg-base">{baseText}</span></template></p>
+            </template>
+        </div>
+
+        <template if:true={hasColors}>
+            <div class="asa-cfg-colors">
+                <span class="asa-cfg-group-label">Color<template if:true={colorNameText}> · <span class="asa-cfg-color-name">{colorNameText}</span></template></span>
+                <div class="asa-cfg-swatches">
+                    <template for:each={colorChips} for:item="c">
+                        <button key={c.key} type="button" class={c.chipClass} data-color-id={c.colorId} onclick={handleColor} aria-label={c.label} title={c.label}>
+                            <span class="asa-cfg-swatch-dot" style={c.swatchStyle}></span>
+                        </button>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+        <div class="asa-cfg-groups">
+            <template for:each={groups} for:item="g">
+                <div key={g.id} class="asa-cfg-group">
+                    <span class="asa-cfg-group-label">{g.label}</span>
+                    <div class="asa-cfg-chips">
+                        <template for:each={g.options} for:item="o">
+                            <button key={o.key} type="button" class={o.chipClass} data-group-id={o.groupId} data-option-id={o.optionId} onclick={handleSelect}>
+                                <span class="asa-cfg-chip-main">
+                                    <span class="asa-cfg-chip-label">{o.label}</span>
+                                    <template if:true={o.hasDetail}>
+                                        <span class="asa-cfg-chip-detail">{o.detail}</span>
+                                    </template>
+                                </span>
+                                <span class="asa-cfg-chip-delta">{o.deltaText}</span>
+                            </button>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <div class="asa-cfg-estimate">
+            <span class="asa-cfg-est-label">Estimated price</span>
+            <span class="asa-cfg-est-value">{estimateText}</span>
+            <span class="asa-cfg-est-note">{estimateNote}</span>
+        </div>
+
+        <button type="button" class="asa-cfg-cta" onclick={handleSubmit}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17H3v-6l2-5h9l4 5h3v6h-2"></path><circle cx="7" cy="17" r="2"></circle><circle cx="17" cy="17" r="2"></circle></svg>
+            {submitText}
+        </button>
+    </div>
+</template>

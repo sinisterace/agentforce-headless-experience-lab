@@ -136,6 +136,90 @@ export function startersFor(rec: Recommendation): string[] {
         'Rebate for a smart thermostat',
         'How can I save on upgrades?',
       ];
+    case 'hvacThermostatJSON':
+      return [
+        'Set my thermostat',
+        "What's the temperature at home?",
+        'Turn on the AC',
+        'Adjust my thermostat',
+      ];
+    case 'hvacTechTrackerJSON':
+      return [
+        'Where is my technician?',
+        'When will the technician arrive?',
+        'Track my service visit',
+        'Is my tech on the way?',
+      ];
+    case 'hvacSystemHealthJSON':
+      return [
+        'How is my HVAC system doing?',
+        'Check my system health',
+        'Is my air filter due?',
+        'When is my next maintenance?',
+      ];
+    case 'hvacServicePlanJSON':
+      return [
+        'What maintenance plans do you offer?',
+        'Compare comfort plans',
+        'Tell me about your membership',
+        'How do I enroll in a service plan?',
+      ];
+    case 'autoConfiguratorJSON':
+      return [
+        'Help me build my car',
+        'Configure an electric SUV',
+        'What packages are available?',
+        'Price out a build',
+      ];
+    case 'autoTestDriveJSON':
+      return [
+        'Book a test drive',
+        'Can I test drive the EV this weekend?',
+        'Schedule a test drive at the dealership',
+        'I want to try the car',
+      ];
+    case 'autoVehicleStatusJSON':
+      return [
+        'How is my vehicle doing?',
+        'Check my tire pressure',
+        "What's my range?",
+        'Show my car status',
+      ];
+    case 'autoTradeInJSON':
+      return [
+        "What's my car worth?",
+        'Estimate my trade-in',
+        'Trade in my vehicle',
+        'How much for my trade-in?',
+      ];
+    case 'pseAppStatusJSON':
+      return [
+        'Check my application status',
+        'Where is my permit?',
+        "What's the status of my application?",
+        'Track my case',
+      ];
+    case 'pseProgramsFinderJSON':
+      return [
+        'What programs do I qualify for?',
+        'Find benefits & assistance',
+        'Are there grants or scholarships?',
+        'What help is available?',
+      ];
+    case 'pseServiceRequestJSON':
+      return [
+        'Report a pothole',
+        'Report a problem',
+        'A streetlight is out',
+        'File a service request',
+      ];
+    case 'pseDocsChecklistJSON':
+      return [
+        'What documents do I need?',
+        'Show my required documents',
+        'What do I need to apply?',
+        'Document checklist',
+      ];
     default: // finServAccountSelectorJSON
       return [
         'Which of my accounts can you see?',
@@ -185,6 +269,30 @@ export function leadFor(rec: Recommendation, company: string): string {
       return `Here's how ${company} Budget Billing would smooth out your monthly payment:`;
     case 'energyRebateOffersJSON':
       return `Here are the ${company} rebates you qualify for — tap one to apply:`;
+    case 'hvacThermostatJSON':
+      return `Here's your ${company} thermostat — set the temperature and mode you'd like:`;
+    case 'hvacTechTrackerJSON':
+      return `Here's where your ${company} technician is right now:`;
+    case 'hvacSystemHealthJSON':
+      return `Here's the latest ${company} checkup on your comfort system:`;
+    case 'hvacServicePlanJSON':
+      return `Here are the ${company} maintenance plans — compare them and pick one to enroll:`;
+    case 'autoConfiguratorJSON':
+      return `Let's build your ${company} vehicle — pick your color and options and I'll price it out:`;
+    case 'autoTestDriveJSON':
+      return `Let's get you behind the wheel at ${company}. Pick a day and time for your test drive:`;
+    case 'autoVehicleStatusJSON':
+      return `Here's the latest status from your ${company} vehicle:`;
+    case 'autoTradeInJSON':
+      return `Here's your ${company} trade-in estimate:`;
+    case 'pseAppStatusJSON':
+      return `Here's the latest status of your ${company} application:`;
+    case 'pseProgramsFinderJSON':
+      return `Here are ${company} programs and benefits you may qualify for — tap one to apply:`;
+    case 'pseServiceRequestJSON':
+      return `Let's get that reported to ${company}. What would you like to report?`;
+    case 'pseDocsChecklistJSON':
+      return `Here's what you'll need for your ${company} application — select the documents to upload:`;
     default: // finServAccountSelectorJSON
       return `Happy to help with your ${company} accounts. Which one would you like to use?`;
   }
@@ -229,6 +337,30 @@ export function invokingLabelFor(rec: Recommendation): string {
       return 'Building your Budget Billing plan';
     case 'energyRebateOffersJSON':
       return 'Finding rebates you qualify for';
+    case 'hvacThermostatJSON':
+      return 'Connecting to your thermostat';
+    case 'hvacTechTrackerJSON':
+      return 'Locating your technician';
+    case 'hvacSystemHealthJSON':
+      return 'Checking your system health';
+    case 'hvacServicePlanJSON':
+      return 'Pulling up maintenance plans';
+    case 'autoConfiguratorJSON':
+      return 'Building your configuration';
+    case 'autoTestDriveJSON':
+      return 'Finding test drive times';
+    case 'autoVehicleStatusJSON':
+      return 'Checking your vehicle';
+    case 'autoTradeInJSON':
+      return 'Estimating your trade-in';
+    case 'pseAppStatusJSON':
+      return 'Checking your application status';
+    case 'pseProgramsFinderJSON':
+      return 'Finding programs you qualify for';
+    case 'pseServiceRequestJSON':
+      return 'Starting your service request';
+    case 'pseDocsChecklistJSON':
+      return 'Pulling up your document checklist';
     default: // finServAccountSelectorJSON
       return 'Pulling up your accounts';
   }

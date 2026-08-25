@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Registers the Flow as an Agentforce action. Deploying this makes the action
+  appear in Agent Builder's "All Actions" picker (search by masterLabel).
+  invocationTarget must equal the Flow's API name.
+-->
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Use this when the customer asks what documents they need for an application, permit, benefit, or enrollment, or wants to upload documents. Shows a checklist of the required, optional, and already-received documents, and lets them pick which to upload.</description>
+    <invocationTarget>asaPseDocsChecklist_Output_a9f6</invocationTarget>
+    <invocationTargetType>flow</invocationTargetType>
+    <isConfirmationRequired>false</isConfirmationRequired>
+    <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+    <masterLabel>ASA Public Sector &amp; Education · Documents Checklist</masterLabel>
+    <progressIndicatorMessage>Putting together your documents checklist</progressIndicatorMessage>
+</GenAiFunction>

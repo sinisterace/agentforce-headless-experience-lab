@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>ASA HVAC · Service Plan Selector</masterLabel>
+    <description>Shows annual HVAC maintenance membership tiers as price-forward plan cards with a feature checklist, and lets the customer enroll in one.</description>
+    <targets>
+        <target>lightning__AgentforceOutput</target>
+        <target>lightningSnapin__ChatMessage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AgentforceOutput">
+            <sourceType name="c__asaHvacServicePlan"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

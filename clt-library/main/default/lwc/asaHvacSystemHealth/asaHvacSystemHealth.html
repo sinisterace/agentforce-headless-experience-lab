@@ -1,0 +1,85 @@
+<template>
+    <div class="asa-card">
+        <template if:true={isTestMode}>
+            <p class="asa-test-badge">Sample data — no score supplied</p>
+        </template>
+
+        <div class="asa-sh-head">
+            <h3 class="selector-title">{title}</h3>
+            <template if:true={hasUpdated}>
+                <span class="asa-sh-updated">{updatedText}</span>
+            </template>
+        </div>
+
+        <!-- Comfort score radial gauge -->
+        <div class="asa-sh-meter">
+            <svg class={gaugeClass} viewBox="0 0 120 120" role="img" aria-label="Comfort health score">
+                <circle class="asa-sh-track" cx="60" cy="60" r="52" pathLength="100"
+                    stroke-dasharray={trackDash} transform="rotate(135 60 60)"></circle>
+                <circle class="asa-sh-value" cx="60" cy="60" r="52" pathLength="100"
+                    stroke-dasharray={valueDash} transform="rotate(135 60 60)"></circle>
+            </svg>
+            <div class="asa-sh-center">
+                <span class="asa-sh-score">{scoreValue}</span>
+                <span class="asa-sh-score-label">{scoreLabel}</span>
+            </div>
+        </div>
+
+        <template if:true={hasStatus}>
+            <p class="asa-sh-status">{statusText}</p>
+        </template>
+
+        <!-- Per-system status rows -->
+        <template if:true={hasSystems}>
+            <ul class="asa-sh-systems">
+                <template for:each={systems} for:item="s">
+                    <li key={s.key} class={s.rowClass}>
+                        <span class="asa-sh-sys-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d={s.iconPath}></path></svg>
+                        </span>
+                        <span class="asa-sh-sys-text">
+                            <span class="asa-sh-sys-label">{s.label}</span>
+                            <template if:true={s.hasDetail}>
+                                <span class="asa-sh-sys-detail">{s.detail}</span>
+                            </template>
+                        </span>
+                        <span class={s.pillClass}>{s.statusLabel}</span>
+                    </li>
+                </template>
+            </ul>
+        </template>
+
+        <!-- Filter-life bar -->
+        <template if:true={hasFilter}>
+            <div class={filterClass}>
+                <div class="asa-sh-filter-top">
+                    <span class="asa-sh-filter-label">{filterLabel}</span>
+                    <span class="asa-sh-filter-pct">{filterPctLabel}</span>
+                </div>
+                <div class="asa-sh-filter-bar"><span class="asa-sh-filter-fill" style={filterBarStyle}></span></div>
+                <span class="asa-sh-filter-cap">{filterCaption}</span>
+            </div>
+        </template>
+
+        <!-- Next-service + recommendation callouts -->
+        <template if:true={hasNextService}>
+            <div class="asa-sh-callout is-schedule">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>
+                <span>{nextServiceText}</span>
+            </div>
+        </template>
+        <template if:true={hasRecommendation}>
+            <div class="asa-sh-callout is-rec">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7c.6.5.9 1.2 1 1.9h6c.1-.7.4-1.4 1-1.9A7 7 0 0 0 12 2Z"></path></svg>
+                <span>{recommendationText}</span>
+            </div>
+        </template>
+
+        <template if:true={hasSubmit}>
+            <button type="button" class="asa-sh-cta" onclick={handleSubmit}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18M9 16l2 2 4-4"></path></svg>
+                {submitText}
+            </button>
+        </template>
+    </div>
+</template>

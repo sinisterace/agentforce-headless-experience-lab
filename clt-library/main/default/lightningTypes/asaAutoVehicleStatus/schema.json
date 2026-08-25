@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Automotive · Connected Car Status",
+  "description" : "Shows a connected vehicle's live status — driving range or fuel/charge as a ring gauge, odometer, a four-corner tire-pressure diagram, service items, and alerts — with a schedule-service action.",
+  "lightning:type" : "@apexClassType/c__AsaAutoVehicleStatusData"
+}

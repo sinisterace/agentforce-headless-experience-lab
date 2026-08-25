@@ -51,6 +51,16 @@
                 <default>false</default>
                 <label>HVAC</label>
             </value>
+            <value>
+                <fullName>automotive</fullName>
+                <default>false</default>
+                <label>Automotive</label>
+            </value>
+            <value>
+                <fullName>public_sector</fullName>
+                <default>false</default>
+                <label>Public Sector &amp; Education</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

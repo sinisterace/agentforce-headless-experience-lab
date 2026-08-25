@@ -451,6 +451,220 @@ function sampleFor(kind: CltKind): Record<string, unknown> {
         submitText: 'Apply for rebate',
         submitValue: 'Apply for the rebate',
       };
+    case 'hvacThermostatJSON':
+      return {
+        title: 'Living room thermostat',
+        currentTemp: 71,
+        targetTemp: 72,
+        mode: 'cool',
+        unit: 'F',
+        humidity: 44,
+        statusText: 'Cooling to 72°',
+        minTemp: 50,
+        maxTemp: 90,
+        presets: [
+          { id: 'eco', label: 'Eco', targetTemp: 78, mode: 'cool' },
+          { id: 'comfort', label: 'Comfort', targetTemp: 72, mode: 'cool' },
+          { id: 'away', label: 'Away', targetTemp: 82, mode: 'off' },
+          { id: 'sleep', label: 'Sleep', targetTemp: 68, mode: 'cool' },
+        ],
+        submitText: 'Set thermostat',
+        submitValue: 'Set my thermostat',
+      };
+    case 'hvacTechTrackerJSON':
+      return {
+        title: 'Your technician is on the way',
+        status: 'enroute',
+        headline: 'Marcus is heading to your home',
+        etaText: 'Arriving in ~15 min',
+        windowText: 'Arrival window 1:00–3:00 PM',
+        updatedText: 'Updated 1 min ago',
+        technician: { name: 'Marcus Reed', role: 'Senior HVAC Technician', rating: 4.9, initials: 'MR', skills: 'AC repair · Heat pumps' },
+        job: { number: 'WO-48213', type: 'AC not cooling', address: '128 Maple Ave' },
+        steps: [
+          { label: 'Scheduled', state: 'done', timeText: '9:00 AM' },
+          { label: 'Dispatched', state: 'done', timeText: '12:40 PM' },
+          { label: 'En route', state: 'current', timeText: '1:05 PM' },
+          { label: 'Arriving', state: 'todo' },
+          { label: 'On site', state: 'todo' },
+        ],
+        submitText: 'Message technician',
+        submitValue: "I'd like to message my technician",
+        secondaryText: 'Reschedule visit',
+        secondaryValue: "I'd like to reschedule my service visit",
+      };
+    case 'hvacSystemHealthJSON':
+      return {
+        title: 'Your comfort system checkup',
+        score: 82,
+        scoreLabel: 'Good',
+        statusText: 'One item needs attention soon',
+        updatedText: 'Checked today',
+        systems: [
+          { label: 'Furnace', status: 'good', detail: 'Operating normally', icon: 'furnace' },
+          { label: 'AC condenser', status: 'watch', detail: 'Coil could use a cleaning', icon: 'ac' },
+          { label: 'Thermostat', status: 'good', detail: 'Firmware up to date', icon: 'thermostat' },
+          { label: 'Air filter', status: 'due', detail: 'Replace within a week', icon: 'filter' },
+        ],
+        filter: { lifePct: 18, daysLeft: 6, label: '20×25×1 filter' },
+        nextServiceText: 'Next maintenance due Nov 3',
+        recommendationText: 'Book a tune-up to clean the AC coil before summer.',
+        submitText: 'Book maintenance',
+        submitValue: "I'd like to book a maintenance visit",
+      };
+    case 'hvacServicePlanJSON':
+      return {
+        title: 'Choose a comfort plan',
+        subtitle: 'Annual maintenance memberships that keep your system running',
+        currency: 'USD',
+        cadence: 'yr',
+        currentPlanId: 'basic',
+        plans: [
+          { id: 'basic', name: 'Comfort Basic', price: 149, tagline: 'Seasonal peace of mind', features: ['1 annual tune-up', 'Priority scheduling', '10% off repairs'] },
+          { id: 'plus', name: 'Comfort Plus', price: 249, tagline: 'Most popular', badge: 'Most popular', recommended: true, features: ['2 tune-ups (heating + cooling)', 'Priority scheduling', '15% off repairs', 'No overtime fees', 'Filter delivery'] },
+          { id: 'total', name: 'Comfort Total', price: 399, tagline: 'Total protection', features: ['2 tune-ups + mid-season check', '24/7 priority dispatch', '20% off repairs', 'Free diagnostics', 'Extended parts warranty'] },
+        ],
+        submitText: 'Enroll in plan',
+      };
+    case 'autoConfiguratorJSON':
+      return {
+        title: 'Build your electric SUV',
+        model: 'Electric SUV',
+        currency: 'USD',
+        basePrice: 41990,
+        colors: [
+          { id: 'white', label: 'Glacier White', hex: '#f3f4f6', priceDelta: 0 },
+          { id: 'black', label: 'Midnight Black', hex: '#111827' },
+          { id: 'red', label: 'Radiant Red', hex: '#dc2626', priceDelta: 595, selected: true },
+        ],
+        optionGroups: [
+          { id: 'trim', label: 'Trim', selectedId: 'rs', options: [{ id: 'lt', label: 'LT', priceDelta: 0 }, { id: 'rs', label: 'RS', priceDelta: 3200, detail: 'Sport-tuned' }] },
+          { id: 'drive', label: 'Drivetrain', selectedId: 'awd', options: [{ id: 'fwd', label: 'FWD', priceDelta: 0 }, { id: 'awd', label: 'AWD', priceDelta: 2500 }] },
+          { id: 'pkg', label: 'Packages', selectedId: 'tech', options: [{ id: 'none', label: 'None', priceDelta: 0 }, { id: 'tech', label: 'Technology Package', priceDelta: 1800, detail: 'Adaptive cruise, HUD' }] },
+        ],
+        submitText: 'Reserve this build',
+        submitValue: "I'd like to reserve this configuration",
+      };
+    case 'autoTestDriveJSON':
+      return {
+        title: 'Book a test drive',
+        vehicle: { name: 'Electric SUV', trim: 'RS AWD · Radiant Red', imageUrl: '', initials: 'EV' },
+        location: { name: 'Downtown Dealership', address: '500 Market St, San Francisco' },
+        days: [
+          { date: '2026-09-16', slots: [{ id: 'a', time: '09:30', driveType: 'showroom' }, { id: 'b', time: '13:00', driveType: 'at_home' }] },
+          { date: '2026-09-17', slots: [{ id: 'c', time: '10:00', driveType: 'showroom' }, { id: 'd', time: '15:30', driveType: 'showroom' }] },
+          { date: '2026-09-18', slots: [{ id: 'e', time: '11:00', driveType: 'at_home' }, { id: 'f', time: '16:00', driveType: 'showroom' }] },
+          { date: '2026-09-21', slots: [{ id: 'g', time: '09:00', driveType: 'showroom' }, { id: 'h', time: '14:00', driveType: 'at_home' }] },
+          { date: '2026-09-22', slots: [{ id: 'i', time: '10:30', driveType: 'showroom' }, { id: 'j', time: '17:00', driveType: 'showroom' }] },
+        ],
+        submitText: 'Book test drive',
+      };
+    case 'autoVehicleStatusJSON':
+      return {
+        title: 'Your vehicle',
+        vehicle: { name: 'Electric SUV', trim: 'RS AWD', imageUrl: '', initials: 'EV' },
+        isElectric: true,
+        range: { value: 248, total: 312, unit: 'mi' },
+        battery: 78,
+        odometer: 18452,
+        odometerUnit: 'mi',
+        tires: [
+          { pos: 'FL', psi: 34, status: 'good' },
+          { pos: 'FR', psi: 33, status: 'good' },
+          { pos: 'RL', psi: 28, status: 'low' },
+          { pos: 'RR', psi: 35, status: 'good' },
+        ],
+        items: [
+          { label: 'Charge', value: '78%', status: 'good' },
+          { label: 'Next service', value: 'in 1,200 mi', status: 'good' },
+          { label: 'Oil life', value: 'N/A', status: 'good' },
+          { label: 'Tire pressure', value: '1 low', status: 'watch' },
+        ],
+        alerts: ['Rear-left tire pressure is low (28 psi)'],
+        updatedText: 'Updated 3 min ago',
+        submitText: 'Schedule service',
+        submitValue: "I'd like to schedule service for my vehicle",
+      };
+    case 'autoTradeInJSON':
+      return {
+        title: 'Your trade-in estimate',
+        vehicle: { name: '2021 Midsize SUV', detail: '42,300 mi · Good condition', initials: 'SV' },
+        currency: 'USD',
+        estimate: 18400,
+        low: 16900,
+        high: 19800,
+        offerText: 'Instant offer good for 7 days',
+        factors: [
+          { label: 'Mileage', detail: '42,300 mi — below average', impact: 'positive' },
+          { label: 'Condition', detail: 'Good', impact: 'neutral' },
+          { label: 'Market demand', detail: 'High for this trim', impact: 'positive' },
+        ],
+        submitText: 'Apply to a purchase',
+        submitValue: "I'd like to apply my trade-in toward a purchase",
+        secondaryText: 'Book an appraisal',
+        secondaryValue: "I'd like to book an in-person appraisal",
+      };
+    case 'pseAppStatusJSON':
+      return {
+        title: 'Your application status',
+        applicationType: 'Building permit',
+        referenceNumber: 'APP-2026-1043',
+        status: 'review',
+        statusLabel: 'Under review',
+        submittedText: 'Submitted Sep 3',
+        updatedText: 'Updated 2 days ago',
+        steps: [
+          { label: 'Submitted', state: 'done', timeText: 'Sep 3' },
+          { label: 'Under review', state: 'current' },
+          { label: 'Approved', state: 'todo' },
+          { label: 'Issued', state: 'todo' },
+        ],
+        nextActionText: 'We may request additional documents — no action needed right now.',
+        submitText: 'Message the office',
+        submitValue: "I'd like to message the office about my application",
+      };
+    case 'pseProgramsFinderJSON':
+      return {
+        title: 'Programs & benefits you may qualify for',
+        subtitle: "Based on what you've told us",
+        programs: [
+          { id: 'snap', name: 'Food assistance (SNAP)', category: 'assistance', detail: 'Monthly grocery benefits', eligibility: 'Likely eligible', badge: 'Popular' },
+          { id: 'liheap', name: 'Energy bill relief (LIHEAP)', category: 'utility', detail: 'Help with heating & cooling costs', eligibility: 'May be eligible' },
+          { id: 'grant', name: 'State tuition grant', category: 'education', detail: 'Up to $4,000/yr for residents', eligibility: 'Likely eligible' },
+          { id: 'childcare', name: 'Childcare subsidy', category: 'assistance', detail: 'Sliding-scale childcare help' },
+        ],
+        submitText: 'Apply for selected',
+        submitValue: "I'd like to apply for the selected program",
+      };
+    case 'pseServiceRequestJSON':
+      return {
+        title: 'Report a problem',
+        subtitle: "Choose what you'd like to report",
+        locationText: 'Near 123 Main St',
+        requestTypes: [
+          { id: 'pothole', label: 'Pothole / road', description: 'Damaged road or pavement', icon: 'road' },
+          { id: 'streetlight', label: 'Streetlight out', description: 'Broken or flickering light', icon: 'light' },
+          { id: 'graffiti', label: 'Graffiti', description: 'Vandalism or tagging', icon: 'graffiti' },
+          { id: 'trash', label: 'Trash / dumping', description: 'Missed pickup or illegal dumping', icon: 'trash' },
+          { id: 'water', label: 'Water / leak', description: 'Leak, flooding, or hydrant', icon: 'water' },
+          { id: 'facility', label: 'Facilities', description: 'Building or campus maintenance', icon: 'building' },
+        ],
+        submitText: 'Start report',
+        submitValue: "I'd like to report a",
+      };
+    case 'pseDocsChecklistJSON':
+      return {
+        title: "Documents you'll need",
+        subtitle: 'For your building permit application',
+        documents: [
+          { id: 'id', name: 'Government-issued ID', detail: "Driver's license or passport", status: 'received' },
+          { id: 'proof', name: 'Proof of residency', detail: 'Utility bill within 60 days', status: 'required' },
+          { id: 'site', name: 'Site plan', detail: 'PDF, drawn to scale', status: 'required' },
+          { id: 'insurance', name: 'Contractor insurance', detail: 'Only if using a contractor', status: 'optional' },
+        ],
+        submitText: 'Upload selected',
+        submitValue: "I'd like to upload the selected documents",
+      };
     default: // finServAccountSelectorJSON
       return {
         title: 'Which account can I help you with?',
@@ -560,7 +774,31 @@ export default function CltHarness() {
                                                           ? 'budget_billing'
                                                           : kind === 'energyRebateOffersJSON'
                                                             ? 'rebate_offers'
-                                                            : 'account_selector',
+                                                            : kind === 'hvacThermostatJSON'
+                                                              ? 'thermostat_control'
+                                                              : kind === 'hvacTechTrackerJSON'
+                                                                ? 'tech_tracker'
+                                                                : kind === 'hvacSystemHealthJSON'
+                                                                  ? 'system_health'
+                                                                  : kind === 'hvacServicePlanJSON'
+                                                                    ? 'service_plan'
+                                                                    : kind === 'autoConfiguratorJSON'
+                                                                      ? 'vehicle_configurator'
+                                                                      : kind === 'autoTestDriveJSON'
+                                                                        ? 'test_drive'
+                                                                        : kind === 'autoVehicleStatusJSON'
+                                                                          ? 'vehicle_status'
+                                                                          : kind === 'autoTradeInJSON'
+                                                                            ? 'trade_in'
+                                                                            : kind === 'pseAppStatusJSON'
+                                                                              ? 'application_status'
+                                                                              : kind === 'pseProgramsFinderJSON'
+                                                                                ? 'programs_finder'
+                                                                                : kind === 'pseServiceRequestJSON'
+                                                                                  ? 'service_request'
+                                                                                  : kind === 'pseDocsChecklistJSON'
+                                                                                    ? 'documents_checklist'
+                                                                                    : 'account_selector',
       label: WIDGET_REGISTRY[kind].label,
       description: 'Dev-harness preview',
       displayOrder: 0,

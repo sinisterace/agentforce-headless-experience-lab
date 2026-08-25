@@ -1,0 +1,16 @@
+{
+  "required": [
+    "Details"
+  ],
+  "unevaluatedProperties": false,
+  "properties": {
+    "Details": {
+      "title": "Details",
+      "description": "The full service-request payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Report a problem\",\"subtitle\":\"Choose what you'd like to report\",\"locationText\":\"Near 123 Main St\",\"requestTypes\":[{\"id\":\"pothole\",\"label\":\"Pothole / road\",\"description\":\"Damaged road or pavement\",\"icon\":\"road\"},{\"id\":\"streetlight\",\"label\":\"Streetlight out\",\"description\":\"Broken or flickering light\",\"icon\":\"light\"},{\"id\":\"graffiti\",\"label\":\"Graffiti\",\"description\":\"Vandalism or tagging\",\"icon\":\"graffiti\"},{\"id\":\"trash\",\"label\":\"Trash / dumping\",\"description\":\"Missed pickup or illegal dumping\",\"icon\":\"trash\"},{\"id\":\"water\",\"label\":\"Water / leak\",\"description\":\"Leak, flooding, or hydrant\",\"icon\":\"water\"},{\"id\":\"facility\",\"label\":\"Facilities\",\"description\":\"Building or campus maintenance\",\"icon\":\"building\"}],\"submitText\":\"Start report\",\"submitValue\":\"I'd like to report a\"}\n\nRules:\n- 'title' (string, optional): the prompt shown at the top of the card. Defaults to 'Report a problem'.\n- 'subtitle' (string, optional): one short line under the title.\n- 'locationText' (string, optional): the place the report is about (e.g. an address or intersection), shown as a context banner above the grid. Include it whenever the location is known.\n- 'requestTypes' (array, REQUIRED, at least two objects): the kinds of problem the person can choose from. Each MUST have 'id' (string, unique, sent back on selection) and 'label' (string, short). Optional: 'description' (string, one short line under the label) and 'icon' (string; one of 'road','light','graffiti','trash','water','building','tree','sidewalk','noise','other' — drives the tile icon; defaults to 'other'). Choose request types that fit the agency or campus (e.g. road/light/graffiti/trash/water for a city 311; building/water/light/other for campus facilities).\n- 'submitText' (string, optional): the confirm-button label; defaults to 'Start report'.\n- 'submitValue' (string, optional): a base message; the card appends the chosen request label and id when sending back. Defaults to \"I'd like to report a\".\n\nNever emit fewer than two request types. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type": "lightning__textType",
+      "lightning:isPII": false,
+      "copilotAction:isUserInput": false
+    }
+  },
+  "lightning:type": "lightning__objectType"
+}

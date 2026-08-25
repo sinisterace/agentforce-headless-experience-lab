@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Public Sector & Education · Programs & Benefits Finder",
+  "description" : "Shows public programs, benefits, and scholarships a resident or student may qualify for as selectable cards, each with an eligibility note, and an apply action.",
+  "lightning:type" : "@apexClassType/c__AsaPseProgramsFinderData"
+}

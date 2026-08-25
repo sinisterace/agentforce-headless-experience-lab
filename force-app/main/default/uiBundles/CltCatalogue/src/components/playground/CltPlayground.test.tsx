@@ -362,3 +362,177 @@ describe('CltPlayground — Energy & Utilities', () => {
     expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
   });
 });
+
+describe('CltPlayground — HVAC', () => {
+  it('renders the thermostat preview for hvacThermostatJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaHvacThermostat', industryKey: 'hvac', capabilityKey: 'thermostat_control',
+          dtoFieldName: 'hvacThermostatJSON', label: 'Smart Thermostat Control',
+          defaultPayloadJson: JSON.stringify({ title: 'Thermostat' }),
+        })}
+        accentColor="#0369a1"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+
+  it('renders the tech-tracker preview for hvacTechTrackerJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaHvacTechTracker', industryKey: 'hvac', capabilityKey: 'tech_tracker',
+          dtoFieldName: 'hvacTechTrackerJSON', label: 'Technician ETA Tracker',
+          defaultPayloadJson: JSON.stringify({ title: 'Your technician is on the way', steps: [] }),
+        })}
+        accentColor="#0369a1"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+
+  it('renders the system-health preview for hvacSystemHealthJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaHvacSystemHealth', industryKey: 'hvac', capabilityKey: 'system_health',
+          dtoFieldName: 'hvacSystemHealthJSON', label: 'Comfort System Health Report',
+          defaultPayloadJson: JSON.stringify({ title: 'Your comfort system checkup', systems: [] }),
+        })}
+        accentColor="#0369a1"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+
+  it('renders the service-plan preview for hvacServicePlanJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaHvacServicePlan', industryKey: 'hvac', capabilityKey: 'service_plan',
+          dtoFieldName: 'hvacServicePlanJSON', label: 'Service Plan Selector',
+          defaultPayloadJson: JSON.stringify({ title: 'Choose a comfort plan', plans: [] }),
+        })}
+        accentColor="#0369a1"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+});
+
+describe('CltPlayground — Automotive', () => {
+  it('renders the configurator preview for autoConfiguratorJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaAutoConfigurator', industryKey: 'automotive', capabilityKey: 'vehicle_configurator',
+          dtoFieldName: 'autoConfiguratorJSON', label: 'Vehicle Configurator',
+          defaultPayloadJson: JSON.stringify({ title: 'Build your vehicle', optionGroups: [] }),
+        })}
+        accentColor="#dc2626"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+
+  it('renders the test-drive preview for autoTestDriveJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaAutoTestDrive', industryKey: 'automotive', capabilityKey: 'test_drive',
+          dtoFieldName: 'autoTestDriveJSON', label: 'Test Drive Scheduler',
+          defaultPayloadJson: JSON.stringify({ title: 'Book a test drive', vehicle: { name: '' }, days: [] }),
+        })}
+        accentColor="#dc2626"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+
+  it('renders the vehicle-status preview for autoVehicleStatusJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaAutoVehicleStatus', industryKey: 'automotive', capabilityKey: 'vehicle_status',
+          dtoFieldName: 'autoVehicleStatusJSON', label: 'Connected Car Status',
+          defaultPayloadJson: JSON.stringify({ title: 'Your vehicle', tires: [], items: [] }),
+        })}
+        accentColor="#dc2626"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+
+  it('renders the trade-in preview for autoTradeInJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaAutoTradeIn', industryKey: 'automotive', capabilityKey: 'trade_in',
+          dtoFieldName: 'autoTradeInJSON', label: 'Trade-In Estimator',
+          defaultPayloadJson: JSON.stringify({ title: 'Your trade-in estimate', factors: [] }),
+        })}
+        accentColor="#dc2626"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+});
+
+describe('CltPlayground — Public Sector & Education', () => {
+  it('renders the application-status preview for pseAppStatusJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaPseAppStatus', industryKey: 'public_sector', capabilityKey: 'application_status',
+          dtoFieldName: 'pseAppStatusJSON', label: 'Application Status Tracker',
+          defaultPayloadJson: JSON.stringify({ title: 'Your application status', steps: [] }),
+        })}
+        accentColor="#1e3a8a"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+
+  it('renders the programs-finder preview for pseProgramsFinderJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaPseProgramsFinder', industryKey: 'public_sector', capabilityKey: 'programs_finder',
+          dtoFieldName: 'pseProgramsFinderJSON', label: 'Programs & Benefits Finder',
+          defaultPayloadJson: JSON.stringify({ title: 'Programs & benefits', programs: [] }),
+        })}
+        accentColor="#1e3a8a"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+
+  it('renders the service-request preview for pseServiceRequestJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaPseServiceRequest', industryKey: 'public_sector', capabilityKey: 'service_request',
+          dtoFieldName: 'pseServiceRequestJSON', label: 'Service Request',
+          defaultPayloadJson: JSON.stringify({ title: 'Report a problem', requestTypes: [] }),
+        })}
+        accentColor="#1e3a8a"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+
+  it('renders the documents-checklist preview for pseDocsChecklistJSON', () => {
+    render(
+      <CltPlayground
+        recommendation={rec({
+          cltApiName: 'asaPseDocsChecklist', industryKey: 'public_sector', capabilityKey: 'documents_checklist',
+          dtoFieldName: 'pseDocsChecklistJSON', label: 'Documents Checklist',
+          defaultPayloadJson: JSON.stringify({ title: "Documents you'll need", documents: [] }),
+        })}
+        accentColor="#1e3a8a"
+      />
+    );
+    expect(screen.getByText(/Test mode/i)).toBeInTheDocument();
+  });
+});
