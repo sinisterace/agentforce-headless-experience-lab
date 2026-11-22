@@ -1,0 +1,15 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "Not used — the pipeline is retrieved live for the running user. Pass an empty string.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType",
+  "lightning:textIndexed" : true
+}

@@ -1,0 +1,14 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full rebate-offers payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Rebates you qualify for\",\"subtitle\":\"Save on energy-efficient upgrades\",\"currency\":\"USD\",\"offers\":[{\"id\":\"thermostat\",\"name\":\"Smart thermostat\",\"category\":\"thermostat\",\"rebateAmount\":75,\"detail\":\"ENERGY STAR models\",\"badge\":\"Popular\"},{\"id\":\"heatpump\",\"name\":\"Heat pump HVAC\",\"category\":\"heat_pump\",\"rebateAmount\":1200,\"detail\":\"Whole-home system\"},{\"id\":\"evcharger\",\"name\":\"Level 2 EV charger\",\"category\":\"ev_charger\",\"rebateAmount\":500,\"detail\":\"Install included\"},{\"id\":\"insulation\",\"name\":\"Attic insulation\",\"category\":\"insulation\",\"rebateAmount\":350,\"detail\":\"Up to R-49\"}],\"submitText\":\"Apply for rebate\",\"submitValue\":\"Apply for the rebate\"}\n\nRules:\n- 'title' (string, optional): heading. Defaults to 'Rebates you qualify for'.\n- 'subtitle' (string, optional): one short line under the title.\n- 'currency' (string, optional): ISO code, default USD.\n- 'offers' (array, REQUIRED): each { 'id' (string, REQUIRED — sent back on selection); 'name' (string, REQUIRED); 'category' (string, optional — one of thermostat | hvac | heat_pump | ev_charger | solar | insulation | water_heater | appliance; drives the tile glyph); 'rebateAmount' (number, optional — shown large in the voucher stub); 'detail' (string, optional — one short line); 'badge' (string, optional — small corner tag e.g. 'Popular') }.\n- 'submitText' (string, optional): confirm-button label; defaults to 'Apply for rebate'. The customer taps a voucher to select it, then this button applies.\n- 'submitValue' (string, optional): a base message; the card appends the chosen offer name when sending back.\n\nUse these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

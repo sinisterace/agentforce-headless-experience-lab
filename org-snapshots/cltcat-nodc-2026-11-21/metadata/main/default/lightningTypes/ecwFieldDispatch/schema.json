@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · Service · Field dispatch",
+  "description" : "An at-risk service appointment with a live dispatch map and ranked candidate technicians to reassign to.",
+  "lightning:type" : "@apexClassType/c__EcwFieldDispatchData"
+}

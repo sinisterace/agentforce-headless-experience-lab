@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Use this when the visitor wants to meet, choose, or be matched with an attorney — for example &quot;who would handle my case&quot;, &quot;show me your lawyers&quot;, or &quot;I want to book with someone&quot;. Shows attorneys matched to the visitor&apos;s matter as trust-building cards (role, practice focus, experience, rating, cases handled and bar number) and lets them pick one to book a free consult with.</description>
+    <developerName>asaLegalAttorneyMatch_Output_7c3e</developerName>
+    <invocationTarget>asaLegalAttorneyMatch_Output_7c3e</invocationTarget>
+    <invocationTargetType>flow</invocationTargetType>
+    <isConfirmationRequired>false</isConfirmationRequired>
+    <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+    <localDeveloperName>asaLegalAttorneyMatch_Output_7c3e</localDeveloperName>
+    <masterLabel>ASA Legal · Meet Your Attorney</masterLabel>
+    <progressIndicatorMessage>Matching you with an attorney</progressIndicatorMessage>
+</GenAiFunction>

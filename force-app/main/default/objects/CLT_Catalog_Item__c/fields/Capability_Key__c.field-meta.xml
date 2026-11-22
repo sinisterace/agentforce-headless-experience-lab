@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Capability_Key__c</fullName>
+    <description>Semantic capability key for UI icon mapping, e.g. record_selector, appointment_picker.</description>
+    <externalId>false</externalId>
+    <label>Capability Key</label>
+    <length>100</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

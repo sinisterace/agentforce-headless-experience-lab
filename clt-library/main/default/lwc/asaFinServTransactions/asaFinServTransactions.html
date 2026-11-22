@@ -1,0 +1,92 @@
+<template>
+    <div class="asa-card">
+        <template if:true={title}>
+            <h3 class="asa-fs-title">{title}</h3>
+        </template>
+
+        <template if:true={hasTransactions}>
+            <!-- Cash-flow readout -->
+            <div class="asa-fs-readout">
+                <div class="asa-fs-flow">
+                    <span class="asa-fs-eyebrow">Money out</span>
+                    <span class="asa-fs-out">{moneyOutText}</span>
+                    <template if:true={hasMoneyIn}>
+                        <span class="asa-fs-in">{moneyInText} in</span>
+                    </template>
+                </div>
+                <div class="asa-fs-acct">
+                    <template if:true={accountLabel}>
+                        <span class="asa-fs-acct-label">{accountLabel}</span>
+                    </template>
+                    <span class="asa-fs-count">{countText}</span>
+                </div>
+            </div>
+
+            <!-- Spend-by-category meter + legend -->
+            <template if:true={hasBreakdown}>
+                <div class="asa-fs-breakdown">
+                    <div class="asa-fs-meter">
+                        <template for:each={breakdown} for:item="s">
+                            <span key={s.key} class="asa-fs-seg" style={s.segStyle}></span>
+                        </template>
+                    </div>
+                    <ul class="asa-fs-legend">
+                        <template for:each={breakdown} for:item="s">
+                            <li key={s.key} class="asa-fs-leg">
+                                <span class="asa-fs-leg-dot" style={s.dotStyle} aria-hidden="true"></span>
+                                <span class="asa-fs-leg-label">{s.label}</span>
+                                <span class="asa-fs-leg-amt">{s.amountText}</span>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </template>
+
+            <!-- Statement ledger -->
+            <div class="asa-fs-ledger">
+                <div class="asa-fs-ledger-head">
+                    <span class="asa-fs-ledger-eyebrow">Recent activity</span>
+                    <span class="asa-fs-ledger-hint">Tap a charge to dispute</span>
+                </div>
+                <div class="asa-fs-rows">
+                    <template for:each={transactions} for:item="txn">
+                        <button
+                            key={txn.key}
+                            type="button"
+                            class={txn.rowClass}
+                            data-index={txn.index}
+                            aria-pressed={txn.selected}
+                            disabled={txn.disabled}
+                            onclick={handleSelect}>
+                            <span class={txn.dotClass} aria-hidden="true"></span>
+                            <span class="asa-fs-meta">
+                                <span class="asa-fs-merchant">
+                                    <span class="asa-fs-merchant-text">{txn.merchant}</span>
+                                    <template if:true={txn.isPending}>
+                                        <span class="asa-fs-badge">Pending</span>
+                                    </template>
+                                </span>
+                                <span class="asa-fs-sub">
+                                    <span class="asa-fs-tag" style={txn.tagStyle}>{txn.categoryLabel}</span>
+                                    <span class="asa-fs-date">{txn.dateDisplay}</span>
+                                </span>
+                            </span>
+                            <span class={txn.amountClass}>{txn.amountDisplay}</span>
+                        </button>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+        <template if:true={showSubmit}>
+            <button type="button" class="asa-fs-cta" onclick={handleSubmit}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
+                {disputeText}
+            </button>
+        </template>
+
+        <template if:true={errorMessage}>
+            <div class="asa-error">{errorMessage}</div>
+        </template>
+    </div>
+</template>

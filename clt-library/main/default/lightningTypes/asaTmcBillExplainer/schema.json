@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Technology, Media & Comms · Bill Explainer",
+  "description" : "Breaks down a bill: the total due and due date, a stacked charge-category bar, itemized line rows, a month-over-month delta callout, and pay / autopay actions.",
+  "lightning:type" : "@apexClassType/c__AsaTmcBillExplainerData"
+}

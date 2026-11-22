@@ -1,0 +1,85 @@
+<template>
+    <div class="clt-live-preview travel-room-container">
+
+        <template if:true={title}>
+            <h3 class="selector-title">{title}</h3>
+        </template>
+        <template if:true={hasSubtitle}>
+            <p class="asa-card-sub">{subtitle}</p>
+        </template>
+
+        <div class="asa-rm-list">
+            <template for:each={rooms} for:item="room">
+                <button
+                    type="button"
+                    key={room.key}
+                    data-key={room.key}
+                    class={room.cardClass}
+                    aria-pressed={room.ariaPressed}
+                    onclick={handleSelect}
+                >
+                    <span class="asa-rm-photo" aria-hidden="true">
+                        <template if:true={room.hasImage}>
+                            <img src={room.imageUrl} alt="" />
+                        </template>
+                        <template if:false={room.hasImage}>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"></path><path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"></path><path d="M12 4v6"></path><path d="M2 18h20"></path></svg>
+                        </template>
+                        <template if:true={room.hasBadge}>
+                            <span class="asa-rm-badge">{room.badge}</span>
+                        </template>
+                        <span class={room.checkClass}>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+                        </span>
+                    </span>
+
+                    <span class="asa-rm-body">
+                        <span class="asa-rm-name">{room.name}</span>
+
+                        <template if:true={room.hasMeta}>
+                            <span class="asa-rm-meta">
+                                <template if:true={room.hasBed}>
+                                    <span class="asa-rm-meta-item">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"></path><path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"></path><path d="M12 4v6"></path><path d="M2 18h20"></path></svg>
+                                        {room.bed}
+                                    </span>
+                                </template>
+                                <template if:true={room.hasSize}>
+                                    <span class="asa-rm-meta-item">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" x2="14" y1="3" y2="10"></line><line x1="3" x2="10" y1="21" y2="14"></line></svg>
+                                        {room.size}
+                                    </span>
+                                </template>
+                                <template if:true={room.hasSleeps}>
+                                    <span class="asa-rm-meta-item">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                                        {room.sleepsLabel}
+                                    </span>
+                                </template>
+                            </span>
+                        </template>
+
+                        <template if:true={room.hasAmenities}>
+                            <span class="asa-rm-amenities">
+                                <template for:each={room.amenities} for:item="a">
+                                    <span class="asa-rm-amenity" key={a.key}>{a.label}</span>
+                                </template>
+                            </span>
+                        </template>
+
+                        <span class="asa-rm-priceline">
+                            <span class="asa-rm-price">{room.priceLabel}</span>
+                            <span class="asa-rm-cadence">{room.cadenceLabel}</span>
+                        </span>
+                    </span>
+                </button>
+            </template>
+        </div>
+
+        <template if:true={showSubmit}>
+            <div class="submit-container">
+                <button type="button" class="asa-rm-submit" onclick={handleReserve}>{submitText}</button>
+            </div>
+        </template>
+    </div>
+</template>

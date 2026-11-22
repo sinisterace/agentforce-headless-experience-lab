@@ -1,0 +1,29 @@
+/*
+ * Copy-review page (URL hash #copy) — plain internal tool for the team to scan
+ * candidate homepage headline + lede options. Uses the app's --df-* tokens so
+ * it themes light/dark, but keeps its own simple layout.
+ */
+.copyrev { max-width: 60rem; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; color: var(--df-fg); }
+.copyrev-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
+.copyrev-eyebrow { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--df-muted-fg); }
+.copyrev-head h1 { margin: 0.35rem 0 0.4rem; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; letter-spacing: -0.02em; }
+.copyrev-head p { margin: 0; color: var(--df-muted-fg); font-size: 0.95rem; max-width: 40rem; }
+.copyrev-theme { flex: none; padding: 0.5rem 0.9rem; border: 1px solid var(--df-border); border-radius: 0.6rem; background: var(--df-card); color: var(--df-fg); font-size: 0.82rem; font-weight: 600; cursor: pointer; }
+
+.copyrev-filters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.4rem; }
+.copyrev-filters button {
+  padding: 0.4rem 0.85rem; border: 1px solid var(--df-border); border-radius: 999px;
+  background: transparent; color: var(--df-muted-fg); font-size: 0.82rem; font-weight: 600; cursor: pointer;
+}
+.copyrev-filters button.is-active { background: var(--df-primary); color: #fff; border-color: transparent; }
+
+.copyrev-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1rem; }
+.copyrev-card { padding: 1.5rem 1.6rem; border: 1px solid var(--df-border); border-radius: 1rem; background: var(--df-card); }
+.copyrev-card-top { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.7rem; }
+.copyrev-num { display: grid; place-items: center; width: 1.7rem; height: 1.7rem; flex: none; border-radius: 0.5rem; background: var(--df-primary); color: #fff; font-family: var(--df-font-mono); font-size: 0.85rem; font-weight: 700; }
+.copyrev-lane { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--df-muted-fg); padding: 0.18rem 0.5rem; border: 1px solid var(--df-border); border-radius: 0.4rem; }
+.copyrev-headline { margin: 0 0 0.5rem; font-size: clamp(1.25rem, 2.6vw, 1.7rem); font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; color: var(--df-fg); }
+.copyrev-lede { margin: 0; font-size: 1rem; line-height: 1.5; color: var(--df-muted-fg); max-width: 46rem; }
+
+.copyrev-foot { margin-top: 1.6rem; font-size: 0.8rem; color: var(--df-muted-fg); }
+.copyrev-foot code { font-family: var(--df-font-mono); font-size: 0.78rem; }

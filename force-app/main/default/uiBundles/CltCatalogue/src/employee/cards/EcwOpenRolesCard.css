@@ -1,0 +1,56 @@
+/* HR · Open roles preview — recruiting requisition ledger (mirror of ecwOpenRoles LWC). */
+.ecw-or {
+    --qr-accent: #334155; --qr-line: #e2e8f0; --qr-ink: #0f172a; --qr-muted: #64748b;
+    --qr-soft: #f1f5f9; --qr-good: #15803d; --qr-warn: #b45309; --qr-bad: #b91c1c;
+    font-family: inherit; color: var(--qr-ink); container-type: inline-size;
+}
+.ecw-or, .ecw-or *, .ecw-or *::before, .ecw-or *::after { box-sizing: border-box; }
+
+.ecw-or-cart { display: flex; align-items: flex-start; gap: 0.7rem; padding: 0.8rem 0.85rem; border: 1px solid var(--qr-line); border-radius: 13px; background: linear-gradient(180deg, #f8fafc, #fff); }
+.ecw-or-cart-ico { flex-shrink: 0; width: 2.4rem; height: 2.4rem; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; background: var(--qr-accent); color: #fff; }
+.ecw-or-cart-ico svg { width: 1.3rem; height: 1.3rem; }
+.ecw-or-cart-body { min-width: 0; flex: 1; }
+.ecw-or-cart-top { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.ecw-or-title { font-size: 1.1rem; font-weight: 760; letter-spacing: -0.02em; margin: 0; }
+.ecw-or-cart-pill { flex-shrink: 0; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--qr-accent); background: color-mix(in srgb, var(--qr-accent) 10%, #fff); border: 1px solid color-mix(in srgb, var(--qr-accent) 22%, var(--qr-line)); padding: 0.16rem 0.5rem; border-radius: 999px; }
+.ecw-or-cart-line { margin: 0.42rem 0 0; display: flex; flex-wrap: wrap; gap: 0.2rem 1rem; align-items: baseline; }
+.ecw-or-cart-kv { display: inline-flex; align-items: baseline; gap: 0.35rem; }
+.ecw-or-cart-key { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--qr-muted); }
+.ecw-or-cart-val { font-size: 0.8rem; font-weight: 680; color: var(--qr-ink); font-variant-numeric: tabular-nums; }
+
+.ecw-or-lines { margin-top: 0.9rem; }
+.ecw-or-section-title { display: block; margin-bottom: 0.5rem; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--qr-muted); }
+.ecw-or-table { border: 1px solid var(--qr-line); border-radius: 12px; overflow: hidden; }
+.ecw-or-thead { display: grid; grid-template-columns: 2.1rem 1fr auto; gap: 0.5rem; align-items: center; padding: 0.42rem 0.7rem; background: var(--qr-soft); font-size: 0.58rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--qr-muted); }
+.ecw-or-th-cand { text-align: right; }
+.ecw-or-trow { display: grid; grid-template-columns: 2.1rem 1fr auto; gap: 0.5rem; align-items: center; padding: 0.62rem 0.7rem; border-top: 1px solid var(--qr-line); }
+.ecw-or-tnum { font-size: 0.7rem; font-weight: 650; color: var(--qr-muted); font-variant-numeric: tabular-nums; }
+.ecw-or-tdesc { min-width: 0; display: flex; flex-direction: column; gap: 0.24rem; }
+.ecw-or-tname { font-size: 0.84rem; font-weight: 640; color: var(--qr-ink); overflow-wrap: break-word; }
+.ecw-or-tmeta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.42rem; }
+.ecw-or-tdept { font-size: 0.68rem; color: var(--qr-muted); }
+.ecw-or-stage { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.02em; padding: 0.07rem 0.4rem; border-radius: 999px; white-space: nowrap; }
+.ecw-or-stage.is-ok { color: var(--qr-accent); background: color-mix(in srgb, var(--qr-accent) 9%, #fff); border: 1px solid color-mix(in srgb, var(--qr-accent) 20%, var(--qr-line)); }
+.ecw-or-stage.is-warn { color: var(--qr-warn); background: rgba(180,83,9,0.1); border: 1px solid rgba(180,83,9,0.22); }
+.ecw-or-stage.is-bad { color: var(--qr-bad); background: rgba(185,28,28,0.1); border: 1px solid rgba(185,28,28,0.22); }
+.ecw-or-tdays { font-size: 0.64rem; color: var(--qr-muted); font-variant-numeric: tabular-nums; }
+.ecw-or-tdays.is-bad { color: var(--qr-bad); font-weight: 700; }
+.ecw-or-thm { font-size: 0.64rem; color: var(--qr-muted); }
+.ecw-or-thm b { font-weight: 650; color: var(--qr-ink); }
+.ecw-or-tcand { display: flex; flex-direction: column; align-items: flex-end; gap: 0.04rem; }
+.ecw-or-tcand-n { font-size: 0.95rem; font-weight: 740; color: var(--qr-ink); line-height: 1; font-variant-numeric: tabular-nums; }
+.ecw-or-tcand-l { font-size: 0.52rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--qr-muted); }
+
+.ecw-or-details { margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px solid var(--qr-line); }
+.ecw-or-sum { display: flex; flex-direction: column; gap: 0.42rem; }
+.ecw-or-sum-row { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+.ecw-or-sum-key { font-size: 0.8rem; color: var(--qr-muted); }
+.ecw-or-sum-val { font-size: 0.86rem; font-weight: 680; color: var(--qr-ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ecw-or-sum-total { margin-top: 0.15rem; padding-top: 0.55rem; border-top: 1px dashed var(--qr-line); }
+.ecw-or-sum-total .ecw-or-sum-key { font-size: 0.82rem; font-weight: 700; color: var(--qr-ink); }
+.ecw-or-sum-total .ecw-or-sum-val { font-size: 1.2rem; font-weight: 790; letter-spacing: -0.01em; }
+
+@container (max-width: 320px) {
+    .ecw-or-thead, .ecw-or-trow { grid-template-columns: 1.7rem 1fr auto; gap: 0.35rem; }
+    .ecw-or-cart-line { gap: 0.2rem 0.65rem; }
+}

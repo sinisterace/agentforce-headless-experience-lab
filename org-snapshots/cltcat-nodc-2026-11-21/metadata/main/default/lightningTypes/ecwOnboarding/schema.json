@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · HR · Onboarding",
+  "description" : "New hires in onboarding with a progress stepper and current stage.",
+  "lightning:type" : "@apexClassType/c__EcwOnboardingData"
+}

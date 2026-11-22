@@ -1,0 +1,114 @@
+<template>
+    <div class="asa-card">
+        <template if:true={title}>
+            <h3 class="asa-card-title">{title}</h3>
+        </template>
+
+        <template if:true={hasProvider}>
+            <div class="asa-ap-provider">
+                <span class="asa-ap-avatar" aria-hidden="true">
+                    <template if:true={hasProviderImage}>
+                        <img src={providerImageUrl} alt={providerName} onerror={handleImageError} />
+                    </template>
+                    <template if:false={hasProviderImage}>
+                        <span class="asa-ap-initials">{providerInitials}</span>
+                    </template>
+                </span>
+                <span class="asa-ap-provider-text">
+                    <span class="asa-ap-provider-name">{providerName}</span>
+                    <template if:true={providerSpecialty}>
+                        <span class="asa-ap-provider-spec">{providerSpecialty}</span>
+                    </template>
+                    <template if:true={hasTrust}>
+                        <span class="asa-ap-trust">
+                            <template if:true={hasRating}>
+                                <span class="asa-ap-rating">
+                                    <svg class="asa-ap-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                                    <span>{ratingText}</span>
+                                    <template if:true={hasReviews}>
+                                        <span class="asa-ap-reviews">{reviewsText}</span>
+                                    </template>
+                                </span>
+                            </template>
+                            <template if:true={hasBadge}>
+                                <span class="asa-ap-badge">{providerBadge}</span>
+                            </template>
+                        </span>
+                    </template>
+                    <template if:true={hasLocation}>
+                        <span class="asa-ap-location">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.4-5.4 9.2-7.3 10.7a1 1 0 0 1-1.4 0C9.4 19.2 4 14.4 4 10a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <span class="asa-ap-location-text">{locationName}</span>
+                        </span>
+                    </template>
+                </span>
+            </div>
+        </template>
+
+        <template if:true={hasDays}>
+            <div class="asa-ap-cal-head">
+                <span class="asa-ap-eyebrow">Select a day</span>
+                <template if:true={monthLabel}>
+                    <span class="asa-ap-month">{monthLabel}</span>
+                </template>
+            </div>
+            <div class="asa-ap-days" role="tablist" aria-label="Choose a day">
+                <template for:each={days} for:item="day">
+                    <button
+                        key={day.key}
+                        type="button"
+                        role="tab"
+                        class={day.tabClass}
+                        data-index={day.index}
+                        aria-selected={day.selected}
+                        onclick={handleDaySelect}>
+                        <span class="asa-ap-day-wd">{day.weekday}</span>
+                        <span class="asa-ap-day-num">{day.dayNum}</span>
+                    </button>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={hasSlots}>
+            <span class="asa-ap-eyebrow asa-ap-eyebrow-times">Choose a time</span>
+            <div class="asa-ap-slots">
+                <template for:each={slots} for:item="slot">
+                    <button
+                        key={slot.key}
+                        type="button"
+                        class={slot.chipClass}
+                        data-id={slot.id}
+                        aria-pressed={slot.selected}
+                        onclick={handleSlotSelect}>
+                        <span class="asa-ap-slot-ico" aria-hidden="true">
+                            <template if:true={slot.isInperson}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M5 21V7l7-4 7 4v14"></path><path d="M9 21v-6h6v6"></path><path d="M9 11h.01"></path><path d="M15 11h.01"></path></svg>
+                            </template>
+                            <template if:true={slot.isVideo}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8z"></path><rect x="2" y="6" width="14" height="12" rx="2"></rect></svg>
+                            </template>
+                            <template if:true={slot.isPhone}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.83 19.5a17.9 17.9 0 0 1-9.33-9.33l1.9-1.9a1.5 1.5 0 0 0 .35-1.56L5.8 3.4A1.5 1.5 0 0 0 4.38 2.5H2.5A1.5 1.5 0 0 0 1 4.15 18 18 0 0 0 19.85 23a1.5 1.5 0 0 0 1.65-1.5v-1.88a1.5 1.5 0 0 0-.9-1.42l-3.3-1a1.5 1.5 0 0 0-1.57.36z"></path></svg>
+                            </template>
+                        </span>
+                        <span class="asa-ap-slot-body">
+                            <span class="asa-ap-slot-time">{slot.time}</span>
+                            <span class="asa-ap-slot-type">{slot.typeLabel}</span>
+                        </span>
+                    </button>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={hasNote}>
+            <p class="asa-ap-note">
+                <svg class="asa-ap-note-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                <span>{note}</span>
+            </p>
+        </template>
+
+        <template if:true={showSubmit}>
+            <button type="button" class="asa-ap-submit" onclick={handleSubmit}>{submitLabel}</button>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,89 @@
+<template>
+    <div class="eom">
+
+        <!-- PRIMARY VIEW -->
+        <template if:false={nominateMode}>
+            <!-- Gold ribbon header -->
+            <div class="eom-ribbon">
+                <span class="eom-ribbon-star" aria-hidden="true">★</span>
+                <span class="eom-ribbon-text">Employee of the Month</span>
+                <span class="eom-ribbon-star" aria-hidden="true">★</span>
+            </div>
+
+            <!-- Hero: headshot + identity -->
+            <div class="eom-hero">
+                <div class="eom-photo-wrap">
+                    <img class="eom-photo" src={photoUrl} alt={name} />
+                </div>
+                <div class="eom-id">
+                    <strong class="eom-name">{name}</strong>
+                    <span class="eom-title">{title}</span>
+                    <p class="eom-reason">&ldquo;{reason}&rdquo;</p>
+                </div>
+            </div>
+
+            <!-- Playful stat tiles -->
+            <template if:true={hasStats}>
+                <dl class="eom-stats">
+                    <template for:each={stats} for:item="st">
+                        <div key={st.key} class="eom-tile">
+                            <dt>{st.label}</dt>
+                            <dd>{st.value}</dd>
+                        </div>
+                    </template>
+                </dl>
+            </template>
+
+            <!-- Badge strip -->
+            <template if:true={hasBadges}>
+                <div class="eom-badges">
+                    <template for:each={badges} for:item="b">
+                        <span key={b.key} class="eom-badge">{b.label}</span>
+                    </template>
+                </div>
+            </template>
+
+            <!-- Congratulated confirmation -->
+            <template if:true={congratulated}>
+                <div class="eom-congrats" role="status">
+                    <span class="eom-congrats-check" aria-hidden="true">✓</span>
+                    <span>{congratulateText}</span>
+                </div>
+            </template>
+
+            <!-- Actions -->
+            <div class="eom-actions">
+                <button type="button" class={congratulateBtnClass} onclick={handleCongratulate} disabled={congratulated}>
+                    {congratulateLabel}
+                </button>
+                <button type="button" class="eom-btn eom-btn-ghost" onclick={handleNominate}>
+                    Nominate Someone Else
+                </button>
+            </div>
+        </template>
+
+        <!-- SECOND VIEW: "Nominate Someone Else" -->
+        <template if:true={nominateMode}>
+            <div class="eom-ribbon eom-ribbon-alt">
+                <span class="eom-ribbon-text">Nominate Someone Else</span>
+            </div>
+            <p class="eom-nominate-lede">We looked everywhere. Here's the only eligible nominee:</p>
+            <div class="eom-nominee">
+                <div class="eom-photo-wrap eom-photo-sm">
+                    <img class="eom-photo" src={photoUrl} alt={nomineeText} />
+                </div>
+                <div class="eom-id">
+                    <strong class="eom-name">{nomineeText}</strong>
+                    <span class="eom-title">Still the Chief Demo Officer</span>
+                </div>
+                <span class="eom-nominee-check" aria-hidden="true">✓</span>
+            </div>
+            <div class="eom-actions">
+                <button type="button" class="eom-btn eom-btn-ghost" onclick={handleBack}>
+                    ← Back
+                </button>
+            </div>
+        </template>
+
+    </div>
+</template>

@@ -1,0 +1,14 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full account-selector payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Which account can I help you with?\",\"mode\":\"single\",\"accounts\":[{\"id\":\"chk-1234\",\"name\":\"Everyday Checking\",\"type\":\"Checking\",\"mask\":\"1234\",\"balance\":4820.55,\"currency\":\"USD\",\"badge\":\"Primary\"},{\"id\":\"sav-5678\",\"name\":\"High-Yield Savings\",\"type\":\"Savings\",\"mask\":\"5678\",\"balance\":15230.00,\"currency\":\"USD\"},{\"id\":\"crd-9012\",\"name\":\"Rewards Card\",\"type\":\"Credit Card\",\"mask\":\"9012\",\"balance\":-742.18,\"currency\":\"USD\",\"available\":9257.82}],\"submitText\":\"Continue\"}\n\nRules:\n- 'title' (string, optional): the prompt shown above the list.\n- 'mode' (string, required): 'single' or 'multiple'. Use 'single' when the customer should pick exactly one account (the card sends the choice immediately on click). Use 'multiple' when they may pick several (a submit button appears).\n- 'accounts' (array, REQUIRED, at least one object): each account MUST have 'id' (string, unique, sent back on selection), 'name' (string), 'type' (string; one of 'Checking','Savings','Credit Card','Loan','Investment' — drives the row icon), 'mask' (string, the last 4 digits of the account number), and 'balance' (number; may be negative for amounts owed). Optional per account: 'currency' (ISO code string, defaults to 'USD'), 'available' (number, e.g. available credit or balance after holds), 'badge' (short string tag such as 'Primary').\n- 'submitText' (string, optional): button label used only in 'multiple' mode; defaults to 'Continue'.\n\nNever emit an empty 'accounts' array. Use the customer's real accounts from context; if none are known, ask the customer rather than inventing account numbers. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

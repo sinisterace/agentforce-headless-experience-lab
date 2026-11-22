@@ -1,0 +1,15 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full service-plan payload as a JSON string, formatted EXACTLY like this: {\"title\":\"Choose a comfort plan\",\"subtitle\":\"Annual maintenance memberships that keep your system running\",\"currency\":\"USD\",\"cadence\":\"yr\",\"currentPlanId\":\"basic\",\"plans\":[{\"id\":\"basic\",\"name\":\"Comfort Basic\",\"price\":149,\"tagline\":\"Seasonal peace of mind\",\"features\":[\"1 annual tune-up\",\"Priority scheduling\",\"10% off repairs\"]},{\"id\":\"plus\",\"name\":\"Comfort Plus\",\"price\":249,\"tagline\":\"Most popular\",\"badge\":\"Most popular\",\"recommended\":true,\"features\":[\"2 tune-ups (heating + cooling)\",\"Priority scheduling\",\"15% off repairs\",\"No overtime fees\",\"Filter delivery\"]},{\"id\":\"total\",\"name\":\"Comfort Total\",\"price\":399,\"tagline\":\"Total protection\",\"features\":[\"2 tune-ups + mid-season check\",\"24/7 priority dispatch\",\"20% off repairs\",\"Free diagnostics\",\"Extended parts warranty\"]}],\"submitText\":\"Enroll in plan\"} Rules: - 'title' (string, optional): heading. Defaults to 'Choose a comfort plan'. - 'subtitle' (string, optional): one short line under the title. - 'currency' (string, optional): ISO code, default USD. - 'cadence' (string, optional): billing cadence, one of mo | yr | wk. Rendered as a price suffix (/mo, /yr, /wk). Default /mo. - 'currentPlanId' (string, optional): the id of the customer's current plan; that card is shown locked/dashed as 'Current plan' and is NOT selectable. - 'plans' (array, REQUIRED): each { 'id' (string, REQUIRED — sent back on selection); 'name' (string, REQUIRED); 'price' (number, optional — shown large); 'tagline' (string, optional — one short line under the name); 'badge' (string, optional — small ribbon tag, e.g. 'Most popular'); 'recommended' (boolean, optional — adds an accent highlight border); 'features' (array of strings, optional — the plan's included benefits as a checklist) }. At most 4 plans render. - 'submitText' (string, optional): confirm-button label; defaults to 'Enroll in plan'. The customer taps a plan to select it, then this button enrolls. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType",
+  "lightning:textIndexed" : true
+}

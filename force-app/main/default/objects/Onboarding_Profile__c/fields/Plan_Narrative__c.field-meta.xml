@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Plan_Narrative__c</fullName>
+    <description>AI-written personalized plan narrative for this company.</description>
+    <externalId>false</externalId>
+    <label>Plan Narrative</label>
+    <length>32768</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>5</visibleLines>
+</CustomField>

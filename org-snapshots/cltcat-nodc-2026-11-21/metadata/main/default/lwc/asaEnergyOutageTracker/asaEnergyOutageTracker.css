@@ -1,0 +1,141 @@
+/* ASA Energy & Utilities · Outage Tracker — a dark control-room hero (status +
+   headline + area) over a horizontal restoration "power-line" track, then a
+   squared hairline info panel (cause / affected / crew / ETA). Energy & Utilities
+   design language: warm-stone neutrals + amber accent, squared geometry (6px),
+   hairline ledger rows — deliberately NOT the rounded/pill cards used elsewhere.
+   rem units + inherited font so the card matches the host chat theme in ECv2. */
+:host {
+    --asa-accent: #d97706;
+    --asa-line: #e7e5e4;
+    --asa-ink: #1c1917;
+    --asa-muted: #78716c;
+    --asa-good: #15803d;
+    --asa-warn: #b45309;
+    --asa-bad: #b91c1c;
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after { box-sizing: border-box; }
+
+.asa-test-badge {
+    margin: 0 0 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    background: #f5f5f4;
+    color: #57534e;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+/* Control-room hero */
+.asa-out-hero {
+    --hue: var(--asa-accent);
+    position: relative;
+    overflow: hidden;
+    border-radius: 6px;
+    padding: 0.82rem 0.85rem 0.95rem;
+    background: #1c1917;
+    color: #f5f0e8;
+}
+.asa-out-hero.is-outage { --hue: #f87171; }
+.asa-out-hero.is-restored { --hue: #34d399; }
+.asa-out-hero::before {
+    content: '';
+    position: absolute;
+    inset: -40% -30% auto auto;
+    width: 70%;
+    height: 120%;
+    background: radial-gradient(circle, color-mix(in srgb, var(--hue) 42%, transparent), transparent 68%);
+    pointer-events: none;
+}
+.asa-out-hero-top { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.asa-out-status { display: inline-flex; align-items: center; gap: 0.36rem; font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; color: var(--hue); }
+.asa-out-status-dot { width: 0.5rem; height: 0.5rem; border-radius: 999px; background: var(--hue); box-shadow: 0 0 9px var(--hue); flex-shrink: 0; }
+.asa-out-hero:not(.is-restored) .asa-out-status-dot { animation: asaOutBlink 1.4s ease-in-out infinite; }
+.asa-out-updated { font-size: 0.6rem; color: #a8a099; white-space: nowrap; flex-shrink: 0; }
+.asa-out-headline { position: relative; margin: 0.5rem 0 0; font-size: 0.92rem; font-weight: 700; line-height: 1.32; overflow-wrap: break-word; }
+.asa-out-area { position: relative; margin: 0.36rem 0 0; display: flex; align-items: center; gap: 0.32rem; font-size: 0.68rem; color: #cbc3ba; overflow-wrap: break-word; }
+.asa-out-area svg { width: 0.82rem; height: 0.82rem; flex-shrink: 0; color: var(--hue); }
+
+/* Restoration power-line track */
+.asa-out-track { position: relative; list-style: none; margin: 0.95rem 0 0; padding: 0; display: flex; }
+.asa-out-node { flex: 1; min-width: 0; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.3rem; padding: 0 0.12rem; }
+.asa-out-node::before {
+    content: '';
+    position: absolute;
+    top: 0.52rem;
+    left: -50%;
+    width: 100%;
+    height: 2px;
+    background: #423d38;
+    z-index: 0;
+}
+.asa-out-node:first-child::before { display: none; }
+.asa-out-node.is-done::before, .asa-out-node.is-current::before { background: var(--asa-accent); }
+.asa-out-node-mark {
+    position: relative;
+    z-index: 1;
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #4a443d;
+    background: #241f1b;
+    color: transparent;
+}
+.asa-out-node-mark svg { width: 0.68rem; height: 0.68rem; }
+.asa-out-node.is-done .asa-out-node-mark { background: var(--asa-accent); border-color: var(--asa-accent); color: #1c1917; }
+.asa-out-node.is-current .asa-out-node-mark { background: var(--asa-accent); border-color: var(--asa-accent); color: #1c1917; box-shadow: 0 0 0 4px color-mix(in srgb, var(--asa-accent) 28%, transparent); animation: asaOutPulse 1.8s ease-in-out infinite; }
+.asa-out-node-label { font-size: 0.6rem; font-weight: 650; line-height: 1.2; color: #ded6cc; overflow-wrap: break-word; word-break: normal; }
+.asa-out-node.is-todo .asa-out-node-label { color: #857d74; }
+.asa-out-node-time { font-size: 0.55rem; font-weight: 600; color: #9c948b; font-variant-numeric: tabular-nums; }
+
+/* Hairline info panel (squared, ledger rows) */
+.asa-out-info { margin-top: 0.72rem; border: 1px solid var(--asa-line); border-radius: 6px; overflow: hidden; background: #fff; }
+.asa-out-row { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; padding: 0.5rem 0.72rem; border-top: 1px solid var(--asa-line); }
+.asa-out-row:first-child { border-top: 0; }
+.asa-out-row-k { font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--asa-muted); flex-shrink: 0; }
+.asa-out-row-v { font-size: 0.74rem; font-weight: 600; color: var(--asa-ink); text-align: right; min-width: 0; overflow-wrap: break-word; }
+.asa-out-row.is-eta { background: color-mix(in srgb, var(--asa-accent) 8%, #fff); border-left: 3px solid var(--asa-accent); }
+.asa-out-row.is-eta .asa-out-row-v { color: var(--asa-warn); font-weight: 800; }
+
+.asa-out-cta {
+    margin-top: 0.62rem;
+    width: 100%;
+    min-height: 2.7rem;
+    padding: 0.6rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    border: 0;
+    border-radius: 6px;
+    background: var(--asa-accent);
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 680;
+    cursor: pointer;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--asa-accent) 26%, transparent);
+    transition: filter 0.15s ease;
+}
+.asa-out-cta:hover { filter: brightness(1.08); }
+.asa-out-cta svg { width: 1rem; height: 1rem; flex-shrink: 0; }
+
+@keyframes asaOutBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+@keyframes asaOutPulse { 0%, 100% { box-shadow: 0 0 0 4px color-mix(in srgb, var(--asa-accent) 28%, transparent); } 50% { box-shadow: 0 0 0 7px color-mix(in srgb, var(--asa-accent) 10%, transparent); } }
+
+@container (max-width: 300px) {
+    .asa-out-node-label { font-size: 0.54rem; }
+    .asa-out-node-time { display: none; }
+}

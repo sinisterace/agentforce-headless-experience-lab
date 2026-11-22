@@ -1,0 +1,136 @@
+<template>
+    <div class="asa-card">
+        <div class="asa-sp-intro">
+            <div>
+                <template if:true={title}>
+                    <h3 class="selector-title">{title}</h3>
+                </template>
+                <template if:true={hasSubtitle}>
+                    <p class="asa-card-sub">{subtitle}</p>
+                </template>
+            </div>
+        </div>
+
+        <div class="asa-sp-map" aria-label="Nearby stores">
+            <svg class="asa-sp-map-canvas" viewBox="0 0 440 168" aria-hidden="true">
+                <rect width="440" height="168" fill="#edf1e9"></rect>
+                <path class="asa-sp-park" d="M0 0h132l-19 58-72 17L0 56z"></path>
+                <g class="asa-sp-blocks">
+                    <path d="M151 0h91l-8 38-96 23z"></path><path d="M263 0h91l-9 26-91 11z"></path><path d="M374 0h66v39l-78-13z"></path>
+                    <path d="M50 88l74-18 32 40-91 24z"></path><path d="M145 65l93-22 14 49-82 20z"></path><path d="M270 42l72-10 23 54-96 8z"></path>
+                    <path d="M373 37l67 12v49l-60-10z"></path><path d="M0 111l44-17 15 44-59 17z"></path><path d="M73 140l87-23 31 51H65z"></path>
+                    <path d="M178 117l78-19 18 70h-77z"></path><path d="M282 101l86-9 19 76H280z"></path><path d="M385 96l55 10v62h-47z"></path>
+                </g>
+                <g class="asa-sp-streets"><path d="M-18 93L456 -18"></path><path d="M-8 151L454 42"></path><path d="M126 -22L211 190"></path><path d="M244 -22L300 190"></path><path d="M351 -22L397 190"></path></g>
+                <g class="asa-sp-street-centers"><path d="M-18 93L456 -18"></path><path d="M-8 151L454 42"></path><path d="M126 -22L211 190"></path><path d="M244 -22L300 190"></path><path d="M351 -22L397 190"></path></g>
+                <g class="asa-sp-map-labels"><text x="18" y="24">Union Square</text><text x="185" y="67" transform="rotate(-13 185 67)">Post St</text><text x="294" y="130" transform="rotate(-13 294 130)">Geary St</text><text x="224" y="27" transform="rotate(75 224 27)">Powell St</text><text x="362" y="55" transform="rotate(77 362 55)">Stockton St</text></g>
+            </svg>
+            <template for:each={mapPins} for:item="pin">
+                <span key={pin.id} class={pin.pinClass} aria-label={pin.ariaLabel}>{pin.label}</span>
+            </template>
+            <span class="asa-sp-map-caption"><b>{availableTodayLabel}</b><small>Union Square · San Francisco</small></span>
+        </div>
+
+        <template if:true={hasProduct}>
+            <div class="asa-sp-product">
+                <span class="asa-sp-prod-thumb" style={product.mediaStyle}>
+                    <template if:true={product.hasImage}>
+                        <img src={product.imageUrl} alt={product.name} />
+                    </template>
+                    <template if:false={product.hasImage}>
+                        <span class="asa-sp-prod-glyph" aria-hidden="true">
+                            <template if:true={product.isApparel}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"></path></svg></template>
+                            <template if:true={product.isShoes}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"></path><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"></path><path d="M16 17h4"></path><path d="M4 13h4"></path></svg></template>
+                            <template if:true={product.isElectronics}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"></rect><path d="M12 18h.01"></path></svg></template>
+                            <template if:true={product.isBeauty}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path><path d="M20 3v4"></path><path d="M22 5h-4"></path><path d="M4 17v2"></path><path d="M5 18H3"></path></svg></template>
+                            <template if:true={product.isHome}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></template>
+                            <template if:true={product.isGrocery}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 11 4-7"></path><path d="m19 11-4-7"></path><path d="M2 11h20"></path><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4"></path><path d="m9 11 1 9"></path><path d="m15 11-1 9"></path></svg></template>
+                            <template if:true={product.isAccessories}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="6"></circle><polyline points="12 10 12 12 13 13"></polyline><path d="m16.13 7.66-.81-4.05a2 2 0 0 0-2-1.61h-2.68a2 2 0 0 0-2 1.61l-.78 4.05"></path><path d="m7.88 16.36.8 4a2 2 0 0 0 2 1.61h2.72a2 2 0 0 0 2-1.61l.81-4.05"></path></svg></template>
+                            <template if:true={product.isOutdoors}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m8 3 4 8 5-5 5 15H2L8 3z"></path></svg></template>
+                            <template if:true={product.isToys}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="12" x="3" y="8" rx="1"></rect><path d="M10 8V5c0-.6-.4-1-1-1H6a1 1 0 0 0-1 1v3"></path><path d="M19 8V5c0-.6-.4-1-1-1h-3a1 1 0 0 0-1 1v3"></path></svg></template>
+                            <template if:true={product.isGeneral}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"></path><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg></template>
+                        </span>
+                    </template>
+                </span>
+                <span class="asa-sp-prod-text">
+                    <span class="asa-sp-prod-name">{product.name}</span>
+                    <template if:true={product.hasVariant}>
+                        <span class="asa-sp-prod-variant">{product.variant}</span>
+                    </template>
+                </span>
+            </div>
+        </template>
+
+        <div class="asa-sp-list">
+            <template for:each={stores} for:item="st">
+                <div key={st.id} class={st.rowClass}>
+                    <button
+                        type="button"
+                        class="asa-sp-pick"
+                        data-id={st.id}
+                        disabled={st.isOut}
+                        aria-pressed={st.selected}
+                        onclick={handlePick}>
+                        <span class="asa-sp-rank">{st.rankLabel}</span>
+                        <span class="asa-sp-radio" aria-hidden="true">
+                            <template if:true={st.selected}>
+                                <span class="asa-sp-radio-dot"></span>
+                            </template>
+                        </span>
+                        <span class="asa-sp-store-main">
+                            <span class="asa-sp-store-head">
+                                <span class="asa-sp-store-name">{st.name}</span>
+                                <span class="asa-sp-store-aside">
+                                    <template if:true={st.isBest}><span class="asa-sp-best">Best match</span></template>
+                                    <template if:true={st.hasDistance}>
+                                        <span class="asa-sp-dist">{st.distance}</span>
+                                    </template>
+                                </span>
+                            </span>
+                            <span class="asa-sp-meta">
+                                <span class={st.availClass}><span class="asa-sp-avail-dot" aria-hidden="true"></span>{st.availLabel}</span>
+                                <template if:true={st.showEta}>
+                                    <span class="asa-sp-eta">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6v6l4 2"></path><circle cx="12" cy="12" r="10"></circle></svg>{st.pickupEta}
+                                    </span>
+                                </template>
+                            </span>
+                            <template if:true={st.hasAddress}>
+                                <span class="asa-sp-line">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>{st.address}
+                                </span>
+                            </template>
+                            <template if:true={st.hasHours}>
+                                <span class="asa-sp-hours">{st.hours}</span>
+                            </template>
+                        </span>
+                    </button>
+                    <template if:true={st.hasLinks}>
+                        <div class="asa-sp-links">
+                            <template if:true={st.mapsUrl}>
+                                <a class="asa-sp-link" href={st.mapsUrl} target="_blank" rel="noopener noreferrer">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>Directions
+                                </a>
+                            </template>
+                            <template if:true={st.tel}>
+                                <a class="asa-sp-link" href={st.tel}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"></path></svg>Call
+                                </a>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </div>
+
+        <button type="button" class="asa-sp-submit" disabled={reserveDisabled} onclick={handleReserve}>
+            <template if:true={isReserved}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+                <span>Reserved for pickup</span>
+            </template>
+            <template if:false={isReserved}>
+                <span>{submitText}</span>
+            </template>
+        </button>
+    </div>
+</template>

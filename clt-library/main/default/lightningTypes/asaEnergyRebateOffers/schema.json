@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Energy & Utilities · Rebate Offers",
+  "description" : "Shows energy-efficiency rebates and incentives the customer qualifies for (thermostat, heat pump, EV charger, insulation, solar) as voucher tiles, each with its rebate amount, and an apply action.",
+  "lightning:type" : "@apexClassType/c__AsaEnergyRebateOffersData"
+}

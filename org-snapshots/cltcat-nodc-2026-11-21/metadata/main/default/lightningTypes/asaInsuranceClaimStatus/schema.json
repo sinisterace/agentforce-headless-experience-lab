@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Insurance · Claim Status Tracker",
+  "description" : "Shows the customer's insurance claims with a step-by-step progress tracker.",
+  "lightning:type" : "@apexClassType/c__AsaInsuranceClaimStatusData"
+}

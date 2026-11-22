@@ -1,0 +1,15 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full programs-and-benefits-finder payload as a JSON string, formatted EXACTLY like this: {\"title\":\"Programs & benefits you may qualify for\",\"subtitle\":\"Based on what you've told us\",\"programs\":[{\"id\":\"snap\",\"name\":\"Food assistance (SNAP)\",\"category\":\"assistance\",\"detail\":\"Monthly grocery benefits\",\"eligibility\":\"Likely eligible\",\"badge\":\"Popular\"},{\"id\":\"liheap\",\"name\":\"Energy bill relief (LIHEAP)\",\"category\":\"utility\",\"detail\":\"Help with heating & cooling costs\",\"eligibility\":\"May be eligible\"},{\"id\":\"grant\",\"name\":\"State tuition grant\",\"category\":\"education\",\"detail\":\"Up to $4,000/yr for residents\",\"eligibility\":\"Likely eligible\"},{\"id\":\"childcare\",\"name\":\"Childcare subsidy\",\"category\":\"assistance\",\"detail\":\"Sliding-scale childcare help\"}],\"submitText\":\"Apply for selected\",\"submitValue\":\"I'd like to apply for the selected program\"} Rules: - 'title' (string, optional): heading. Defaults to 'Programs & benefits you may qualify for'. - 'subtitle' (string, optional): one short line under the title. - 'programs' (array, REQUIRED): each { 'id' (string, REQUIRED — sent back on selection); 'name' (string, REQUIRED); 'category' (string, optional — one of assistance | education | health | housing | tax | employment | utility; drives the card glyph); 'detail' (string, optional — one short line); 'eligibility' (string, optional — a short pill, e.g. 'Likely eligible' / 'May be eligible'); 'badge' (string, optional — small corner tag e.g. 'Popular') }. - 'submitText' (string, optional): confirm-button label; defaults to 'Apply for selected'. The person taps a program to select it, then this button applies. - 'submitValue' (string, optional): a base message; the card appends the chosen program name when sending back. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType",
+  "lightning:textIndexed" : true
+}

@@ -1,0 +1,14 @@
+{
+  "required" : [ "selection" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "selection" : {
+      "title" : "selection",
+      "description" : "The overdue accounts the user chose to send a payment reminder to.",
+      "lightning:type" : "c__ecwArAgingInput",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : true
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

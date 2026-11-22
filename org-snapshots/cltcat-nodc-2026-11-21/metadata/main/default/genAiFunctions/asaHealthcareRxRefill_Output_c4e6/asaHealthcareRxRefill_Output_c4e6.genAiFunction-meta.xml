@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Use this when the customer wants to refill or reorder a prescription, or says they are running low on their medication. Shows a checklist of their medications with supply status, lets them pick which to refill, and shows the pickup pharmacy. Confirms the request back to the agent.</description>
+    <developerName>asaHealthcareRxRefill_Output_c4e6</developerName>
+    <invocationTarget>asaHealthcareRxRefill_Output_c4e6</invocationTarget>
+    <invocationTargetType>flow</invocationTargetType>
+    <isConfirmationRequired>false</isConfirmationRequired>
+    <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+    <localDeveloperName>asaHealthcareRxRefill_Output_c4e6</localDeveloperName>
+    <masterLabel>ASA Healthcare · Prescription Refill</masterLabel>
+    <progressIndicatorMessage>Pulling up your prescriptions</progressIndicatorMessage>
+</GenAiFunction>

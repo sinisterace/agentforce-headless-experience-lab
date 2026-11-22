@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>ASA Technology, Media &amp; Comms · Plan Comparison</masterLabel>
+    <description>Compares up to four plans as price-forward cards with feature lists, a recommended highlight, and a current-plan marker; the customer picks one to switch to.</description>
+    <targets>
+        <target>lightning__AgentforceOutput</target>
+        <target>lightningSnapin__ChatMessage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AgentforceOutput">
+            <sourceType name="c__asaTmcPlanCompare"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

@@ -1,0 +1,59 @@
+<template>
+    <div class="asa-card">
+
+        <div class="asa-plc-head">
+            <h3 class="selector-title">{title}</h3>
+            <template if:true={hasSubtitle}>
+                <p class="asa-card-sub">{subtitle}</p>
+            </template>
+        </div>
+
+        <ul class="asa-plc-list">
+            <template for:each={plans} for:item="p">
+                <li key={p.id} class={p._class}>
+                    <div class="asa-plc-btn" role="button" tabindex="0" data-id={p.id} onclick={handleSelect} onkeydown={handleKey}>
+                        <template if:true={p.hasBadge}>
+                            <span class="asa-plc-ribbon">{p.badge}</span>
+                        </template>
+                        <template if:true={p.isCurrent}>
+                            <span class="asa-plc-ribbon is-current-tag">Current plan</span>
+                        </template>
+
+                        <span class="asa-plc-top">
+                            <span class="asa-plc-name-col">
+                                <span class="asa-plc-name">{p.name}</span>
+                                <template if:true={p.hasTagline}>
+                                    <span class="asa-plc-tagline">{p.tagline}</span>
+                                </template>
+                            </span>
+                            <span class="asa-plc-price-col">
+                                <span class="asa-plc-price">{p.price}</span>
+                                <span class="asa-plc-cadence">{p.cadence}</span>
+                            </span>
+                        </span>
+
+                        <template if:true={p.hasFeatures}>
+                            <ul class="asa-plc-features">
+                                <template for:each={p.features} for:item="f">
+                                    <li key={f.key} class="asa-plc-feature">
+                                        <svg class="asa-plc-check" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5 8 14.5 16 5.5"></path></svg>
+                                        <span class="asa-plc-feature-text">{f.text}</span>
+                                    </li>
+                                </template>
+                            </ul>
+                        </template>
+
+                        <span class="asa-plc-state">
+                            <span class="asa-plc-radio" aria-hidden="true"></span>
+                            <span class="asa-plc-state-label">{p._btnLabel}</span>
+                        </span>
+                    </div>
+                </li>
+            </template>
+        </ul>
+
+        <template if:true={hasSubmit}>
+            <button type="button" class="asa-plc-cta" onclick={handleSubmit}>{submitText}</button>
+        </template>
+    </div>
+</template>

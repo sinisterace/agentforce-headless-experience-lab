@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Retail · Product Carousel",
+  "description" : "Shows up to three products, one focused card at a time, with accessible previous and next controls.",
+  "lightning:type" : "@apexClassType/c__AsaRetailProductCarouselData"
+}

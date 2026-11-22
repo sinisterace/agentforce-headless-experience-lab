@@ -1,0 +1,48 @@
+/* HR · Headcount preview — quote-builder ledger (mirror of ecwHeadcount LWC). */
+.ecw-hc {
+    --hc-accent: #334155; --hc-line: #e2e8f0; --hc-ink: #0f172a; --hc-muted: #64748b;
+    --hc-soft: #f1f5f9; --hc-good: #15803d; --hc-bad: #b91c1c;
+    --hc-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-family: inherit; color: var(--hc-ink); container-type: inline-size;
+}
+.ecw-hc, .ecw-hc *, .ecw-hc *::before, .ecw-hc *::after { box-sizing: border-box; }
+
+.ecw-hc-head { display: flex; align-items: flex-start; gap: 0.65rem; padding: 0.75rem 0.8rem; border: 1px solid var(--hc-line); border-radius: 13px; background: linear-gradient(180deg, #f8fafc, #fff); }
+.ecw-hc-ico { flex-shrink: 0; width: 2.4rem; height: 2.4rem; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; background: var(--hc-accent); color: #fff; }
+.ecw-hc-ico svg { width: 1.3rem; height: 1.3rem; }
+.ecw-hc-head-body { min-width: 0; flex: 1; }
+.ecw-hc-head-top { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.ecw-hc-title { margin: 0; font-size: 1.02rem; font-weight: 750; letter-spacing: -0.02em; color: var(--hc-ink); overflow-wrap: break-word; }
+.ecw-hc-pill { flex-shrink: 0; font-size: 0.64rem; font-weight: 700; letter-spacing: 0.02em; white-space: nowrap; padding: 0.16rem 0.5rem; border-radius: 999px; color: var(--hc-good); background: color-mix(in srgb, var(--hc-good) 10%, #fff); border: 1px solid color-mix(in srgb, var(--hc-good) 22%, var(--hc-line)); }
+.ecw-hc-pill.is-down { color: var(--hc-bad); background: color-mix(in srgb, var(--hc-bad) 10%, #fff); border-color: color-mix(in srgb, var(--hc-bad) 22%, var(--hc-line)); }
+.ecw-hc-sub { margin: 0.3rem 0 0; font-size: 0.74rem; color: var(--hc-muted); display: flex; flex-wrap: wrap; gap: 0.2rem 0.45rem; align-items: baseline; }
+.ecw-hc-sub b { color: var(--hc-ink); font-weight: 650; font-variant-numeric: tabular-nums; }
+.ecw-hc-sub-dot { color: var(--hc-line); }
+
+.ecw-hc-sec { display: block; margin: 0.9rem 0 0.5rem; font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--hc-muted); }
+
+.ecw-hc-table { border: 1px solid var(--hc-line); border-radius: 12px; overflow: hidden; }
+.ecw-hc-thead { display: grid; grid-template-columns: 2.1rem 1fr 3.1rem; gap: 0.6rem; align-items: center; padding: 0.4rem 0.7rem; background: var(--hc-soft); font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--hc-muted); }
+.ecw-hc-th-count { text-align: right; }
+.ecw-hc-row { display: grid; grid-template-columns: 2.1rem 1fr 3.1rem; gap: 0.6rem; align-items: center; padding: 0.55rem 0.7rem; border-top: 1px solid var(--hc-line); }
+.ecw-hc-rank { font-family: var(--hc-mono); font-size: 0.7rem; font-weight: 650; color: var(--hc-muted); font-variant-numeric: tabular-nums; }
+.ecw-hc-dept { min-width: 0; display: flex; flex-direction: column; gap: 0.3rem; }
+.ecw-hc-name { font-size: 0.82rem; font-weight: 620; color: var(--hc-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ecw-hc-share { display: flex; align-items: center; gap: 0.45rem; }
+.ecw-hc-track { flex: 1; height: 0.3rem; border-radius: 999px; background: var(--hc-soft); overflow: hidden; }
+.ecw-hc-bar { display: block; height: 100%; border-radius: 999px; background: var(--hc-accent); }
+.ecw-hc-pct { font-family: var(--hc-mono); font-size: 0.6rem; font-weight: 600; color: var(--hc-muted); font-variant-numeric: tabular-nums; white-space: nowrap; min-width: 2.2rem; text-align: right; }
+.ecw-hc-count { text-align: right; font-family: var(--hc-mono); font-size: 0.88rem; font-weight: 720; color: var(--hc-ink); font-variant-numeric: tabular-nums; }
+
+.ecw-hc-sum { margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px solid var(--hc-line); display: flex; flex-direction: column; gap: 0.4rem; }
+.ecw-hc-sum-row { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+.ecw-hc-sum-key { font-size: 0.8rem; color: var(--hc-muted); }
+.ecw-hc-sum-val { font-size: 0.86rem; font-weight: 680; color: var(--hc-ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ecw-hc-sum-total { margin-top: 0.15rem; padding-top: 0.55rem; border-top: 1px dashed var(--hc-line); }
+.ecw-hc-sum-total .ecw-hc-sum-key { font-size: 0.82rem; font-weight: 700; color: var(--hc-ink); }
+.ecw-hc-sum-total .ecw-hc-sum-val { font-size: 1.15rem; font-weight: 780; letter-spacing: -0.01em; }
+
+@container (max-width: 320px) {
+    .ecw-hc-thead, .ecw-hc-row { grid-template-columns: 1.7rem 1fr 2.7rem; gap: 0.45rem; }
+    .ecw-hc-pct { display: none; }
+}

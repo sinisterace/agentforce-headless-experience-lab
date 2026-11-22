@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · HR · Open roles",
+  "description" : "Open requisitions with stage, days open, and candidate counts.",
+  "lightning:type" : "@apexClassType/c__EcwOpenRolesData"
+}

@@ -1,0 +1,14 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full room-selector payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Choose your room\",\"subtitle\":\"The Shoreline Resort · Jul 12-15 · 2 guests\",\"currency\":\"USD\",\"rooms\":[{\"id\":\"r1\",\"name\":\"Ocean View King\",\"bed\":\"1 King bed\",\"size\":\"420 sq ft\",\"sleeps\":2,\"amenities\":[\"Ocean view\",\"Balcony\",\"Free WiFi\"],\"price\":389,\"cadence\":\"night\",\"badge\":\"Best value\"},{\"id\":\"r2\",\"name\":\"Garden Double Queen\",\"bed\":\"2 Queen beds\",\"size\":\"480 sq ft\",\"sleeps\":4,\"amenities\":[\"Garden view\",\"Free WiFi\",\"Mini bar\"],\"price\":329,\"cadence\":\"night\"},{\"id\":\"r3\",\"name\":\"Beachfront Suite\",\"bed\":\"1 King + sofa bed\",\"size\":\"720 sq ft\",\"sleeps\":3,\"amenities\":[\"Beachfront\",\"Living room\",\"Soaking tub\"],\"price\":612,\"cadence\":\"night\",\"badge\":\"Only 2 left\"}],\"submitText\":\"Reserve\",\"submitValue\":\"I would like to reserve this room\"}\n\nRules:\n- 'title' (string, optional): heading above the room list. Defaults to 'Choose your room'.\n- 'subtitle' (string, optional): context line under the title, e.g. 'property · dates · guests'.\n- 'currency' (string, optional): ISO currency code used to format room prices. Defaults to 'USD'.\n- 'rooms' (array, recommended): the rooms to choose from. Each item MUST have 'name' (string) and SHOULD have 'id' (string) — the 'id'/name is echoed back to you when the guest reserves. Per-room optional fields: 'bed' (string, e.g. '1 King bed'), 'size' (string, e.g. '420 sq ft'), 'sleeps' (number, occupancy), 'amenities' (array of strings; only the first 3 are shown, as chips), 'price' (number, per cadence), 'cadence' (string, defaults to 'night'), 'currency' (string, per-room override of the top-level currency), 'imageUrl' (string, optional; a gradient placeholder is shown if omitted), 'badge' (string, e.g. 'Best value' or 'Only 2 left'). If 'rooms' is empty or omitted the card shows a test-mode sample so it never renders blank — always include real rooms.\n- 'submitText' (string, optional): the Reserve button label; defaults to 'Reserve'.\n- 'submitValue' (string, optional): the base message sent back to the agent when the guest reserves; the chosen room name and price are appended automatically. Defaults to 'I would like to reserve this room'.\n\nUse these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

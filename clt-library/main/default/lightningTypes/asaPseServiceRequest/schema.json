@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Public Sector & Education · Service Request",
+  "description" : "Lets a resident or student report a problem (311 / facilities) by choosing a request type from a tile grid.",
+  "lightning:type" : "@apexClassType/c__AsaPseServiceRequestData"
+}

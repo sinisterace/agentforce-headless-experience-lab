@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Use this when the customer asks where their technician is, when the tech will arrive, or for the status of a scheduled HVAC service visit. Shows a live dispatch card — status, ETA and arrival window, the technician&apos;s identity, an en-route progress track, and job details — with message and reschedule actions.</description>
+    <developerName>asaHvacTechTracker_Output_b3c4</developerName>
+    <invocationTarget>asaHvacTechTracker_Output_b3c4</invocationTarget>
+    <invocationTargetType>flow</invocationTargetType>
+    <isConfirmationRequired>false</isConfirmationRequired>
+    <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+    <localDeveloperName>asaHvacTechTracker_Output_b3c4</localDeveloperName>
+    <masterLabel>ASA HVAC · Technician ETA Tracker</masterLabel>
+    <progressIndicatorMessage>Locating your technician</progressIndicatorMessage>
+</GenAiFunction>

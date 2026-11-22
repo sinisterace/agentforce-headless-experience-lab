@@ -1,0 +1,52 @@
+<template>
+    <div class="ecw-ap">
+        <div class="ecw-ap-hero">
+            <span class="ecw-ap-eyebrow">Awaiting approval</span>
+            <div class="ecw-ap-hero-row">
+                <strong class="ecw-ap-hero-val">{heroValue}</strong>
+                <span class="ecw-ap-headline">{headline}</span>
+            </div>
+        </div>
+
+        <template if:true={hasItems}>
+            <ul class="ecw-ap-list">
+                <template for:each={items} for:item="i">
+                    <li key={i.key} class={i.rowClass}>
+                        <button type="button" class="ecw-ap-rowhead" data-key={i.key} aria-pressed={i.selected} onclick={handleSelect}>
+                            <span class={i.dotClass} aria-hidden="true"></span>
+                            <div class="ecw-ap-main">
+                                <span class="ecw-ap-vendor">{i.vendor}</span>
+                                <span class="ecw-ap-sub">
+                                    <span class="ecw-ap-subtext">{i.sub}</span>
+                                    <template if:true={i.hasAging}><span class="ecw-ap-aging">{i.aging}</span></template>
+                                </span>
+                            </div>
+                            <span class="ecw-ap-amount">{i.amountText}</span>
+                            <template if:true={i.due}><span class={i.dueClass}>{i.due}</span></template>
+                        </button>
+                    </li>
+                </template>
+            </ul>
+
+            <template if:true={showActions}>
+                <div class="ecw-ap-actions">
+                    <button type="button" class="ecw-ap-cta" onclick={handleApprove}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                        {approveLabel}
+                    </button>
+                    <button type="button" class="ecw-ap-cta is-ghost" onclick={handleHold}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg>
+                        {holdLabel}
+                    </button>
+                </div>
+            </template>
+
+            <template if:true={done}>
+                <div class="ecw-ap-done">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+                    <span class="ecw-ap-done-text">{doneText}</span>
+                </div>
+            </template>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Registers the Flow as an Agentforce action. Deploying this makes the action
+  appear in Agent Builder's "All Actions" picker (search by masterLabel).
+  invocationTarget must equal the Flow's API name.
+-->
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Use this when the visitor wants to book, schedule, or set up a free consultation or meeting with the firm or an attorney — for example "book a free consultation", "I want to meet with a lawyer", or "schedule a call". Shows a consultation scheduler with an attorney hero, a meeting-type toggle (in person, phone, video), a day picker, and time slots to choose from.</description>
+    <invocationTarget>asaLegalConsultScheduler_Output_7d4f</invocationTarget>
+    <invocationTargetType>flow</invocationTargetType>
+    <isConfirmationRequired>false</isConfirmationRequired>
+    <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+    <masterLabel>ASA Legal · Consultation Scheduler</masterLabel>
+    <progressIndicatorMessage>Opening the consultation scheduler</progressIndicatorMessage>
+</GenAiFunction>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Get_Forecast</name>
+        <label>Get Forecast</label>
+        <locationX>176</locationX>
+        <locationY>158</locationY>
+        <actionName>EcwForecast</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Assign_To_Options</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>details</name>
+            <value>
+                <elementReference>Details</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>EcwForecast</nameSegment>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <apiVersion>67.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Assign_To_Options</name>
+        <label>Assign To Options</label>
+        <locationX>176</locationX>
+        <locationY>278</locationY>
+        <assignmentItems>
+            <assignToReference>Options.ecwForecastJSON</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Forecast.json</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <description>Show the running user&apos;s forecast as Closed / Commit / Best case / Pipeline confidence tiers summing to total forecast.</description>
+    <environments>Default</environments>
+    <interviewLabel>Ecw Forecast {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Agentforce Coworker · Sales · Forecast</label>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>176</locationX>
+        <locationY>48</locationY>
+        <connector>
+            <targetReference>Get_Forecast</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <description>LLM-provided payload (ignored; data now comes from Apex/SOQL).</description>
+        <name>Details</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Show to the user</description>
+        <name>Options</name>
+        <apexClass>EcwForecastData</apexClass>
+        <dataType>Apex</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>

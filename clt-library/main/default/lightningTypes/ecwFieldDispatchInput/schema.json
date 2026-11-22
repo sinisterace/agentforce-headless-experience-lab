@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · Service · Field dispatch — selection",
+  "description" : "The technician the dispatcher chose to reassign the at-risk appointment to.",
+  "lightning:type" : "@apexClassType/c__EcwFieldDispatchInput"
+}

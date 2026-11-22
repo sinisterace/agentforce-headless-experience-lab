@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Technology, Media & Comms · Data Usage Meter",
+  "description" : "Shows data (or minutes/texts) used against an allowance on a radial gauge, with the billing-cycle status, a per-category breakdown bar, and an optional add-on action.",
+  "lightning:type" : "@apexClassType/c__AsaTmcDataUsageData"
+}

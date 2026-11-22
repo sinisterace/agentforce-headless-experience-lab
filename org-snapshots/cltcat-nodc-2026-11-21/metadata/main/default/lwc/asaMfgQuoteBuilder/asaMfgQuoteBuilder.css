@@ -1,0 +1,151 @@
+/* ASA Manufacturing · Quote Builder — a cart / quote-review card: a header with
+   cart id + status + ship-to/bill-to, a line-items table (item #, description,
+   UOM + unit price, qty stepper + line total, Add item), and an order-details
+   block (PO input, subtotal, a Calculate-fees shipping estimate, estimated total,
+   and an acknowledgement checkbox that gates the Request-quote CTA). rem units +
+   inherited font so the card matches the host chat theme in Enhanced Chat v2.
+   Steel-slate accent + neutrals are local props. */
+:host {
+    --asa-accent: #334155;
+    --asa-line: #e2e8f0;
+    --asa-ink: #0f172a;
+    --asa-muted: #64748b;
+    --asa-soft: #f1f5f9;
+    --asa-radius: 14px;
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after { box-sizing: border-box; }
+
+.asa-test-badge { margin: 0 0 0.5rem; padding: 0.3rem 0.5rem; border-radius: 8px; background: var(--asa-soft); color: #475569; font-size: 0.68rem; font-weight: 600; }
+
+/* ── Header card ─────────────────────────────────────────────────────────── */
+.asa-qb-cart {
+    display: flex; align-items: flex-start; gap: 0.65rem;
+    padding: 0.7rem 0.75rem; border: 1px solid var(--asa-line); border-radius: 13px;
+    background: linear-gradient(180deg, #f8fafc, #fff);
+}
+.asa-qb-cart-ico { flex-shrink: 0; width: 2.3rem; height: 2.3rem; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; background: var(--asa-accent); color: #fff; }
+.asa-qb-cart-ico svg { width: 1.25rem; height: 1.25rem; }
+.asa-qb-cart-body { min-width: 0; flex: 1; }
+.asa-qb-cart-top { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.selector-title.asa-qb-title { font-size: 1.1rem; font-weight: 750; letter-spacing: -0.02em; margin: 0; overflow-wrap: break-word; word-break: normal; }
+.asa-qb-cart-pill { flex-shrink: 0; font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--asa-accent); background: color-mix(in srgb, var(--asa-accent) 10%, #fff); border: 1px solid color-mix(in srgb, var(--asa-accent) 22%, var(--asa-line)); padding: 0.16rem 0.5rem; border-radius: 999px; }
+.asa-qb-cart-line { margin: 0.28rem 0 0; font-size: 0.76rem; color: var(--asa-ink); overflow-wrap: break-word; display: flex; flex-wrap: wrap; gap: 0.25rem 0.4rem; align-items: baseline; }
+.asa-qb-cart-sub { margin-top: 0.12rem; }
+.asa-qb-cart-key { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--asa-muted); }
+.asa-qb-cart-val { font-weight: 600; color: var(--asa-ink); }
+.asa-qb-cart-id { font-size: 0.72rem; font-weight: 650; color: var(--asa-muted); font-variant-numeric: tabular-nums; }
+
+/* ── Section headings ────────────────────────────────────────────────────── */
+.asa-qb-section-title { display: block; font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--asa-muted); }
+
+/* ── Line items ──────────────────────────────────────────────────────────── */
+.asa-qb-lines { margin-top: 0.9rem; }
+.asa-qb-lines-head { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.5rem; }
+.asa-qb-additem {
+    display: inline-flex; align-items: center; gap: 0.28rem; flex-shrink: 0;
+    padding: 0.32rem 0.55rem; border: 1px solid var(--asa-line); border-radius: 9px;
+    background: #fff; color: var(--asa-accent); font-family: inherit; font-size: 0.72rem; font-weight: 650; cursor: pointer;
+    transition: border-color 0.12s ease, background 0.12s ease;
+}
+.asa-qb-additem:hover { border-color: color-mix(in srgb, var(--asa-accent) 45%, var(--asa-line)); background: var(--asa-soft); }
+.asa-qb-additem svg { width: 0.85rem; height: 0.85rem; }
+
+.asa-qb-table { border: 1px solid var(--asa-line); border-radius: 12px; overflow: hidden; }
+.asa-qb-thead {
+    display: grid; grid-template-columns: 4.3rem 1fr auto; gap: 0.5rem; align-items: center;
+    padding: 0.4rem 0.65rem; background: var(--asa-soft);
+    font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--asa-muted);
+}
+.asa-qb-th-qty { text-align: right; }
+.asa-qb-trow {
+    display: grid; grid-template-columns: 4.3rem 1fr auto; gap: 0.5rem; align-items: center;
+    padding: 0.55rem 0.65rem; border-top: 1px solid var(--asa-line);
+}
+.asa-qb-tnum { font-size: 0.7rem; font-weight: 650; color: var(--asa-muted); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.asa-qb-tdesc { min-width: 0; display: flex; flex-direction: column; gap: 0.1rem; }
+.asa-qb-tdesc-name { font-size: 0.82rem; font-weight: 620; color: var(--asa-ink); overflow-wrap: break-word; }
+.asa-qb-tmeta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; }
+.asa-qb-tuom { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.03em; color: var(--asa-muted); background: var(--asa-soft); border-radius: 5px; padding: 0.05rem 0.32rem; }
+.asa-qb-tunit { font-size: 0.7rem; color: var(--asa-muted); white-space: nowrap; }
+.asa-qb-tqty { display: flex; flex-direction: column; align-items: flex-end; gap: 0.28rem; }
+.asa-qb-tline { font-size: 0.8rem; font-weight: 720; color: var(--asa-ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* Quantity stepper */
+.asa-qb-stepper { display: inline-flex; align-items: center; gap: 0.1rem; border: 1px solid var(--asa-line); border-radius: 10px; padding: 0.12rem; }
+.asa-qb-step { width: 1.75rem; height: 1.75rem; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 8px; background: var(--asa-soft); color: var(--asa-accent); cursor: pointer; transition: background 0.12s ease, color 0.12s ease; }
+.asa-qb-step:hover:not(:disabled) { background: var(--asa-accent); color: #fff; }
+.asa-qb-step:disabled { opacity: 0.4; cursor: default; }
+.asa-qb-step svg { width: 0.9rem; height: 0.9rem; }
+.asa-qb-qty-value { min-width: 1.7rem; text-align: center; font-size: 0.86rem; font-weight: 720; color: var(--asa-ink); font-variant-numeric: tabular-nums; }
+
+/* ── Order details ───────────────────────────────────────────────────────── */
+.asa-qb-details { margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px solid var(--asa-line); display: flex; flex-direction: column; gap: 0.7rem; }
+.asa-qb-po { display: flex; flex-direction: column; gap: 0.28rem; }
+.asa-qb-po-label { font-size: 0.72rem; font-weight: 650; color: var(--asa-ink); }
+.asa-qb-po-input {
+    width: 100%; padding: 0.5rem 0.6rem; border: 1px solid var(--asa-line); border-radius: 10px;
+    background: #fff; color: var(--asa-ink); font-family: inherit; font-size: 0.82rem;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+.asa-qb-po-input::placeholder { color: #94a3b8; }
+.asa-qb-po-input:focus { outline: 0; border-color: var(--asa-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--asa-accent) 14%, transparent); }
+
+.asa-qb-sum { display: flex; flex-direction: column; gap: 0.4rem; }
+.asa-qb-sum-row { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+.asa-qb-sum-key { font-size: 0.8rem; color: var(--asa-muted); }
+.asa-qb-sum-val { font-size: 0.86rem; font-weight: 680; color: var(--asa-ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.asa-qb-sum-fees { display: inline-flex; align-items: center; gap: 0.5rem; }
+.asa-qb-sum-dash { font-size: 0.86rem; font-weight: 650; color: var(--asa-muted); }
+.asa-qb-calc {
+    padding: 0.28rem 0.55rem; border: 1px dashed color-mix(in srgb, var(--asa-accent) 40%, var(--asa-line)); border-radius: 9px;
+    background: #fff; color: var(--asa-accent); font-family: inherit; font-size: 0.72rem; font-weight: 650; cursor: pointer;
+    transition: background 0.12s ease, border-color 0.12s ease;
+}
+.asa-qb-calc:hover { background: var(--asa-soft); border-color: var(--asa-accent); }
+.asa-qb-sum-total { margin-top: 0.15rem; padding-top: 0.5rem; border-top: 1px dashed var(--asa-line); }
+.asa-qb-sum-total .asa-qb-sum-key { font-size: 0.82rem; font-weight: 700; color: var(--asa-ink); text-transform: none; }
+.asa-qb-sum-total .asa-qb-sum-val { font-size: 1.15rem; font-weight: 780; letter-spacing: -0.01em; }
+
+/* Acknowledgement */
+.asa-qb-ack { display: flex; align-items: flex-start; gap: 0.5rem; padding: 0.55rem 0.6rem; border: 1px solid var(--asa-line); border-radius: 10px; background: var(--asa-soft); cursor: pointer; }
+.asa-qb-ack input { margin-top: 0.12rem; width: 1rem; height: 1rem; flex-shrink: 0; accent-color: var(--asa-accent); cursor: pointer; }
+.asa-qb-ack-text { font-size: 0.72rem; line-height: 1.35; color: var(--asa-muted); overflow-wrap: break-word; }
+
+/* Actions */
+.asa-qb-actions { display: flex; align-items: center; gap: 0.5rem; }
+.asa-qb-secondary {
+    flex-shrink: 0; min-height: 2.7rem; padding: 0.55rem 0.85rem;
+    border: 1px solid var(--asa-line); border-radius: 11px; background: #fff; color: var(--asa-ink);
+    font-family: inherit; font-size: 0.82rem; font-weight: 650; cursor: pointer;
+    transition: background 0.12s ease, border-color 0.12s ease;
+}
+.asa-qb-secondary:hover { background: var(--asa-soft); border-color: color-mix(in srgb, var(--asa-accent) 35%, var(--asa-line)); }
+.asa-qb-submit {
+    flex: 1; min-height: 2.7rem; padding: 0.6rem;
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem;
+    border: 0; border-radius: 11px; background: var(--asa-accent); color: #fff;
+    font-family: inherit; font-size: 0.86rem; font-weight: 680; cursor: pointer;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--asa-accent) 26%, transparent);
+    transition: filter 0.15s ease;
+}
+.asa-qb-submit:hover:not(:disabled) { filter: brightness(1.12); }
+.asa-qb-submit:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none; }
+.asa-qb-submit svg { width: 1.05rem; height: 1.05rem; }
+
+@container (max-width: 320px) {
+    .asa-qb-thead, .asa-qb-trow { grid-template-columns: 3.4rem 1fr auto; gap: 0.35rem; }
+    .asa-qb-step { width: 1.6rem; height: 1.6rem; }
+    .asa-qb-actions { flex-wrap: wrap; }
+    .asa-qb-secondary, .asa-qb-submit { flex: 1 1 100%; }
+}

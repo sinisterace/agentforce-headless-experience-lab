@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>ASA Automotive · Connected Car Status</masterLabel>
+    <description>Shows a connected vehicle's live status — range/charge ring gauge, odometer, four-corner tire pressures, service items, and alerts — with a schedule-service action.</description>
+    <targets>
+        <target>lightning__AgentforceOutput</target>
+        <target>lightningSnapin__ChatMessage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AgentforceOutput">
+            <sourceType name="c__asaAutoVehicleStatus"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

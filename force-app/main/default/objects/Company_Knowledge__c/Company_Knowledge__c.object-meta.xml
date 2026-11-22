@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <deploymentStatus>Deployed</deploymentStatus>
+    <description>Holds the AI-generated company FAQ that grounds the Agentforce Service Agent. Written at runtime by the "deploy agent" step; read by the AnswerCompanyFaq agent action. One active record per org (each cloned org = one customer).</description>
+    <enableActivities>false</enableActivities>
+    <enableFeeds>false</enableFeeds>
+    <enableHistory>false</enableHistory>
+    <enableReports>false</enableReports>
+    <label>Company Knowledge</label>
+    <nameField>
+        <label>Company Knowledge Name</label>
+        <type>Text</type>
+    </nameField>
+    <pluralLabel>Company Knowledge</pluralLabel>
+    <sharingModel>ReadWrite</sharingModel>
+    <visibility>Public</visibility>
+</CustomObject>

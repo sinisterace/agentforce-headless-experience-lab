@@ -1,0 +1,57 @@
+{
+  "title": "Onboarding Setup Checklist",
+  "description": "An employee onboarding setup checklist: titled steps with completion state, a progress count, and Save/Complete actions that post back to the agent.",
+  "type": "object",
+  "properties": {
+    "attributes": {
+      "lightning:type": "lightning__objectType",
+      "properties": {
+        "title": {
+          "title": "Title",
+          "description": "Headline of the checklist, e.g. 'New hire setup'.",
+          "lightning:type": "lightning__textType"
+        },
+        "subtitle": {
+          "title": "Subtitle",
+          "description": "Short supporting line under the title.",
+          "lightning:type": "lightning__textType"
+        },
+        "completedCount": {
+          "title": "Completed count",
+          "description": "Number of steps completed.",
+          "lightning:type": "lightning__numberType"
+        },
+        "totalCount": {
+          "title": "Total count",
+          "description": "Total number of steps.",
+          "lightning:type": "lightning__numberType"
+        },
+        "steps": {
+          "title": "Steps",
+          "description": "The onboarding steps to display.",
+          "lightning:type": "lightning__listType",
+          "items": {
+            "lightning:type": "lightning__objectType",
+            "properties": {
+              "isCompleted": {
+                "title": "Completed",
+                "description": "Whether this step is complete.",
+                "lightning:type": "lightning__booleanType"
+              },
+              "title": {
+                "title": "Step title",
+                "description": "Name of the onboarding step.",
+                "lightning:type": "lightning__textType"
+              },
+              "description": {
+                "title": "Step description",
+                "description": "Short description of the step.",
+                "lightning:type": "lightning__textType"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

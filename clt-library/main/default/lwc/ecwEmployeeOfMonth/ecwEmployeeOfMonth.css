@@ -1,0 +1,188 @@
+/* Agentforce Coworker · Employee of the Month — Ask-native gag card.
+   Crisp, squared, editorial: sharp corners, hairline rules, a squared headshot,
+   flat square stat cells and badges, and flat squared actions. Deep-navy ink on
+   white, a single gold ribbon as the one flourish. Container-query responsive;
+   inherits the host chat theme font. */
+:host {
+    --ecw-ink: #06234d;
+    --ecw-ink-2: #35507a;
+    --ecw-muted: #6a7891;
+    --ecw-line: #dbe2ec;
+    --ecw-line-soft: #eef2f7;
+    --ecw-accent: #0d6fd1;
+    --ecw-gold: #d4af37;
+    --ecw-gold-2: #e9c54a;
+    --ecw-gold-deep: #9a7a16;
+    display: block;
+}
+
+.eom {
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--ecw-line);
+    border-radius: 0;
+    background: #fff;
+    font-family: inherit;
+    overflow: hidden;
+}
+
+/* Gold ribbon header — full-bleed, squared */
+.eom-ribbon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.62rem 1rem;
+    background: linear-gradient(90deg, var(--ecw-gold-2), var(--ecw-gold) 60%, var(--ecw-gold-deep));
+    color: #2c2205;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-size: 0.74rem;
+    border-bottom: 1px solid var(--ecw-gold-deep);
+}
+.eom-ribbon-alt {
+    background: #f3f6fb;
+    color: var(--ecw-ink);
+    border-bottom: 1px solid var(--ecw-line);
+    justify-content: flex-start;
+    letter-spacing: 0.08em;
+}
+.eom-ribbon-star { font-size: 0.78rem; line-height: 1; }
+
+/* Hero */
+.eom-hero { display: flex; align-items: center; gap: 1rem; padding: 1.05rem 1.15rem; border-bottom: 1px solid var(--ecw-line-soft); }
+.eom-photo-wrap { position: relative; flex: 0 0 auto; }
+.eom-photo {
+    width: 76px;
+    height: 76px;
+    border-radius: 2px;
+    object-fit: cover;
+    object-position: 50% 16%;
+    border: 1px solid var(--ecw-line);
+    box-shadow: inset 0 0 0 2px #fff, 0 0 0 1px var(--ecw-gold);
+    background: #eef3fa;
+    display: block;
+}
+.eom-photo-sm .eom-photo { width: 52px; height: 52px; }
+.eom-id { display: flex; flex-direction: column; gap: 0.12rem; min-width: 0; }
+.eom-name { font-size: 1.25rem; font-weight: 820; color: var(--ecw-ink); letter-spacing: -0.01em; line-height: 1.1; }
+.eom-title { font-size: 0.8rem; font-weight: 700; color: var(--ecw-accent); }
+.eom-reason { margin: 0.35rem 0 0; font-size: 0.85rem; font-style: italic; color: var(--ecw-ink-2); line-height: 1.35; }
+
+/* Stat cells — squared, hairline grid, no gaps/rounded boxes */
+.eom-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 0;
+    border-bottom: 1px solid var(--ecw-line-soft);
+}
+.eom-tile {
+    display: flex;
+    flex-direction: column;
+    gap: 0.28rem;
+    padding: 0.85rem 0.9rem;
+    text-align: left;
+    border-left: 1px solid var(--ecw-line-soft);
+}
+.eom-tile:first-child { border-left: 0; }
+.eom-tile dt { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ecw-muted); }
+.eom-tile dd { margin: 0; font-size: 1.05rem; font-weight: 820; color: var(--ecw-ink); font-variant-numeric: tabular-nums; }
+
+/* Badges — flat square chips */
+.eom-badges { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0.9rem 1.15rem; }
+.eom-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.28rem 0.6rem;
+    border-radius: 2px;
+    background: #f3f6fb;
+    color: var(--ecw-ink-2);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    border: 1px solid var(--ecw-line);
+}
+
+/* Congratulated confirmation — squared inline rule */
+.eom-congrats {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 1.15rem 0.9rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: 2px;
+    background: #fbf5e2;
+    border: 1px solid var(--ecw-gold);
+    border-left-width: 3px;
+    color: #6f5712;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+.eom-congrats-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 2px;
+    background: var(--ecw-gold-deep);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 900;
+    flex: 0 0 auto;
+}
+
+/* Actions — flat squared, split row with a hairline divider */
+.eom-actions { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--ecw-line); }
+.eom-btn {
+    padding: 0.8rem 0.9rem;
+    border: 0;
+    background: #fff;
+    color: var(--ecw-ink);
+    font-size: 0.86rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.12s ease;
+}
+.eom-btn + .eom-btn { border-left: 1px solid var(--ecw-line); }
+.eom-btn-primary { background: var(--ecw-gold); color: #2c2205; }
+.eom-btn-primary:hover { background: var(--ecw-gold-2); }
+.eom-btn-primary.is-done { background: #f3f6fb; color: var(--ecw-gold-deep); cursor: default; }
+.eom-btn-ghost:hover { background: #f6f8fb; }
+
+/* Nominate (second) view */
+.eom-nominate-lede { margin: 0; padding: 1rem 1.15rem 0.2rem; font-size: 0.88rem; color: var(--ecw-ink-2); }
+.eom-nominee {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin: 0.8rem 1.15rem 1rem;
+    padding: 0.75rem 0.85rem;
+    border: 1px solid var(--ecw-line);
+    border-left: 3px solid var(--ecw-gold);
+    border-radius: 2px;
+    background: #fafbfd;
+}
+.eom-nominee .eom-id { flex: 1 1 auto; }
+.eom-nominee-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 2px;
+    background: var(--ecw-accent);
+    color: #fff;
+    font-weight: 900;
+    flex: 0 0 auto;
+}
+
+@container (max-width: 380px) {
+    .eom-stats { grid-template-columns: 1fr; }
+    .eom-tile { border-left: 0; border-top: 1px solid var(--ecw-line-soft); }
+    .eom-tile:first-child { border-top: 0; }
+    .eom-hero { flex-direction: column; text-align: center; align-items: flex-start; }
+}

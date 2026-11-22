@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · Finance · Budget vs actual",
+  "description" : "Departmental budget vs actual with bullet bars and variance.",
+  "lightning:type" : "@apexClassType/c__EcwBudgetActualData"
+}

@@ -1,0 +1,56 @@
+* { box-sizing: border-box; }
+/* Agentforce Coworker · Finance · AP approvals — "approval list" archetype.
+   Shares the ecw family: airy white surface, deep-navy ink, hairline dividers, mono
+   numerals. Hero total awaiting + one selectable row per invoice/PO; select rows and
+   Approve or Hold — the choice is sent back to the agent. */
+:host {
+    --ecw-ink: #06234d; --ecw-ink-2: #35507a; --ecw-muted: #6a7891; --ecw-line: #e9edf4;
+    --ecw-accent: #0d6fd1; --ecw-good: #15803d; --ecw-warn: #b45309; --ecw-bad: #b91c1c;
+    display: block;
+}
+
+.ecw-ap { container-type: inline-size; display: flex; flex-direction: column; gap: 1rem; padding: 1.15rem 1.2rem; border: 1px solid var(--ecw-line); border-radius: 0.9rem; background: #fff; font-family: inherit; box-shadow: 0 22px 48px -34px rgba(6, 35, 77, 0.6); }
+
+.ecw-ap-hero { display: flex; flex-direction: column; gap: 0.15rem; padding: 0 0 1rem; border-bottom: 1px solid var(--ecw-line); }
+.ecw-ap-eyebrow { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ecw-accent); }
+.ecw-ap-hero-row { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap; }
+.ecw-ap-hero-val { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 2.3rem; line-height: 1; font-weight: 820; letter-spacing: -0.03em; color: var(--ecw-ink); font-variant-numeric: tabular-nums; }
+.ecw-ap-headline { font-size: 0.78rem; font-weight: 600; color: var(--ecw-muted); }
+
+.ecw-ap-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.ecw-ap-row { border-top: 1px solid var(--ecw-line); border-radius: 0.5rem; transition: background 0.13s ease; }
+.ecw-ap-row:first-child { border-top: 0; }
+.ecw-ap-row.selected { background: color-mix(in srgb, var(--ecw-accent) 7%, #fff); }
+.ecw-ap-rowhead { width: 100%; display: flex; align-items: center; gap: 0.6rem; padding: 0.65rem 0.4rem; background: transparent; border: 0; cursor: pointer; font-family: inherit; text-align: left; border-radius: 0.5rem; }
+.ecw-ap-rowhead:hover { background: #f7f9fc; }
+.ecw-ap-row.selected .ecw-ap-rowhead:hover { background: transparent; }
+.ecw-ap-dot { width: 0.9rem; height: 0.9rem; flex: none; border-radius: 50%; border: 1.5px solid #cbd5e1; background: #fff; transition: border-color 0.13s ease, background 0.13s ease; }
+.ecw-ap-dot.on { border-color: var(--ecw-accent); background: var(--ecw-accent); box-shadow: inset 0 0 0 2px #fff; }
+.ecw-ap-main { display: flex; flex-direction: column; gap: 0.12rem; min-width: 0; flex: 1; }
+.ecw-ap-vendor { font-size: 0.84rem; font-weight: 650; color: var(--ecw-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ecw-ap-sub { display: flex; align-items: baseline; gap: 0.45rem; min-width: 0; flex-wrap: wrap; }
+.ecw-ap-subtext { font-size: 0.7rem; color: var(--ecw-muted); font-variant-numeric: tabular-nums; }
+.ecw-ap-aging { font-size: 0.68rem; color: var(--ecw-muted); opacity: 0.85; }
+.ecw-ap-amount { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9rem; font-weight: 750; color: var(--ecw-ink); font-variant-numeric: tabular-nums; flex: none; }
+.ecw-ap-due { font-size: 0.68rem; font-weight: 700; padding: 0.12rem 0.45rem; border-radius: 999px; flex: none; white-space: nowrap; }
+.ecw-ap-due.is-ok { color: var(--ecw-good); background: rgba(21, 128, 61, 0.1); }
+.ecw-ap-due.is-warn { color: var(--ecw-warn); background: rgba(180, 83, 9, 0.11); }
+.ecw-ap-due.is-bad { color: var(--ecw-bad); background: rgba(185, 28, 28, 0.1); }
+
+/* action bar — Approve (primary) / Hold (ghost); sent back to the agent */
+.ecw-ap-actions { display: flex; gap: 0.5rem; padding-top: 0.4rem; }
+.ecw-ap-cta { flex: 1; min-height: 2.6rem; padding: 0.6rem 0.9rem; display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; border: 0; border-radius: 0.6rem; background: var(--ecw-accent); color: #fff; font-family: inherit; font-size: 0.82rem; font-weight: 680; cursor: pointer; box-shadow: 0 10px 22px -12px color-mix(in oklab, var(--ecw-accent) 70%, transparent); transition: filter 0.15s ease, transform 0.05s ease; }
+.ecw-ap-cta:hover { filter: brightness(1.08); }
+.ecw-ap-cta:active { transform: translateY(1px); }
+.ecw-ap-cta svg { width: 1rem; height: 1rem; flex: none; }
+.ecw-ap-cta.is-ghost { background: #fff; color: var(--ecw-accent); border: 1px solid color-mix(in oklab, var(--ecw-accent) 40%, var(--ecw-line)); box-shadow: none; }
+.ecw-ap-cta.is-ghost:hover { background: color-mix(in srgb, var(--ecw-accent) 6%, #fff); filter: none; }
+.ecw-ap-done { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.4rem; padding: 0.6rem 0.8rem; border-radius: 0.6rem; background: color-mix(in srgb, var(--ecw-good) 8%, #fff); border: 1px solid color-mix(in oklab, var(--ecw-good) 30%, var(--ecw-line)); color: var(--ecw-good); }
+.ecw-ap-done svg { width: 1rem; height: 1rem; flex: none; }
+.ecw-ap-done-text { font-size: 0.82rem; font-weight: 700; }
+
+@container (max-width: 340px) {
+    .ecw-ap-hero-val { font-size: 2rem; }
+    .ecw-ap-due { display: none; }
+    .ecw-ap-actions { flex-direction: column; }
+}

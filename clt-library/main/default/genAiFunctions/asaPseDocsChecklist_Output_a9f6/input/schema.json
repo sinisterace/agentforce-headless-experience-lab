@@ -1,0 +1,16 @@
+{
+  "required": [
+    "Details"
+  ],
+  "unevaluatedProperties": false,
+  "properties": {
+    "Details": {
+      "title": "Details",
+      "description": "The full documents-checklist payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Required documents\",\"subtitle\":\"For your building permit application\",\"documents\":[{\"id\":\"id\",\"name\":\"Government-issued ID\",\"detail\":\"Driver's license or passport\",\"status\":\"received\"},{\"id\":\"proof\",\"name\":\"Proof of residency\",\"detail\":\"Utility bill within 60 days\",\"status\":\"required\"},{\"id\":\"site\",\"name\":\"Site plan\",\"detail\":\"PDF, drawn to scale\",\"status\":\"required\"},{\"id\":\"insurance\",\"name\":\"Contractor insurance\",\"detail\":\"Only if using a contractor\",\"status\":\"optional\"}],\"submitText\":\"Upload selected\",\"submitValue\":\"I'd like to upload the selected documents\"}\n\nRules:\n- 'title' (string, optional): heading; defaults to \"Required documents\".\n- 'subtitle' (string, optional): a short line under the title (e.g. what the documents are for).\n- 'documents' (array, REQUIRED, at least one object): the documents for this application/enrollment. Each MUST have 'id' (string, unique, sent back on selection) and 'name' (string). Optional per document: 'detail' (string, one short line, e.g. an accepted format or condition); 'status' (string; one of 'required','received','optional' — drives the status pill: required=navy, received=green, optional=muted; defaults to 'required'). A document with status 'received' is shown checked and is NOT selectable (it has already been provided). 'required' and 'optional' documents are multi-selectable.\n- 'submitText' (string, optional): confirm-button label; defaults to 'Upload selected'. The button shows the count of selected documents.\n- 'submitValue' (string, optional): a base message; the card appends the selected document names when sending back.\n\nUse these EXACT field names — they are the single contract the card reads.",
+      "lightning:type": "lightning__textType",
+      "lightning:isPII": false,
+      "copilotAction:isUserInput": false
+    }
+  },
+  "lightning:type": "lightning__objectType"
+}

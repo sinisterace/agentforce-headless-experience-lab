@@ -1,0 +1,80 @@
+<template>
+    <div class="asa-card">
+        <template if:true={title}>
+            <h3 class="asa-card-title">{title}</h3>
+        </template>
+
+        <div class="asa-advisor">
+            <span class="asa-advisor-avatar" aria-hidden="true">
+                <template if:true={advisor.hasPhoto}>
+                    <img src={advisor.photoUrl} alt="" class="asa-advisor-photo" />
+                </template>
+                <template if:false={advisor.hasPhoto}>
+                    <span class="asa-advisor-initials">{advisor.initials}</span>
+                </template>
+            </span>
+            <span class="asa-advisor-meta">
+                <span class="asa-advisor-name">{advisor.name}</span>
+                <template if:true={advisor.title}>
+                    <span class="asa-advisor-title">{advisor.title}</span>
+                </template>
+                <template if:true={advisor.specialty}>
+                    <span class="asa-advisor-specialty">{advisor.specialty}</span>
+                </template>
+            </span>
+        </div>
+
+        <template if:true={hasDays}>
+            <div class="asa-appt-days">
+                <template for:each={days} for:item="day">
+                    <div class="asa-appt-day" key={day.key}>
+                        <div class="asa-appt-day-head">
+                            <template if:true={day.dateTile}>
+                                <span class="asa-appt-cal" aria-hidden="true">
+                                    <span class="asa-appt-cal-wd">{day.dateTile.weekday}</span>
+                                    <span class="asa-appt-cal-day">{day.dateTile.day}</span>
+                                </span>
+                            </template>
+                            <span class="asa-appt-day-label">{day.dateLabel}</span>
+                        </div>
+                        <div class="asa-appt-slots">
+                            <template for:each={day.slots} for:item="slot">
+                                <button
+                                    key={slot.key}
+                                    type="button"
+                                    class={slot.slotClass}
+                                    data-day={slot.dayIndex}
+                                    data-slot={slot.slotIndex}
+                                    aria-pressed={slot.selected}
+                                    title={slot.typeLabel}
+                                    onclick={handleSelect}>
+
+                                    <span class="asa-appt-type" aria-hidden="true">
+                                        <template if:true={slot.isVideo}>
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m23 7-7 5 7 5V7z"></path><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+                                        </template>
+                                        <template if:true={slot.isPhone}>
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                                        </template>
+                                        <template if:true={slot.isBranch}>
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M3 10h18"></path><path d="m12 3 9 7H3l9-7z"></path><path d="M6 10v11M10 10v11M14 10v11M18 10v11"></path></svg>
+                                        </template>
+                                    </span>
+                                    <span class="asa-appt-time">{slot.timeDisplay}</span>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={showSubmit}>
+            <button type="button" class="asa-appt-submit" onclick={handleSubmit}>{submitText}</button>
+        </template>
+
+        <template if:true={errorMessage}>
+            <div class="asa-error">{errorMessage}</div>
+        </template>
+    </div>
+</template>

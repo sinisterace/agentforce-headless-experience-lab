@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Automotive · Vehicle Configurator",
+  "description" : "Renders a build-and-price configurator for a vehicle: base price, paint-color swatches, and single-select option groups (trim, drivetrain, packages) each with a price delta, plus a live estimated price and a reserve action.",
+  "lightning:type" : "@apexClassType/c__AsaAutoConfiguratorData"
+}

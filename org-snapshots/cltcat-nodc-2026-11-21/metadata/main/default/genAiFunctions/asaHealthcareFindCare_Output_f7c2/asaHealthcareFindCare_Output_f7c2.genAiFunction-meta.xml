@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Use this when the customer wants to find a place to get care near them — for example an urgent care, ER, primary care clinic, pharmacy, or lab. Shows a list of nearby facilities with distance, open-now status, hours, and buttons to open directions in maps or call.</description>
+    <developerName>asaHealthcareFindCare_Output_f7c2</developerName>
+    <invocationTarget>asaHealthcareFindCare_Output_f7c2</invocationTarget>
+    <invocationTargetType>flow</invocationTargetType>
+    <isConfirmationRequired>false</isConfirmationRequired>
+    <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+    <localDeveloperName>asaHealthcareFindCare_Output_f7c2</localDeveloperName>
+    <masterLabel>ASA Healthcare · Find Care Near You</masterLabel>
+    <progressIndicatorMessage>Finding care near you</progressIndicatorMessage>
+</GenAiFunction>

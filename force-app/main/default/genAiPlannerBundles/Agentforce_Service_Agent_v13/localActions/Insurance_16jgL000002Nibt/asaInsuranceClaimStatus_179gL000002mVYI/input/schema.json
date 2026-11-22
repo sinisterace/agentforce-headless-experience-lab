@@ -1,0 +1,15 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full claim-status payload as a JSON string, formatted EXACTLY like this: {\"title\":\"Your claims\",\"claims\":[{\"id\":\"clm-4471\",\"claimNumber\":\"CLM-4471\",\"type\":\"Collision\",\"policyLabel\":\"Auto — 2022 Tesla Model 3\",\"filedDate\":\"2026-07-28\",\"amount\":3200.00,\"currency\":\"USD\",\"status\":\"Review\",\"statusLabel\":\"In review\",\"updatedDate\":\"2026-08-05\",\"nextActionText\":\"Upload the repair estimate\",\"steps\":[{\"label\":\"Submitted\",\"state\":\"done\"},{\"label\":\"Review\",\"state\":\"current\"},{\"label\":\"Approved\",\"state\":\"upcoming\"},{\"label\":\"Paid\",\"state\":\"upcoming\"}]},{\"id\":\"clm-3120\",\"claimNumber\":\"CLM-3120\",\"type\":\"Water damage\",\"policyLabel\":\"Homeowners — 14 Elm St\",\"filedDate\":\"2026-06-10\",\"amount\":8750.00,\"currency\":\"USD\",\"status\":\"Paid\",\"statusLabel\":\"Paid\",\"updatedDate\":\"2026-07-02\",\"steps\":[{\"label\":\"Submitted\",\"state\":\"done\"},{\"label\":\"Review\",\"state\":\"done\"},{\"label\":\"Approved\",\"state\":\"done\"},{\"label\":\"Paid\",\"state\":\"done\"}]}],\"submitText\":\"Ask about a claim\"} Rules: - 'title' (string, optional): heading shown above the list. Defaults to 'Your claims'. - 'claims' (array, REQUIRED, at least one object): each claim MUST have 'id' (string, unique, sent back if the customer taps it), 'claimNumber' (string, the human-readable claim reference), and 'status' (string; one of 'Submitted','Review','Approved','Paid','Denied' — drives the accent colour and which step is current). Optional per claim: 'type' (string, e.g. 'Collision','Water damage'), 'policyLabel' (string, the policy the claim is on), 'filedDate' (string, ISO yyyy-mm-dd), 'amount' (number, the claimed or paid amount), 'currency' (ISO code string, defaults to 'USD'), 'statusLabel' (string, a friendly label for the status pill; defaults to the status), 'updatedDate' (string, ISO yyyy-mm-dd of the last update), 'nextActionText' (string, one short line describing what the customer needs to do next), and 'steps' (array of { 'label' (string), 'state' (string; one of 'done','current','upcoming') } describing the progress tracker). If 'steps' is omitted the card derives a default Submitted → Review → Approved → Paid tracker from 'status'. - 'submitText' (string, optional): label for the footer button that lets the customer ask about a claim; defaults to 'Ask about a claim'. Never emit an empty 'claims' array. Use the customer's real claims from context; if none are known, say so rather than inventing claim numbers. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType",
+  "lightning:textIndexed" : true
+}

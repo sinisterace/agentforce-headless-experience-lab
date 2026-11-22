@@ -1,0 +1,64 @@
+<template>
+    <div class="ecw-pm">
+        <!-- hero -->
+        <div class="ecw-pm-hero">
+            <span class="ecw-pm-eyebrow">Marketing</span>
+            <div class="ecw-pm-hero-row">
+                <strong class="ecw-pm-title">{title}</strong>
+                <span class="ecw-pm-count">{countText}</span>
+            </div>
+            <template if:true={heroStandout}><span class="ecw-pm-standout">{heroStandout}</span></template>
+        </div>
+
+        <!-- quadrant plot -->
+        <div class="ecw-pm-chartwrap">
+            <span class="ecw-pm-ylabel">{yLabel}</span>
+            <div class="ecw-pm-plot">
+                <span class="ecw-pm-axis-v" aria-hidden="true"></span>
+                <span class="ecw-pm-axis-h" aria-hidden="true"></span>
+                <span class="ecw-pm-quad ecw-pm-quad-tl">Optimize</span>
+                <span class="ecw-pm-quad ecw-pm-quad-tr">Scale</span>
+                <span class="ecw-pm-quad ecw-pm-quad-bl">Cut</span>
+                <span class="ecw-pm-quad ecw-pm-quad-br">Test</span>
+                <template for:each={bubbles} for:item="b">
+                    <button key={b.key} type="button" class={b.bubbleClass} style={b.style} data-key={b.key}
+                        onmouseenter={handleEnter} onmouseleave={handleLeave} onfocus={handleEnter} onblur={handleLeave} onclick={handleClick}
+                        aria-label={b.name}></button>
+                </template>
+            </div>
+            <span class="ecw-pm-xlabel">{xLabel}</span>
+        </div>
+
+        <!-- reveal readout -->
+        <template if:true={hasDetail}>
+            <div class="ecw-pm-detail">
+                <div class="ecw-pm-detail-head">
+                    <span class="ecw-pm-detail-name">{detail.name}</span>
+                    <span class={detail.quadClass}>{detail.quadLabel}</span>
+                </div>
+                <div class="ecw-pm-detail-metrics">
+                    <div class="ecw-pm-metric">
+                        <span class="ecw-pm-metric-label">{xLabel}</span>
+                        <span class="ecw-pm-metric-val">{detail.reachText}</span>
+                    </div>
+                    <div class="ecw-pm-metric">
+                        <span class="ecw-pm-metric-label">{yLabel}</span>
+                        <span class="ecw-pm-metric-val">{detail.engText}</span>
+                    </div>
+                    <div class="ecw-pm-metric">
+                        <span class="ecw-pm-metric-label">Conversions</span>
+                        <span class="ecw-pm-metric-val ecw-pm-metric-conv">
+                            {detail.convText}
+                            <template if:true={detail.trendUp}><svg class="ecw-pm-trend is-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17 L11 10 L15 14 L20 8"/><path d="M20 8h-5m5 0v5"/></svg></template>
+                            <template if:true={detail.trendDown}><svg class="ecw-pm-trend is-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7 L11 14 L15 10 L20 16"/><path d="M20 16h-5m5 0v-5"/></svg></template>
+                            <template if:true={detail.trendFlat}><svg class="ecw-pm-trend is-flat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16"/></svg></template>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </template>
+        <template if:false={hasDetail}>
+            <p class="ecw-pm-hint">Hover or tap an asset to see its metrics.</p>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,58 @@
+<template>
+    <div class="ecw-ar">
+        <div class="ecw-ar-hero">
+            <span class="ecw-ar-eyebrow">Outstanding receivables</span>
+            <div class="ecw-ar-hero-row">
+                <strong class="ecw-ar-hero-val">{heroValue}</strong>
+                <span class="ecw-ar-dso">{dsoText}</span>
+            </div>
+        </div>
+
+        <template if:true={hasChart}>
+            <div class="ecw-ar-bar">
+                <template for:each={segments} for:item="s">
+                    <span key={s.key} class="ecw-ar-seg" style={s.segStyle}></span>
+                </template>
+            </div>
+            <ul class="ecw-ar-legend">
+                <template for:each={legend} for:item="l">
+                    <li key={l.key} class="ecw-ar-leg-row">
+                        <span class="ecw-ar-dot" style={l.dotStyle}></span>
+                        <span class="ecw-ar-leg-label">{l.label}</span>
+                        <span class="ecw-ar-leg-pct">{l.pctText}</span>
+                        <span class="ecw-ar-leg-amt">{l.amountText}</span>
+                    </li>
+                </template>
+            </ul>
+        </template>
+
+        <template if:true={hasTop}>
+            <div class="ecw-ar-top">
+                <span class="ecw-ar-top-title">Top overdue accounts</span>
+                <div class="ecw-ar-top-list">
+                    <template for:each={top} for:item="t">
+                        <button key={t.key} type="button" class={t.rowClass} data-key={t.key} aria-pressed={t.selected} onclick={handleSelect}>
+                            <span class={t.dotClass} aria-hidden="true"></span>
+                            <span class="ecw-ar-top-acct">{t.account}</span>
+                            <span class={t.bucketClass}>{t.bucket}</span>
+                            <span class="ecw-ar-top-amt">{t.amountText}</span>
+                        </button>
+                    </template>
+                </div>
+                <template if:true={showRemind}>
+                    <button type="button" class="ecw-ar-cta" onclick={handleRemind}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                        {remindLabel}
+                    </button>
+                </template>
+
+                <template if:true={done}>
+                    <div class="ecw-ar-done">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+                        <span class="ecw-ar-done-text">{doneText}</span>
+                    </div>
+                </template>
+            </div>
+        </template>
+    </div>
+</template>

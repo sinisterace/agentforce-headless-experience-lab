@@ -1,0 +1,53 @@
+/* EcwForecastCard — React preview mirror of the ecwForecast LWC (Energy & Utilities
+   design: warm-stone neutrals + amber accent, squared geometry, hairline rows). */
+.ecw-fc {
+    --fc-accent: #d97706;
+    --fc-line: #e7e5e4;
+    --fc-ink: #1c1917;
+    --fc-muted: #78716c;
+    --fc-panel: #faf7f2;
+    --fc-good: #15803d;
+    padding: 0.9rem;
+    font-family: inherit;
+    color: var(--fc-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.ecw-fc *, .ecw-fc *::before, .ecw-fc *::after { box-sizing: border-box; }
+
+.ecw-fc-head { display: flex; flex-direction: column; align-items: flex-start; gap: 0.1rem; margin-bottom: 0.65rem; }
+.ecw-fc-eyebrow { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.09em; color: var(--fc-muted); }
+.ecw-fc-title { font-size: 1.12rem; font-weight: 700; letter-spacing: -0.02em; margin: 0; color: var(--fc-ink); }
+
+.ecw-fc-readout { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.4rem 0.6rem; padding: 0.7rem 0.75rem; border-radius: 6px; background: var(--fc-panel); }
+.ecw-fc-proj { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; flex: 1 1 8rem; }
+.ecw-fc-proj-eyebrow { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; color: var(--fc-muted); }
+.ecw-fc-proj-value { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1.72rem; font-weight: 750; line-height: 1.04; letter-spacing: -0.03em; color: var(--fc-ink); font-variant-numeric: tabular-nums; }
+.ecw-fc-sub { font-size: 0.66rem; font-weight: 600; color: var(--fc-muted); margin-top: 0.1rem; }
+.ecw-fc-cov { display: inline-flex; align-items: center; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.66rem; font-weight: 750; letter-spacing: -0.01em; padding: 0.24rem 0.46rem; border-radius: 4px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ecw-fc-cov.is-strong { color: var(--fc-good); background: color-mix(in srgb, var(--fc-good) 12%, #fff); }
+.ecw-fc-cov.is-soft { color: var(--fc-accent); background: color-mix(in srgb, var(--fc-accent) 13%, #fff); }
+
+.ecw-fc-chart { margin-top: 0.75rem; padding: 0.55rem 0.5rem 0.3rem; border: 1px solid var(--fc-line); border-radius: 6px; background: #fff; }
+.ecw-fc-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.ecw-fc-base { stroke: var(--fc-line); stroke-width: 2; }
+.ecw-fc-rect { shape-rendering: crispEdges; }
+.ecw-fc-colval { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 7.5px; font-weight: 700; fill: var(--fc-ink); letter-spacing: -0.02em; }
+.ecw-fc-collabel { font-size: 7px; font-weight: 650; fill: var(--fc-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+
+.ecw-fc-breakdown { margin-top: 0.75rem; }
+.ecw-fc-meter { display: flex; width: 100%; height: 0.7rem; border-radius: 3px; overflow: hidden; background: #f1efec; }
+.ecw-fc-seg { height: 100%; }
+.ecw-fc-seg + .ecw-fc-seg { border-left: 1.5px solid #fff; }
+.ecw-fc-legend { list-style: none; margin: 0.5rem 0 0; padding: 0; }
+.ecw-fc-leg { display: flex; align-items: center; gap: 0.45rem; padding: 0.4rem 0; border-top: 1px solid var(--fc-line); }
+.ecw-fc-leg:first-child { border-top: 0; }
+.ecw-fc-leg-dot { width: 0.62rem; height: 0.62rem; border-radius: 2px; flex-shrink: 0; }
+.ecw-fc-leg-label { flex: 1; min-width: 0; font-size: 0.74rem; font-weight: 600; color: var(--fc-ink); overflow-wrap: break-word; }
+.ecw-fc-leg-pct { font-size: 0.68rem; font-weight: 650; color: var(--fc-muted); font-variant-numeric: tabular-nums; }
+.ecw-fc-leg-amt { min-width: 3.4rem; text-align: right; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.74rem; font-weight: 700; color: var(--fc-ink); font-variant-numeric: tabular-nums; white-space: nowrap; flex-shrink: 0; }
+
+@container (max-width: 300px) {
+    .ecw-fc-proj-value { font-size: 1.5rem; }
+    .ecw-fc-leg-pct { display: none; }
+}

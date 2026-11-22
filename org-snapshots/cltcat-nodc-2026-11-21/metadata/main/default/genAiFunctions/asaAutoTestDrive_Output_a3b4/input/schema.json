@@ -1,0 +1,14 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full test-drive-scheduler payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Book a test drive\",\"vehicle\":{\"name\":\"Electric SUV\",\"trim\":\"RS AWD · Radiant Red\",\"imageUrl\":\"\",\"initials\":\"EV\"},\"location\":{\"name\":\"Downtown Dealership\",\"address\":\"500 Market St, San Francisco\"},\"days\":[{\"date\":\"2026-09-16\",\"slots\":[{\"id\":\"a\",\"time\":\"09:30\",\"driveType\":\"showroom\"},{\"id\":\"b\",\"time\":\"13:00\",\"driveType\":\"at_home\"}]},{\"date\":\"2026-09-17\",\"slots\":[{\"id\":\"c\",\"time\":\"10:00\",\"driveType\":\"showroom\"},{\"id\":\"d\",\"time\":\"15:30\",\"driveType\":\"showroom\"}]},{\"date\":\"2026-09-18\",\"slots\":[{\"id\":\"e\",\"time\":\"11:00\",\"driveType\":\"at_home\"},{\"id\":\"f\",\"time\":\"16:00\",\"driveType\":\"showroom\"}]},{\"date\":\"2026-09-21\",\"slots\":[{\"id\":\"g\",\"time\":\"09:00\",\"driveType\":\"showroom\"},{\"id\":\"h\",\"time\":\"14:00\",\"driveType\":\"at_home\"}]},{\"date\":\"2026-09-22\",\"slots\":[{\"id\":\"i\",\"time\":\"10:30\",\"driveType\":\"showroom\"},{\"id\":\"j\",\"time\":\"17:00\",\"driveType\":\"showroom\"}]}],\"submitText\":\"Book test drive\"}\n\nRules:\n- 'title' (string, optional): heading. Defaults to 'Book a test drive'.\n- 'vehicle' (object, optional): { 'name' (string, REQUIRED when present — the model being driven); 'trim' (string, optional — trim/color line); 'imageUrl' (string, optional — a full https image URL; falls back to initials if it fails to load); 'initials' (string, optional — 1-2 letters shown when there is no image) }.\n- 'location' (object, optional): { 'name' (string), 'address' (string) } — the dealership.\n- 'days' (array, REQUIRED): each { 'date' (string, REQUIRED — ISO 'YYYY-MM-DD'); 'slots' (array, REQUIRED) of { 'id' (string, REQUIRED — sent back on selection); 'time' (string, REQUIRED — 24h 'HH:MM', rendered as '1:30 PM'); 'driveType' (string, optional — one of showroom | at_home; drives the slot glyph + hue) } }. Do NOT emit empty days or empty slot arrays.\n- 'submitText' (string, optional): confirm-button label; defaults to 'Book test drive'. The customer taps a time slot to select it, then this button books it.\n\nUse these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

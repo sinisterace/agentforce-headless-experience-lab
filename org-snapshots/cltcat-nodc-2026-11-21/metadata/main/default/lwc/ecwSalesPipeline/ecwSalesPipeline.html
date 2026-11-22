@@ -1,0 +1,48 @@
+<template>
+    <div class="ecw-pipe">
+
+        <!-- Hero: the one headline number, leads the card (no header chrome) -->
+        <template if:true={hasHero}>
+            <div class="ecw-pipe-hero">
+                <span class="ecw-pipe-hero-label">Open pipeline</span>
+                <div class="ecw-pipe-hero-row">
+                    <strong class="ecw-pipe-hero-val">{heroValue}</strong>
+                    <template if:true={hasDelta}>
+                        <span class={deltaClass}>
+                            <span class="ecw-pipe-delta-arrow" aria-hidden="true">{deltaArrow}</span>{deltaLabel}
+                        </span>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+        <!-- Stage breakdown: one direct-labeled horizontal bar per stage -->
+        <template if:true={hasStages}>
+            <div class="ecw-pipe-stages">
+                <template for:each={stages} for:item="s">
+                    <div key={s.key} class="ecw-pipe-row">
+                        <div class="ecw-pipe-row-top">
+                            <span class="ecw-pipe-row-label">{s.label}</span>
+                            <span class="ecw-pipe-row-val">{s.amountText}</span>
+                        </div>
+                        <div class="ecw-pipe-track">
+                            <span class="ecw-pipe-fill" style={s.fillStyle}></span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <!-- Open metrics strip — hairline dividers, no boxes -->
+        <template if:true={hasStats}>
+            <dl class="ecw-pipe-stats">
+                <template for:each={stats} for:item="st">
+                    <div key={st.key} class={st.tileClass}>
+                        <dt>{st.label}</dt>
+                        <dd>{st.value}</dd>
+                    </div>
+                </template>
+            </dl>
+        </template>
+    </div>
+</template>

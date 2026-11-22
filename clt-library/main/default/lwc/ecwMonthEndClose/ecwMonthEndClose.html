@@ -1,0 +1,37 @@
+<template>
+    <div class="ecw-mc">
+        <div class="ecw-mc-hero">
+            <span class="ecw-mc-eyebrow">Month-end close</span>
+            <div class="ecw-mc-hero-row">
+                <strong class="ecw-mc-pct">{pctText}</strong>
+                <div class="ecw-mc-hero-meta">
+                    <span class="ecw-mc-headline">{headline}</span>
+                    <template if:true={targetText}><span class="ecw-mc-target">{targetText}</span></template>
+                </div>
+            </div>
+            <div class="ecw-mc-progress"><span class="ecw-mc-progress-bar" style={barStyle}></span></div>
+        </div>
+
+        <template if:true={hasTasks}>
+            <ul class="ecw-mc-list">
+                <template for:each={tasks} for:item="t">
+                    <li key={t.key} class={t.rowClass}>
+                        <div class="ecw-mc-rowwrap">
+                            <button type="button" class="ecw-mc-rowhead" data-key={t.key} onclick={toggleTask}>
+                                <span class={t.markClass}>{t.markLabel}</span>
+                                <span class={t.nameClass}>{t.name}</span>
+                                <svg class={t.caretClass} viewBox="0 0 24 24" aria-hidden="true"><path d="m8 10 4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                            <template if:true={t.showAction}>
+                                <button type="button" class={t.actClass} data-key={t.key} onclick={handleAction} disabled={t.actDisabled}>{t.actLabel}</button>
+                            </template>
+                        </div>
+                        <template if:true={t.expanded}>
+                            <p class="ecw-mc-note">{t.note}</p>
+                        </template>
+                    </li>
+                </template>
+            </ul>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,219 @@
+/* ASA Retail · Store Pickup — a list of nearby stores with stock status,
+   distance, pickup ETA, hours, and Directions/Call links; the customer picks
+   a store via a single-select radio and reserves it for pickup. An optional
+   product context row shows what's being picked up. rem units + inherited
+   font so the card matches the host chat theme in Enhanced Chat v2. Retail
+   indigo accent + neutrals are local custom props for easy theming. */
+:host {
+    --asa-accent: #4f46e5;
+    --asa-line: #e5e7eb;
+    --asa-ink: #101828;
+    --asa-muted: #667085;
+    --asa-ok: #15803d;
+    --asa-low: #b45309;
+    --asa-out: #c0392b;
+    --asa-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+    --asa-shadow-md: 0 10px 26px rgba(15, 23, 42, 0.14);
+    --asa-radius: 14px;
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    /* Enhanced Chat v2 renders this in a ~320px column; size the content to the
+       card, not the viewport, so it also reads well on wide desktop GenAi. */
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after {
+    box-sizing: border-box;
+}
+
+.asa-test-badge {
+    margin: 0 0 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 8px;
+    background: #fff7ed;
+    color: #b45309;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+.selector-title {
+    font-size: 1.05rem;
+    font-weight: 680;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.1rem;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-card-sub {
+    margin: 0 0 0.6rem;
+    font-size: 0.78rem;
+    color: var(--asa-muted);
+}
+
+/* --- Store Pickup --- */
+.asa-sp-product { display: flex; align-items: center; gap: 0.55rem; padding: 0.5rem 0.6rem; border: 1px solid var(--asa-line); border-radius: 12px; background: color-mix(in srgb, var(--asa-accent) 4%, #fff); margin-bottom: 0.75rem; }
+.asa-sp-prod-thumb { width: 2.4rem; height: 2.4rem; border-radius: 10px; overflow: hidden; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(155deg, color-mix(in srgb, var(--rt-hue, #8b5cf6) 16%, #fff), color-mix(in srgb, var(--rt-hue, #8b5cf6) 6%, #fff)); }
+.asa-sp-prod-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.asa-sp-prod-glyph { display: inline-flex; }
+.asa-sp-prod-glyph svg { width: 1.1rem; height: 1.1rem; stroke-width: 1.5; color: color-mix(in srgb, var(--rt-hue, #8b5cf6) 62%, #475569); }
+.asa-sp-prod-text { display: flex; flex-direction: column; gap: 0.06rem; min-width: 0; }
+.asa-sp-prod-name { font-size: 0.82rem; font-weight: 640; color: var(--asa-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.asa-sp-prod-variant { font-size: 0.72rem; color: var(--asa-muted); }
+.asa-sp-list { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.85rem; }
+.asa-sp-store { border: 1px solid var(--asa-line); border-radius: 12px; background: #fff; overflow: hidden; transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease; }
+.asa-sp-store.is-selected { border-color: var(--asa-accent); background: color-mix(in srgb, var(--asa-accent) 5%, #fff); box-shadow: 0 0 0 1px var(--asa-accent); }
+.asa-sp-store.is-out { opacity: 0.72; }
+.asa-sp-pick { display: flex; align-items: flex-start; gap: 0.55rem; width: 100%; text-align: left; padding: 0.6rem; background: transparent; border: none; cursor: pointer; }
+.asa-sp-pick:disabled { cursor: default; }
+.asa-sp-radio { width: 1.15rem; height: 1.15rem; border-radius: 999px; border: 2px solid var(--asa-line); flex-shrink: 0; margin-top: 0.1rem; display: inline-flex; align-items: center; justify-content: center; background: #fff; }
+.asa-sp-store.is-selected .asa-sp-radio { border-color: var(--asa-accent); }
+.asa-sp-radio-dot { width: 0.6rem; height: 0.6rem; border-radius: 999px; background: var(--asa-accent); }
+.asa-sp-store-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.22rem; }
+.asa-sp-store-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.4rem; }
+.asa-sp-store-name { font-size: 0.85rem; font-weight: 660; color: var(--asa-ink); }
+.asa-sp-dist { font-size: 0.72rem; color: var(--asa-muted); white-space: nowrap; }
+.asa-sp-meta { display: flex; align-items: center; gap: 0.55rem; flex-wrap: wrap; }
+.asa-sp-avail { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.72rem; font-weight: 620; }
+.asa-sp-avail-dot { width: 0.5rem; height: 0.5rem; border-radius: 999px; }
+.asa-sp-avail.is-in { color: var(--asa-ok); }
+.asa-sp-avail.is-in .asa-sp-avail-dot { background: var(--asa-ok); }
+.asa-sp-avail.is-low { color: var(--asa-low); }
+.asa-sp-avail.is-low .asa-sp-avail-dot { background: var(--asa-low); }
+.asa-sp-avail.is-out { color: var(--asa-out); }
+.asa-sp-avail.is-out .asa-sp-avail-dot { background: var(--asa-out); }
+.asa-sp-eta { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.72rem; font-weight: 620; color: var(--asa-accent); }
+.asa-sp-eta svg { width: 0.85rem; height: 0.85rem; }
+.asa-sp-line { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.74rem; color: var(--asa-muted); }
+.asa-sp-line svg { width: 0.85rem; height: 0.85rem; flex-shrink: 0; }
+.asa-sp-hours { font-size: 0.72rem; color: var(--asa-muted); }
+.asa-sp-links { display: flex; gap: 0.75rem; padding: 0 0.6rem 0.6rem 2.3rem; }
+.asa-sp-link { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.72rem; font-weight: 620; color: var(--asa-accent); text-decoration: none; }
+.asa-sp-link svg { width: 0.85rem; height: 0.85rem; }
+.asa-sp-link:hover { text-decoration: underline; }
+.asa-sp-submit {
+    width: 100%;
+    padding: 0.62rem;
+    border: none;
+    border-radius: 10px;
+    background: var(--asa-accent);
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 660;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    transition: background 0.15s ease;
+}
+.asa-sp-submit svg { width: 0.95rem; height: 0.95rem; }
+.asa-sp-submit:hover:not(:disabled) { background: color-mix(in srgb, var(--asa-accent) 88%, #000); }
+.asa-sp-submit:disabled { background: #e4e7ec; color: var(--asa-muted); cursor: not-allowed; }
+
+/* Nearby inventory finder. */
+.asa-sp-intro { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.65rem; margin-bottom: 0.55rem; }
+.asa-sp-intro > div { min-width: 0; }
+.asa-sp-intro .asa-card-sub { margin-bottom: 0; }
+.asa-sp-kicker { display: block; margin-bottom: 0.18rem; color: var(--asa-accent); font-size: 0.6rem; font-weight: 780; letter-spacing: 0.13em; line-height: 1; text-transform: uppercase; }
+.asa-sp-count { display: inline-flex; align-items: center; justify-content: center; gap: 0.18rem; min-width: 2.2rem; padding: 0.28rem 0.42rem; border-radius: 999px; background: var(--asa-ink); color: #fff; font-size: 0.64rem; font-weight: 720; white-space: nowrap; }
+.asa-sp-count svg { width: 0.72rem; height: 0.72rem; }
+.asa-sp-store-aside { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: flex-end; gap: 0.3rem; white-space: nowrap; }
+.asa-sp-best { padding: 0.16rem 0.34rem; border-radius: 999px; background: color-mix(in srgb, var(--asa-accent) 10%, #fff); color: var(--asa-accent); font-size: 0.54rem; font-weight: 740; letter-spacing: 0.03em; text-transform: uppercase; }
+@container (max-width: 300px) {
+    .asa-sp-store-head { align-items: flex-start; }
+    .asa-sp-store-aside { flex-direction: column; align-items: flex-end; gap: 0.12rem; }
+}
+
+/* ── Neighborhood inventory finder redesign ──────────────────────────── */
+.selector-title { font-size: 1.2rem; letter-spacing: -0.04em; }
+.asa-sp-map { position: relative; height: 10.5rem; margin: 0.2rem 0 0; border-radius: 18px 18px 4px 4px; overflow: hidden; background-color: #e9f0e5; background-image: linear-gradient(30deg, rgba(255,255,255,0.48) 12%, transparent 12.5%, transparent 87%, rgba(255,255,255,0.48) 87.5%), linear-gradient(150deg, rgba(255,255,255,0.48) 12%, transparent 12.5%, transparent 87%, rgba(255,255,255,0.48) 87.5%); background-size: 3.2rem 5.4rem; box-shadow: inset 0 0 0 1px rgba(71, 85, 105, 0.09); }
+.asa-sp-road { position: absolute; z-index: 1; display: block; background: #fff; box-shadow: 0 0 0 1px #d6ded5; }
+.asa-sp-road::after { content: ''; position: absolute; inset: 50% 0 auto; border-top: 1px dashed #c4cec2; }
+.asa-sp-road.is-a { width: 125%; height: 1.05rem; left: -12%; top: 42%; transform: rotate(-13deg); }
+.asa-sp-road.is-b { width: 1.1rem; height: 145%; left: 63%; top: -20%; transform: rotate(20deg); }
+.asa-sp-road.is-b::after { inset: 0 auto 0 50%; border-top: 0; border-left: 1px dashed #c4cec2; }
+.asa-sp-road.is-c { width: 70%; height: 0.7rem; left: -10%; bottom: 14%; transform: rotate(8deg); }
+.asa-sp-map-pin { position: absolute; z-index: 3; display: inline-flex; align-items: center; justify-content: center; width: 1.75rem; height: 1.75rem; border: 3px solid #fff; border-radius: 50% 50% 50% 4px; background: #0f172a; box-shadow: 0 5px 12px rgba(15,23,42,0.28); color: #fff; font-size: 0.6rem; font-weight: 800; }
+.asa-sp-map-pin.p1 { left: 18%; top: 25%; }
+.asa-sp-map-pin.p2 { right: 19%; top: 16%; background: var(--asa-accent); }
+.asa-sp-map-pin.p3 { right: 28%; bottom: 18%; background: #64748b; }
+.asa-sp-map-pin.is-out { background: #94a3b8; opacity: 0.72; }
+.asa-sp-map-caption { position: absolute; z-index: 4; left: 0.58rem; bottom: 0.58rem; display: flex; flex-direction: column; min-width: 8.8rem; padding: 0.45rem 0.54rem; border: 1px solid rgba(255,255,255,0.68); border-radius: 9px; background: rgba(15,23,42,0.9); box-shadow: 0 8px 18px rgba(15,23,42,0.2); color: #fff; backdrop-filter: blur(6px); }
+.asa-sp-map-caption small { color: #94a3b8; font-size: 0.49rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.asa-sp-map-caption b { margin-top: 0.08rem; font-size: 0.7rem; }
+.asa-sp-product { position: relative; z-index: 5; margin: -0.45rem 0 0.85rem 0.8rem; width: calc(100% - 1.6rem); padding: 0.58rem; border: 0; border-radius: 11px; background: #fff; box-shadow: 0 10px 22px rgba(15,23,42,0.14); }
+.asa-sp-prod-thumb { width: 2.8rem; height: 2.8rem; border-radius: 7px; }
+.asa-sp-prod-name { font-family: Georgia, 'Times New Roman', serif; font-size: 0.88rem; font-weight: 700; }
+.asa-sp-list { gap: 0.58rem; }
+.asa-sp-store { position: relative; border: 0; border-radius: 4px 14px 14px 4px; background: #f8fafc; box-shadow: inset 3px 0 0 #cbd5e1, 0 5px 14px rgba(15,23,42,0.07); }
+.asa-sp-store::after { content: ''; position: absolute; top: 0.68rem; bottom: 0.68rem; right: 2.3rem; border-right: 1px dashed #cbd5e1; pointer-events: none; }
+.asa-sp-store.is-best { background: #fff; box-shadow: inset 5px 0 0 var(--asa-accent), 0 12px 24px rgba(15,23,42,0.12); }
+.asa-sp-store.is-selected { border-color: transparent; background: #0f172a; box-shadow: inset 5px 0 0 #38bdf8, 0 12px 24px rgba(15,23,42,0.22); }
+.asa-sp-pick { gap: 0.48rem; padding: 0.72rem 0.62rem; }
+.asa-sp-rank { align-self: flex-start; width: 1.15rem; padding-top: 0.13rem; color: #94a3b8; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.52rem; font-weight: 760; letter-spacing: 0.08em; }
+.asa-sp-radio { width: 1rem; height: 1rem; border-width: 1px; }
+.asa-sp-radio-dot { width: 0.52rem; height: 0.52rem; }
+.asa-sp-store.is-selected .asa-sp-store-name { color: #f8fafc; }
+.asa-sp-store.is-selected .asa-sp-dist, .asa-sp-store.is-selected .asa-sp-line, .asa-sp-store.is-selected .asa-sp-hours { color: #94a3b8; }
+.asa-sp-store.is-selected .asa-sp-best { background: #e0f2fe; color: #075985; }
+.asa-sp-store.is-selected .asa-sp-radio { border-color: #7dd3fc; background: rgba(255,255,255,0.08); }
+.asa-sp-store-head { align-items: flex-start; }
+.asa-sp-store-name { font-size: 0.88rem; letter-spacing: -0.015em; }
+.asa-sp-links { padding: 0 0.62rem 0.65rem 3.95rem; }
+.asa-sp-store.is-selected .asa-sp-link { color: #7dd3fc; }
+.asa-sp-submit { min-height: 2.75rem; border-radius: 10px; background: #0f172a; }
+.asa-sp-submit:hover:not(:disabled) { background: #1e293b; }
+@container (max-width: 300px) {
+    .asa-sp-map { height: 9.5rem; }
+    .asa-sp-store::after { display: none; }
+    .asa-sp-pick { gap: 0.38rem; padding: 0.62rem 0.5rem; }
+    .asa-sp-rank { display: none; }
+    .asa-sp-links { padding-left: 2.05rem; }
+}
+
+.asa-card { font-family: "Avenir Next", Avenir, "Century Gothic", sans-serif; }
+.selector-title,
+.asa-sp-prod-name { font-family: "Avenir Next", Avenir, "Century Gothic", sans-serif; font-weight: 700; }
+.asa-sp-prod-name { font-size: 0.88rem; letter-spacing: -0.02em; }
+
+/* Cartographic pickup surface: block, street, park, and label hierarchy. */
+.asa-sp-map { background: #edf1e9; border: 1px solid #d7ddd4; border-radius: 14px 14px 5px 5px; }
+.asa-sp-map-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.asa-sp-park { fill: #d9ead3; stroke: #c5dcc0; stroke-width: 1; }
+.asa-sp-blocks { fill: #f8f8f5; stroke: #dfe3dc; stroke-width: 1; }
+.asa-sp-streets { fill: none; stroke: #fff; stroke-width: 13; stroke-linecap: round; }
+.asa-sp-street-centers { fill: none; stroke: #cbd2c8; stroke-width: 0.8; stroke-dasharray: 5 4; }
+.asa-sp-map-labels { fill: #687267; font-family: "Avenir Next", Avenir, sans-serif; font-size: 7px; font-weight: 600; letter-spacing: 0.02em; }
+.asa-sp-map-labels text:first-child { fill: #66845f; font-size: 8px; font-weight: 700; }
+.asa-sp-map-pin { width: 1.65rem; height: 1.65rem; border-width: 2px; border-radius: 50% 50% 50% 6px; transform: rotate(-45deg); background: #2563eb; box-shadow: 0 3px 10px rgba(30, 64, 175, 0.3); color: transparent; }
+.asa-sp-map-pin.p1 { left: 20%; top: 28%; }
+.asa-sp-map-pin.p2 { right: 22%; top: 22%; background: #2563eb; }
+.asa-sp-map-pin.p3 { right: 31%; bottom: 18%; background: #64748b; }
+.asa-sp-map-pin::after { content: ''; width: 0.42rem; height: 0.42rem; border-radius: 50%; background: #fff; }
+.asa-sp-map-caption { left: 0.55rem; bottom: 0.5rem; min-width: 0; padding: 0.42rem 0.52rem; border-color: rgba(203, 213, 225, 0.8); border-radius: 8px; background: rgba(255,255,255,0.94); color: #172033; box-shadow: 0 3px 12px rgba(30, 41, 59, 0.13); backdrop-filter: blur(5px); }
+.asa-sp-map-caption b { margin: 0; font-size: 0.67rem; }
+.asa-sp-map-caption small { order: 2; margin-top: 0.05rem; color: #64748b; font-size: 0.48rem; letter-spacing: 0.02em; text-transform: none; }
+
+/* Final pickup sizing and Returns-aligned selected state, without a color rail. */
+.asa-sp-product { min-height: 4.65rem; gap: 0.75rem; margin-top: -0.35rem; padding: 0.62rem 0.72rem; }
+.asa-sp-prod-thumb { width: 4.4rem; height: 3.4rem; border-radius: 8px; background: #fff; }
+.asa-sp-prod-thumb img { display: block; width: 100%; height: 100%; padding: 0.12rem; border-radius: 0; background: #fff; object-fit: contain; }
+.asa-sp-store.is-best { box-shadow: 0 8px 20px rgba(15,23,42,0.1); }
+.asa-sp-store.is-selected { border: 1px solid color-mix(in srgb, var(--asa-accent) 65%, #cbd5e1); background: linear-gradient(90deg, color-mix(in srgb, var(--asa-accent) 8%, #fff), #fff 78%); box-shadow: 0 0 0 1px color-mix(in srgb, var(--asa-accent) 35%, transparent), 0 10px 22px rgba(15,23,42,0.11); }
+.asa-sp-store.is-selected .asa-sp-store-name { color: #101828; }
+.asa-sp-store.is-selected .asa-sp-dist,
+.asa-sp-store.is-selected .asa-sp-line,
+.asa-sp-store.is-selected .asa-sp-hours { color: #667085; }
+.asa-sp-store.is-selected .asa-sp-radio { border-color: #0f172a; background: #0f172a; }
+.asa-sp-store.is-selected .asa-sp-radio-dot { background: #fff; }
+.asa-sp-store.is-selected .asa-sp-link { color: #0969da; }
+@container (max-width: 300px) {
+    .asa-sp-product { min-height: 4.15rem; gap: 0.55rem; padding: 0.5rem 0.58rem; }
+    .asa-sp-prod-thumb { width: 3.65rem; height: 2.9rem; }
+}

@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · Marketing · Performance matrix",
+  "description" : "Agentforce Coworker · Marketing · Performance matrix renderer.",
+  "lightning:type" : "@apexClassType/c__EcwPerformanceMatrixData"
+}

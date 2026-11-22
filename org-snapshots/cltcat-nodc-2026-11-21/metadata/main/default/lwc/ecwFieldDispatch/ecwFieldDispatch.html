@@ -1,0 +1,160 @@
+<template>
+    <div class="ecw-fd">
+        <!-- Appointment context -->
+        <div class="ecw-fd-head">
+            <div class="ecw-fd-head-top">
+                <span class="ecw-fd-eyebrow">Dispatch</span>
+                <template if:true={appt.hasSla}><span class={slaClass}>{appt.slaText}</span></template>
+            </div>
+            <div class="ecw-fd-appt">
+                <div class="ecw-fd-appt-main">
+                    <span class="ecw-fd-appt-cust">{appt.customer}</span>
+                    <span class="ecw-fd-appt-sub">
+                        <template if:true={appt.number}><span class="ecw-fd-appt-num">{appt.number}</span></template>
+                        <template if:true={appt.jobType}><span>· {appt.jobType}</span></template>
+                    </span>
+                </div>
+                <template if:true={appt.hasPriority}><span class="ecw-fd-prio">{appt.priority}</span></template>
+            </div>
+            <div class="ecw-fd-meta">
+                <template if:true={appt.hasWindow}><span class="ecw-fd-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>{appt.window}</span></template>
+                <template if:true={appt.hasAddress}><span class="ecw-fd-meta-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-5.3-7-11a7 7 0 0 1 14 0c0 5.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>{appt.address}</span></template>
+            </div>
+            <template if:true={appt.hasCurrent}>
+                <div class="ecw-fd-current">
+                    <span class="ecw-fd-current-dot" aria-hidden="true"></span>
+                    <span class="ecw-fd-current-text">{appt.currentTech} · {appt.currentIssue}</span>
+                </div>
+            </template>
+        </div>
+
+        <!-- Live dispatch map -->
+        <div class="ecw-fd-map">
+            <div class="ecw-fd-map-head">
+                <span class="ecw-fd-map-title">Nearby technicians</span>
+                <span class="ecw-fd-live"><span class="ecw-fd-live-dot" aria-hidden="true"></span>LIVE</span>
+            </div>
+            <div class="ecw-fd-canvas">
+                <svg class="ecw-fd-mapbase" viewBox="0 0 400 220" preserveAspectRatio="none" aria-hidden="true">
+                    <!-- land -->
+                    <rect width="400" height="220" fill="#edf0f5"/>
+                    <!-- green space -->
+                    <rect x="14" y="150" width="76" height="58" rx="6" fill="#dcebd4"/>
+                    <path d="M312,150 q40,-8 74,8 l0,50 -74,0 z" fill="#dcebd4"/>
+                    <!-- water -->
+                    <ellipse cx="352" cy="34" rx="44" ry="26" fill="#d1e3f3"/>
+                    <!-- building blocks -->
+                    <g fill="#e4e8f0">
+                        <rect x="14" y="12" width="74" height="34" rx="3"/><rect x="120" y="12" width="76" height="34" rx="3"/><rect x="228" y="12" width="66" height="30" rx="3"/>
+                        <rect x="14" y="70" width="74" height="46" rx="3"/><rect x="120" y="70" width="76" height="46" rx="3"/><rect x="228" y="70" width="68" height="46" rx="3"/>
+                        <rect x="322" y="86" width="64" height="30" rx="3"/><rect x="120" y="142" width="76" height="60" rx="3"/><rect x="228" y="142" width="68" height="60" rx="3"/>
+                    </g>
+                    <g fill="#e9edf4">
+                        <rect x="40" y="12" width="24" height="34" rx="2"/><rect x="150" y="70" width="26" height="46" rx="2"/><rect x="250" y="142" width="24" height="60" rx="2"/>
+                    </g>
+                    <!-- minor streets -->
+                    <g stroke="#e6eaf1" stroke-width="4" fill="none">
+                        <line x1="56" y1="0" x2="56" y2="220"/><line x1="156" y1="0" x2="156" y2="220"/><line x1="260" y1="0" x2="260" y2="220"/><line x1="356" y1="0" x2="356" y2="220"/><line x1="0" y1="96" x2="400" y2="96"/>
+                    </g>
+                    <!-- arterial casing -->
+                    <g stroke="#d7dce6" stroke-width="13" fill="none">
+                        <line x1="0" y1="56" x2="400" y2="56"/><line x1="0" y1="128" x2="400" y2="128"/><line x1="104" y1="0" x2="104" y2="220"/><line x1="208" y1="0" x2="208" y2="220"/><line x1="308" y1="0" x2="308" y2="220"/>
+                    </g>
+                    <!-- arterial fill -->
+                    <g stroke="#ffffff" stroke-width="9" fill="none">
+                        <line x1="0" y1="56" x2="400" y2="56"/><line x1="0" y1="128" x2="400" y2="128"/><line x1="104" y1="0" x2="104" y2="220"/><line x1="208" y1="0" x2="208" y2="220"/><line x1="308" y1="0" x2="308" y2="220"/>
+                    </g>
+                    <!-- centre lane dashes -->
+                    <g stroke="#e5e8ef" stroke-width="1.2" stroke-dasharray="7,8" fill="none">
+                        <line x1="0" y1="56" x2="400" y2="56"/><line x1="0" y1="128" x2="400" y2="128"/><line x1="104" y1="0" x2="104" y2="220"/><line x1="208" y1="0" x2="208" y2="220"/><line x1="308" y1="0" x2="308" y2="220"/>
+                    </g>
+                    <!-- street labels -->
+                    <text x="150" y="53" class="ecw-fd-street">W 5th St</text>
+                    <text x="206" y="150" class="ecw-fd-street" transform="rotate(-90 206 150)">Lavaca</text>
+                    <!-- active route: casing + animated flow + moving vehicle -->
+                    <path id="fdRoute" d="M104,70 L104,128 L208,128 L208,101" fill="none" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.2"/>
+                    <path class="ecw-fd-route" d="M104,70 L104,128 L208,128 L208,101" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle class="ecw-fd-veh" r="3.4" fill="#1d4ed8" stroke="#fff" stroke-width="1.4">
+                        <animateMotion dur="4.5s" repeatCount="indefinite" rotate="auto"><mpath href="#fdRoute"/></animateMotion>
+                    </circle>
+                </svg>
+
+                <!-- Job site -->
+                <div class="ecw-fd-site" style={siteStyle}>
+                    <span class="ecw-fd-site-pulse" aria-hidden="true"></span>
+                    <svg class="ecw-fd-site-pin" viewBox="0 0 32 40" aria-hidden="true"><path d="M16 2C9.4 2 4 7.4 4 14c0 8.75 12 24 12 24s12-15.25 12-24C28 7.4 22.6 2 16 2z" fill="#dc2626" stroke="#fff" stroke-width="1.6"/><circle cx="16" cy="14" r="4.6" fill="#fff"/></svg>
+                    <span class="ecw-fd-site-label">Job site</span>
+                </div>
+
+                <!-- Technician markers -->
+                <template for:each={markers} for:item="m">
+                    <div key={m.key} class={m.markerClass} style={m.style}>
+                        <span class="ecw-fd-mk-pulse" aria-hidden="true"></span>
+                        <img class="ecw-fd-mk-photo" src={m.photoUrl} alt={m.name} loading="lazy" />
+                        <template if:true={m.best}><span class="ecw-fd-mk-badge">Best</span></template>
+                    </div>
+                </template>
+
+                <!-- en-route ETA chip -->
+                <template if:true={bestEta}>
+                    <span class="ecw-fd-eta" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                        {bestEta}
+                    </span>
+                </template>
+            </div>
+        </div>
+
+        <!-- Candidate technicians -->
+        <template if:true={hasCandidates}>
+            <div class="ecw-fd-list">
+                <span class="ecw-fd-list-title">{title}</span>
+                <template for:each={candidates} for:item="c">
+                    <button key={c.key} type="button" class={c.cardClass} data-key={c.key} onclick={handleSelect} aria-pressed={c.selected}>
+                        <span class={c.dotClass} aria-hidden="true"></span>
+                        <img class="ecw-fd-cand-photo" src={c.photoUrl} alt={c.name} loading="lazy" />
+                        <span class="ecw-fd-cand-body">
+                            <span class="ecw-fd-cand-top">
+                                <span class="ecw-fd-cand-name">{c.name}</span>
+                                <template if:true={c.best}><span class="ecw-fd-cand-best">Best match</span></template>
+                            </span>
+                            <span class="ecw-fd-cand-meta">
+                                <template if:true={c.status}><span class="ecw-fd-cand-status">{c.status}</span></template>
+                                <span class="ecw-fd-cand-eta">{c.metaLine}</span>
+                                <template if:true={c.ratingText}><span class="ecw-fd-cand-rating">{c.ratingText}</span></template>
+                            </span>
+                            <span class="ecw-fd-cand-bars">
+                                <span class="ecw-fd-bar">
+                                    <span class="ecw-fd-bar-label">Skills</span>
+                                    <span class="ecw-fd-bar-track"><span class="ecw-fd-bar-fill is-skills" style={c.skillsStyle}></span></span>
+                                </span>
+                                <span class="ecw-fd-bar">
+                                    <span class="ecw-fd-bar-label">Load</span>
+                                    <span class="ecw-fd-bar-track"><span class="ecw-fd-bar-fill is-util" style={c.utilStyle}></span></span>
+                                </span>
+                            </span>
+                        </span>
+                        <span class={c.fitClass}>
+                            <span class="ecw-fd-fit-num">{c.fit}</span>
+                            <span class="ecw-fd-fit-label">fit</span>
+                        </span>
+                    </button>
+                </template>
+            </div>
+
+            <template if:true={showConfirm}>
+                <button type="button" class="ecw-fd-confirm" onclick={handleConfirm}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    {confirmLabel}
+                </button>
+            </template>
+
+            <template if:true={done}>
+                <div class="ecw-fd-done">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    <span>{doneText}</span>
+                </div>
+            </template>
+        </template>
+    </div>
+</template>

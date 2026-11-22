@@ -1,0 +1,98 @@
+/* ASA Energy & Utilities · Usage & Cost — a projected-bill readout (monospace
+   meter numerics), a vertical daily/weekly column chart, and a segmented
+   cost-breakdown meter with a hairline legend. Energy & Utilities design
+   language: warm-stone neutrals + amber accent, squared geometry (6px),
+   flat baselines & hairline rows — NOT rounded chip cards. rem units +
+   inherited font so the card matches the host chat theme in ECv2. */
+:host {
+    --asa-accent: #d97706;
+    --asa-line: #e7e5e4;
+    --asa-ink: #1c1917;
+    --asa-muted: #78716c;
+    --asa-good: #15803d;
+    --asa-warn: #b45309;
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after { box-sizing: border-box; }
+
+.asa-test-badge {
+    margin: 0 0 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    background: #f5f5f4;
+    color: #57534e;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.asa-uc-head { display: flex; flex-direction: column; align-items: flex-start; gap: 0.12rem; margin-bottom: 0.65rem; }
+.selector-title { font-size: 1.12rem; font-weight: 700; letter-spacing: -0.02em; margin: 0; overflow-wrap: break-word; word-break: normal; }
+.asa-uc-cycle { font-size: 0.62rem; font-weight: 650; color: var(--asa-muted); overflow-wrap: break-word; }
+
+/* Projected-bill readout */
+.asa-uc-projbar { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.4rem 0.6rem; padding: 0.7rem 0.75rem; border-radius: 6px; background: #faf7f2; }
+.asa-uc-proj { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; flex: 1 1 8rem; }
+.asa-uc-proj-eyebrow { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; color: var(--asa-muted); }
+.asa-uc-proj-value { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1.62rem; font-weight: 750; line-height: 1.05; letter-spacing: -0.02em; color: var(--asa-ink); font-variant-numeric: tabular-nums; }
+.asa-uc-used { font-size: 0.66rem; font-weight: 600; color: var(--asa-muted); margin-top: 0.12rem; }
+.asa-uc-delta { display: inline-flex; align-items: center; gap: 0.22rem; font-size: 0.64rem; font-weight: 750; padding: 0.2rem 0.4rem; border-radius: 4px; }
+.asa-uc-delta.is-down { color: var(--asa-good); background: color-mix(in srgb, var(--asa-good) 12%, #fff); }
+.asa-uc-delta.is-up { color: var(--asa-warn); background: color-mix(in srgb, var(--asa-warn) 12%, #fff); }
+.asa-uc-delta-arrow { font-size: 0.7rem; line-height: 1; }
+
+/* Column chart */
+.asa-uc-chart { display: flex; align-items: flex-end; gap: 0.35rem; margin-top: 0.75rem; padding: 0.5rem 0.55rem 0.4rem; border: 1px solid var(--asa-line); border-radius: 6px; background: #fff; }
+.asa-uc-col { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 0.32rem; }
+.asa-uc-col-track { width: 100%; height: 4.4rem; display: flex; align-items: flex-end; justify-content: center; border-bottom: 2px solid var(--asa-line); }
+.asa-uc-bar { width: 62%; border-radius: 2px 2px 0 0; background: color-mix(in srgb, var(--asa-accent) 34%, #f5f0e6); min-height: 3px; }
+.asa-uc-bar.is-peak { background: linear-gradient(180deg, var(--asa-accent), #b45309); }
+.asa-uc-col-label { font-size: 0.56rem; font-weight: 650; color: var(--asa-muted); white-space: nowrap; }
+
+/* Cost breakdown: segmented meter + hairline legend */
+.asa-uc-breakdown { margin-top: 0.75rem; }
+.asa-uc-meter { display: flex; width: 100%; height: 0.7rem; border-radius: 3px; overflow: hidden; background: #f1efec; }
+.asa-uc-seg { height: 100%; }
+.asa-uc-seg + .asa-uc-seg { border-left: 1.5px solid #fff; }
+.asa-uc-legend { list-style: none; margin: 0.5rem 0 0; padding: 0; }
+.asa-uc-leg { display: flex; align-items: center; gap: 0.45rem; padding: 0.4rem 0; border-top: 1px solid var(--asa-line); }
+.asa-uc-leg:first-child { border-top: 0; }
+.asa-uc-leg-dot { width: 0.62rem; height: 0.62rem; border-radius: 2px; flex-shrink: 0; }
+.asa-uc-leg-label { flex: 1; min-width: 0; font-size: 0.74rem; font-weight: 600; color: var(--asa-ink); overflow-wrap: break-word; }
+.asa-uc-leg-amt { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.74rem; font-weight: 700; color: var(--asa-ink); white-space: nowrap; font-variant-numeric: tabular-nums; flex-shrink: 0; }
+
+.asa-uc-cta {
+    margin-top: 0.75rem;
+    width: 100%;
+    min-height: 2.7rem;
+    padding: 0.6rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    border: 0;
+    border-radius: 6px;
+    background: var(--asa-accent);
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 680;
+    cursor: pointer;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--asa-accent) 26%, transparent);
+    transition: filter 0.15s ease;
+}
+.asa-uc-cta:hover { filter: brightness(1.08); }
+.asa-uc-cta svg { width: 1rem; height: 1rem; flex-shrink: 0; }
+
+@container (max-width: 300px) {
+    .asa-uc-proj-value { font-size: 1.42rem; }
+    .asa-uc-col-track { height: 3.6rem; }
+}

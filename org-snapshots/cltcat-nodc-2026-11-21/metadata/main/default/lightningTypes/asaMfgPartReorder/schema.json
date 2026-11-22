@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Manufacturing · Part Reorder",
+  "description" : "Shows a single spare part with its photo, stock level, lead time, and unit price, plus a quantity stepper and a live subtotal to reorder it.",
+  "lightning:type" : "@apexClassType/c__AsaMfgPartReorderData"
+}

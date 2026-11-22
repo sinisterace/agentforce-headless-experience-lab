@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Public Sector & Education · Documents Checklist",
+  "description" : "Shows the documents a resident or student needs for an application or enrollment as a checklist, marks which are already received, and lets them pick which to upload.",
+  "lightning:type" : "@apexClassType/c__AsaPseDocsChecklistData"
+}

@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Manufacturing · Equipment Monitor",
+  "description" : "Shows a machine's live status with metric tiles (OEE, temperature, throughput, uptime), a trend sparkline, and a create-work-order action.",
+  "lightning:type" : "@apexClassType/c__AsaMfgEquipmentMonitorData"
+}

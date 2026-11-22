@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Use this when the employee asks what deals need attention, what is at risk, what is slipping or overdue, or what they should follow up on. Shows a card of open deals that are overdue, closing soon, or stalled, ranked by urgency, with the total value at risk. The data is retrieved live; you do not need to supply any figures.</description>
+    <invocationTarget>ecwNeedsAttention_Output_b2c4</invocationTarget>
+    <invocationTargetType>flow</invocationTargetType>
+    <isConfirmationRequired>false</isConfirmationRequired>
+    <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+    <masterLabel>Agentforce Coworker · Sales · Needs attention</masterLabel>
+    <progressIndicatorMessage>Checking what needs your attention</progressIndicatorMessage>
+</GenAiFunction>

@@ -1,0 +1,343 @@
+/* ASA Financial Services · Money Movement — recipient rows + amount chips.
+   rem units + inherited font so the card matches the host chat theme in
+   Enhanced Chat v2. Accent + neutrals are local custom props for easy theming. */
+:host {
+    --asa-accent: #0b5cab;
+    --asa-line: #e3e6ec;
+    --asa-negative: #c0392b;
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    /* Enhanced Chat v2 renders this in a ~320px column; size the content to the
+       card, not the viewport, so it also reads well on wide desktop GenAi. */
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after {
+    box-sizing: border-box;
+}
+
+.asa-card-title {
+    margin: 0 0 0.15rem 0;
+    font-size: 1.05rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-card-sub {
+    margin: 0 0 0.75rem 0;
+    opacity: 0.6;
+    font-size: 0.8rem;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-card-title {
+    margin-bottom: 0.65rem;
+}
+
+/* Transfer flow — source "From" node, then a directional rail into the
+   "To" destinations. This is what gives Money Movement its own identity:
+   money reads as flowing from one account down into the chosen recipient. */
+.asa-mm-node {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--asa-line);
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--asa-accent) 4%, #fff);
+}
+.asa-mm-node-ico {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.2rem;
+    height: 2.2rem;
+    flex-shrink: 0;
+    border-radius: 11px;
+    background: color-mix(in srgb, var(--asa-accent) 13%, transparent);
+    color: var(--asa-accent);
+}
+.asa-mm-node-ico svg {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+.asa-mm-node-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+}
+.asa-mm-node-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.55;
+}
+.asa-mm-node-value {
+    font-weight: 650;
+    font-size: 0.92rem;
+    letter-spacing: -0.005em;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-mm-node-mask {
+    font-style: normal;
+    opacity: 0.55;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+}
+/* Rail: a short vertical connector with a down-arrow badge sitting on it. */
+.asa-mm-rail {
+    position: relative;
+    display: block;
+    height: 1.5rem;
+    margin-left: 1.85rem; /* aligns the rail under the node icon's centre */
+}
+.asa-mm-rail::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 2px;
+    background: color-mix(in srgb, var(--asa-accent) 30%, var(--asa-line));
+}
+.asa-mm-rail-badge {
+    position: absolute;
+    top: 50%;
+    left: 1px;
+    transform: translate(-50%, -50%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    border-radius: 999px;
+    background: var(--asa-accent);
+    color: #fff;
+}
+.asa-mm-rail-badge svg {
+    width: 0.8rem;
+    height: 0.8rem;
+}
+.asa-mm-to-label {
+    margin: 0 0 0.4rem 0;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.55;
+}
+
+/* Recipient rows */
+.asa-mm-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+.asa-mm-row {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    width: 100%;
+    padding: 0.7rem 0.8rem;
+    border: 1px solid var(--asa-line);
+    border-radius: 14px;
+    background: #fff;
+    color: inherit;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease, transform 0.06s ease;
+}
+.asa-mm-row:hover {
+    border-color: color-mix(in srgb, var(--asa-accent) 45%, var(--asa-line));
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+    transform: translateY(-1px);
+}
+.asa-mm-row.selected {
+    border-color: var(--asa-accent);
+    background: color-mix(in srgb, var(--asa-accent) 6%, #fff);
+    box-shadow: inset 0 0 0 1px var(--asa-accent);
+}
+
+.asa-mm-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--asa-accent) 13%, transparent);
+    color: var(--asa-accent);
+}
+.asa-mm-icon svg {
+    width: 1.15rem;
+    height: 1.15rem;
+}
+
+.asa-mm-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+    flex: 1;
+}
+.asa-mm-name-text {
+    min-width: 0;
+    font-weight: 650;
+    font-size: 0.92rem;
+    letter-spacing: -0.005em;
+    /* wrap between words, never mid-word, in the narrow panel */
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-mm-sub {
+    opacity: 0.6;
+    font-size: 0.76rem;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* radio/check affordance — empty ring by default, filled accent when selected */
+.asa-mm-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    flex-shrink: 0;
+    border-radius: 999px;
+    border: 1.5px solid var(--asa-line);
+    color: transparent;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.asa-mm-check svg {
+    width: 0.8rem;
+    height: 0.8rem;
+}
+.asa-mm-check.on {
+    background: var(--asa-accent);
+    border-color: var(--asa-accent);
+    color: #fff;
+}
+
+/* Amount chips */
+.asa-mm-amount-label {
+    margin: 0.85rem 0 0.4rem 0;
+    font-size: 0.78rem;
+    font-weight: 650;
+    opacity: 0.65;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.asa-mm-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.asa-mm-chip {
+    flex-shrink: 0; /* chips never collapse to one glyph per line */
+    padding: 0.5rem 0.85rem;
+    border: 1px solid var(--asa-line);
+    border-radius: 999px;
+    background: #fff;
+    color: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease, transform 0.06s ease;
+}
+.asa-mm-chip:hover {
+    border-color: color-mix(in srgb, var(--asa-accent) 45%, var(--asa-line));
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.08);
+    transform: translateY(-1px);
+}
+.asa-mm-chip.selected {
+    border-color: var(--asa-accent);
+    background: color-mix(in srgb, var(--asa-accent) 8%, #fff);
+    box-shadow: inset 0 0 0 1px var(--asa-accent);
+}
+/* the "Other amount" chip reads as a softer, secondary option */
+.asa-mm-chip.is-other {
+    font-weight: 500;
+    opacity: 0.85;
+    border-style: dashed;
+}
+.asa-mm-chip.is-other.selected {
+    opacity: 1;
+    border-style: solid;
+}
+
+.asa-mm-submit {
+    margin-top: 0.85rem;
+    width: 100%;
+    padding: 0.7rem 1.15rem;
+    border-radius: 12px;
+    border: none;
+    background: var(--asa-accent);
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: filter 0.15s ease;
+}
+.asa-mm-submit:hover {
+    filter: brightness(1.06);
+}
+
+.asa-error {
+    color: var(--asa-negative);
+    font-size: 0.875rem;
+}
+
+/* Tightest chat columns: shrink the frame so names + chips keep their space. */
+@container (max-width: 300px) {
+    .asa-mm-node {
+        gap: 0.55rem;
+        padding: 0.55rem 0.6rem;
+    }
+    .asa-mm-node-ico {
+        width: 2rem;
+        height: 2rem;
+    }
+    .asa-mm-rail {
+        margin-left: 1.6rem;
+    }
+    .asa-mm-row {
+        gap: 0.55rem;
+        padding: 0.6rem 0.65rem;
+    }
+    .asa-mm-icon {
+        width: 2rem;
+        height: 2rem;
+    }
+    .asa-mm-name-text {
+        font-size: 0.88rem;
+    }
+    .asa-mm-check {
+        width: 1.15rem;
+        height: 1.15rem;
+    }
+    .asa-mm-chips {
+        gap: 0.4rem;
+    }
+    .asa-mm-chip {
+        padding: 0.45rem 0.7rem;
+        font-size: 0.8rem;
+    }
+}

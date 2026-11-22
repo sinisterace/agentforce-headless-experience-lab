@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Live data: call invocable Apex EcwSalesPipeline to build the card payload
+     from the running user's REAL open Opportunities, then assign it to the DTO
+     output. The LLM-provided `Details` is ignored (kept only to satisfy the
+     action signature). -->
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <actionCalls>
+        <name>Get_Pipeline</name>
+        <label>Get Pipeline</label>
+        <locationX>176</locationX>
+        <locationY>158</locationY>
+        <actionName>EcwSalesPipeline</actionName>
+        <actionType>apex</actionType>
+        <connector><targetReference>Assign_Pipeline_To_Options</targetReference></connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>details</name>
+            <value><elementReference>Details</elementReference></value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <assignments>
+        <name>Assign_Pipeline_To_Options</name>
+        <label>Assign Pipeline To Options</label>
+        <locationX>176</locationX>
+        <locationY>278</locationY>
+        <assignmentItems>
+            <assignToReference>Options.ecwSalesPipelineJSON</assignToReference>
+            <operator>Assign</operator>
+            <value><elementReference>Get_Pipeline.json</elementReference></value>
+        </assignmentItems>
+    </assignments>
+    <description>Show a sales-pipeline snapshot built from the running user's real open Opportunities: total open pipeline, a quarter-over-quarter trend, a stage breakdown, and win-rate / closing / avg-deal stats.</description>
+    <environments>Default</environments>
+    <interviewLabel>Ecw Sales Pipeline {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Agentforce Coworker · Sales · My pipeline</label>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>176</locationX>
+        <locationY>48</locationY>
+        <connector><targetReference>Get_Pipeline</targetReference></connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <description>LLM-provided payload (ignored; data now comes from Apex/SOQL).</description>
+        <name>Details</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Show to the user</description>
+        <name>Options</name>
+        <apexClass>EcwSalesPipelineData</apexClass>
+        <dataType>Apex</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>

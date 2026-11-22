@@ -1,0 +1,15 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full Budget Billing payload as a JSON string, formatted EXACTLY like this: {\"title\":\"Smooth out your bill\",\"subtitle\":\"Budget Billing keeps your payment the same every month\",\"currency\":\"USD\",\"monthlyAmount\":118,\"currentAvgText\":\"Your bills now swing $64–$210\",\"termText\":\"Recalculated every 12 months\",\"series\":{\"actual\":[96,120,168,210,150,88,64,72,110,175,190,140],\"budget\":118},\"bullets\":[\"No surprises in peak season\",\"Cancel anytime\",\"Settles up once a year\"],\"submitText\":\"Enroll in Budget Billing\",\"submitValue\":\"Enroll me in Budget Billing\",\"secondaryText\":\"Maybe later\",\"secondaryValue\":\"I'd like to think about Budget Billing\"} Rules: - 'title' (string, optional): heading. Defaults to 'Smooth out your bill'. - 'subtitle' (string, optional): one short line under the title. - 'currency' (string, optional): ISO code, default USD. - 'monthlyAmount' (number, optional): the flat monthly payment; rendered large. - 'currentAvgText' (string, optional): describes today's swing, e.g. 'Your bills now swing $64–$210'. - 'termText' (string, optional): plan terms, e.g. 'Recalculated every 12 months'. - 'series' (object, optional): { 'actual' (array of 6–12 numbers = recent monthly bills), 'budget' (number = the flat line) }. Rendered as a jagged actual line vs a flat budget line. Omit to hide the chart. - 'bullets' (array of strings, optional): benefit checklist (2–4 items). - 'submitText' (string, optional): primary button label, e.g. 'Enroll in Budget Billing'. - 'submitValue' (string, optional): message sent back on enroll; defaults to the label. - 'secondaryText' (string, optional): secondary/ghost button label, e.g. 'Maybe later'. - 'secondaryValue' (string, optional): message sent back for the secondary button; defaults to the label. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType",
+  "lightning:textIndexed" : true
+}

@@ -1,0 +1,79 @@
+<template>
+    <div class="asa-ba">
+
+        <!-- Head -->
+        <div class="asa-ba-head">
+            <h3 class="asa-ba-title">Budget vs actual</h3>
+            <template if:true={eyebrow}><span class="asa-ba-cycle">{eyebrow}</span></template>
+        </div>
+
+        <!-- Projected-spend readout -->
+        <div class="asa-ba-projbar">
+            <div class="asa-ba-proj">
+                <span class="asa-ba-proj-eyebrow">Actual spend</span>
+                <span class="asa-ba-proj-value">{heroValue}</span>
+                <span class="asa-ba-proj-sub">{budgetText} · {pctUsedText}</span>
+            </div>
+            <template if:true={hasDelta}>
+                <span class={deltaClass}>
+                    <span class="asa-ba-delta-arrow" aria-hidden="true">{deltaArrow}</span>{deltaLabel}
+                </span>
+            </template>
+        </div>
+
+        <!-- Per-department column chart: columns = actual spend, dashed tick = budget -->
+        <template if:true={hasColumns}>
+            <div class="asa-ba-chart">
+                <svg class="asa-ba-plot" viewBox={chartViewBox} preserveAspectRatio="none" aria-hidden="true">
+                    <template for:each={columns} for:item="c">
+                        <rect key={c.key} class="asa-ba-bar" x={c.barX} y={c.barY} width={c.barW} height={c.barH} fill={c.fill}></rect>
+                    </template>
+                    <template for:each={columns} for:item="c">
+                        <line key={c.key} class="asa-ba-budget-tick" x1={c.budgetX1} y1={c.budgetY} x2={c.budgetX2} y2={c.budgetY}></line>
+                    </template>
+                    <line class="asa-ba-baseline" x1="0" y1="94" x2={baselineX2} y2="94"></line>
+                </svg>
+                <div class="asa-ba-xaxis">
+                    <template for:each={lines} for:item="l">
+                        <span key={l.key} class="asa-ba-xlabel">{l.dept}</span>
+                    </template>
+                </div>
+                <div class="asa-ba-chart-key">
+                    <span class="asa-ba-key-item"><span class="asa-ba-key-bar" aria-hidden="true"></span>Actual</span>
+                    <span class="asa-ba-key-item"><span class="asa-ba-key-tick" aria-hidden="true"></span>Budget</span>
+                </div>
+            </div>
+        </template>
+
+        <!-- Spend share meter + interactive legend -->
+        <template if:true={hasLines}>
+            <div class="asa-ba-breakdown">
+                <div class="asa-ba-meter">
+                    <template for:each={lines} for:item="l">
+                        <span key={l.key} class="asa-ba-seg" style={l.segStyle}></span>
+                    </template>
+                </div>
+                <ul class="asa-ba-legend">
+                    <template for:each={lines} for:item="l">
+                        <li key={l.key} class={l.rowClass}>
+                            <div class="asa-ba-leg-row">
+                                <button type="button" class="asa-ba-leg-main" data-key={l.key} onclick={toggleLine} aria-expanded={l.expanded}>
+                                    <span class="asa-ba-leg-dot" style={l.dotStyle} aria-hidden="true"></span>
+                                    <span class="asa-ba-leg-label">{l.dept}</span>
+                                    <span class={l.chipClass}>{l.chipText}</span>
+                                    <span class="asa-ba-leg-amt">{l.amountText}</span>
+                                </button>
+                                <template if:true={l.isActionable}>
+                                    <button type="button" class="asa-ba-act" data-key={l.key} onclick={handleInvestigate} disabled={l.requested}>{l.actLabel}</button>
+                                </template>
+                            </div>
+                            <template if:true={l.expanded}>
+                                <p class="asa-ba-detail">{l.varianceText} · {l.pctText} of budget</p>
+                            </template>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </template>
+    </div>
+</template>

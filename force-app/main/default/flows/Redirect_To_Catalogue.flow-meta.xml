@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <description>Login Flow: redirects every user to the Agentforce Interfaces (CltCatalogue) UI Bundle app immediately after login. Screenless — sets LoginFlow_FinishLocation and finishes, so there is no interstitial.</description>
+    <environments>Default</environments>
+    <interviewLabel>Redirect To Catalogue {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Redirect To Catalogue</label>
+    <processType>Flow</processType>
+    <runInMode>SystemModeWithoutSharing</runInMode>
+    <start>
+        <locationX>176</locationX>
+        <locationY>50</locationY>
+        <connector>
+            <targetReference>Set_Finish_Location</targetReference>
+        </connector>
+    </start>
+    <assignments>
+        <name>Set_Finish_Location</name>
+        <label>Set Finish Location</label>
+        <locationX>176</locationX>
+        <locationY>158</locationY>
+        <assignmentItems>
+            <assignToReference>LoginFlow_FinishLocation</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <stringValue>https://your-domain--c.my.salesforce.app/app/c__CltCatalogue</stringValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <variables>
+        <name>LoginFlow_FinishLocation</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <status>Active</status>
+</Flow>

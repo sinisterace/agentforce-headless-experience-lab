@@ -1,0 +1,73 @@
+<template>
+    <div class="ecw-ob">
+        <div class="ecw-ob-head">
+            <span class="ecw-ob-eyebrow">Onboarding</span>
+            <template if:true={headline}><span class="ecw-ob-headline">{headline}</span></template>
+        </div>
+
+        <template if:true={hasHires}>
+            <div class="ecw-ob-stack">
+                <template for:each={hires} for:item="h">
+                    <article key={h.key} class={h.cardClass} data-key={h.key} onclick={toggleHire}>
+                        <!-- Identity: photo + name/role/start + current-stage pill + caret -->
+                        <div class="ecw-ob-id">
+                            <img class="ecw-ob-photo" src={h.photoUrl} alt={h.name} loading="lazy" />
+                            <div class="ecw-ob-idtext">
+                                <span class="ecw-ob-name">{h.name}</span>
+                                <template if:true={h.hasRole}><span class="ecw-ob-role">{h.role}</span></template>
+                                <template if:true={h.hasStart}><span class="ecw-ob-start">{h.start}</span></template>
+                            </div>
+                            <span class={h.statusClass}>{h.statusText}</span>
+                            <svg class={h.caretClass} viewBox="0 0 24 24" aria-hidden="true"><path d="m8 10 4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+
+                        <!-- Progress stepper -->
+                        <div class="ecw-ob-steps">
+                            <template for:each={h.steps} for:item="s">
+                                <div key={s.key} class={s.cls}>
+                                    <template if:true={s.showConn}><span class="ecw-ob-conn" aria-hidden="true"></span></template>
+                                    <span class="ecw-ob-node" aria-hidden="true">
+                                        <template if:true={s.isDone}><span class="ecw-ob-check">✓</span></template>
+                                    </span>
+                                    <span class="ecw-ob-steplabel">{s.label}</span>
+                                </div>
+                            </template>
+                        </div>
+
+                        <div class="ecw-ob-prog">
+                            <span class="ecw-ob-progtext">{h.progressText}</span>
+                            <span class="ecw-ob-next">{h.nextText}</span>
+                        </div>
+
+                        <template if:true={h.hasDetail}>
+                            <p class="ecw-ob-foot"><span class="ecw-ob-footdot" aria-hidden="true"></span>{h.detail}</p>
+                        </template>
+
+                        <!-- Expanded: detail grid + quick links out -->
+                        <template if:true={h.expanded}>
+                            <div class="ecw-ob-expand">
+                                <div class="ecw-ob-grid">
+                                    <template for:each={h.details} for:item="d">
+                                        <div key={d.key} class="ecw-ob-field">
+                                            <span class="ecw-ob-flabel">{d.label}</span>
+                                            <template if:true={d.isMono}><span class="ecw-ob-fval is-mono">{d.value}</span></template>
+                                            <template if:false={d.isMono}><span class="ecw-ob-fval">{d.value}</span></template>
+                                        </div>
+                                    </template>
+                                </div>
+                                <div class="ecw-ob-links">
+                                    <template for:each={h.links} for:item="l">
+                                        <a key={l.key} class="ecw-ob-link" href={l.url} target="_blank" rel="noopener" onclick={stopLink}>
+                                            {l.label}
+                                            <svg class="ecw-ob-ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5h5v5m0-5-8 8M9 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                        </a>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                    </article>
+                </template>
+            </div>
+        </template>
+    </div>
+</template>

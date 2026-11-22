@@ -1,0 +1,67 @@
+/* Agentforce Coworker · Sales · My pipeline — Ask-native card.
+   Editorial, bespoke: an airy white surface, deep-navy ink, hairline dividers
+   (no boxes), a large headline number, and the showpiece — a sales funnel of
+   thick glossy deepening-blue bands, each directly labeled. Monospace tabular
+   numerals, container-query responsive. Inherits the host chat theme font. */
+:host {
+    --ecw-ink: #06234d;
+    --ecw-ink-2: #35507a;
+    --ecw-muted: #6a7891;
+    --ecw-line: #e9edf4;
+    --ecw-accent: #0d6fd1;
+    --ecw-accent-2: #5d5cde;
+    --ecw-good: #15803d;
+    --ecw-warn: #b45309;
+    --ecw-bad: #b91c1c;
+    display: block;
+}
+
+.ecw-pipe {
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.15rem 1.2rem;
+    border: 1px solid var(--ecw-line);
+    border-radius: 0.9rem;
+    background: #fff;
+    font-family: inherit;
+    box-shadow: 0 22px 48px -34px rgba(6, 35, 77, 0.6);
+}
+
+/* hero — editorial headline, leads the card; a hairline separates it from the funnel */
+.ecw-pipe-hero { display: flex; flex-direction: column; gap: 0.15rem; padding: 0 0 1rem; border-bottom: 1px solid var(--ecw-line); }
+.ecw-pipe-hero-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ecw-muted); }
+.ecw-pipe-hero-row { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap; }
+.ecw-pipe-hero-val { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 2.6rem; line-height: 1; font-weight: 820; letter-spacing: -0.035em; color: var(--ecw-ink); font-variant-numeric: tabular-nums; }
+.ecw-pipe-delta { display: inline-flex; align-items: center; gap: 0.25rem; font-size: 0.78rem; font-weight: 700; }
+.ecw-pipe-delta.is-up { color: var(--ecw-good); }
+.ecw-pipe-delta.is-down { color: var(--ecw-bad); }
+.ecw-pipe-delta-arrow { font-size: 0.9rem; }
+
+/* funnel — thick glossy deepening-blue bands, directly labeled, no track */
+.ecw-pipe-stages { display: flex; flex-direction: column; gap: 0.72rem; }
+.ecw-pipe-row { display: flex; flex-direction: column; gap: 0.32rem; }
+.ecw-pipe-row-top { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
+.ecw-pipe-row-label { font-size: 0.8rem; color: var(--ecw-ink-2); font-weight: 600; }
+.ecw-pipe-row-val { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.82rem; font-variant-numeric: tabular-nums; font-weight: 700; color: var(--ecw-ink); }
+.ecw-pipe-track { height: 1rem; border-radius: 0.5rem; background: transparent; }
+.ecw-pipe-fill { position: relative; display: block; height: 100%; min-width: 1.4rem; border-radius: 0.5rem; overflow: hidden; box-shadow: 0 2px 5px -2px rgba(6, 35, 77, 0.3); }
+.ecw-pipe-fill::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(180deg, rgba(255, 255, 255, 0.38), rgba(255, 255, 255, 0) 60%); }
+
+/* open metrics strip — hairline top + vertical dividers, no boxes */
+.ecw-pipe-stats { margin: 0; padding-top: 0.95rem; border-top: 1px solid var(--ecw-line); display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+.ecw-pipe-tile { display: flex; flex-direction: column; gap: 0.3rem; padding: 0 0.85rem; border-left: 1px solid var(--ecw-line); }
+.ecw-pipe-tile:first-child { padding-left: 0; border-left: 0; }
+.ecw-pipe-tile dt { font-size: 0.56rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ecw-muted); }
+.ecw-pipe-tile dd { margin: 0; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1.15rem; font-weight: 760; letter-spacing: -0.01em; color: var(--ecw-ink); font-variant-numeric: tabular-nums; }
+.ecw-pipe-tile.is-good dd { color: var(--ecw-good); }
+.ecw-pipe-tile.is-warn dd { color: var(--ecw-warn); }
+.ecw-pipe-tile.is-bad dd { color: var(--ecw-bad); }
+
+@container (max-width: 360px) {
+    /* narrow Coworker column */
+    .ecw-pipe-hero-val { font-size: 2.1rem; }
+    .ecw-pipe-stats { grid-template-columns: 1fr 1fr; gap: 0.9rem 0; }
+    .ecw-pipe-tile:nth-child(odd) { padding-left: 0; border-left: 0; }
+}

@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · Service · Escalate case — selection",
+  "description" : "The case escalation the agent confirmed (case, severity, on-call route).",
+  "lightning:type" : "@apexClassType/c__EcwEscalationInput"
+}

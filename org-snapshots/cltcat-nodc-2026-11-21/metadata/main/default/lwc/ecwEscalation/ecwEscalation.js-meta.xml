@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Agentforce Coworker · Service · Escalate case</masterLabel>
+    <description>A case-escalation report in a ledger layout: context, severity, impacted line items with a business-impact total, an acknowledgement, and an escalate action.</description>
+    <targets>
+        <target>lightning__AgentforceOutput</target>
+        <target>lightning__AgentforceInput</target>
+        <target>lightningSnapin__ChatMessage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AgentforceOutput">
+            <sourceType name="c__ecwEscalation"/>
+        </targetConfig>
+        <targetConfig targets="lightning__AgentforceInput">
+            <targetType name="c__ecwEscalationInput"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

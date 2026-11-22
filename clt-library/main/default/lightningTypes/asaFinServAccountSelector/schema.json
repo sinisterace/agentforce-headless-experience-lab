@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Financial Services · Account Selector",
+  "description" : "Lets a customer pick one or more of their financial accounts, with balances.",
+  "lightning:type" : "@apexClassType/c__AsaFinServAccountSelectorData"
+}

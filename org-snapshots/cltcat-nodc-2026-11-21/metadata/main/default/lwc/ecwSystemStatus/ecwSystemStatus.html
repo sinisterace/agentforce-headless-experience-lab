@@ -1,0 +1,73 @@
+<template>
+    <div class="ecw-ss">
+
+        <!-- Head -->
+        <div class="ecw-ss-head">
+            <h3 class="ecw-ss-title">{title}</h3>
+            <template if:true={hasCycle}><span class="ecw-ss-cycle">{cycleText}</span></template>
+        </div>
+
+        <!-- Hero readout: 30-day uptime + overall status chip -->
+        <div class="ecw-ss-projbar">
+            <div class="ecw-ss-proj">
+                <span class="ecw-ss-proj-eyebrow">30-day uptime</span>
+                <template if:true={hasUptime}><span class="ecw-ss-proj-value">{overallUptime}</span></template>
+                <template if:true={hasMonitored}><span class="ecw-ss-used">{monitoredText}</span></template>
+            </div>
+            <span class={chipClass}>
+                <span class="ecw-ss-chip-dot" aria-hidden="true"></span>{overallLabel}
+            </span>
+        </div>
+
+        <!-- Status-mix meter -->
+        <template if:true={hasMix}>
+            <div class="ecw-ss-mix-wrap">
+                <div class="ecw-ss-mix">
+                    <template for:each={mix} for:item="m">
+                        <span key={m.key} class={m.cls} style={m.style}></span>
+                    </template>
+                </div>
+                <div class="ecw-ss-mix-cap">{mixCaption}</div>
+            </div>
+        </template>
+
+        <!-- SVG column chart: per-service uptime on a flat baseline -->
+        <template if:true={hasColumns}>
+            <div class="ecw-ss-chart-wrap">
+                <div class="ecw-ss-chart-head">
+                    <span class="ecw-ss-chart-title">Uptime by service</span>
+                    <span class="ecw-ss-chart-axis">{axisText}</span>
+                </div>
+                <svg class="ecw-ss-chart" viewBox={viewBox} preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
+                    <line class="ecw-ss-grid" x1="0" y1={gridLineY} x2={chartW} y2={gridLineY}></line>
+                    <template for:each={columns} for:item="c">
+                        <rect key={c.key} class={c.barClass} x={c.x} y={c.y} width={c.w} height={c.h}></rect>
+                    </template>
+                    <line class="ecw-ss-baseline" x1="0" y1={baselineY} x2={chartW} y2={baselineY}></line>
+                    <template for:each={columns} for:item="c">
+                        <text key={c.key} class="ecw-ss-bar-label" x={c.cx} y={c.labelY} text-anchor="middle">{c.label}</text>
+                    </template>
+                    <template for:each={columns} for:item="c">
+                        <text key={c.key} class="ecw-ss-bar-val" x={c.cx} y={c.valY} text-anchor="middle">{c.valText}</text>
+                    </template>
+                </svg>
+            </div>
+        </template>
+
+        <!-- Legend: per-service detail with exact uptime + incident note -->
+        <template if:true={hasLegend}>
+            <ul class="ecw-ss-legend">
+                <template for:each={legend} for:item="s">
+                    <li key={s.key} class="ecw-ss-leg">
+                        <span class={s.dotClass} aria-hidden="true"></span>
+                        <span class="ecw-ss-leg-main">
+                            <span class="ecw-ss-leg-label">{s.name}</span>
+                            <template if:true={s.hasNote}><span class="ecw-ss-leg-note">{s.note}</span></template>
+                        </span>
+                        <span class="ecw-ss-leg-amt">{s.uptime}</span>
+                    </li>
+                </template>
+            </ul>
+        </template>
+    </div>
+</template>

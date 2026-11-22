@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Retail · Store Pickup",
+  "description" : "Shows nearby stores with stock status, distance, pickup ETA, hours, and Directions/Call links; the customer picks a store to reserve.",
+  "lightning:type" : "@apexClassType/c__AsaRetailStorePickupData"
+}

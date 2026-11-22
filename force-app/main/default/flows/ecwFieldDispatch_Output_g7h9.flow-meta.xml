@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Get_Field_Dispatch</name>
+        <label>Get Field Dispatch</label>
+        <locationX>176</locationX>
+        <locationY>158</locationY>
+        <actionName>EcwFieldDispatch</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Assign_To_Options</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>details</name>
+            <value>
+                <elementReference>Details</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>EcwFieldDispatch</nameSegment>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <apiVersion>67.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Assign_To_Options</name>
+        <label>Assign To Options</label>
+        <locationX>176</locationX>
+        <locationY>278</locationY>
+        <assignmentItems>
+            <assignToReference>Options.ecwFieldDispatchJSON</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Get_Field_Dispatch.json</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <description>Return an at-risk service appointment and ranked candidate technicians to reassign to.</description>
+    <environments>Default</environments>
+    <interviewLabel>Ecw Field Dispatch {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Agentforce Coworker · Service · Field dispatch</label>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>176</locationX>
+        <locationY>48</locationY>
+        <connector>
+            <targetReference>Get_Field_Dispatch</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <description>LLM-provided payload (ignored; data comes from Apex).</description>
+        <name>Details</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Show to the user</description>
+        <name>Options</name>
+        <apexClass>EcwFieldDispatchData</apexClass>
+        <dataType>Apex</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>

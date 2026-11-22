@@ -1,0 +1,26 @@
+# List files or directories below to ignore them when running force:source:push, force:source:pull, and force:source:status
+# More information: https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_exclude_source.htm
+#
+
+package.xml
+
+# LWC configuration files
+**/jsconfig.json
+**/.eslintrc.json
+
+# LWC Jest
+**/__tests__/**
+
+node_modules/
+
+# UI bundle build artifacts (not part of the shipped bundle)
+**/*.tsbuildinfo
+**/.tsbuild-node/**
+
+# UI bundle TypeScript source + raw assets: only the built dist/ is served
+# (ui-bundle.json outputDir=dist). Shipping src/ too duplicated ~19MB of assets
+# and pushed the deploy zip past the ~50MB Metadata API limit. src/ stays in git.
+**/uiBundles/CltCatalogue/src/**
+
+# Unused org-side leftovers (Help Agent 1 / HelpSite / agentforceservice scaffold) — never deploy to other orgs
+unused-org-artifacts/**

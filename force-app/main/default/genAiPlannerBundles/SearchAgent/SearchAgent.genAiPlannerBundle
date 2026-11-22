@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlannerBundle xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <description>This agent executes multi-step information retrieval and synthesis across federated enterprise data sources based on a user natural language utterance. It returns a synthesized answer, source attribution, and actionable next steps.</description>
+    <localActionLinks>
+        <genAiFunctionName>AnswerQuestionsWithKnowledge_16jg8000001MYth</genAiFunctionName>
+    </localActionLinks>
+    <localTopicLinks>
+        <genAiPluginName>CLT_16jg8000001MYth</genAiPluginName>
+    </localTopicLinks>
+    <localTopics>
+        <fullName>CLT_16jg8000001MYth</fullName>
+        <aiPluginUtterances>
+            <developerName>utterance_1</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Utterance 1</masterLabel>
+            <utterance>Show me my financial accounts</utterance>
+        </aiPluginUtterances>
+        <aiPluginUtterances>
+            <developerName>utterance_2</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Utterance 2</masterLabel>
+            <utterance>Show me my pipeline this quarter</utterance>
+        </aiPluginUtterances>
+        <aiPluginUtterances>
+            <developerName>utterance_3</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Utterance 3</masterLabel>
+            <utterance>How's my pipeline looking this quarter?</utterance>
+        </aiPluginUtterances>
+        <aiPluginUtterances>
+            <developerName>utterance_4</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Utterance 4</masterLabel>
+            <utterance>Show me my sales pipeline</utterance>
+        </aiPluginUtterances>
+        <aiPluginUtterances>
+            <developerName>utterance_5</developerName>
+            <language xsi:nil="true"/>
+            <masterLabel>Utterance 5</masterLabel>
+            <utterance>What's in my pipeline?</utterance>
+        </aiPluginUtterances>
+        <canEscalate>false</canEscalate>
+        <description>Call a custom lightning type</description>
+        <developerName>CLT_16jg8000001MYth</developerName>
+        <genAiPluginInstructions>
+            <description>when the user says &quot;Show me my financial accounts&quot; run the action: &quot;ASA Financial Services · Account Selector&quot; to show the accounts card.</description>
+            <developerName>instructions_0_1790790283070</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_0_1790790283070</masterLabel>
+            <sortOrder>0</sortOrder>
+        </genAiPluginInstructions>
+        <genAiPluginInstructions>
+            <description>when the user asks about their pipeline, their quarter, what is closing this month, or their win rate (for example &quot;Show me my pipeline this quarter&quot;) run the action: &quot;Agentforce Coworker · Sales · My pipeline&quot; to show the pipeline card.</description>
+            <developerName>instructions_1_ecwpipe</developerName>
+            <language>en_US</language>
+            <masterLabel>instructions_1_ecwpipe</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>asaFinServAccountSelector_Output_acc7_179g80000029VzV</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwSalesPipeline_Output_a1f7_pipe01</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>asaFinServAccountSelector_Output_acc7_179g80000029VzV</fullName>
+            <description>Use this when the customer needs to choose one or more of their own financial accounts (checking, savings, credit card, loan, investment) — for example to check a balance, pay from, transfer, or start a dispute. Shows an interactive account list with balances.</description>
+            <developerName>asaFinServAccountSelector_Output_acc7_179g80000029VzV</developerName>
+            <invocationTarget>asaFinServAccountSelector_Output_acc7</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaFinServAccountSelector_Output_acc7</localDeveloperName>
+            <masterLabel>ASA Financial Services · Account Selector</masterLabel>
+            <progressIndicatorMessage>Pulling up your accounts</progressIndicatorMessage>
+            <source>asaFinServAccountSelector_Output_acc7</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwSalesPipeline_Output_a1f7_pipe01</fullName>
+            <description>Use this when the employee asks about their sales pipeline, how their quarter is looking, what is closing this month, or their win rate. Shows a pipeline snapshot card: total open pipeline, a quarter-over-quarter trend, a stage breakdown, and win-rate / closing / avg-deal stats.</description>
+            <developerName>ecwSalesPipeline_Output_a1f7_pipe01</developerName>
+            <invocationTarget>ecwSalesPipeline_Output_a1f7</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwSalesPipeline_Output_a1f7</localDeveloperName>
+            <masterLabel>Agentforce Coworker · Sales · My pipeline</masterLabel>
+            <progressIndicatorMessage>Pulling your pipeline</progressIndicatorMessage>
+            <source>ecwSalesPipeline_Output_a1f7</source>
+        </localActions>
+        <localDeveloperName>CLT</localDeveloperName>
+        <masterLabel>CLT</masterLabel>
+        <pluginType>Topic</pluginType>
+        <scope>Call a custom lightning type</scope>
+    </localTopics>
+    <masterLabel>Search Agent</masterLabel>
+    <plannerActions>
+        <fullName>AnswerQuestionsWithKnowledge_16jg8000001MYth</fullName>
+        <description>Answers questions about company policies and procedures, troubleshooting steps, or product information. For example: “What is your return policy?” “How do I fix an issue?” or “What features does a product have?”</description>
+        <developerName>AnswerQuestionsWithKnowledge_16jg8000001MYth</developerName>
+        <invocationTarget>streamKnowledgeSearch</invocationTarget>
+        <invocationTargetType>standardInvocableAction</invocationTargetType>
+        <isConfirmationRequired>false</isConfirmationRequired>
+        <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+        <localDeveloperName>AnswerQuestionsWithKnowledge</localDeveloperName>
+        <masterLabel>Answer Questions with Knowledge</masterLabel>
+        <progressIndicatorMessage>Getting answers</progressIndicatorMessage>
+        <source>EmployeeCopilot__AnswerQuestionsWithKnowledge</source>
+    </plannerActions>
+    <plannerSurfaces>
+        <adaptiveResponseAllowed>true</adaptiveResponseAllowed>
+        <callRecordingAllowed>false</callRecordingAllowed>
+        <surface>SurfaceAction__Messaging</surface>
+        <surfaceType>Messaging</surfaceType>
+    </plannerSurfaces>
+    <plannerType>SentOS__SearchAgent</plannerType>
+</GenAiPlannerBundle>

@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlannerBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Shows employees their work as interactive cards across Sales (pipeline, deals, forecast, what changed), Service (case prep, CSAT, field dispatch, case escalation), IT (system status, known issues, changes, IT requests), Finance (budget vs actual, AP approvals, AR aging, month-end close), and HR (headcount, who&apos;s out, open roles, onboarding).</description>
+    <localTopicLinks>
+        <genAiPluginName>ap_approval_16jfj000003C8Xx</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>escalation_16jfj000003C8Xx</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>field_dispatch_16jfj000003C8Xx</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>main_16jfj000003C8Xx</genAiPluginName>
+    </localTopicLinks>
+    <localTopics>
+        <fullName>field_dispatch_16jfj000003C8Xx</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Shows the at-risk appointment with ranked candidate technicians on the interactive field dispatch card, collects the dispatcher&apos;s reassignment, and confirms the result.</description>
+        <developerName>field_dispatch_16jfj000003C8Xx</developerName>
+        <genAiPluginInstructions>
+            <description>You are the Employee Agent, an internal AI teammate that helps employees
+get work done by rendering interactive cards right in the conversation.
+Run the action that matches the employee&apos;s request and let the card do the
+talking — keep any accompanying text to one short sentence. If a request is
+outside the actions you have, briefly say what you can help with instead.
+When a finance user wants to approve or hold invoices or POs, route to the
+AP approvals handler, which collects their choice on an interactive card and
+confirms the result.</description>
+            <developerName>instruction0_179fj000004O3X9</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000004O3X9</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>reassignDispatch_179fj000004O3X9</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>reassignDispatch_179fj000004O3X9</fullName>
+            <description>Submits the dispatcher&apos;s technician reassignment for an at-risk service appointment and returns a confirmation.</description>
+            <developerName>reassignDispatch_179fj000004O3X9</developerName>
+            <invocationTarget>EcwReassignDispatch</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>reassignDispatch</localDeveloperName>
+            <masterLabel>Service · Reassign dispatch</masterLabel>
+        </localActions>
+        <localDeveloperName>field_dispatch</localDeveloperName>
+        <masterLabel>Field dispatch</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>main_16jfj000003C8Xx</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Show the employee&apos;s own work as an interactive card. Sales: pipeline, deals that need attention, forecast, what changed. Service: case prep (Case 360), CSAT, field dispatch, and case escalation.</description>
+        <developerName>main_16jfj000003C8Xx</developerName>
+        <genAiPluginInstructions>
+            <description>You are the Employee Agent, an internal AI teammate that helps employees
+get work done by rendering interactive cards right in the conversation.
+Run the action that matches the employee&apos;s request and let the card do the
+talking — keep any accompanying text to one short sentence. If a request is
+outside the actions you have, briefly say what you can help with instead.
+When a finance user wants to approve or hold invoices or POs, route to the
+AP approvals handler, which collects their choice on an interactive card and
+confirms the result.</description>
+            <developerName>instruction0_179fj000004O3XA</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000004O3XA</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>ecwNeedsAttention_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwKnownIssues_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwEscalation_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwHeadcount_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwCase360_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwSalesPipeline_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwSystemStatus_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>investigateBudgetLine_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwOnboarding_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwOpenRoles_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwPerformanceMatrix_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwCampaignFunnel_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwForecast_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwMyItRequests_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwBudgetActual_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwChangeCalendar_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwApApprovals_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwTimeOff_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwAudienceExplorer_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwArAging_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>actOnMonthEndTask_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwFieldDispatch_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwAbTest_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwWhatChanged_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>remindArAccounts_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwCsatPulse_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>ecwMonthEndClose_179fj000004O3XA</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>ecwHeadcount_179fj000004O3XA</fullName>
+            <description>Use when the HR or People team asks about headcount, employee count, headcount by department, or team growth. Shows headcount by department with growth and open roles.</description>
+            <developerName>ecwHeadcount_179fj000004O3XA</developerName>
+            <invocationTarget>ecwHeadcount_Output_f1a2</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwHeadcount</localDeveloperName>
+            <masterLabel>HR · Headcount</masterLabel>
+            <source>ecwHeadcount_Output_f1a2</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwMyItRequests_179fj000004O3XA</fullName>
+            <description>Use when the employee asks about their IT tickets, their IT requests, the status of a request they submitted, or their hardware/software/access request. Shows their requests with progress.</description>
+            <developerName>ecwMyItRequests_179fj000004O3XA</developerName>
+            <invocationTarget>ecwMyItRequests_Output_a9b1</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwMyItRequests</localDeveloperName>
+            <masterLabel>IT · My IT requests</masterLabel>
+            <source>ecwMyItRequests_Output_a9b1</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwArAging_179fj000004O3XA</fullName>
+            <description>Use when the finance team asks about AR aging, outstanding receivables, overdue accounts, DSO, or collections. Shows AR aging buckets and top overdue accounts.</description>
+            <developerName>ecwArAging_179fj000004O3XA</developerName>
+            <invocationTarget>ecwArAging_Output_d3e5</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwArAging</localDeveloperName>
+            <masterLabel>Finance · AR aging</masterLabel>
+            <source>ecwArAging_Output_d3e5</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwNeedsAttention_179fj000004O3XA</fullName>
+            <description>Use this when the employee asks what deals need attention, what is at risk, what is slipping or overdue, or what they should follow up on. Shows a card of open deals that are overdue, closing soon, or stalled, ranked by urgency, with the total value at risk.</description>
+            <developerName>ecwNeedsAttention_179fj000004O3XA</developerName>
+            <invocationTarget>ecwNeedsAttention_Output_b2c4</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwNeedsAttention</localDeveloperName>
+            <masterLabel>Sales · Needs attention</masterLabel>
+            <source>ecwNeedsAttention_Output_b2c4</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwCase360_179fj000004O3XA</fullName>
+            <description>Use when the employee wants to prep for or get context on their top case. Shows a Case 360 card: subject, customer and contact, description, priority/status/age, and their other open cases.</description>
+            <developerName>ecwCase360_179fj000004O3XA</developerName>
+            <invocationTarget>ecwCase360_Output_f6a8</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwCase360</localDeveloperName>
+            <masterLabel>Service · Case 360</masterLabel>
+            <source>ecwCase360_Output_f6a8</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwChangeCalendar_179fj000004O3XA</fullName>
+            <description>Use when the employee asks about upcoming IT changes, maintenance windows, planned downtime, or what IT is changing this week. Shows a change calendar.</description>
+            <developerName>ecwChangeCalendar_179fj000004O3XA</developerName>
+            <invocationTarget>ecwChangeCalendar_Output_e5a6</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwChangeCalendar</localDeveloperName>
+            <masterLabel>IT · Change calendar</masterLabel>
+            <source>ecwChangeCalendar_Output_e5a6</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwOnboarding_179fj000004O3XA</fullName>
+            <description>Use when the HR or People team asks about onboarding, new hires, or new-hire onboarding status. Shows new hires with their onboarding progress.</description>
+            <developerName>ecwOnboarding_179fj000004O3XA</developerName>
+            <invocationTarget>ecwOnboarding_Output_f4d5</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwOnboarding</localDeveloperName>
+            <masterLabel>HR · Onboarding</masterLabel>
+            <source>ecwOnboarding_Output_f4d5</source>
+        </localActions>
+        <localActions>
+            <fullName>actOnMonthEndTask_179fj000004O3XA</fullName>
+            <description>Use when the finance team wants to mark a month-end close task complete or chase the blocker on a blocked task. Renders the interactive month-end close card to collect the task action, then confirms.</description>
+            <developerName>actOnMonthEndTask_179fj000004O3XA</developerName>
+            <invocationTarget>EcwMonthEndAction</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>actOnMonthEndTask</localDeveloperName>
+            <masterLabel>Finance · Act on month-end task</masterLabel>
+        </localActions>
+        <localActions>
+            <fullName>ecwCampaignFunnel_179fj000004O3XA</fullName>
+            <description>Use when a marketer asks how a campaign is performing, the conversion funnel, where leads are dropping off, campaign results, or marketing-sourced pipeline. Shows a conversion funnel from impressions to won.</description>
+            <developerName>ecwCampaignFunnel_179fj000004O3XA</developerName>
+            <invocationTarget>ecwCampaignFunnel_Output_m1a1</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwCampaignFunnel</localDeveloperName>
+            <masterLabel>Marketing · Campaign conversion</masterLabel>
+            <source>ecwCampaignFunnel_Output_m1a1</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwFieldDispatch_179fj000004O3XA</fullName>
+            <description>Use when a service dispatcher or manager wants to reassign a service appointment, find a better or closer technician, cover an at-risk or SLA-breaching job, or asks who can take or cover a job. Shows the at-risk appointment on a live dispatch map with ranked candidate technicians (fit, skills, ETA, utilization, rating).</description>
+            <developerName>ecwFieldDispatch_179fj000004O3XA</developerName>
+            <invocationTarget>ecwFieldDispatch_Output_g7h9</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwFieldDispatch</localDeveloperName>
+            <masterLabel>Service · Field dispatch</masterLabel>
+            <source>ecwFieldDispatch_Output_g7h9</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwWhatChanged_179fj000004O3XA</fullName>
+            <description>Use this when the employee asks what changed, what moved, what happened while they were out, or for recent updates on their deals. Shows a feed of recent deal motion — won, advanced, new, slipped, lost — with the net pipeline change this week.</description>
+            <developerName>ecwWhatChanged_179fj000004O3XA</developerName>
+            <invocationTarget>ecwWhatChanged_Output_d4e6</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwWhatChanged</localDeveloperName>
+            <masterLabel>Sales · What changed</masterLabel>
+            <source>ecwWhatChanged_Output_d4e6</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwEscalation_179fj000004O3XA</fullName>
+            <description>Use when a support agent or manager wants to escalate a case, raise its severity, report an escalation, page Tier 2 or on-call, or flag a major incident. Shows an escalation summary — impacted accounts and business impact as a ledger, routed to the on-call team.</description>
+            <developerName>ecwEscalation_179fj000004O3XA</developerName>
+            <invocationTarget>ecwEscalation_Output_h8k2</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwEscalation</localDeveloperName>
+            <masterLabel>Service · Escalate case</masterLabel>
+            <source>ecwEscalation_Output_h8k2</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwMonthEndClose_179fj000004O3XA</fullName>
+            <description>Use when the finance team asks about the month-end close, close status, close checklist, or what is blocking the close. Shows the close checklist with status and blockers.</description>
+            <developerName>ecwMonthEndClose_179fj000004O3XA</developerName>
+            <invocationTarget>ecwMonthEndClose_Output_e4f6</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwMonthEndClose</localDeveloperName>
+            <masterLabel>Finance · Month-end close</masterLabel>
+            <source>ecwMonthEndClose_Output_e4f6</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwPerformanceMatrix_179fj000004O3XA</fullName>
+            <description>Use when a marketer asks which content or campaigns are performing, what to scale or cut, content performance, or engagement versus reach. Shows a performance quadrant of assets sized by conversions.</description>
+            <developerName>ecwPerformanceMatrix_179fj000004O3XA</developerName>
+            <invocationTarget>ecwPerformanceMatrix_Output_m2b2</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwPerformanceMatrix</localDeveloperName>
+            <masterLabel>Marketing · Performance matrix</masterLabel>
+            <source>ecwPerformanceMatrix_Output_m2b2</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwOpenRoles_179fj000004O3XA</fullName>
+            <description>Use when the HR or People team asks about open roles, open requisitions, the hiring pipeline, or recruiting status. Shows open requisitions with stage, days open, and candidate counts.</description>
+            <developerName>ecwOpenRoles_179fj000004O3XA</developerName>
+            <invocationTarget>ecwOpenRoles_Output_f3c4</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwOpenRoles</localDeveloperName>
+            <masterLabel>HR · Open roles</masterLabel>
+            <source>ecwOpenRoles_Output_f3c4</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwSalesPipeline_179fj000004O3XA</fullName>
+            <description>Use this when the employee asks about their sales pipeline, how their quarter is looking, what is closing, or their win rate. Shows a pipeline snapshot card: total open pipeline, a quarter-over-quarter trend, a stage breakdown, and win-rate / closing / avg-deal stats.</description>
+            <developerName>ecwSalesPipeline_179fj000004O3XA</developerName>
+            <invocationTarget>ecwSalesPipeline_Output_a1f7</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwSalesPipeline</localDeveloperName>
+            <masterLabel>Sales · My pipeline</masterLabel>
+            <source>ecwSalesPipeline_Output_a1f7</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwAbTest_179fj000004O3XA</fullName>
+            <description>Use when a marketer asks about A/B test results, which variant won, test lift, significance, or experiment outcomes. Shows a head-to-head A versus B comparison with confidence and the winner.</description>
+            <developerName>ecwAbTest_179fj000004O3XA</developerName>
+            <invocationTarget>ecwAbTest_Output_m3c3</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwAbTest</localDeveloperName>
+            <masterLabel>Marketing · A/B test</masterLabel>
+            <source>ecwAbTest_Output_m3c3</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwSystemStatus_179fj000004O3XA</fullName>
+            <description>Use when the employee asks if systems are up, system or service status, whether an app is down, or if there&apos;s an outage. Shows a status board of the services they use.</description>
+            <developerName>ecwSystemStatus_179fj000004O3XA</developerName>
+            <invocationTarget>ecwSystemStatus_Output_c1d2</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwSystemStatus</localDeveloperName>
+            <masterLabel>IT · System status</masterLabel>
+            <source>ecwSystemStatus_Output_c1d2</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwTimeOff_179fj000004O3XA</fullName>
+            <description>Use when the HR or People team asks who is out, who is on PTO or leave this week, or about time-off coverage. Shows who is out this week with dates and leave type.</description>
+            <developerName>ecwTimeOff_179fj000004O3XA</developerName>
+            <invocationTarget>ecwTimeOff_Output_f2b3</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwTimeOff</localDeveloperName>
+            <masterLabel>HR · Who&apos;s out</masterLabel>
+            <source>ecwTimeOff_Output_f2b3</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwKnownIssues_179fj000004O3XA</fullName>
+            <description>Use when the employee asks what&apos;s broken, known issues, if there&apos;s an outage, or what IT problems are affecting them right now. Shows active IT incidents with impact and workaround.</description>
+            <developerName>ecwKnownIssues_179fj000004O3XA</developerName>
+            <invocationTarget>ecwKnownIssues_Output_d3e4</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwKnownIssues</localDeveloperName>
+            <masterLabel>IT · Known issues</masterLabel>
+            <source>ecwKnownIssues_Output_d3e4</source>
+        </localActions>
+        <localActions>
+            <fullName>remindArAccounts_179fj000004O3XA</fullName>
+            <description>Use when the finance team wants to send a payment reminder to overdue AR accounts, chase collections, or nudge a customer about an outstanding balance. Renders the interactive AR aging card to collect which accounts to remind, then confirms.</description>
+            <developerName>remindArAccounts_179fj000004O3XA</developerName>
+            <invocationTarget>EcwArRemind</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>remindArAccounts</localDeveloperName>
+            <masterLabel>Finance · Send AR payment reminder</masterLabel>
+        </localActions>
+        <localActions>
+            <fullName>ecwCsatPulse_179fj000004O3XA</fullName>
+            <description>Use this when the employee asks about their CSAT, customer satisfaction, how customers rate them, their survey scores, or recent feedback. Shows a CSAT pulse card: rolling score with a trend and recent verbatim comments.</description>
+            <developerName>ecwCsatPulse_179fj000004O3XA</developerName>
+            <invocationTarget>ecwCsatPulse_Output_b8c0</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwCsatPulse</localDeveloperName>
+            <masterLabel>Service · CSAT pulse</masterLabel>
+            <source>ecwCsatPulse_Output_b8c0</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwApApprovals_179fj000004O3XA</fullName>
+            <description>Use when the finance team asks what invoices or POs are awaiting approval, the AP approval queue, or what payables need sign-off. Shows invoices/POs awaiting approval.</description>
+            <developerName>ecwApApprovals_179fj000004O3XA</developerName>
+            <invocationTarget>ecwApApprovals_Output_c2d4</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwApApprovals</localDeveloperName>
+            <masterLabel>Finance · AP approvals</masterLabel>
+            <source>ecwApApprovals_Output_c2d4</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwAudienceExplorer_179fj000004O3XA</fullName>
+            <description>Use when a marketer asks about audience size, building or refining a segment, how many contacts match some criteria, or segment reach. Shows an interactive audience builder that sizes the segment live.</description>
+            <developerName>ecwAudienceExplorer_179fj000004O3XA</developerName>
+            <invocationTarget>ecwAudienceExplorer_Output_m4d4</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwAudienceExplorer</localDeveloperName>
+            <masterLabel>Marketing · Audience builder</masterLabel>
+            <source>ecwAudienceExplorer_Output_m4d4</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwBudgetActual_179fj000004O3XA</fullName>
+            <description>Use when the finance team asks about budget vs actual, spend against budget, departmental budget consumption, or variance to budget. Shows departmental budget vs actual with bullet bars.</description>
+            <developerName>ecwBudgetActual_179fj000004O3XA</developerName>
+            <invocationTarget>ecwBudgetActual_Output_b1c3</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwBudgetActual</localDeveloperName>
+            <masterLabel>Finance · Budget vs actual</masterLabel>
+            <source>ecwBudgetActual_Output_b1c3</source>
+        </localActions>
+        <localActions>
+            <fullName>ecwForecast_179fj000004O3XA</fullName>
+            <description>Use this when the employee asks about their forecast, their commit, their best case, how much they will make, or whether they will hit the number. Shows a forecast coverage card: committed amount of total forecast split into Closed / Commit / Best case / Pipeline tiers.</description>
+            <developerName>ecwForecast_179fj000004O3XA</developerName>
+            <invocationTarget>ecwForecast_Output_c3d5</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>ecwForecast</localDeveloperName>
+            <masterLabel>Sales · Forecast</masterLabel>
+            <source>ecwForecast_Output_c3d5</source>
+        </localActions>
+        <localActions>
+            <fullName>investigateBudgetLine_179fj000004O3XA</fullName>
+            <description>Use when the finance team wants to investigate or flag a department&apos;s budget variance (an over-budget or near-budget line). Renders the interactive budget vs actual card to collect which department to investigate, then confirms.</description>
+            <developerName>investigateBudgetLine_179fj000004O3XA</developerName>
+            <invocationTarget>EcwBudgetInvestigate</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>investigateBudgetLine</localDeveloperName>
+            <masterLabel>Finance · Investigate budget variance</masterLabel>
+        </localActions>
+        <localDeveloperName>main</localDeveloperName>
+        <masterLabel>Employee Agent</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>escalation_16jfj000003C8Xx</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Shows the case escalation summary on the interactive escalation card, collects the agent&apos;s escalation, and confirms the result.</description>
+        <developerName>escalation_16jfj000003C8Xx</developerName>
+        <genAiPluginInstructions>
+            <description>You are the Employee Agent, an internal AI teammate that helps employees
+get work done by rendering interactive cards right in the conversation.
+Run the action that matches the employee&apos;s request and let the card do the
+talking — keep any accompanying text to one short sentence. If a request is
+outside the actions you have, briefly say what you can help with instead.
+When a finance user wants to approve or hold invoices or POs, route to the
+AP approvals handler, which collects their choice on an interactive card and
+confirms the result.</description>
+            <developerName>instruction0_179fj000004O3X8</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000004O3X8</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>raiseEscalation_179fj000004O3X8</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>raiseEscalation_179fj000004O3X8</fullName>
+            <description>Submits the agent&apos;s case escalation and returns a confirmation.</description>
+            <developerName>raiseEscalation_179fj000004O3X8</developerName>
+            <invocationTarget>EcwRaiseEscalation</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>raiseEscalation</localDeveloperName>
+            <masterLabel>Service · Raise escalation</masterLabel>
+        </localActions>
+        <localDeveloperName>escalation</localDeveloperName>
+        <masterLabel>Escalate case</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>ap_approval_16jfj000003C8Xx</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Collects the finance user&apos;s approve/hold selection on the interactive AP approvals card and confirms the result.</description>
+        <developerName>ap_approval_16jfj000003C8Xx</developerName>
+        <genAiPluginInstructions>
+            <description>You are the Employee Agent, an internal AI teammate that helps employees
+get work done by rendering interactive cards right in the conversation.
+Run the action that matches the employee&apos;s request and let the card do the
+talking — keep any accompanying text to one short sentence. If a request is
+outside the actions you have, briefly say what you can help with instead.
+When a finance user wants to approve or hold invoices or POs, route to the
+AP approvals handler, which collects their choice on an interactive card and
+confirms the result.</description>
+            <developerName>instruction0_179fj000004O3X7</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000004O3X7</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>approveApInvoices_179fj000004O3X7</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>approveApInvoices_179fj000004O3X7</fullName>
+            <description>Submits the finance user&apos;s approve/hold selection for AP invoices or POs and returns a confirmation.</description>
+            <developerName>approveApInvoices_179fj000004O3X7</developerName>
+            <invocationTarget>EcwApApprove</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>approveApInvoices</localDeveloperName>
+            <masterLabel>Finance · Approve AP invoices</masterLabel>
+        </localActions>
+        <localDeveloperName>ap_approval</localDeveloperName>
+        <masterLabel>AP approvals</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <masterLabel>Employee Agent</masterLabel>
+    <plannerType>Atlas__ConcurrentMultiAgentOrchestration</plannerType>
+</GenAiPlannerBundle>

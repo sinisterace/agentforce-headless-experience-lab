@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Use this when the visitor wants to book, schedule, or set up a free consultation or meeting with the firm or an attorney — for example &quot;book a free consultation&quot;, &quot;I want to meet with a lawyer&quot;, or &quot;schedule a call&quot;. Shows a consultation scheduler with an attorney hero, a meeting-type toggle (in person, phone, video), a day picker, and time slots to choose from.</description>
+    <developerName>asaLegalConsultScheduler_Output_7d4f</developerName>
+    <invocationTarget>asaLegalConsultScheduler_Output_7d4f</invocationTarget>
+    <invocationTargetType>flow</invocationTargetType>
+    <isConfirmationRequired>false</isConfirmationRequired>
+    <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+    <localDeveloperName>asaLegalConsultScheduler_Output_7d4f</localDeveloperName>
+    <masterLabel>ASA Legal · Consultation Scheduler</masterLabel>
+    <progressIndicatorMessage>Opening the consultation scheduler</progressIndicatorMessage>
+</GenAiFunction>

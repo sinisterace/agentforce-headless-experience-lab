@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Travel · Seat Map",
+  "description" : "Shows an interactive cabin seat map the traveler taps to pick a seat (open / taken / extra-legroom / exit / premium seats colour-coded), with a live seat detail and price.",
+  "lightning:type" : "@apexClassType/c__AsaTravelSeatMapData"
+}

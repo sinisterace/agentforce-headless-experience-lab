@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Thin AutoLaunched Flow that wraps the AnswerCompanyFaqAction Apex invocable so it can be
+  registered as an Agentforce action (this org rejects genAiFunction invocationTargetType=apex,
+  so we use a Flow like the CLT library does). Reuses the tested Apex logic; the flow only maps
+  the query in and faqContent/companyName/found out.
+-->
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <actionCalls>
+        <name>Call_FAQ_Action</name>
+        <label>Call FAQ Action</label>
+        <locationX>176</locationX>
+        <locationY>158</locationY>
+        <actionName>AnswerCompanyFaqAction</actionName>
+        <actionType>apex</actionType>
+        <connector>
+            <targetReference>Assign_Outputs</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>query</name>
+            <value>
+                <elementReference>query</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <assignments>
+        <name>Assign_Outputs</name>
+        <label>Assign Outputs</label>
+        <locationX>176</locationX>
+        <locationY>278</locationY>
+        <assignmentItems>
+            <assignToReference>faqContent</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Call_FAQ_Action.faqContent</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>companyName</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Call_FAQ_Action.companyName</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>found</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Call_FAQ_Action.found</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>industryKey</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Call_FAQ_Action.industryKey</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <interviewLabel>Answer Company FAQ {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Answer Company FAQ</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Call_FAQ_Action</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>query</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>faqContent</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <name>companyName</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <name>found</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <name>industryKey</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>

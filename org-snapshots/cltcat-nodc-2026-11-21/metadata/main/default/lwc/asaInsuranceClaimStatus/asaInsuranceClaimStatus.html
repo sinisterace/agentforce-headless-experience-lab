@@ -1,0 +1,80 @@
+<template>
+    <div class="asa-card">
+        <template if:true={title}>
+            <h3 class="asa-card-title">{title}</h3>
+        </template>
+
+        <template if:true={hasClaims}>
+            <div class="asa-cs-list">
+                <template for:each={claims} for:item="claim">
+                    <button
+                        key={claim.key}
+                        type="button"
+                        class={claim.cardClass}
+                        data-index={claim.index}
+                        onclick={handleClaimTap}>
+
+                        <span class="asa-cs-head">
+                            <span class="asa-cs-id-wrap">
+                                <span class="asa-cs-num">{claim.claimNumber}</span>
+                                <span class="asa-cs-meta-line">
+                                    <template if:true={claim.hasType}>
+                                        <span class="asa-cs-type">{claim.type}</span>
+                                    </template>
+                                    <template if:true={claim.hasPolicy}>
+                                        <span class="asa-cs-policy">{claim.policyLabel}</span>
+                                    </template>
+                                </span>
+                            </span>
+                            <span class={claim.statusClass}>{claim.statusLabel}</span>
+                        </span>
+
+                        <span class="asa-cs-track">
+                            <template for:each={claim.steps} for:item="step">
+                                <span key={step.key} class="asa-cs-step">
+                                    <template if:true={step.index}>
+                                        <span class={step.barClass} aria-hidden="true"></span>
+                                    </template>
+                                    <span class="asa-cs-node">
+                                        <span class={step.dotClass} aria-hidden="true">
+                                            <template if:true={step.isDone}>
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                                            </template>
+                                            <template if:true={step.isDenied}>
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                                            </template>
+                                        </span>
+                                        <span class={step.labelClass}>{step.label}</span>
+                                    </span>
+                                </span>
+                            </template>
+                        </span>
+
+                        <template if:true={claim.hasNextAction}>
+                            <span class="asa-cs-next">
+                                <span class="asa-cs-next-ico" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
+                                </span>
+                                <span class="asa-cs-next-text">{claim.nextAction}</span>
+                            </span>
+                        </template>
+
+                        <span class="asa-cs-foot">
+                            <template if:true={claim.hasAmount}>
+                                <span class="asa-cs-amount">{claim.amountDisplay}</span>
+                            </template>
+                            <template if:true={claim.hasFiled}>
+                                <span class="asa-cs-date">Filed {claim.filedDisplay}</span>
+                            </template>
+                            <template if:true={claim.hasUpdated}>
+                                <span class="asa-cs-date">Updated {claim.updatedDisplay}</span>
+                            </template>
+                        </span>
+                    </button>
+                </template>
+            </div>
+        </template>
+
+        <button type="button" class="asa-cs-submit" onclick={handleSubmit}>{submitLabel}</button>
+    </div>
+</template>

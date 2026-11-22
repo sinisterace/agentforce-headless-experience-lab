@@ -1,0 +1,57 @@
+<template>
+    <div class="ecw-ab">
+        <!-- Hero -->
+        <div class="ecw-ab-head">
+            <span class="ecw-ab-eyebrow">A/B test</span>
+            <strong class="ecw-ab-title">{testName}</strong>
+            <template if:true={hasAudience}><span class="ecw-ab-aud">{audience}</span></template>
+        </div>
+
+        <template if:true={hasVariants}>
+            <!-- Metric lens: underlined segmented tabs (not pills) -->
+            <div class="ecw-ab-lens" role="tablist">
+                <template for:each={tabs} for:item="t">
+                    <button key={t.key} type="button" class={t.cls} data-key={t.key} role="tab" onclick={handleLens}>{t.label}</button>
+                </template>
+            </div>
+
+            <!-- Duel -->
+            <div class="ecw-ab-stage">
+                <template for:each={variants} for:item="v">
+                    <div key={v.key} class={v.cardClass}>
+                        <span class="ecw-ab-vname">{v.name}</span>
+                        <template if:true={v.hasPreview}><p class="ecw-ab-preview">{v.preview}</p></template>
+                        <span class="ecw-ab-sent">{v.sentText}</span>
+                        <strong class={v.valClass}>{v.valText}</strong>
+                        <span class="ecw-ab-bar"><span class={v.barClass} style={v.barStyle}></span></span>
+                    </div>
+                </template>
+            </div>
+            <p class="ecw-ab-compare">{compareText}</p>
+
+            <!-- Confidence -->
+            <div class="ecw-ab-conf">
+                <div class="ecw-ab-conf-top">
+                    <span class="ecw-ab-conf-label">Confidence</span>
+                    <span class="ecw-ab-conf-val">{confText}</span>
+                </div>
+                <span class="ecw-ab-conf-track"><span class={confFillClass} style={confFillStyle}></span></span>
+                <span class={confNoteClass}>{confNote}</span>
+            </div>
+
+            <!-- Winner reveal -->
+            <template if:true={hasWinner}>
+                <div class="ecw-ab-winner">
+                    <div class="ecw-ab-winner-main">
+                        <span class="ecw-ab-winner-eyebrow">Winner</span>
+                        <strong class="ecw-ab-winner-name">{winnerName}</strong>
+                    </div>
+                    <div class="ecw-ab-winner-stats">
+                        <template if:true={lift}><span class="ecw-ab-winner-lift">{lift}</span></template>
+                        <template if:true={projected}><span class="ecw-ab-winner-proj">{projected}</span></template>
+                    </div>
+                </div>
+            </template>
+        </template>
+    </div>
+</template>

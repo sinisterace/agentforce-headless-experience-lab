@@ -1,0 +1,55 @@
+<template>
+    <div class="asa-card">
+
+        <div class="asa-du-head">
+            <h3 class="selector-title">{title}</h3>
+            <template if:true={hasCycle}>
+                <p class="asa-du-cycle">{cycleText}</p>
+            </template>
+        </div>
+
+        <div class="asa-du-meter">
+            <svg class={gaugeClass} viewBox="0 0 120 120" role="img" aria-label="Data usage gauge">
+                <circle class="asa-du-track" cx="60" cy="60" r="52" pathLength="100"
+                    stroke-dasharray={trackDash} transform="rotate(135 60 60)"></circle>
+                <circle class="asa-du-value" cx="60" cy="60" r="52" pathLength="100"
+                    stroke-dasharray={valueDash} transform="rotate(135 60 60)"></circle>
+            </svg>
+            <div class="asa-du-center">
+                <span class="asa-du-used">{usedLabel}<span class="asa-du-unit">{unit}</span></span>
+                <span class="asa-du-total">{totalLabel}</span>
+            </div>
+        </div>
+
+        <template if:true={hasRemaining}>
+            <p class="asa-du-remaining">{remainingLabel}</p>
+        </template>
+
+        <template if:true={hasBreakdown}>
+            <div class="asa-du-breakdown">
+                <div class="asa-du-bar">
+                    <template for:each={segments} for:item="s">
+                        <span key={s.key} class="asa-du-seg" style={s.style}></span>
+                    </template>
+                </div>
+                <ul class="asa-du-legend">
+                    <template for:each={legend} for:item="l">
+                        <li key={l.key} class="asa-du-legend-item">
+                            <span class="asa-du-dot" style={l.dotStyle}></span>
+                            <span class="asa-du-legend-label">{l.label}</span>
+                            <span class="asa-du-legend-amt">{l.amount}</span>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </template>
+
+        <template if:true={hasNote}>
+            <p class={noteClass}>{note}</p>
+        </template>
+
+        <template if:true={hasSubmit}>
+            <button type="button" class="asa-du-cta" onclick={handleSubmit}>{submitText}</button>
+        </template>
+    </div>
+</template>

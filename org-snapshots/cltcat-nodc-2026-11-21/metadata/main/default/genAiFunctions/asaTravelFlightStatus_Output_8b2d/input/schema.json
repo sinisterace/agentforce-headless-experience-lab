@@ -1,0 +1,14 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full flight-status card payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Flight AF128\",\"status\":\"in_air\",\"origin\":{\"code\":\"SFO\",\"city\":\"San Francisco\",\"time\":\"10:35 AM\",\"gate\":\"A12\",\"terminal\":\"2\"},\"dest\":{\"code\":\"JFK\",\"city\":\"New York\",\"time\":\"7:05 PM\",\"terminal\":\"4\",\"baggage\":\"Belt 6\"},\"progressPct\":62,\"aircraft\":\"Airbus A321neo\",\"durationText\":\"5h 30m\",\"updatedText\":\"Live · updated just now\",\"submitText\":\"Get gate updates\",\"submitValue\":\"Send me gate and delay updates for flight AF128\"}\n\nRules:\n- 'title' (string, optional): the card heading, usually the flight number, e.g. 'Flight AF128'. Defaults to 'Flight status'.\n- 'status' (string, recommended): the live flight state. Use ONE of exactly: 'scheduled', 'boarding', 'departed', 'in_air', 'landed', 'delayed', 'cancelled'. Drives the coloured status pill and the plane's position.\n- 'statusLabel' (string, optional): a display override for the pill text; if omitted a sensible label is derived from 'status' (e.g. 'in_air' shows 'In air').\n- 'origin' (object, recommended): the departure airport — { 'code' (string, e.g. 'SFO'), 'city' (string, optional), 'time' (string, optional, e.g. '10:35 AM'), 'gate' (string, optional), 'terminal' (string, optional) }.\n- 'dest' (object, recommended): the arrival airport — same shape as 'origin' plus 'baggage' (string, optional, the baggage-claim belt, e.g. 'Belt 6'). Note: 'baggage' applies to the destination only.\n- 'progressPct' (number, optional): 0-100, the plane's position along the route arc. Ignored when status is 'scheduled' or 'boarding' (forced to 0) or 'landed' (forced to 100).\n- 'aircraft' (string, optional): aircraft type, e.g. 'Airbus A321neo'; shown under the title.\n- 'durationText' (string, optional): flight duration, e.g. '5h 30m'; appended after the aircraft as '<aircraft> · <durationText>'.\n- 'updatedText' (string, optional): a freshness caption, e.g. 'Live · updated just now'.\n- 'submitText' (string, optional): the get-updates button label; defaults to 'Get updates'.\n- 'submitValue' (string, optional): the EXACT message sent back to the agent when the button is tapped; defaults to a sensible 'Send me gate and delay updates...' phrase.\n\nUse these EXACT field names — they are the single contract the card reads. Only include fields you actually have; omit unknown ones rather than inventing values.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

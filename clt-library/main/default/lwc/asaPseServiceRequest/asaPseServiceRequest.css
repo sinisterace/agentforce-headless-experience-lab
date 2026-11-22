@@ -1,0 +1,235 @@
+/* ASA Public Sector & Education · Service Request — "Civic Records" design
+   language: a navy agency masthead with a seal emblem over an official-paper
+   surface, a big central location scene with an overlaid address caption, then a
+   grid of request-type tiles. rem units + inherited font so the card matches the
+   host chat theme in Enhanced Chat v2. Civic-navy + neutrals are local props. */
+:host {
+    --asa-accent: #1e3a8a;
+    --asa-navy-deep: #172554;
+    --asa-paper: #fbfbf9;
+    --asa-line: #e4e4e7;
+    --asa-ink: #1e293b;
+    --asa-muted: #64748b;
+    --asa-gold: #c79a3a;
+    --asa-good: #15803d;
+    --asa-warn: #b45309;
+    --asa-bad: #b91c1c;
+    display: block;
+}
+
+.asa-card {
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    background: var(--asa-paper);
+    border: 1px solid var(--asa-line);
+    border-radius: 12px;
+    overflow: hidden;
+    /* Enhanced Chat v2 renders this in a ~320px column; size to the card. */
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after {
+    box-sizing: border-box;
+}
+
+/* --- Masthead --- */
+.asa-sr-masthead {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 0.8rem;
+    background: linear-gradient(135deg, var(--asa-accent), var(--asa-navy-deep));
+}
+.asa-sr-seal {
+    flex-shrink: 0;
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid var(--asa-gold);
+    color: #fff;
+}
+.asa-sr-seal svg { width: 1.15rem; height: 1.15rem; }
+.asa-sr-mast-text { min-width: 0; }
+.asa-sr-kicker {
+    display: block;
+    font-size: 0.55rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--asa-gold);
+}
+.asa-sr-mast-title {
+    display: block;
+    margin: 0.1rem 0 0;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #fff;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* --- Body --- */
+.asa-sr-body { padding: 0.8rem; }
+
+/* Big location scene */
+.asa-sr-scene {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    margin-bottom: 0.8rem;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--asa-line);
+    background: #ececea;
+}
+.asa-sr-scene-img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.asa-sr-scene-scrim {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 45%;
+    background: linear-gradient(to top, rgba(15, 23, 42, 0.55), transparent);
+    pointer-events: none;
+}
+.asa-sr-scene-cap {
+    position: absolute;
+    left: 0.6rem;
+    bottom: 0.6rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    max-width: calc(100% - 1.2rem);
+    padding: 0.28rem 0.55rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--asa-navy-deep) 82%, transparent);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 650;
+    backdrop-filter: blur(2px);
+}
+.asa-sr-scene-cap svg { width: 0.85rem; height: 0.85rem; flex-shrink: 0; color: var(--asa-gold); }
+.asa-sr-scene-cap-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.asa-sr-sub {
+    margin: 0 0 0.7rem 0;
+    font-size: 0.78rem;
+    line-height: 1.35;
+    color: var(--asa-muted);
+    overflow-wrap: break-word;
+}
+
+/* Request tile grid */
+.asa-sr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
+.asa-sr-tile {
+    --req: var(--asa-accent);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.7rem 0.65rem;
+    border: 1px solid var(--asa-line);
+    border-radius: 10px;
+    background: #fff;
+    color: inherit;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+.asa-sr-tile:hover { border-color: color-mix(in srgb, var(--asa-accent) 45%, var(--asa-line)); }
+.asa-sr-tile.is-selected {
+    border-color: var(--asa-accent);
+    background: color-mix(in srgb, var(--asa-accent) 6%, #fff);
+    box-shadow: inset 0 0 0 1px var(--asa-accent);
+}
+/* Per-request hues so the icon squares read as distinct kinds of report. */
+.asa-sr-tile.is-road { --req: var(--asa-accent); }
+.asa-sr-tile.is-light { --req: #b45309; }
+.asa-sr-tile.is-graffiti { --req: #6b46c1; }
+.asa-sr-tile.is-trash { --req: #15803d; }
+.asa-sr-tile.is-water { --req: #2563eb; }
+.asa-sr-tile.is-building { --req: #0e7490; }
+.asa-sr-tile.is-tree { --req: #15803d; }
+.asa-sr-tile.is-sidewalk { --req: #475467; }
+.asa-sr-tile.is-noise { --req: #b83280; }
+.asa-sr-tile.is-other { --req: #475467; }
+
+.asa-sr-ico {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--req) 12%, transparent);
+    color: var(--req);
+}
+.asa-sr-ico svg { width: 1.25rem; height: 1.25rem; }
+
+.asa-sr-text { display: flex; flex-direction: column; gap: 0.12rem; min-width: 0; width: 100%; }
+.asa-sr-label {
+    font-weight: 660;
+    font-size: 0.86rem;
+    letter-spacing: -0.005em;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-sr-desc {
+    font-size: 0.74rem;
+    color: var(--asa-muted);
+    line-height: 1.3;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+.asa-sr-check {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--asa-line);
+    color: transparent;
+    background: #fff;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.asa-sr-check svg { width: 0.72rem; height: 0.72rem; }
+.asa-sr-check.on { background: var(--asa-accent); border-color: var(--asa-accent); color: #fff; }
+
+.asa-sr-submit {
+    margin-top: 0.85rem;
+    width: 100%;
+    min-height: 2.7rem;
+    padding: 0.7rem 1.15rem;
+    border-radius: 10px;
+    border: none;
+    background: var(--asa-accent);
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 650;
+    transition: filter 0.15s ease;
+}
+.asa-sr-submit:hover { filter: brightness(1.08); }
+
+/* Tightest chat columns: collapse to a single column so labels never truncate. */
+@container (max-width: 300px) {
+    .asa-sr-grid { grid-template-columns: 1fr; }
+    .asa-sr-tile { flex-direction: row; align-items: center; }
+    .asa-sr-ico { width: 2.1rem; height: 2.1rem; }
+    .asa-sr-check { position: static; margin-left: auto; align-self: center; }
+}

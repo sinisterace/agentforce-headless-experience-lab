@@ -1,0 +1,5 @@
+{
+  "title" : "ASA HVAC · Comfort System Health Report",
+  "description" : "Shows a whole-home comfort system checkup: an overall health score gauge, per-system status rows (furnace, AC, thermostat, ductwork, filter), a filter-life bar, the next maintenance due date, a recommendation, and a book-maintenance action.",
+  "lightning:type" : "@apexClassType/c__AsaHvacSystemHealthData"
+}

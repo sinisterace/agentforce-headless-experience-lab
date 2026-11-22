@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Agentforce Coworker · Marketing · A/B test</masterLabel>
+    <description>A head-to-head A/B test showdown — variant previews, a metric-lens duel, a confidence meter, and a winner reveal with lift and projected impact.</description>
+    <targets>
+        <target>lightning__AgentforceOutput</target>
+        <target>lightningSnapin__ChatMessage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AgentforceOutput">
+            <sourceType name="c__ecwAbTest"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

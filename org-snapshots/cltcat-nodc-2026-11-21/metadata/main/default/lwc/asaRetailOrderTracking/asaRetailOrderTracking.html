@@ -1,0 +1,73 @@
+<template>
+    <div class="asa-card">
+        <div class="asa-ot-head">
+            <template if:true={title}>
+                <h3 class="selector-title">{title}</h3>
+            </template>
+        </div>
+
+        <div class="asa-ot-map">
+            <svg class="asa-ot-svg" viewBox="0 0 320 176" role="img" aria-label="Delivery map">
+                <rect x="0" y="0" width="320" height="176" class="asa-ot-map-bg"></rect>
+                <g class="asa-ot-blocks">
+                    <rect x="10" y="12" width="56" height="42" rx="6"></rect>
+                    <rect x="80" y="12" width="52" height="30" rx="6"></rect>
+                    <rect x="196" y="12" width="48" height="34" rx="6"></rect>
+                    <rect x="258" y="12" width="52" height="34" rx="6"></rect>
+                    <rect x="10" y="118" width="60" height="46" rx="6"></rect>
+                    <rect x="176" y="118" width="60" height="46" rx="6"></rect>
+                    <rect x="250" y="82" width="60" height="42" rx="6"></rect>
+                    <rect x="80" y="128" width="70" height="36" rx="6"></rect>
+                </g>
+                <g class="asa-ot-roads">
+                    <path d={fullPath}></path>
+                    <line x1="0" y1="106" x2="320" y2="106"></line>
+                    <line x1="150" y1="0" x2="150" y2="176"></line>
+                </g>
+                <path class="asa-ot-route-rest" d={fullPath}></path>
+                <path class="asa-ot-route-done" d={coveredPath}></path>
+                <circle class="asa-ot-origin" cx="40" cy="150" r="5"></circle>
+                <g transform={destTransform}>
+                    <path class="asa-ot-dest-pin" d="M0,-15 C-6.5,-15 -12,-9.5 -12,-3 C-12,5 0,15 0,15 C0,15 12,5 12,-3 C12,-9.5 6.5,-15 0,-15 Z"></path>
+                    <circle class="asa-ot-dest-dot" cx="0" cy="-3" r="4"></circle>
+                </g>
+                <g transform={courierTransform}>
+                    <template if:true={showPulse}>
+                        <circle class="asa-ot-pulse" cx="0" cy="0" r="12"></circle>
+                    </template>
+                    <circle class="asa-ot-courier-ring" cx="0" cy="0" r="11"></circle>
+                    <circle class="asa-ot-courier-dot" cx="0" cy="0" r="7"></circle>
+                </g>
+            </svg>
+            <template if:true={hasEta}>
+                <div class="asa-ot-eta">
+                    <span class="asa-ot-eta-label">Estimated arrival</span>
+                    <span class="asa-ot-eta-time">{etaText}</span>
+                    <template if:true={hasDest}>
+                        <span class="asa-ot-eta-dest">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            {destText}
+                        </span>
+                    </template>
+                </div>
+            </template>
+        </div>
+
+        <ol class="asa-ot-steps">
+            <template for:each={steps} for:item="s">
+                <li key={s.key} class={s.stepClass}>
+                    <span class="asa-ot-step-index">{s.orderLabel}</span>
+                    <span class="asa-ot-node" aria-hidden="true"></span>
+                    <span class="asa-ot-step-label">{s.label}</span>
+                    <template if:true={s.hasTime}>
+                        <span class="asa-ot-step-time">{s.time}</span>
+                    </template>
+                </li>
+            </template>
+        </ol>
+
+        <template if:true={hasSubmit}>
+            <button type="button" class="asa-ot-cta" onclick={handleSubmit}>{submitText}</button>
+        </template>
+    </div>
+</template>

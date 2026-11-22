@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Healthcare · Care Options",
+  "description" : "Presents the ways a customer can get care (nurse line, video, in-person, ER), each with an action.",
+  "lightning:type" : "@apexClassType/c__AsaHealthcareCareOptionsData"
+}

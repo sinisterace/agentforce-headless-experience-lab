@@ -1,0 +1,137 @@
+<template>
+    <div class="asa-card">
+
+        <!-- Header: cart id + status + ship-to / bill-to -->
+        <div class="asa-qb-cart">
+            <span class="asa-qb-cart-ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16.5 9.4 7.55 4.24"></path>
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                    <path d="M3.3 7 12 12l8.7-5"></path>
+                    <path d="M12 22V12"></path>
+                </svg>
+            </span>
+            <div class="asa-qb-cart-body">
+                <div class="asa-qb-cart-top">
+                    <h3 class="selector-title asa-qb-title">{headerLabel}</h3>
+                    <template if:true={hasStatus}>
+                        <span class="asa-qb-cart-pill">{statusLabel}</span>
+                    </template>
+                </div>
+                <template if:true={hasShipTo}>
+                    <p class="asa-qb-cart-line">
+                        <span class="asa-qb-cart-key">Ship-To</span>
+                        <span class="asa-qb-cart-val">{shipTo}</span>
+                    </p>
+                </template>
+                <template if:true={hasShipMeta}>
+                    <p class="asa-qb-cart-line asa-qb-cart-sub">
+                        <template if:true={hasShipId}>
+                            <span class="asa-qb-cart-id">{shipToId}</span>
+                        </template>
+                        <template if:true={hasBillTo}>
+                            <span class="asa-qb-cart-key">Bill-To</span>
+                            <span class="asa-qb-cart-val">{billTo}</span>
+                        </template>
+                    </p>
+                </template>
+            </div>
+        </div>
+
+        <!-- Line items -->
+        <div class="asa-qb-lines">
+            <div class="asa-qb-lines-head">
+                <span class="asa-qb-section-title">Line items</span>
+                <button type="button" class="asa-qb-additem" onclick={handleAddItem}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Add item
+                </button>
+            </div>
+            <div class="asa-qb-table">
+                <div class="asa-qb-thead" aria-hidden="true">
+                    <span class="asa-qb-th-num">Item #</span>
+                    <span class="asa-qb-th-desc">Description</span>
+                    <span class="asa-qb-th-qty">Qty</span>
+                </div>
+                <template for:each={lines} for:item="l">
+                    <div key={l.id} class="asa-qb-trow">
+                        <span class="asa-qb-tnum">{l.itemNumber}</span>
+                        <span class="asa-qb-tdesc">
+                            <span class="asa-qb-tdesc-name">{l.description}</span>
+                            <span class="asa-qb-tmeta">
+                                <template if:true={l.hasUom}><span class="asa-qb-tuom">{l.uom}</span></template>
+                                <template if:true={l.hasUnit}><span class="asa-qb-tunit">{l.unitText}</span></template>
+                            </span>
+                        </span>
+                        <span class="asa-qb-tqty">
+                            <span class="asa-qb-stepper">
+                                <button type="button" class="asa-qb-step" data-id={l.id} onclick={handleDecrement} aria-label="Decrease quantity">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                </button>
+                                <span class="asa-qb-qty-value">{l.quantity}</span>
+                                <button type="button" class="asa-qb-step" data-id={l.id} onclick={handleIncrement} aria-label="Increase quantity">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                </button>
+                            </span>
+                            <template if:true={l.hasLineTotal}>
+                                <span class="asa-qb-tline">{l.lineTotalText}</span>
+                            </template>
+                        </span>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Order details -->
+        <div class="asa-qb-details">
+            <span class="asa-qb-section-title">Order details</span>
+
+            <label class="asa-qb-po">
+                <span class="asa-qb-po-label">{poLabel}</span>
+                <input class="asa-qb-po-input" type="text" placeholder={poPlaceholder} value={po} onchange={handlePoInput} />
+            </label>
+
+            <div class="asa-qb-sum">
+                <div class="asa-qb-sum-row">
+                    <span class="asa-qb-sum-key">Subtotal</span>
+                    <span class="asa-qb-sum-val">{subtotalText}</span>
+                </div>
+                <div class="asa-qb-sum-row">
+                    <span class="asa-qb-sum-key">Shipping &amp; handling</span>
+                    <template if:false={feesCalculated}>
+                        <span class="asa-qb-sum-fees">
+                            <span class="asa-qb-sum-dash">{shippingDash}</span>
+                            <button type="button" class="asa-qb-calc" onclick={handleCalcFees}>Calculate fees</button>
+                        </span>
+                    </template>
+                    <template if:true={feesCalculated}>
+                        <span class="asa-qb-sum-val">{feesText}</span>
+                    </template>
+                </div>
+                <template if:true={feesCalculated}>
+                    <div class="asa-qb-sum-row asa-qb-sum-total">
+                        <span class="asa-qb-sum-key">Estimated total</span>
+                        <span class="asa-qb-sum-val">{totalText}</span>
+                    </div>
+                </template>
+            </div>
+
+            <template if:true={hasAck}>
+                <label class="asa-qb-ack">
+                    <input type="checkbox" checked={agree} onchange={handleAckChange} />
+                    <span class="asa-qb-ack-text">{acknowledgeText}</span>
+                </label>
+            </template>
+
+            <div class="asa-qb-actions">
+                <template if:true={hasSecondary}>
+                    <button type="button" class="asa-qb-secondary">{secondaryText}</button>
+                </template>
+                <button type="button" class="asa-qb-submit" onclick={handleSubmit} disabled={submitDisabled}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M16 13H8"></path><path d="M16 17H8"></path><path d="M10 9H8"></path></svg>
+                    {submitText}
+                </button>
+            </div>
+        </div>
+    </div>
+</template>

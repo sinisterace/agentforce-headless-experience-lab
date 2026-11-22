@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Registers the Flow as an Agentforce action. Deploying this makes the action
+  appear in Agent Builder's "All Actions" picker (search by masterLabel).
+  invocationTarget must equal the Flow's API name.
+-->
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Use this when the customer asks about a machine's or asset's health, live status, performance metrics (OEE, temperature, throughput, uptime), or whether equipment is running, idle, or in a fault. Shows an equipment monitor card with an asset photo, a live status, metric tiles, a trend sparkline, and a create-work-order action.</description>
+    <invocationTarget>asaMfgEquipmentMonitor_Output_a5f2</invocationTarget>
+    <invocationTargetType>flow</invocationTargetType>
+    <isConfirmationRequired>false</isConfirmationRequired>
+    <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+    <masterLabel>ASA Manufacturing · Equipment Monitor</masterLabel>
+    <progressIndicatorMessage>Pulling live machine telemetry</progressIndicatorMessage>
+</GenAiFunction>

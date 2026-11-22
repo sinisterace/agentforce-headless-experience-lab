@@ -1,0 +1,180 @@
+<template>
+  <article class="slds-card slds-text-color_default">
+    <div class="slds-var-p-around_x-large">
+      <!-- BEGIN HOME SECTION -->
+      <!-- INTRO -->
+      <div class="slds-var-m-bottom_medium">
+        <section class="slds-var-m-bottom_medium">
+          <h2 class="slds-text-heading_large slds-var-m-bottom_small">Welcome to the Headless 360 Workshop</h2>
+          <p>
+            Headless 360 makes Salesforce capabilities available through APIs, Model Context Protocol (MCP) tools, and
+            CLI commands so developers can build governed experiences wherever work happens. This workshop explores how
+            to compose Salesforce context, data, actions, and trust into applications and agents that are not tied to a
+            single user interface.
+          </p>
+        </section>
+
+        <section class="slds-var-m-bottom_medium">
+          <h3 class="slds-text-heading_medium slds-var-m-bottom_small">What is Headless 360?</h3>
+          <p>
+            Headless 360 is Salesforce's open, composable platform surface for developers, agents, apps, and tools. It
+            exposes major Salesforce capabilities through governed entry points while relying on the Salesforce Platform
+            and Trust Layer for identity, permissions, validation rules, automation, and access control. The result is a
+            platform that can be consumed from custom apps, coding agents, Slack, mobile, web, or any authenticated
+            client your organization authorizes.
+          </p>
+        </section>
+
+        <section class="slds-var-m-bottom_medium">
+          <h3 class="slds-text-heading_medium slds-var-m-bottom_small">Build for Any Experience</h3>
+          <p class="slds-var-m-bottom_small">
+            Headless 360 helps you define capabilities once and deliver them through the channels that matter most.
+            Coding agents can use MCP tools to understand metadata, generate code, run tests, and deploy through
+            existing review gates. Business agents and custom experiences can call the same trusted platform
+            capabilities from Slack, mobile, web, ChatGPT, Claude, Teams, or other connected surfaces.
+          </p>
+        </section>
+
+        <!-- Credentials + Setup -->
+        <div class="slds-var-m-bottom_x-large slds-grid slds-wrap">
+          <!-- Column 1: Credentials -->
+          <section class="slds-col slds-size_1-of-2 slds-var-p-right_medium">
+            <h3 class="slds-text-heading_medium slds-var-m-top_medium slds-var-m-bottom_small">Credentials</h3>
+            <p class="slds-var-m-bottom_small">
+              Ensure that you write down your username and password as they are not available to retrieve after the
+              event or if you misplace them during the workshop.
+            </p>
+
+            <!-- Username -->
+            <div class="credentials-container slds-grid slds-grid_vertical-align-end">
+              <lightning-input type="email" label="Username" value={username} class="slds-grow" disabled="true">
+              </lightning-input>
+              <lightning-button-icon
+                class="slds-m-left_x-small slds-m-bottom_xxx-small"
+                data-content={username}
+                icon-name="utility:copy"
+                onclick={handleCopy}
+              ></lightning-button-icon>
+            </div>
+            <!-- Password -->
+            <div class="credentials-container slds-grid slds-grid_vertical-align-end">
+              <lightning-input
+                type="text"
+                label="Default Password"
+                value="orgfarm1234"
+                class="slds-grow"
+                disabled="true"
+              >
+              </lightning-input>
+              <lightning-button-icon
+                class="slds-m-left_x-small slds-m-bottom_xxx-small"
+                data-content="orgfarm1234"
+                icon-name="utility:copy"
+                onclick={handleCopy}
+              ></lightning-button-icon>
+            </div>
+          </section>
+
+          <!-- Column 2: Configuration Checks -->
+          <section class="slds-col slds-size_1-of-2 slds-var-p-left_medium">
+            <h3 class="slds-text-heading_medium slds-var-m-top_medium slds-var-m-bottom_small">Configuration Checks</h3>
+            <!-- Verified email -->
+            <div lwc:if={isUserEmailVerified} class="slds-media slds-media_center slds-var-m-bottom_medium">
+              <div class="slds-media__figure">
+                <lightning-icon
+                  icon-name="utility:check"
+                  alternative-text="valid"
+                  size="small"
+                  title="valid"
+                  variant="success"
+                ></lightning-icon>
+              </div>
+              <div class="slds-media__body">
+                <p>Verified user email: {email}</p>
+              </div>
+            </div>
+            <div lwc:else class="slds-media slds-media_center slds-var-m-bottom_medium">
+              <div class="slds-media__figure">
+                <lightning-icon
+                  icon-name="utility:warning"
+                  alternative-text="warning"
+                  size="small"
+                  title="warning"
+                  variant="warning"
+                ></lightning-icon>
+              </div>
+              <div class="slds-media__body">
+                <p><strong>Unverified user email</strong></p>
+                <p>Follow the workshop instructions to change your user's email to a verified email address.</p>
+              </div>
+            </div>
+
+            <!-- External Client App -->
+            <div lwc:if={hasExternalClientApp} class="slds-media slds-media_center slds-var-m-bottom_medium">
+              <div class="slds-media__figure">
+                <lightning-icon
+                  icon-name="utility:check"
+                  alternative-text="valid"
+                  size="small"
+                  title="valid"
+                  variant="success"
+                ></lightning-icon>
+              </div>
+              <div class="slds-media__body">
+                <p>
+                  <a href="/lightning/setup/ManageExternalClientApplication/home">External Client App</a> registered
+                </p>
+              </div>
+            </div>
+            <div lwc:else class="slds-media slds-media_center slds-var-m-bottom_medium">
+              <div class="slds-media__figure">
+                <lightning-icon
+                  icon-name="utility:warning"
+                  alternative-text="warning"
+                  size="small"
+                  title="warning"
+                  variant="warning"
+                ></lightning-icon>
+              </div>
+              <div class="slds-media__body">
+                <p><strong>No External Client App Registered</strong></p>
+                <p>
+                  Follow the workshop instructions to register an&nbsp;
+                  <a href="/lightning/setup/ManageExternalClientApplication/home">External Client App</a>.
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <section class="slds-grid slds-grid_align-center slds-var-m-top_xx-large">
+        <!-- CARD: Agentforce Interfaces -->
+        <div class="slds-col slds-size_1-of-1 slds-large-size_2-of-3 slds-text-align_center">
+          <div class="slds-box slds-var-p-around_large">
+            <lightning-icon
+              size="large"
+              icon-name="standard:apps"
+              class="slds-var-m-bottom_small"
+            ></lightning-icon>
+            <p class="slds-text-heading_small slds-text-color_default">
+              <strong>Agentforce Interfaces</strong>
+            </p>
+            <p class="slds-text-color_default slds-var-p-vertical_small">
+              Browse and personalize the packaged Agentforce Custom Lightning Types, and preview
+              how they render across Salesforce, Slack, ChatGPT, and Claude.
+            </p>
+            <lightning-button
+              label="Open Agentforce Interfaces"
+              icon-name="utility:new_window"
+              icon-position="right"
+              onclick={openInterfaces}
+              name="interfaces"
+              variant="brand"
+            ></lightning-button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </article>
+</template>

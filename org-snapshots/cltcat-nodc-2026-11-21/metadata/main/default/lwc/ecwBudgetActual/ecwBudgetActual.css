@@ -1,0 +1,90 @@
+/* Agentforce Coworker · Finance · Budget vs actual — Energy & Utilities design
+   language (per c/asaEnergyUsageCost): warm-stone neutrals + amber accent, squared
+   6px geometry, 1px hairlines, flat baselines — NOT rounded chips, NO heavy shadows
+   or gradient-fill headers. Monospace tabular numerals for all money/%, tiny
+   uppercase eyebrows. rem units + inherited font so it matches the host chat theme. */
+:host {
+    --asa-accent: #d97706;
+    --asa-ink: #1c1917;
+    --asa-muted: #78716c;
+    --asa-line: #e7e5e4;
+    --asa-panel: #faf7f2;
+    --asa-good: #15803d;
+    --asa-warn: #b45309;
+    --asa-over: #b91c1c;
+    --asa-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    display: block;
+    color: var(--asa-ink);
+}
+
+.asa-ba {
+    container-type: inline-size;
+    padding: 0.95rem 1rem;
+    font-family: inherit;
+    border: 1px solid var(--asa-line);
+    border-radius: 6px;
+    background: #fff;
+}
+.asa-ba *, .asa-ba *::before, .asa-ba *::after { box-sizing: border-box; }
+
+/* Head */
+.asa-ba-head { display: flex; flex-direction: column; align-items: flex-start; gap: 0.1rem; margin-bottom: 0.65rem; }
+.asa-ba-title { margin: 0; font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; color: var(--asa-ink); }
+.asa-ba-cycle { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--asa-muted); }
+
+/* Projected-spend readout */
+.asa-ba-projbar { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.4rem 0.6rem; padding: 0.7rem 0.75rem; border-radius: 6px; background: var(--asa-panel); }
+.asa-ba-proj { display: flex; flex-direction: column; gap: 0.08rem; min-width: 0; flex: 1 1 9rem; }
+.asa-ba-proj-eyebrow { font-size: 0.56rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--asa-muted); }
+.asa-ba-proj-value { font-family: var(--asa-mono); font-size: 1.72rem; font-weight: 750; line-height: 1.02; letter-spacing: -0.03em; color: var(--asa-ink); font-variant-numeric: tabular-nums; }
+.asa-ba-proj-sub { font-size: 0.66rem; font-weight: 600; color: var(--asa-muted); margin-top: 0.12rem; font-variant-numeric: tabular-nums; }
+.asa-ba-delta { display: inline-flex; align-items: center; gap: 0.22rem; font-size: 0.64rem; font-weight: 750; padding: 0.2rem 0.42rem; border-radius: 4px; font-variant-numeric: tabular-nums; }
+.asa-ba-delta.is-down { color: var(--asa-good); background: color-mix(in srgb, var(--asa-good) 12%, #fff); }
+.asa-ba-delta.is-up { color: var(--asa-over); background: color-mix(in srgb, var(--asa-over) 12%, #fff); }
+.asa-ba-delta-arrow { font-size: 0.68rem; line-height: 1; }
+
+/* Column chart */
+.asa-ba-chart { margin-top: 0.75rem; padding: 0.55rem 0.6rem 0.45rem; border: 1px solid var(--asa-line); border-radius: 6px; background: #fff; }
+.asa-ba-plot { display: block; width: 100%; height: 5rem; overflow: visible; }
+.asa-ba-bar { }
+.asa-ba-budget-tick { stroke: var(--asa-ink); stroke-width: 1.25; stroke-dasharray: 2 1.6; vector-effect: non-scaling-stroke; opacity: 0.6; }
+.asa-ba-baseline { stroke: var(--asa-line); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.asa-ba-xaxis { display: flex; margin-top: 0.3rem; }
+.asa-ba-xlabel { flex: 1; min-width: 0; text-align: center; font-size: 0.54rem; font-weight: 650; color: var(--asa-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0 0.1rem; }
+.asa-ba-chart-key { display: flex; justify-content: center; gap: 0.9rem; margin-top: 0.4rem; }
+.asa-ba-key-item { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.56rem; font-weight: 650; color: var(--asa-muted); }
+.asa-ba-key-bar { width: 0.55rem; height: 0.55rem; border-radius: 1px; background: color-mix(in srgb, var(--asa-accent) 70%, #000 0%); }
+.asa-ba-key-tick { width: 0.7rem; height: 0; border-top: 1.5px dashed var(--asa-ink); opacity: 0.6; }
+
+/* Spend-share meter + legend */
+.asa-ba-breakdown { margin-top: 0.75rem; }
+.asa-ba-meter { display: flex; width: 100%; height: 0.7rem; border-radius: 3px; overflow: hidden; background: #f1efec; }
+.asa-ba-seg { height: 100%; }
+.asa-ba-seg + .asa-ba-seg { border-left: 1.5px solid #fff; }
+.asa-ba-legend { list-style: none; margin: 0.5rem 0 0; padding: 0; }
+.asa-ba-leg { border-top: 1px solid var(--asa-line); }
+.asa-ba-leg:first-child { border-top: 0; }
+.asa-ba-leg-row { display: flex; align-items: center; gap: 0.5rem; }
+.asa-ba-leg-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.5rem; padding: 0.42rem 0; background: transparent; border: 0; cursor: pointer; font-family: inherit; text-align: left; color: inherit; }
+.asa-ba-leg-main:hover { background: #faf9f7; }
+.asa-ba-leg-dot { width: 0.62rem; height: 0.62rem; border-radius: 2px; flex-shrink: 0; }
+.asa-ba-leg-label { flex: 1; min-width: 0; font-size: 0.76rem; font-weight: 650; color: var(--asa-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.asa-ba-chip { flex-shrink: 0; font-size: 0.58rem; font-weight: 750; padding: 0.08rem 0.36rem; border-radius: 3px; font-variant-numeric: tabular-nums; }
+.asa-ba-chip.is-ok { color: var(--asa-good); background: color-mix(in srgb, var(--asa-good) 11%, #fff); }
+.asa-ba-chip.is-warn { color: var(--asa-warn); background: color-mix(in srgb, var(--asa-warn) 12%, #fff); }
+.asa-ba-chip.is-over { color: var(--asa-over); background: color-mix(in srgb, var(--asa-over) 11%, #fff); }
+.asa-ba-leg-amt { flex-shrink: 0; font-family: var(--asa-mono); font-size: 0.74rem; font-weight: 700; color: var(--asa-ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+/* Investigate action — squared amber ghost button */
+.asa-ba-act { flex: none; display: inline-flex; align-items: center; padding: 0.26rem 0.5rem; border-radius: 4px; border: 1px solid color-mix(in srgb, var(--asa-accent) 45%, var(--asa-line)); background: #fff; color: var(--asa-accent); font-family: inherit; font-size: 0.62rem; font-weight: 750; letter-spacing: 0.01em; cursor: pointer; white-space: nowrap; transition: background 0.13s ease; }
+.asa-ba-act:hover { background: color-mix(in srgb, var(--asa-accent) 9%, #fff); }
+.asa-ba-act:disabled { color: var(--asa-muted); border-color: var(--asa-line); background: var(--asa-panel); cursor: default; }
+
+.asa-ba-detail { margin: 0; padding: 0 0 0.5rem 1.12rem; font-size: 0.7rem; line-height: 1.4; color: var(--asa-muted); font-variant-numeric: tabular-nums; }
+
+@container (max-width: 320px) {
+    .asa-ba-proj-value { font-size: 1.5rem; }
+    .asa-ba-plot { height: 4.2rem; }
+    .asa-ba-xlabel { font-size: 0.5rem; }
+    .asa-ba-leg-label { font-size: 0.72rem; }
+}

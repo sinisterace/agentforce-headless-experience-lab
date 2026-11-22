@@ -1,0 +1,66 @@
+<template>
+    <div class="asa-card">
+        <template if:true={title}>
+            <h3 class="asa-card-title">{title}</h3>
+        </template>
+
+        <template if:true={hasAccounts}>
+            <div class="asa-wallet">
+                <template for:each={accounts} for:item="acct">
+                    <button
+                        key={acct.key}
+                        type="button"
+                        class={acct.cardClass}
+                        data-index={acct.index}
+                        aria-pressed={acct.selected}
+                        onclick={handleSelect}>
+
+                        <span class="asa-wcard-top">
+                            <span class="asa-wcard-brand">
+                                <span class="asa-wcard-chip" aria-hidden="true">
+                                    <svg viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="1.4">
+                                        <rect x="1" y="1" width="22" height="16" rx="3"></rect>
+                                        <path d="M1 6h6M1 12h6M23 6h-6M23 12h-6M9 1v4a3 3 0 0 0 6 0V1M9 17v-4a3 3 0 0 1 6 0v4"></path>
+                                    </svg>
+                                </span>
+                                <span class="asa-wcard-type">{acct.typeLabel}</span>
+                            </span>
+                            <template if:true={acct.badge}>
+                                <span class="asa-wcard-badge">{acct.badge}</span>
+                            </template>
+                        </span>
+
+                        <template if:true={acct.mask}>
+                            <span class="asa-wcard-num">
+                                <i aria-hidden="true">••••</i>&nbsp;{acct.mask}
+                            </span>
+                        </template>
+
+                        <span class="asa-wcard-foot">
+                            <span class="asa-wcard-holder">
+                                <span class="asa-wcard-name">{acct.name}</span>
+                                <span class="asa-wcard-bal-row">
+                                    <b class={acct.balanceClass}>{acct.balanceDisplay}</b>
+                                    <template if:true={acct.hasAvailable}>
+                                        <small>{acct.availableDisplay} available</small>
+                                    </template>
+                                </span>
+                            </span>
+                            <span class={acct.checkClass} aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                            </span>
+                        </span>
+                    </button>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={showSubmit}>
+            <button type="button" class="asa-acct-submit" onclick={handleSubmit}>{submitText}</button>
+        </template>
+
+        <template if:true={errorMessage}>
+            <div class="asa-error">{errorMessage}</div>
+        </template>
+    </div>
+</template>

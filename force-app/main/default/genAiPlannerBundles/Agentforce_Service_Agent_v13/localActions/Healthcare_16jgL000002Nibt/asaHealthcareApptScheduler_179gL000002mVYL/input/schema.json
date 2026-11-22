@@ -1,0 +1,15 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full appointment-scheduler payload as a JSON string, formatted EXACTLY like this: {\"title\":\"Book a visit\",\"provider\":{\"name\":\"Dr. Maya Chen\",\"specialty\":\"Primary Care · Internal Medicine\",\"initials\":\"MC\"},\"location\":{\"name\":\"Downtown Health Center\",\"address\":\"500 Market St, Suite 300\"},\"days\":[{\"date\":\"2026-08-14\",\"slots\":[{\"id\":\"s1\",\"time\":\"09:00\",\"visitType\":\"in-person\"},{\"id\":\"s2\",\"time\":\"10:30\",\"visitType\":\"video\"},{\"id\":\"s3\",\"time\":\"13:15\",\"visitType\":\"phone\"}]},{\"date\":\"2026-08-15\",\"slots\":[{\"id\":\"s4\",\"time\":\"09:30\",\"visitType\":\"video\"},{\"id\":\"s5\",\"time\":\"15:00\",\"visitType\":\"in-person\"}]}],\"submitText\":\"Confirm appointment\"} Rules: - 'title' (string, optional): the heading shown at the top of the card. Defaults to 'Book a visit'. - 'provider' (object, optional but strongly recommended): the clinician the visit is with. 'name' (string) e.g. 'Dr. Maya Chen'; 'specialty' (string, optional) e.g. 'Primary Care'; 'initials' (string, optional, 1-2 letters) shown in the avatar when there is no photo — derived from the name if omitted; 'imageUrl' (string, optional) same-origin photo URL (e.g. a Salesforce static resource '/resource/<Name>'). - 'location' (object, optional): where the visit takes place. 'name' (string) and 'address' (string, optional). - 'days' (array, REQUIRED, at least one object): the bookable days. Each day MUST have 'date' (string, ISO 'yyyy-mm-dd') and 'slots' (array, at least one). Each slot MUST have 'id' (string, unique across the whole payload, sent back on selection) and 'time' (string, 24-hour 'HH:MM' e.g. '09:00','14:30' — rendered as '9:00 AM'). Optional per slot: 'visitType' (string; one of 'in-person','video','phone'; drives the slot icon; defaults to 'in-person'). - 'submitText' (string, optional): the confirm-button label; defaults to 'Confirm appointment'. Never emit zero days or a day with zero slots. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType",
+  "lightning:textIndexed" : true
+}

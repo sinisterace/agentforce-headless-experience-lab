@@ -1,0 +1,14 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full equipment-monitor payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Machine health\",\"asset\":{\"name\":\"Trailblazer Assembly Cell\",\"model\":\"TB-9000\",\"assetId\":\"LINE-3\",\"location\":\"Plant 2 · Bay 4\",\"imageUrl\":\"/resource/asaMfgTrailblazerCell\"},\"status\":\"running\",\"statusLabel\":\"Running\",\"updatedText\":\"Live · updated 12s ago\",\"metrics\":[{\"label\":\"OEE\",\"value\":\"87\",\"unit\":\"%\",\"state\":\"good\"},{\"label\":\"Spindle temp\",\"value\":\"62\",\"unit\":\"°C\",\"state\":\"warn\"},{\"label\":\"Throughput\",\"value\":\"142\",\"unit\":\"/hr\",\"state\":\"good\"},{\"label\":\"Uptime\",\"value\":\"6d 4h\",\"state\":\"good\"}],\"trend\":{\"label\":\"OEE · last 12h\",\"points\":[72,78,74,80,83,81,85,84,86,88,87,87]},\"submitText\":\"Create work order\",\"submitValue\":\"Open a work order for the Trailblazer Assembly Cell (LINE-3)\"}\n\nRules:\n- 'title' (string, optional): heading at the top of the card. Defaults to 'Machine health'.\n- 'asset' (object, REQUIRED): the machine. 'name' (string, REQUIRED); optional 'model','assetId','location' (strings, joined into a meta line); 'imageUrl' (string, same-origin https URL or '/resource/<Name>'; use '/resource/asaMfgTrailblazerCell' for the sample machine).\n- 'status' (string, optional): one of 'running','idle','fault','maintenance','offline'. Defaults to 'running'; drives the status pill color.\n- 'statusLabel' (string, optional): overrides the displayed status text.\n- 'updatedText' (string, optional): a freshness line, e.g. 'Live · updated 12s ago'.\n- 'metrics' (array, REQUIRED, 1 to 4 objects): the metric tiles. Each has 'label' (string) and 'value' (string or number); optional 'unit' (string, e.g. '%','°C','/hr') and 'state' (one of 'good','warn','bad' — colors the tile; defaults to 'good'). More than four are ignored.\n- 'trend' (object, optional): a sparkline. 'points' (array of 2+ numbers, REQUIRED for the sparkline to draw); optional 'label' (string).\n- 'submitText' (string, optional): action-button label, e.g. 'Create work order'. Omit to hide it.\n- 'submitValue' (string, optional): the exact message sent back when tapped; defaults to 'submitText'.\n\nUse these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

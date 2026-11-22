@@ -1,0 +1,14 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full data-usage payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Your data this cycle\",\"cycleText\":\"12 days left · resets Sep 30\",\"used\":42.1,\"total\":50,\"unit\":\"GB\",\"categories\":[{\"label\":\"Streaming\",\"amount\":24.6},{\"label\":\"Social\",\"amount\":9.8},{\"label\":\"Other\",\"amount\":7.7}],\"note\":\"You're on track to stay under your limit.\",\"submitText\":\"Add a data pass\",\"submitValue\":\"I'd like to add a data pass to my plan\"}\n\nRules:\n- 'title' (string, optional): heading at the top of the card. Defaults to 'Your usage'.\n- 'cycleText' (string, optional): the billing-cycle status line, e.g. '12 days left · resets Sep 30'.\n- 'used' (number, REQUIRED): amount consumed so far this cycle, in the same unit as 'total'.\n- 'total' (number, optional): the allowance. Omit it (or set 0) for an unlimited plan — the gauge then fills fully and shows 'Unlimited'.\n- 'unit' (string, optional): the unit of measure, e.g. 'GB','MB','min','texts'. Defaults to 'GB'.\n- 'categories' (array, optional, up to 6 objects): a usage breakdown shown as a stacked bar with a legend. Each object has 'label' (string), 'amount' (number, same unit), and optional 'color' (string, hex like '#0891b2'). Only categories with a positive amount are shown.\n- 'note' (string, optional): a short callout under the gauge, e.g. an overage warning or reassurance. It is automatically tinted amber near the limit and red when over.\n- 'submitText' (string, optional): label for an optional action button, e.g. 'Add a data pass' or 'Upgrade plan'. Omit to hide the button.\n- 'submitValue' (string, optional): the exact message sent back to you when the button is tapped; defaults to 'submitText'.\n\nThe gauge turns amber at 80% of the allowance and red at or over 100%. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

@@ -1,0 +1,101 @@
+<template>
+    <div class="ecw-csat">
+
+        <span class="ecw-csat-eyebrow">{label}</span>
+
+        <!-- Hero: arc gauge + score | trend -->
+        <div class="ecw-csat-hero">
+            <div class="ecw-csat-gauge">
+                <div class="ecw-csat-gauge-fig">
+                    <div class="ecw-csat-dial">
+                        <svg class="ecw-csat-gauge-svg" viewBox="0 0 120 68" aria-hidden="true">
+                            <path class="ecw-csat-track" d="M8,62 A52,52 0 0 1 112,62" fill="none" stroke-width="4" stroke-linecap="round"/>
+                            <path class={gaugeClass} d="M10,62 A50,50 0 0 1 110,62" fill="none" stroke-width="5" stroke-linecap="round" stroke-dasharray={gaugeDash}/>
+                            <template if:true={hasMarker}>
+                                <circle class={markerClass} cx={markerX} cy={markerY} r="4.2"/>
+                            </template>
+                        </svg>
+                        <div class="ecw-csat-readout">
+                            <strong class={scoreClass}>{score}</strong>
+                            <span class="ecw-csat-max">{scoreMax}</span>
+                        </div>
+                    </div>
+                    <template if:true={hasDelta}>
+                        <span class={deltaClass}>
+                            <template if:true={deltaUp}><svg class="ecw-csat-tri" viewBox="0 0 10 8" aria-hidden="true"><path d="M5 0 10 8 0 8z"/></svg></template>
+                            <template if:false={deltaUp}><svg class="ecw-csat-tri" viewBox="0 0 10 8" aria-hidden="true"><path d="M5 8 0 0 10 0z"/></svg></template>
+                            <span class="ecw-csat-delta-val">{deltaValue}</span>
+                            <template if:true={deltaRest}><span class="ecw-csat-delta-rest">{deltaRest}</span></template>
+                        </span>
+                    </template>
+                </div>
+
+                <div class="ecw-csat-rule" aria-hidden="true"></div>
+
+                <div class="ecw-csat-trend">
+                    <span class="ecw-csat-trend-label">Trend</span>
+                    <template if:true={hasSpark}>
+                        <div class="ecw-csat-spark-wrap">
+                            <svg class="ecw-csat-spark" viewBox="0 0 100 32" preserveAspectRatio="none" aria-hidden="true">
+                                <polygon class="ecw-csat-spark-area" points={sparkArea}></polygon>
+                                <polyline class="ecw-csat-spark-line" points={sparkPoints}></polyline>
+                            </svg>
+                            <span class="ecw-csat-spark-dot" style={sparkDotStyle}></span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stat strip -->
+        <template if:true={hasStats}>
+            <div class="ecw-csat-stats">
+                <template for:each={stats} for:item="s">
+                    <div key={s.key} class="ecw-csat-stat">
+                        <template if:true={s.hasNum}><span class="ecw-csat-stat-num">{s.num}</span></template>
+                        <span class="ecw-csat-stat-lbl">{s.text}</span>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <!-- Verbatims -->
+        <template if:true={hasComments}>
+            <div class="ecw-csat-verbatims">
+                <span class="ecw-csat-vhead">Recent verbatims</span>
+                <ul class="ecw-csat-list">
+                    <template for:each={comments} for:item="c">
+                        <li key={c.key} class={c.rowClass}>
+                            <button type="button" class="ecw-csat-rowhead" data-key={c.key} onclick={toggleComment}>
+                                <span class={c.railClass} aria-hidden="true"></span>
+                                <span class="ecw-csat-main">
+                                    <span class="ecw-csat-text">{c.text}</span>
+                                    <span class="ecw-csat-sub">
+                                        <span class={c.themeClass}>{c.theme}</span>
+                                        <template if:true={c.hasWho}><span class="ecw-csat-who">{c.who}</span></template>
+                                    </span>
+                                </span>
+                                <span class="ecw-csat-aside">
+                                    <template if:true={c.hasRating}>
+                                        <span class="ecw-csat-stars">
+                                            <template for:each={c.stars} for:item="st">
+                                                <svg key={st.key} class={st.cls} viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 5.9 6.5.95-4.7 4.58 1.1 6.47L12 17.9 6.2 20.9l1.1-6.47-4.7-4.58 6.5-.95z"/></svg>
+                                            </template>
+                                        </span>
+                                    </template>
+                                    <svg class={c.caretClass} viewBox="0 0 24 24" aria-hidden="true"><path d="m8 10 4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </span>
+                            </button>
+                            <template if:true={c.expanded}>
+                                <div class="ecw-csat-body">
+                                    <template if:true={c.hasFull}><p class="ecw-csat-full">{c.full}</p></template>
+                                    <template if:true={c.hasCaseRef}><span class="ecw-csat-caseref">{c.caseRef}</span></template>
+                                </div>
+                            </template>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </template>
+    </div>
+</template>

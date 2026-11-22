@@ -1,0 +1,15 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full vehicle-configurator payload as a JSON string, formatted EXACTLY like this: {\"title\":\"Build your electric SUV\",\"model\":\"Electric SUV\",\"currency\":\"USD\",\"basePrice\":41990,\"colors\":[{\"id\":\"white\",\"label\":\"Glacier White\",\"hex\":\"#f3f4f6\",\"priceDelta\":0},{\"id\":\"black\",\"label\":\"Midnight Black\",\"hex\":\"#111827\"},{\"id\":\"red\",\"label\":\"Radiant Red\",\"hex\":\"#dc2626\",\"priceDelta\":595,\"selected\":true}],\"optionGroups\":[{\"id\":\"trim\",\"label\":\"Trim\",\"selectedId\":\"rs\",\"options\":[{\"id\":\"lt\",\"label\":\"LT\",\"priceDelta\":0},{\"id\":\"rs\",\"label\":\"RS\",\"priceDelta\":3200,\"detail\":\"Sport-tuned\"}]},{\"id\":\"drive\",\"label\":\"Drivetrain\",\"selectedId\":\"awd\",\"options\":[{\"id\":\"fwd\",\"label\":\"FWD\",\"priceDelta\":0},{\"id\":\"awd\",\"label\":\"AWD\",\"priceDelta\":2500}]},{\"id\":\"pkg\",\"label\":\"Packages\",\"selectedId\":\"tech\",\"options\":[{\"id\":\"none\",\"label\":\"None\",\"priceDelta\":0},{\"id\":\"tech\",\"label\":\"Technology Package\",\"priceDelta\":1800,\"detail\":\"Adaptive cruise, HUD\"}]}],\"submitText\":\"Reserve this build\",\"submitValue\":\"I'd like to reserve this configuration\"} Rules: - 'title' (string, optional): heading. Defaults to 'Build your vehicle'. - 'model' (string, optional): the model name shown under the title. - 'currency' (string, optional): ISO code, default USD. - 'basePrice' (number, optional): the starting price; the estimate builds up from here. - 'colors' (array, optional): paint choices rendered as single-select circular swatches. Each { 'id' (string, REQUIRED); 'label' (string, REQUIRED — the color name); 'hex' (string, optional — a CSS color like '#dc2626' for the swatch); 'priceDelta' (number, optional — added to the estimate; default 0); 'selected' (boolean, optional — the default color) }. - 'optionGroups' (array, REQUIRED unless colors are provided): each group { 'id' (string, REQUIRED); 'label' (string, REQUIRED — e.g. Trim, Drivetrain, Packages); 'selectedId' (string, optional — the default option; else the first option); 'options' (array, REQUIRED) of { 'id' (string, REQUIRED — sent back on selection); 'label' (string, REQUIRED); 'priceDelta' (number, optional — added to the estimate; 0 shows as 'Included'); 'detail' (string, optional — one short line) } }. Each group is single-select. - 'submitText' (string, optional): confirm-button label; defaults to 'Reserve this build'. - 'submitValue' (string, optional): a base message; the card appends the chosen color, options, and estimated price when sending back. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType",
+  "lightning:textIndexed" : true
+}

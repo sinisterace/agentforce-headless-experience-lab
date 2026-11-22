@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · Sales · Forecast",
+  "description" : "A forecast coverage view: committed amount of total forecast, split into Closed / Commit / Best case / Pipeline confidence tiers.",
+  "lightning:type" : "@apexClassType/c__EcwForecastData"
+}

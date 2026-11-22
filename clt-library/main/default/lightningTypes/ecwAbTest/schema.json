@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · Marketing · A/B test",
+  "description" : "Agentforce Coworker · Marketing · A/B test renderer.",
+  "lightning:type" : "@apexClassType/c__EcwAbTestData"
+}

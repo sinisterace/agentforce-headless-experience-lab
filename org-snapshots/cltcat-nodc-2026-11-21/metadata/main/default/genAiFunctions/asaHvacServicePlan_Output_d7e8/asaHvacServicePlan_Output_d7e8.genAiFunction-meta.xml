@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Use this when the customer asks about maintenance plans, service memberships, protection plans, or ways to save on tune-ups and repairs. Shows the available HVAC comfort-plan tiers as price-forward cards with a feature checklist and lets them enroll in one.</description>
+    <developerName>asaHvacServicePlan_Output_d7e8</developerName>
+    <invocationTarget>asaHvacServicePlan_Output_d7e8</invocationTarget>
+    <invocationTargetType>flow</invocationTargetType>
+    <isConfirmationRequired>false</isConfirmationRequired>
+    <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+    <localDeveloperName>asaHvacServicePlan_Output_d7e8</localDeveloperName>
+    <masterLabel>ASA HVAC · Service Plan Selector</masterLabel>
+    <progressIndicatorMessage>Pulling up comfort plans</progressIndicatorMessage>
+</GenAiFunction>

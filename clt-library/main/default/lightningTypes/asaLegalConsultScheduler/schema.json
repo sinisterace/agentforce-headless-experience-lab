@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Legal · Consultation Scheduler",
+  "description" : "Lets a law-firm website visitor book a free consultation by choosing a meeting type (in person, phone, video), a day, and a time slot, above an attorney hero header.",
+  "lightning:type" : "@apexClassType/c__AsaLegalConsultSchedulerData"
+}

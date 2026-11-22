@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · Employee of the Month",
+  "description" : "A celebratory Employee of the Month card: gold-ribbon header, headshot, name and title, a citation line, playful stat tiles, badges, and Congratulate / Nominate actions.",
+  "lightning:type" : "@apexClassType/c__EcwEmployeeOfMonthData"
+}

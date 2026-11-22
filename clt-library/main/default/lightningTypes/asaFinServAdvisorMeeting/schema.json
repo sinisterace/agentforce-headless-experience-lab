@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Financial Services · Advisor Appointment",
+  "description" : "Shows a customer's matched advisor with available day/time slots and lets them book one.",
+  "lightning:type" : "@apexClassType/c__AsaFinServAdvisorMeetingData"
+}

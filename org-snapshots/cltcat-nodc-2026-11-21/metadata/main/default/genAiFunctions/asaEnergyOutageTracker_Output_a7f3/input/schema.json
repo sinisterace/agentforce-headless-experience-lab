@@ -1,0 +1,14 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full outage payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Outage status\",\"status\":\"restoring\",\"headline\":\"Crews are on site restoring power\",\"area\":\"Maple Grove · ZIP 55311\",\"cause\":\"Storm — downed line\",\"affectedText\":\"1,240 customers affected\",\"etaText\":\"Est. restore by 6:45 PM\",\"updatedText\":\"Updated 4 min ago\",\"crew\":\"Crew #17 on site\",\"steps\":[{\"label\":\"Outage detected\",\"state\":\"done\",\"timeText\":\"3:02 PM\"},{\"label\":\"Crew dispatched\",\"state\":\"done\",\"timeText\":\"3:40 PM\"},{\"label\":\"On site — repairing\",\"state\":\"current\",\"timeText\":\"5:15 PM\"},{\"label\":\"Power restored\",\"state\":\"todo\"}],\"submitText\":\"Text me when power is back\",\"submitValue\":\"Please text me when power is restored\"}\n\nRules:\n- 'title' (string, optional): heading. Defaults to 'Outage status'.\n- 'status' (string, optional): one of investigating | outage | restoring | restored. Drives the hero color + label (investigating/restoring = amber, outage = red, restored = green). Defaults to 'outage'.\n- 'headline' (string, optional): one short sentence under the status.\n- 'area' (string, optional): the affected location, e.g. neighborhood + ZIP.\n- 'cause' (string, optional): what caused the outage.\n- 'affectedText' (string, optional): e.g. '1,240 customers affected'.\n- 'etaText' (string, optional): estimated restore time.\n- 'updatedText' (string, optional): freshness stamp, e.g. 'Updated 4 min ago'.\n- 'crew' (string, optional): crew status line.\n- 'steps' (array, optional): the restoration track, each { 'label' (string, REQUIRED), 'state' ('done'|'current'|'todo'), 'timeText' (string, optional) }. Order them chronologically. If omitted, a default track is derived from 'status'.\n- 'submitText' (string, optional): action-button label, e.g. 'Text me when power is back'. Omit for no button.\n- 'submitValue' (string, optional): the message sent back when the button is tapped; defaults to the label.\n\nUse these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

@@ -1,0 +1,251 @@
+/* ASA Insurance · File a Claim — a guided "what happened?" form: a policy-context
+   banner above a two-column grid of incident-type tiles, each with its own hue.
+   rem units + inherited font so the card matches the host chat theme in Enhanced
+   Chat v2. Accent + neutrals are local custom props for easy theming. */
+:host {
+    --asa-accent: #0b5cab;
+    --asa-line: #e5e7eb;
+    --asa-ink: #101828;
+    --asa-negative: #c0392b;
+    --asa-credit: #1a7f4b;
+    --asa-warn: #b7791f;
+    --asa-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+    --asa-shadow-md: 0 8px 22px rgba(15, 23, 42, 0.12);
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    /* Enhanced Chat v2 renders this in a ~320px column; size the content to the
+       card, not the viewport, so it also reads well on wide desktop GenAi. */
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after {
+    box-sizing: border-box;
+}
+
+.asa-card-title {
+    margin: 0 0 0.7rem 0;
+    font-size: 1.05rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* Hero asset — a photo of the insured item (e.g. the vehicle). Rounded border +
+   slight shadow; the policy label reads as its caption in the banner beneath. */
+.asa-fc-asset {
+    display: block;
+    margin-bottom: 0.5rem;
+    border: 1px solid var(--asa-line);
+    border-radius: 14px;
+    box-shadow: var(--asa-shadow-sm);
+    overflow: hidden;
+    background: color-mix(in srgb, var(--asa-accent) 5%, #f2f4f7);
+}
+.asa-fc-asset img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 190px;
+    object-fit: cover;
+}
+
+/* Policy-context banner — a tinted strip that anchors the claim to a policy. */
+.asa-fc-policy {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.55rem 0.65rem;
+    margin-bottom: 0.75rem;
+    border: 1px solid color-mix(in srgb, var(--asa-accent) 22%, var(--asa-line));
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--asa-accent) 7%, #fff);
+}
+.asa-fc-policy-ico {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+    border-radius: 9px;
+    background: color-mix(in srgb, var(--asa-accent) 15%, transparent);
+    color: var(--asa-accent);
+}
+.asa-fc-policy-ico svg {
+    width: 1.05rem;
+    height: 1.05rem;
+}
+.asa-fc-policy-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+}
+.asa-fc-policy-label {
+    font-weight: 640;
+    font-size: 0.86rem;
+    letter-spacing: -0.005em;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-fc-policy-num {
+    font-size: 0.74rem;
+    opacity: 0.65;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Incident tile grid — two even columns of pickable tiles. */
+.asa-fc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.55rem;
+}
+
+.asa-fc-tile {
+    --inc: var(--asa-accent);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.7rem 0.65rem;
+    border: 1px solid var(--asa-line);
+    border-radius: 13px;
+    background: #fff;
+    color: inherit;
+    cursor: pointer;
+    text-align: left;
+    box-shadow: var(--asa-shadow-sm);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.06s ease;
+}
+.asa-fc-tile:hover {
+    border-color: color-mix(in srgb, var(--inc) 45%, var(--asa-line));
+    box-shadow: var(--asa-shadow-md);
+    transform: translateY(-1px);
+}
+.asa-fc-tile.is-selected {
+    border-color: var(--inc);
+    box-shadow: inset 0 0 0 1px var(--inc), var(--asa-shadow-sm);
+    background: color-mix(in srgb, var(--inc) 6%, #fff);
+}
+/* Per-incident hues so the grid reads as distinct kinds of loss at a glance. */
+.asa-fc-tile.is-collision { --inc: var(--asa-accent); }
+.asa-fc-tile.is-theft { --inc: #6b46c1; }
+.asa-fc-tile.is-weather { --inc: #0e7490; }
+.asa-fc-tile.is-water { --inc: #2563eb; }
+.asa-fc-tile.is-fire { --inc: #c0392b; }
+.asa-fc-tile.is-glass { --inc: #0891b2; }
+.asa-fc-tile.is-liability { --inc: #b7791f; }
+.asa-fc-tile.is-medical { --inc: #b83280; }
+.asa-fc-tile.is-other { --inc: #475467; }
+
+.asa-fc-ico {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    flex-shrink: 0;
+    border-radius: 11px;
+    background: color-mix(in srgb, var(--inc) 13%, transparent);
+    color: var(--inc);
+}
+.asa-fc-ico svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.asa-fc-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.12rem;
+    min-width: 0;
+    width: 100%;
+}
+.asa-fc-label {
+    font-weight: 640;
+    font-size: 0.86rem;
+    letter-spacing: -0.005em;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-fc-desc {
+    font-size: 0.74rem;
+    opacity: 0.68;
+    line-height: 1.3;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* check affordance — top-right corner, empty by default, filled when selected */
+.asa-fc-check {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--asa-line);
+    color: transparent;
+    background: #fff;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.asa-fc-check svg {
+    width: 0.72rem;
+    height: 0.72rem;
+}
+.asa-fc-check.on {
+    background: var(--inc);
+    border-color: var(--inc);
+    color: #fff;
+}
+
+.asa-fc-submit {
+    margin-top: 0.85rem;
+    width: 100%;
+    padding: 0.7rem 1.15rem;
+    border-radius: 12px;
+    border: none;
+    background: var(--asa-accent);
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: filter 0.15s ease;
+}
+.asa-fc-submit:hover {
+    filter: brightness(1.06);
+}
+
+/* Tightest chat columns: collapse to a single column so labels never truncate. */
+@container (max-width: 300px) {
+    .asa-fc-grid {
+        grid-template-columns: 1fr;
+    }
+    .asa-fc-tile {
+        flex-direction: row;
+        align-items: center;
+    }
+    .asa-fc-ico {
+        width: 2.1rem;
+        height: 2.1rem;
+    }
+    .asa-fc-check {
+        position: static;
+        margin-left: auto;
+        align-self: center;
+    }
+}

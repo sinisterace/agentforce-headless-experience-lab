@@ -1,0 +1,14 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full work-order payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Work order WO-4821\",\"orderNumber\":\"WO-4821\",\"product\":\"Trailblazer Assembly Cell · 2 units\",\"priority\":\"high\",\"etaText\":\"Est. ship Oct 2\",\"updatedText\":\"Updated 1h ago\",\"milestones\":[{\"label\":\"Order received\",\"state\":\"done\",\"timeText\":\"Sep 18\",\"owner\":\"Intake\"},{\"label\":\"Machining\",\"state\":\"done\",\"timeText\":\"Sep 22\",\"owner\":\"Cell A\"},{\"label\":\"Assembly\",\"state\":\"current\",\"timeText\":\"In progress\",\"owner\":\"Bay 4\"},{\"label\":\"Quality check\",\"state\":\"todo\"},{\"label\":\"Ready to ship\",\"state\":\"todo\"}],\"submitText\":\"Message production team\",\"submitValue\":\"I have a question about work order WO-4821\"}\n\nRules:\n- 'title' (string, optional): heading. Defaults to 'Work order <orderNumber>' when omitted.\n- 'orderNumber' (string, optional): the work-order id.\n- 'product' (string, optional): one line describing what is being built.\n- 'priority' (string, optional): one of 'low','normal','high','urgent'. Shown as a colored chip; omit to hide it.\n- 'etaText' (string, optional): estimated ship/completion, e.g. 'Est. ship Oct 2'.\n- 'updatedText' (string, optional): freshness stamp, e.g. 'Updated 1h ago'.\n- 'milestones' (array, REQUIRED, 2 to 7 objects, in order top to bottom): each has 'label' (string, REQUIRED) and 'state' (one of 'done','current','todo'); optional 'timeText' (string) and 'owner' (string), joined into a meta line. Mark exactly one as 'current' (the stage in progress); earlier stages 'done', later ones 'todo'.\n- 'submitText' (string, optional): action-button label, e.g. 'Message production team'. Omit to hide it.\n- 'submitValue' (string, optional): the exact message sent back when tapped; defaults to 'submitText'.\n\nUse these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

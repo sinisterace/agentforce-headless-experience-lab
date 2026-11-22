@@ -1,0 +1,160 @@
+/* ASA Technology, Media & Comms · Bill Explainer — a statement card: the total
+   due + due date, a stacked charge-category bar, itemized line rows colored by
+   category (discounts as credits), a month-over-month delta callout, and pay /
+   autopay actions. rem units + inherited font so the card matches the host
+   chat theme in Enhanced Chat v2. Cyan accent + neutrals are local props. */
+:host {
+    --asa-accent: #0891b2;
+    --asa-line: #e5e7eb;
+    --asa-track: #eef2f6;
+    --asa-ink: #101828;
+    --asa-muted: #667085;
+    --asa-credit: #15803d;
+    --asa-up: #b45309;
+    --asa-radius: 14px;
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after { box-sizing: border-box; }
+
+.asa-test-badge {
+    margin: 0 0 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 8px;
+    background: #ecfeff;
+    color: #0e7490;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.asa-be-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.35rem; }
+.selector-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-be-period { font-size: 0.68rem; color: var(--asa-muted); font-weight: 600; white-space: nowrap; flex-shrink: 0; }
+
+/* --- Total --- */
+.asa-be-total {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.6rem;
+    padding: 0.55rem 0.7rem;
+    margin-bottom: 0.7rem;
+    border-radius: 12px;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--asa-accent) 8%, #fff), #fff);
+    border: 1px solid color-mix(in srgb, var(--asa-accent) 20%, var(--asa-line));
+}
+.asa-be-total-amt { font-size: 1.7rem; font-weight: 780; letter-spacing: -0.03em; color: var(--asa-ink); white-space: nowrap; }
+.asa-be-due {
+    font-size: 0.7rem; font-weight: 700; color: var(--asa-accent);
+    padding: 0.22rem 0.5rem; border-radius: 999px;
+    background: color-mix(in srgb, var(--asa-accent) 12%, #fff);
+    white-space: nowrap; flex-shrink: 0;
+}
+
+/* --- Stacked bar --- */
+.asa-be-bar {
+    display: flex; width: 100%; height: 0.55rem; border-radius: 999px;
+    overflow: hidden; background: var(--asa-track); gap: 2px; margin-bottom: 0.7rem;
+}
+.asa-be-seg { height: 100%; min-width: 0.4rem; }
+.asa-be-seg:first-child { border-radius: 999px 0 0 999px; }
+.asa-be-seg:last-child { border-radius: 0 999px 999px 0; }
+
+/* --- Line items --- */
+.asa-be-items { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.asa-be-item {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.44rem 0; font-size: 0.82rem;
+    border-bottom: 1px solid var(--asa-line);
+}
+.asa-be-item:last-child { border-bottom: 0; }
+.asa-be-dot { width: 0.6rem; height: 0.6rem; border-radius: 3px; flex-shrink: 0; }
+.asa-be-label { min-width: 0; flex: 1; color: var(--asa-ink); overflow-wrap: break-word; }
+.asa-be-amt { font-weight: 660; color: var(--asa-ink); white-space: nowrap; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+.asa-be-amt.is-credit { color: var(--asa-credit); }
+
+/* --- Delta callout — a designed "trend" insight, not a flat pill --- */
+.asa-be-delta {
+    --trend: var(--asa-muted);
+    position: relative;
+    display: flex; align-items: center; gap: 0.6rem;
+    margin-top: 0.7rem; padding: 0.6rem 0.7rem 0.6rem 0.85rem;
+    border-radius: 12px;
+    border: 1px solid var(--asa-line); background: #fff; color: var(--asa-ink);
+    box-shadow: var(--asa-shadow-sm);
+    overflow: hidden;
+}
+.asa-be-delta::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--trend); }
+.asa-be-trend {
+    width: 2rem; height: 2rem; border-radius: 999px; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: color-mix(in srgb, var(--trend) 13%, #fff); color: var(--trend);
+}
+.asa-be-trend svg { width: 1rem; height: 1rem; }
+.asa-be-delta-body { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+.asa-be-delta-lead { font-size: 0.82rem; color: var(--asa-ink); }
+.asa-be-delta-amt { font-weight: 780; font-size: 0.92rem; color: var(--trend); }
+.asa-be-delta-reason { font-size: 0.72rem; color: var(--asa-muted); line-height: 1.3; overflow-wrap: break-word; }
+.asa-be-delta.is-up { --trend: var(--asa-up); }
+.asa-be-delta.is-down { --trend: var(--asa-credit); }
+.asa-be-delta.is-flat { --trend: var(--asa-accent); }
+
+.asa-be-note {
+    margin: 0.55rem 0 0;
+    font-size: 0.72rem;
+    line-height: 1.35;
+    color: var(--asa-muted);
+    overflow-wrap: break-word;
+}
+
+.asa-be-cta {
+    margin-top: 0.65rem;
+    width: 100%;
+    min-height: 2.7rem;
+    padding: 0.6rem;
+    border: 0;
+    border-radius: 11px;
+    background: var(--asa-accent);
+    color: #fff;
+    font-size: 0.84rem;
+    font-weight: 680;
+    cursor: pointer;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--asa-accent) 22%, transparent);
+    transition: filter 0.15s ease;
+}
+.asa-be-cta:hover { filter: brightness(1.06); }
+.asa-be-cta-secondary {
+    margin-top: 0.45rem;
+    width: 100%;
+    min-height: 2.5rem;
+    padding: 0.55rem;
+    border: 1px solid var(--asa-line);
+    border-radius: 11px;
+    background: #fff;
+    color: var(--asa-ink);
+    font-size: 0.8rem;
+    font-weight: 640;
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+.asa-be-cta-secondary:hover { border-color: var(--asa-accent); color: var(--asa-accent); }
+
+@container (max-width: 300px) {
+    .asa-be-total-amt { font-size: 1.5rem; }
+}

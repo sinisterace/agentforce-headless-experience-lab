@@ -1,0 +1,318 @@
+/* ASA Healthcare · Prescription Refill — bespoke pharmacy "prescription label".
+   Each medication is a squared paper label: an ℞ mark, name + strength, a
+   monospace label data block (Sig / Supply / Refills) split by a dashed
+   perforation rule, and a squared select box. Out-of-refills meds carry a
+   rotated "NO REFILLS" stamp and are disabled. A tear-off pickup ticket anchors
+   the destination. Deliberately squared / rough-edged (2–4px, dashed rules,
+   monospace) — NOT pill-rounded chip cards. rem units + inherited font so it
+   matches the host chat theme in ECv2. */
+:host {
+    --asa-accent: #0f766e;      /* clinical pharmacy teal */
+    --asa-line: #e3e5e8;
+    --asa-ink: #14181f;
+    --asa-muted: #6b7280;
+    --asa-paper: #fcfcfb;
+    --asa-ok: #15803d;
+    --asa-low: #b45309;
+    --asa-out: #b42318;
+    --asa-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    display: block;
+    color: var(--asa-ink);
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after {
+    box-sizing: border-box;
+}
+
+.asa-rx-title {
+    margin: 0 0 0.15rem 0;
+    font-size: 1.06rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-rx-sub {
+    margin: 0 0 0.7rem 0;
+    font-size: 0.76rem;
+    color: var(--asa-muted);
+}
+
+.asa-rx-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+/* ---- prescription label card ---- */
+.asa-rx-med {
+    --stat: var(--asa-ok);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+    padding: 0.6rem 0.65rem;
+    border: 1px solid var(--asa-line);
+    border-radius: 3px;
+    background: var(--asa-paper);
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.14s ease, background 0.14s ease, box-shadow 0.14s ease;
+}
+.asa-rx-med.is-low { --stat: var(--asa-low); }
+.asa-rx-med.is-out { --stat: var(--asa-out); }
+.asa-rx-med:not(.is-disabled):hover {
+    border-color: color-mix(in srgb, var(--asa-accent) 42%, var(--asa-line));
+}
+.asa-rx-med.is-selected {
+    border-color: var(--asa-accent);
+    background: color-mix(in srgb, var(--asa-accent) 5%, #fff);
+    box-shadow: inset 0 0 0 1px var(--asa-accent);
+}
+.asa-rx-med.is-disabled {
+    cursor: not-allowed;
+    /* faint diagonal hatch — a voided-label feel */
+    background:
+        repeating-linear-gradient(-45deg, #f6f6f5 0, #f6f6f5 6px, #f1f1f0 6px, #f1f1f0 12px);
+    color: color-mix(in srgb, var(--asa-ink) 62%, #fff);
+}
+
+/* ---- label header ---- */
+.asa-rx-head {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding-right: 1.9rem; /* room for the select box */
+}
+.asa-rx-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.85rem;
+    height: 1.85rem;
+    flex-shrink: 0;
+    border-radius: 3px;
+    background: color-mix(in srgb, var(--asa-accent) 12%, #fff);
+    border: 1px solid color-mix(in srgb, var(--asa-accent) 28%, transparent);
+    color: var(--asa-accent);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1;
+}
+.asa-rx-thumb {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: transparent;
+    padding: 0;
+}
+.asa-rx-thumb img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    display: block;
+}
+.asa-rx-headtext {
+    display: flex;
+    flex-direction: column;
+    gap: 0.05rem;
+    min-width: 0;
+    flex: 1;
+}
+.asa-rx-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: -0.006em;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-rx-strength {
+    font-family: var(--asa-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--asa-muted);
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-rx-tag {
+    flex-shrink: 0;
+    padding: 0.12rem 0.4rem;
+    border-radius: 2px;
+    font-size: 0.58rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+    color: var(--stat);
+    background: color-mix(in srgb, var(--stat) 12%, #fff);
+    border: 1px solid color-mix(in srgb, var(--stat) 30%, transparent);
+}
+
+/* rotated "NO REFILLS" stamp on out-of-refills labels */
+.asa-rx-stamp {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.5rem;
+    transform: rotate(-7deg);
+    padding: 0.08rem 0.34rem;
+    border: 1.5px solid color-mix(in srgb, var(--asa-out) 55%, transparent);
+    border-radius: 2px;
+    color: color-mix(in srgb, var(--asa-out) 78%, transparent);
+    font-size: 0.6rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.72;
+    pointer-events: none;
+}
+
+/* ---- monospace label data block ---- */
+.asa-rx-fields {
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.5rem;
+    padding-top: 0.45rem;
+    border-top: 1px dashed color-mix(in srgb, var(--asa-ink) 22%, #fff);
+}
+.asa-rx-field {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.12rem 0;
+}
+.asa-rx-flabel {
+    font-size: 0.56rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--asa-muted);
+    flex-shrink: 0;
+}
+.asa-rx-fval {
+    font-family: var(--asa-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--asa-ink);
+    text-align: right;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* ---- squared select box ---- */
+.asa-rx-check {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.55rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    flex-shrink: 0;
+    border-radius: 3px;
+    border: 1.5px solid color-mix(in srgb, var(--asa-ink) 25%, #fff);
+    color: transparent;
+    background: #fff;
+    transition: background 0.14s ease, border-color 0.14s ease, color 0.14s ease;
+}
+.asa-rx-check svg {
+    width: 0.82rem;
+    height: 0.82rem;
+}
+.asa-rx-check.on {
+    background: var(--asa-accent);
+    border-color: var(--asa-accent);
+    color: #fff;
+}
+.asa-rx-med.is-disabled .asa-rx-check {
+    visibility: hidden;
+}
+
+/* ---- tear-off pickup ticket ---- */
+.asa-rx-pickup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    margin-top: 0.8rem;
+    padding: 0.65rem;
+    border: 1px solid var(--asa-line);
+    border-top: 2px dashed color-mix(in srgb, var(--asa-accent) 40%, var(--asa-line));
+    border-radius: 3px;
+    background: color-mix(in srgb, var(--asa-accent) 5%, #fff);
+}
+.asa-rx-pickup-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.58rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--asa-accent);
+    margin-bottom: 0.15rem;
+}
+.asa-rx-pickup-eyebrow svg {
+    width: 0.82rem;
+    height: 0.82rem;
+}
+.asa-rx-pickup-name {
+    font-weight: 700;
+    font-size: 0.84rem;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-rx-pickup-meta,
+.asa-rx-pickup-hours {
+    font-family: var(--asa-mono);
+    font-size: 0.7rem;
+    color: var(--asa-muted);
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* ---- confirm ---- */
+.asa-rx-submit {
+    margin-top: 0.85rem;
+    width: 100%;
+    min-height: 2.7rem;
+    padding: 0.68rem 1.1rem;
+    border-radius: 4px;
+    border: none;
+    background: var(--asa-accent);
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.86rem;
+    font-weight: 680;
+    letter-spacing: 0.01em;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--asa-accent) 24%, transparent);
+    transition: filter 0.15s ease, transform 0.05s ease;
+}
+.asa-rx-submit:hover {
+    filter: brightness(1.08);
+}
+.asa-rx-submit:active {
+    transform: translateY(1px);
+}
+
+@container (max-width: 300px) {
+    .asa-rx-name { font-size: 0.86rem; }
+    .asa-rx-field { gap: 0.5rem; }
+}

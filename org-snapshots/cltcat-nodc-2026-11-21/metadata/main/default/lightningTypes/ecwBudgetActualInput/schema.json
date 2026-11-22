@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · Finance · Budget vs actual — selection",
+  "description" : "The department line the finance user chose to investigate.",
+  "lightning:type" : "@apexClassType/c__EcwBudgetActualInput"
+}

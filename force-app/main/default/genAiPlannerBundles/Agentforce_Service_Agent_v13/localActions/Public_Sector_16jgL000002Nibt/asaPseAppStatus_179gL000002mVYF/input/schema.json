@@ -1,0 +1,15 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full application-status payload as a JSON string, formatted EXACTLY like this: {\"title\":\"Your application status\",\"applicationType\":\"Building permit\",\"referenceNumber\":\"APP-2026-1043\",\"status\":\"review\",\"statusLabel\":\"Under review\",\"steps\":[{\"label\":\"Submitted\",\"state\":\"done\"},{\"label\":\"Under review\",\"state\":\"current\"},{\"label\":\"Approved\",\"state\":\"todo\"},{\"label\":\"Issued\",\"state\":\"todo\"}],\"nextActionText\":\"We may request additional documents — no action needed right now.\",\"submitText\":\"Message the office\",\"submitValue\":\"I'd like to message the office about my application\"} Rules: - 'title' (string, optional): card heading. Defaults to 'Your application status'. - 'applicationType' (string, optional): what the application is for, e.g. 'Building permit', 'Admission application', 'Benefits case'. Shown under the reference number. - 'referenceNumber' (string, optional): the case/reference id, shown prominently. - 'status' (string, REQUIRED): one of submitted | review | approved | issued | denied. Drives the tracker position + the status pill colour. 'denied' renders a terminal Submitted -> Denied track. - 'statusLabel' (string, optional): human label for the status stamp, e.g. 'Under review'. Defaults to the status. - 'steps' (array, optional): the progress track. Each { 'label' (string, REQUIRED), 'state' (string — one of done | current | todo | denied) }. Do NOT include dates. If omitted, a default 4-step track (Submitted -> Under review -> Approved -> Issued) is derived from 'status'. - 'nextActionText' (string, optional): a short callout telling the applicant what happens next or what they must do. - 'submitText' (string, optional): label for an optional button (e.g. 'Message the office'). 'submitValue' (string, optional): the message sent back to the agent when tapped; defaults to submitText. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType",
+  "lightning:textIndexed" : true
+}

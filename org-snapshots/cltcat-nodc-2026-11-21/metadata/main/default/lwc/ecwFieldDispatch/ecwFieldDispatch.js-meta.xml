@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Agentforce Coworker · Service · Field dispatch</masterLabel>
+    <description>An at-risk service appointment with a live dispatch map and ranked candidate technicians to reassign to (fit, skills, ETA, utilization, rating).</description>
+    <targets>
+        <target>lightning__AgentforceOutput</target>
+        <target>lightning__AgentforceInput</target>
+        <target>lightningSnapin__ChatMessage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AgentforceOutput">
+            <sourceType name="c__ecwFieldDispatch"/>
+        </targetConfig>
+        <targetConfig targets="lightning__AgentforceInput">
+            <targetType name="c__ecwFieldDispatchInput"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

@@ -1,0 +1,106 @@
+/* CSAT pulse — premium rebuild (catalogue mirror of the ecwCsatPulse LWC).
+   near-black ink, one accent, hairline rules, mono tabular numerals, no pills/gradients. */
+.ecw-csat {
+    --ink: #0b1220;
+    --ink-2: #39435c;
+    --muted: #8b93a6;
+    --line: #e8eaf0;
+    --raised: #fafbfd;
+    --accent: #2563eb;
+    --good: #15803d;
+    --warn: #b45309;
+    --bad: #b91c1c;
+    container-type: inline-size;
+    display: flex; flex-direction: column; gap: 0.9rem;
+    padding: 1.15rem 1.2rem 1.05rem;
+    border: 1px solid var(--line); border-radius: 6px; background: #fff;
+    font-family: inherit; color: var(--ink);
+    box-shadow: 0 1px 2px rgba(11, 18, 32, 0.04), 0 14px 32px -26px rgba(11, 18, 32, 0.5);
+}
+.ecw-csat, .ecw-csat * { box-sizing: border-box; }
+
+.ecw-csat-eyebrow { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+
+/* hero */
+.ecw-csat-hero { padding-bottom: 1rem; border-bottom: 1px solid var(--line); }
+.ecw-csat-gauge { display: flex; align-items: center; gap: 1.15rem; }
+.ecw-csat-gauge-fig { flex: none; width: 8rem; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+.ecw-csat-dial { position: relative; width: 100%; }
+.ecw-csat-gauge-svg { width: 100%; height: auto; display: block; }
+.ecw-csat-track { stroke: var(--line); }
+.ecw-csat-arc { fill: none; }
+.ecw-csat-arc.is-good { stroke: var(--good); }
+.ecw-csat-arc.is-warn { stroke: var(--warn); }
+.ecw-csat-arc.is-bad { stroke: var(--bad); }
+.ecw-csat-marker { stroke: #fff; stroke-width: 2; }
+.ecw-csat-marker.is-good { fill: var(--good); }
+.ecw-csat-marker.is-warn { fill: var(--warn); }
+.ecw-csat-marker.is-bad { fill: var(--bad); }
+.ecw-csat-readout { position: absolute; left: 0; right: 0; bottom: 0.35rem; display: flex; align-items: baseline; justify-content: center; gap: 0.16rem; }
+.ecw-csat-score { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1.95rem; line-height: 1; font-weight: 760; letter-spacing: -0.045em; font-variant-numeric: tabular-nums; }
+.ecw-csat-score.is-good { color: var(--good); }
+.ecw-csat-score.is-warn { color: var(--warn); }
+.ecw-csat-score.is-bad { color: var(--bad); }
+.ecw-csat-max { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.72rem; font-weight: 600; color: var(--muted); }
+.ecw-csat-delta { display: inline-flex; align-items: baseline; gap: 0.28rem; white-space: nowrap; }
+.ecw-csat-tri { width: 0.46rem; height: auto; align-self: center; }
+.ecw-csat-delta.is-good { color: var(--good); }
+.ecw-csat-delta.is-bad { color: var(--bad); }
+.ecw-csat-delta.is-good .ecw-csat-tri { fill: var(--good); }
+.ecw-csat-delta.is-bad .ecw-csat-tri { fill: var(--bad); }
+.ecw-csat-delta-val { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.74rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.ecw-csat-delta-rest { font-size: 0.66rem; font-weight: 500; color: var(--muted); }
+
+.ecw-csat-rule { align-self: stretch; width: 1px; background: var(--line); margin: 0.1rem 0; }
+
+/* trend */
+.ecw-csat-trend { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.ecw-csat-trend-label { font-size: 0.56rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.ecw-csat-spark-wrap { position: relative; width: 100%; height: 2.9rem; }
+.ecw-csat-spark { width: 100%; height: 100%; display: block; }
+.ecw-csat-spark-area { fill: color-mix(in srgb, var(--accent) 9%, transparent); stroke: none; }
+.ecw-csat-spark-line { fill: none; stroke: var(--accent); stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.ecw-csat-spark-dot { position: absolute; width: 0.46rem; height: 0.46rem; border-radius: 50%; background: var(--accent); border: 1.5px solid #fff; box-shadow: 0 0 0 1px var(--accent); transform: translate(-50%, -50%); }
+
+/* stat strip */
+.ecw-csat-stats { display: flex; align-items: center; gap: 1.1rem; }
+.ecw-csat-stat { display: flex; align-items: baseline; gap: 0.3rem; padding-right: 1.1rem; border-right: 1px solid var(--line); }
+.ecw-csat-stat:last-child { padding-right: 0; border-right: 0; }
+.ecw-csat-stat-num { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.9rem; font-weight: 720; color: var(--ink); letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.ecw-csat-stat-lbl { font-size: 0.68rem; font-weight: 500; color: var(--muted); }
+
+/* verbatims */
+.ecw-csat-verbatims { display: flex; flex-direction: column; gap: 0.35rem; }
+.ecw-csat-vhead { font-size: 0.56rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.ecw-csat-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.ecw-csat-row { border-top: 1px solid var(--line); }
+.ecw-csat-row:first-child { border-top: 0; }
+.ecw-csat-rowhead { width: 100%; display: flex; align-items: flex-start; gap: 0.7rem; padding: 0.62rem 0.3rem 0.62rem 0; background: transparent; border: 0; cursor: pointer; font-family: inherit; text-align: left; border-radius: 3px; transition: background 0.14s ease; }
+.ecw-csat-rowhead:hover { background: var(--raised); }
+.ecw-csat-rail { flex: none; align-self: stretch; width: 2px; border-radius: 2px; }
+.ecw-csat-rail.is-good { background: color-mix(in srgb, var(--good) 55%, var(--line)); }
+.ecw-csat-rail.is-bad { background: var(--bad); }
+.ecw-csat-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.28rem; }
+.ecw-csat-text { font-size: 0.82rem; line-height: 1.4; color: var(--ink); letter-spacing: -0.005em; }
+.ecw-csat-sub { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+.ecw-csat-theme { font-size: 0.56rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.ecw-csat-theme.is-good { color: var(--accent); }
+.ecw-csat-theme.is-bad { color: var(--bad); }
+.ecw-csat-who { font-size: 0.7rem; font-weight: 500; color: var(--muted); position: relative; padding-left: 0.6rem; }
+.ecw-csat-who::before { content: ""; position: absolute; left: 0; top: 50%; width: 2px; height: 2px; border-radius: 50%; background: var(--muted); transform: translateY(-50%); }
+.ecw-csat-aside { flex: none; display: flex; align-items: center; gap: 0.5rem; padding-top: 0.1rem; }
+.ecw-csat-stars { display: inline-flex; gap: 0.08rem; }
+.ecw-csat-star { width: 0.72rem; height: 0.72rem; fill: var(--line); }
+.ecw-csat-star.is-on { fill: var(--ink-2); }
+.ecw-csat-caret { width: 0.85rem; height: 0.85rem; color: var(--muted); flex: none; transition: transform 0.2s ease; }
+.ecw-csat-caret.is-open { transform: rotate(180deg); }
+.ecw-csat-body { padding: 0 0.3rem 0.7rem 0.7rem; }
+.ecw-csat-full { margin: 0 0 0.35rem; font-size: 0.78rem; line-height: 1.5; color: var(--ink-2); }
+.ecw-csat-caseref { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.66rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+@container (max-width: 360px) {
+    .ecw-csat-gauge { gap: 0.9rem; }
+    .ecw-csat-gauge-fig { width: 6rem; }
+    .ecw-csat-stats { flex-wrap: wrap; gap: 0.6rem 0.9rem; }
+    .ecw-csat-stat { padding-right: 0.9rem; }
+}

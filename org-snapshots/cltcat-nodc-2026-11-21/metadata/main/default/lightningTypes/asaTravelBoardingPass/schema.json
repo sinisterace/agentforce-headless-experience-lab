@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Travel · Digital Boarding Pass",
+  "description" : "Shows a wallet-style airline boarding pass (route, flight, gate, seat, boarding group and a barcode strip) with add-to-wallet and email actions.",
+  "lightning:type" : "@apexClassType/c__AsaTravelBoardingPassData"
+}

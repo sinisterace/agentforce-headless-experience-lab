@@ -1,0 +1,67 @@
+<template>
+    <div class={rootClass}>
+        <!-- Header lockup -->
+        <div class="ecw-esc-head">
+            <div class="ecw-esc-eyebrow-row">
+                <span class="ecw-esc-eyebrow">Escalation</span>
+                <template if:true={model.sevLabel}><span class={model.sevClass}>{model.sevLabel}</span></template>
+            </div>
+            <template if:true={model.hasSubject}><h3 class="ecw-esc-subject">{model.subject}</h3></template>
+            <div class="ecw-esc-meta">
+                <template if:true={model.number}><span class="ecw-esc-meta-case">{model.number}</span></template>
+                <template if:true={model.hasAccount}><span class="ecw-esc-dot" aria-hidden="true"></span><span class="ecw-esc-meta-acct">{model.account}</span></template>
+                <template if:true={model.hasPriority}><span class="ecw-esc-dot" aria-hidden="true"></span><span>{model.priority} priority</span></template>
+                <template if:true={model.hasChannel}><span class="ecw-esc-dot" aria-hidden="true"></span><span>{model.channel}</span></template>
+                <template if:true={model.hasOpened}><span class="ecw-esc-dot" aria-hidden="true"></span><span>{model.opened}</span></template>
+            </div>
+        </div>
+
+        <template if:true={model.hasReason}><p class="ecw-esc-reason">{model.reason}</p></template>
+
+        <!-- Impact ledger -->
+        <template if:true={hasLines}>
+            <div class="ecw-esc-ledger">
+                <div class="ecw-esc-ledger-head"><span>Impact</span><span>Scope</span></div>
+                <template for:each={lines} for:item="l">
+                    <div key={l.key} class="ecw-esc-row">
+                        <span class="ecw-esc-row-main">
+                            <span class="ecw-esc-item">{l.item}</span>
+                            <template if:true={l.hasDetail}><span class="ecw-esc-detail">{l.detail}</span></template>
+                        </span>
+                        <span class="ecw-esc-metric">{l.metric}</span>
+                    </div>
+                </template>
+                <div class="ecw-esc-total">
+                    <span class="ecw-esc-total-k">{model.summaryLabel}</span>
+                    <span class="ecw-esc-total-v">{model.summaryTotal}</span>
+                </div>
+            </div>
+            <template if:true={model.hasNote}><p class="ecw-esc-note">{model.summaryNote}</p></template>
+        </template>
+
+        <!-- Route -->
+        <template if:true={model.hasRoute}>
+            <div class="ecw-esc-route">
+                <span class="ecw-esc-route-k">Route to</span>
+                <span class="ecw-esc-route-v">{model.routeTo}</span>
+            </div>
+        </template>
+
+        <!-- Acknowledgement + action -->
+        <div class="ecw-esc-foot">
+            <template if:false={done}>
+                <label class="ecw-esc-ack">
+                    <input type="checkbox" checked={acked} onchange={handleAck} />
+                    <span class="ecw-esc-ack-text">{model.ackText}</span>
+                </label>
+                <button type="button" class="ecw-esc-cta" disabled={escalateDisabled} onclick={handleEscalate}>{model.action}</button>
+            </template>
+            <template if:true={done}>
+                <div class="ecw-esc-done">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    <span>{doneText}</span>
+                </div>
+            </template>
+        </div>
+    </div>
+</template>

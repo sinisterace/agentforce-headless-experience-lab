@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Insurance · Policy Selector",
+  "description" : "Lets a customer pick one or more of their insurance policies, with coverage and renewal details.",
+  "lightning:type" : "@apexClassType/c__AsaInsurancePolicySelectorData"
+}

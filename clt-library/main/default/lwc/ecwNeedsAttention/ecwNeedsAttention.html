@@ -1,0 +1,35 @@
+<template>
+    <div class="ecw-na">
+
+        <!-- Hero: total at risk + how many deals need action -->
+        <template if:true={hasHero}>
+            <div class="ecw-na-hero">
+                <span class="ecw-na-hero-label">At risk</span>
+                <div class="ecw-na-hero-row">
+                    <strong class="ecw-na-hero-val">{heroValue}</strong>
+                    <span class="ecw-na-summary">{summaryText}</span>
+                </div>
+            </div>
+        </template>
+
+        <!-- The deals, most urgent first -->
+        <template if:true={hasItems}>
+            <ul class="ecw-na-list">
+                <template for:each={items} for:item="it">
+                    <li key={it.key} class="ecw-na-row">
+                        <div class="ecw-na-main">
+                            <span class="ecw-na-name">{it.name}</span>
+                            <template if:true={it.hasSub}>
+                                <span class="ecw-na-sub">{it.sub}</span>
+                            </template>
+                        </div>
+                        <div class="ecw-na-side">
+                            <span class="ecw-na-amount">{it.amountText}</span>
+                            <span class={it.flagClass}>{it.flag}</span>
+                        </div>
+                    </li>
+                </template>
+            </ul>
+        </template>
+    </div>
+</template>

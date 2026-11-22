@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · Finance · AP approvals — selection",
+  "description" : "The invoices/POs the finance user chose to approve or hold.",
+  "lightning:type" : "@apexClassType/c__EcwApApprovalsInput"
+}

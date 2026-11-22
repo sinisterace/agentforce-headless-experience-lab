@@ -1,0 +1,14 @@
+{
+  "required" : [ "selection" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "selection" : {
+      "title" : "selection",
+      "description" : "The case escalation the user confirmed.",
+      "lightning:type" : "c__ecwEscalationInput",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : true
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

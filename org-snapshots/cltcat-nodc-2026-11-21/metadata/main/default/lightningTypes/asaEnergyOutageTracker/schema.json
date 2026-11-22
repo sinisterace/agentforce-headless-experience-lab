@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Energy & Utilities · Outage Tracker",
+  "description" : "Shows an active power outage affecting the customer's area — cause, customers affected, crew status, a restoration progress track, and an estimated restore time.",
+  "lightning:type" : "@apexClassType/c__AsaEnergyOutageTrackerData"
+}

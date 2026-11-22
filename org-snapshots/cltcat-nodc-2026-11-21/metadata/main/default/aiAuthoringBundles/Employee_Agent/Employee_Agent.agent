@@ -1,0 +1,793 @@
+system:
+    instructions: |
+        You are the Employee Agent, an internal AI teammate that helps employees
+        get work done by rendering interactive cards right in the conversation.
+        Run the action that matches the employee's request and let the card do the
+        talking — keep any accompanying text to one short sentence. If a request is
+        outside the actions you have, briefly say what you can help with instead.
+        When a finance user wants to approve or hold invoices or POs, route to the
+        AP approvals handler, which collects their choice on an interactive card and
+        confirms the result.
+    messages:
+        welcome: "Hi! I can help across Sales, Service, IT, Finance, and HR — pipeline, cases, system status, budgets, headcount, and more, as interactive cards. What do you need?"
+        error: "Sorry, it looks like something has gone wrong."
+
+config:
+    developer_name: "Employee_Agent"
+    agent_label: "Employee Agent"
+    description: "Shows employees their work as interactive cards across Sales (pipeline, deals, forecast, what changed), Service (case prep, CSAT, field dispatch, case escalation), IT (system status, known issues, changes, IT requests), Finance (budget vs actual, AP approvals, AR aging, month-end close), and HR (headcount, who's out, open roles, onboarding)."
+    agent_type: "AgentforceEmployeeAgent"
+
+language:
+    default_locale: "en_US"
+    additional_locales: ""
+    all_additional_locales: False
+
+start_agent main:
+    label: "Employee Agent"
+    description: "Show the employee's own work as an interactive card. Sales: pipeline, deals that need attention, forecast, what changed. Service: case prep (Case 360), CSAT, field dispatch, and case escalation."
+
+    actions:
+        ecwSalesPipeline:
+            description: "Use this when the employee asks about their sales pipeline, how their quarter is looking, what is closing, or their win rate. Shows a pipeline snapshot card: total open pipeline, a quarter-over-quarter trend, a stage breakdown, and win-rate / closing / avg-deal stats."
+            label: "Sales · My pipeline"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwSalesPipeline_Output_a1f7"
+            target: "flow://ecwSalesPipeline_Output_a1f7"
+            inputs:
+                "Details": string
+                    description: "Not used — the pipeline is retrieved live for the running user. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwSalesPipeline"
+
+        ecwNeedsAttention:
+            description: "Use this when the employee asks what deals need attention, what is at risk, what is slipping or overdue, or what they should follow up on. Shows a card of open deals that are overdue, closing soon, or stalled, ranked by urgency, with the total value at risk."
+            label: "Sales · Needs attention"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwNeedsAttention_Output_b2c4"
+            target: "flow://ecwNeedsAttention_Output_b2c4"
+            inputs:
+                "Details": string
+                    description: "Not used — the data is retrieved live for the running user. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwNeedsAttention"
+
+        ecwForecast:
+            description: "Use this when the employee asks about their forecast, their commit, their best case, how much they will make, or whether they will hit the number. Shows a forecast coverage card: committed amount of total forecast split into Closed / Commit / Best case / Pipeline tiers."
+            label: "Sales · Forecast"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwForecast_Output_c3d5"
+            target: "flow://ecwForecast_Output_c3d5"
+            inputs:
+                "Details": string
+                    description: "Not used — the forecast is retrieved live for the running user. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwForecast"
+
+        ecwWhatChanged:
+            description: "Use this when the employee asks what changed, what moved, what happened while they were out, or for recent updates on their deals. Shows a feed of recent deal motion — won, advanced, new, slipped, lost — with the net pipeline change this week."
+            label: "Sales · What changed"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwWhatChanged_Output_d4e6"
+            target: "flow://ecwWhatChanged_Output_d4e6"
+            inputs:
+                "Details": string
+                    description: "Not used — the recent-changes feed is retrieved live. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwWhatChanged"
+
+        ecwCase360:
+            description: "Use when the employee wants to prep for or get context on their top case. Shows a Case 360 card: subject, customer and contact, description, priority/status/age, and their other open cases."
+            label: "Service · Case 360"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwCase360_Output_f6a8"
+            target: "flow://ecwCase360_Output_f6a8"
+            inputs:
+                "Details": string
+                    description: "Not used — the case context is retrieved live for the running user. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwCase360"
+
+        ecwCsatPulse:
+            description: "Use this when the employee asks about their CSAT, customer satisfaction, how customers rate them, their survey scores, or recent feedback. Shows a CSAT pulse card: rolling score with a trend and recent verbatim comments."
+            label: "Service · CSAT pulse"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwCsatPulse_Output_b8c0"
+            target: "flow://ecwCsatPulse_Output_b8c0"
+            inputs:
+                "Details": string
+                    description: "Not used — the CSAT pulse is retrieved live. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwCsatPulse"
+
+        ecwFieldDispatch:
+            description: "Use when a service dispatcher or manager wants to reassign a service appointment, find a better or closer technician, cover an at-risk or SLA-breaching job, or asks who can take or cover a job. Shows the at-risk appointment on a live dispatch map with ranked candidate technicians (fit, skills, ETA, utilization, rating)."
+            label: "Service · Field dispatch"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwFieldDispatch_Output_g7h9"
+            target: "flow://ecwFieldDispatch_Output_g7h9"
+            inputs:
+                "Details": string
+                    description: "Not used — the dispatch suggestion is retrieved live. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwFieldDispatch"
+
+        ecwEscalation:
+            description: "Use when a support agent or manager wants to escalate a case, raise its severity, report an escalation, page Tier 2 or on-call, or flag a major incident. Shows an escalation summary — impacted accounts and business impact as a ledger, routed to the on-call team."
+            label: "Service · Escalate case"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwEscalation_Output_h8k2"
+            target: "flow://ecwEscalation_Output_h8k2"
+            inputs:
+                "Details": string
+                    description: "Not used — the escalation summary is retrieved live. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwEscalation"
+
+        ecwSystemStatus:
+            description: "Use when the employee asks if systems are up, system or service status, whether an app is down, or if there's an outage. Shows a status board of the services they use."
+            label: "IT · System status"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwSystemStatus_Output_c1d2"
+            target: "flow://ecwSystemStatus_Output_c1d2"
+            inputs:
+                "Details": string
+                    description: "Not used — retrieved live. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwSystemStatus"
+
+        ecwKnownIssues:
+            description: "Use when the employee asks what's broken, known issues, if there's an outage, or what IT problems are affecting them right now. Shows active IT incidents with impact and workaround."
+            label: "IT · Known issues"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwKnownIssues_Output_d3e4"
+            target: "flow://ecwKnownIssues_Output_d3e4"
+            inputs:
+                "Details": string
+                    description: "Not used — retrieved live. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwKnownIssues"
+
+        ecwChangeCalendar:
+            description: "Use when the employee asks about upcoming IT changes, maintenance windows, planned downtime, or what IT is changing this week. Shows a change calendar."
+            label: "IT · Change calendar"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwChangeCalendar_Output_e5a6"
+            target: "flow://ecwChangeCalendar_Output_e5a6"
+            inputs:
+                "Details": string
+                    description: "Not used — retrieved live. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwChangeCalendar"
+
+        ecwMyItRequests:
+            description: "Use when the employee asks about their IT tickets, their IT requests, the status of a request they submitted, or their hardware/software/access request. Shows their requests with progress."
+            label: "IT · My IT requests"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwMyItRequests_Output_a9b1"
+            target: "flow://ecwMyItRequests_Output_a9b1"
+            inputs:
+                "Details": string
+                    description: "Not used — retrieved live. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwMyItRequests"
+
+        ecwBudgetActual:
+            description: "Use when the finance team asks about budget vs actual, spend against budget, departmental budget consumption, or variance to budget. Shows departmental budget vs actual with bullet bars."
+            label: "Finance · Budget vs actual"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwBudgetActual_Output_b1c3"
+            target: "flow://ecwBudgetActual_Output_b1c3"
+            inputs:
+                "Details": string
+                    description: "Not used — retrieved live. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwBudgetActual"
+
+        investigateBudgetLine:
+            description: "Use when the finance team wants to investigate or flag a department's budget variance (an over-budget or near-budget line). Renders the interactive budget vs actual card to collect which department to investigate, then confirms."
+            label: "Finance · Investigate budget variance"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            target: "apex://EcwBudgetInvestigate"
+            inputs:
+                "selection": object
+                    description: "The department line the user chose to investigate."
+                    label: "selection"
+                    is_required: True
+                    is_user_input: True
+                    complex_data_type_name: "c__ecwBudgetActualInput"
+            outputs:
+                "confirmation": string
+                    description: "Confirmation of the variance review flagged, to relay to the user in one short sentence."
+                    label: "confirmation"
+
+        ecwApApprovals:
+            description: "Use when the finance team asks what invoices or POs are awaiting approval, the AP approval queue, or what payables need sign-off. Shows invoices/POs awaiting approval."
+            label: "Finance · AP approvals"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwApApprovals_Output_c2d4"
+            target: "flow://ecwApApprovals_Output_c2d4"
+            inputs:
+                "Details": string
+                    description: "Not used — retrieved live. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwApApprovals"
+
+        ecwArAging:
+            description: "Use when the finance team asks about AR aging, outstanding receivables, overdue accounts, DSO, or collections. Shows AR aging buckets and top overdue accounts."
+            label: "Finance · AR aging"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwArAging_Output_d3e5"
+            target: "flow://ecwArAging_Output_d3e5"
+            inputs:
+                "Details": string
+                    description: "Not used — retrieved live. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwArAging"
+
+        remindArAccounts:
+            description: "Use when the finance team wants to send a payment reminder to overdue AR accounts, chase collections, or nudge a customer about an outstanding balance. Renders the interactive AR aging card to collect which accounts to remind, then confirms."
+            label: "Finance · Send AR payment reminder"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            target: "apex://EcwArRemind"
+            inputs:
+                "selection": object
+                    description: "The overdue accounts the user chose to send a payment reminder to."
+                    label: "selection"
+                    is_required: True
+                    is_user_input: True
+                    complex_data_type_name: "c__ecwArAgingInput"
+            outputs:
+                "confirmation": string
+                    description: "Confirmation of the reminders queued, to relay to the user in one short sentence."
+                    label: "confirmation"
+
+        ecwMonthEndClose:
+            description: "Use when the finance team asks about the month-end close, close status, close checklist, or what is blocking the close. Shows the close checklist with status and blockers."
+            label: "Finance · Month-end close"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwMonthEndClose_Output_e4f6"
+            target: "flow://ecwMonthEndClose_Output_e4f6"
+            inputs:
+                "Details": string
+                    description: "Not used — retrieved live. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwMonthEndClose"
+
+        actOnMonthEndTask:
+            description: "Use when the finance team wants to mark a month-end close task complete or chase the blocker on a blocked task. Renders the interactive month-end close card to collect the task action, then confirms."
+            label: "Finance · Act on month-end task"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            target: "apex://EcwMonthEndAction"
+            inputs:
+                "selection": object
+                    description: "The month-end task and the action (complete or chase) the user chose."
+                    label: "selection"
+                    is_required: True
+                    is_user_input: True
+                    complex_data_type_name: "c__ecwMonthEndCloseInput"
+            outputs:
+                "confirmation": string
+                    description: "Confirmation of the task action, to relay to the user in one short sentence."
+                    label: "confirmation"
+
+        ecwHeadcount:
+            description: "Use when the HR or People team asks about headcount, employee count, headcount by department, or team growth. Shows headcount by department with growth and open roles."
+            label: "HR · Headcount"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwHeadcount_Output_f1a2"
+            target: "flow://ecwHeadcount_Output_f1a2"
+            inputs:
+                "Details": string
+                    description: "Not used — retrieved live. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwHeadcount"
+
+        ecwTimeOff:
+            description: "Use when the HR or People team asks who is out, who is on PTO or leave this week, or about time-off coverage. Shows who is out this week with dates and leave type."
+            label: "HR · Who's out"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwTimeOff_Output_f2b3"
+            target: "flow://ecwTimeOff_Output_f2b3"
+            inputs:
+                "Details": string
+                    description: "Not used — retrieved live. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwTimeOff"
+
+        ecwOpenRoles:
+            description: "Use when the HR or People team asks about open roles, open requisitions, the hiring pipeline, or recruiting status. Shows open requisitions with stage, days open, and candidate counts."
+            label: "HR · Open roles"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwOpenRoles_Output_f3c4"
+            target: "flow://ecwOpenRoles_Output_f3c4"
+            inputs:
+                "Details": string
+                    description: "Not used — retrieved live. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwOpenRoles"
+
+        ecwOnboarding:
+            description: "Use when the HR or People team asks about onboarding, new hires, or new-hire onboarding status. Shows new hires with their onboarding progress."
+            label: "HR · Onboarding"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwOnboarding_Output_f4d5"
+            target: "flow://ecwOnboarding_Output_f4d5"
+            inputs:
+                "Details": string
+                    description: "Not used — retrieved live. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwOnboarding"
+
+        ecwCampaignFunnel:
+            description: "Use when a marketer asks how a campaign is performing, the conversion funnel, where leads are dropping off, campaign results, or marketing-sourced pipeline. Shows a conversion funnel from impressions to won."
+            label: "Marketing · Campaign conversion"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwCampaignFunnel_Output_m1a1"
+            target: "flow://ecwCampaignFunnel_Output_m1a1"
+            inputs:
+                "Details": string
+                    description: "Not used — retrieved live. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwCampaignFunnel"
+
+        ecwPerformanceMatrix:
+            description: "Use when a marketer asks which content or campaigns are performing, what to scale or cut, content performance, or engagement versus reach. Shows a performance quadrant of assets sized by conversions."
+            label: "Marketing · Performance matrix"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwPerformanceMatrix_Output_m2b2"
+            target: "flow://ecwPerformanceMatrix_Output_m2b2"
+            inputs:
+                "Details": string
+                    description: "Not used — retrieved live. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwPerformanceMatrix"
+
+        ecwAbTest:
+            description: "Use when a marketer asks about A/B test results, which variant won, test lift, significance, or experiment outcomes. Shows a head-to-head A versus B comparison with confidence and the winner."
+            label: "Marketing · A/B test"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwAbTest_Output_m3c3"
+            target: "flow://ecwAbTest_Output_m3c3"
+            inputs:
+                "Details": string
+                    description: "Not used — retrieved live. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwAbTest"
+
+        ecwAudienceExplorer:
+            description: "Use when a marketer asks about audience size, building or refining a segment, how many contacts match some criteria, or segment reach. Shows an interactive audience builder that sizes the segment live."
+            label: "Marketing · Audience builder"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "ecwAudienceExplorer_Output_m4d4"
+            target: "flow://ecwAudienceExplorer_Output_m4d4"
+            inputs:
+                "Details": string
+                    description: "Not used — retrieved live. Pass an empty string."
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__ecwAudienceExplorer"
+
+    reasoning:
+        instructions: ->
+            | Run the single action that best matches the employee's request and let
+              the card do the talking. Sales:
+              - pipeline, quarter, win rate, what's closing -> Sales · My pipeline
+              - at risk, needs attention, slipping, overdue, follow up -> Sales · Needs attention
+              - forecast, commit, best case, hit the number -> Sales · Forecast
+              - what changed, what moved, recent updates -> Sales · What changed
+              Service:
+              - prep for a case, case or customer context, my top case -> Service · Case 360
+              - CSAT, customer satisfaction, survey scores, recent feedback -> Service · CSAT pulse
+              - show the dispatch board, nearby or available technicians (just viewing) -> Service · Field dispatch
+              - reassign a job, cover an at-risk or SLA-breaching appointment, find a closer/better technician and reassign, who can take a job (taking action) -> goFieldDispatch
+              - show an escalation summary or an incident's business impact (just viewing) -> Service · Escalate case
+              - escalate a case, raise severity, report an escalation, page Tier 2 or on-call, flag a major incident (taking action) -> goEscalation
+              IT:
+              - are systems up, system/service status, is an app down, outage -> IT · System status
+              - what's broken, known issues, what's affecting me right now -> IT · Known issues
+              - upcoming changes, maintenance, planned downtime this week -> IT · Change calendar
+              - my IT tickets/requests, status of my request, my hardware/access/software request -> IT · My IT requests
+              Finance:
+              - budget vs actual, spend against budget, variance to budget -> Finance · Budget vs actual
+              - invoices/POs awaiting approval, AP approval queue, payables to sign off (just viewing) -> Finance · AP approvals
+              - approve or hold invoices/POs, approve payables, sign off AP (taking action) -> goApApproval
+              - AR aging, outstanding receivables, overdue accounts, DSO, collections -> Finance · AR aging
+              - month-end close, close status, close checklist, what's blocking the close -> Finance · Month-end close
+              HR:
+              - headcount, employee count, headcount by department, team growth -> HR · Headcount
+              - who's out, who's on PTO or leave this week, time-off coverage -> HR · Who's out
+              - open roles, open requisitions, hiring pipeline, recruiting status -> HR · Open roles
+              - onboarding, new hires, new-hire status -> HR · Onboarding
+              Marketing:
+              - campaign performance, conversion funnel, where leads drop off, marketing-sourced pipeline -> Marketing · Campaign conversion
+              - which content/campaigns are performing, what to scale or cut, content performance -> Marketing · Performance matrix
+              - A/B test results, which variant won, test lift, experiment outcome -> Marketing · A/B test
+              - audience size, build or refine a segment, how many contacts match, segment reach -> Marketing · Audience builder
+              Keep any accompanying text to one short sentence. For anything else,
+              briefly say what you can help with across Sales, Service, IT, Finance, and HR.
+
+        actions:
+            ecwSalesPipeline: @actions.ecwSalesPipeline
+                with Details = ...
+            ecwNeedsAttention: @actions.ecwNeedsAttention
+                with Details = ...
+            ecwForecast: @actions.ecwForecast
+                with Details = ...
+            ecwWhatChanged: @actions.ecwWhatChanged
+                with Details = ...
+            ecwCase360: @actions.ecwCase360
+                with Details = ...
+            ecwCsatPulse: @actions.ecwCsatPulse
+                with Details = ...
+            ecwFieldDispatch: @actions.ecwFieldDispatch
+                with Details = ...
+            goFieldDispatch: @utils.transition to @subagent.field_dispatch
+                description: "Reassign a service appointment to a technician; also for any ACTION_CONFIRM that submits the field dispatch card."
+            ecwEscalation: @actions.ecwEscalation
+                with Details = ...
+            goEscalation: @utils.transition to @subagent.escalation
+                description: "Escalate a case to the on-call team; also for any ACTION_CONFIRM that submits the escalation card."
+            ecwSystemStatus: @actions.ecwSystemStatus
+                with Details = ...
+            ecwKnownIssues: @actions.ecwKnownIssues
+                with Details = ...
+            ecwChangeCalendar: @actions.ecwChangeCalendar
+                with Details = ...
+            ecwMyItRequests: @actions.ecwMyItRequests
+                with Details = ...
+            ecwBudgetActual: @actions.ecwBudgetActual
+                with Details = ...
+            ecwApApprovals: @actions.ecwApApprovals
+                with Details = ...
+            goApApproval: @utils.transition to @subagent.ap_approval
+                description: "Approve or hold invoices/POs from the AP queue; also for any ACTION_CONFIRM that submits the AP approvals card."
+            ecwArAging: @actions.ecwArAging
+                with Details = ...
+            ecwMonthEndClose: @actions.ecwMonthEndClose
+                with Details = ...
+            ecwHeadcount: @actions.ecwHeadcount
+                with Details = ...
+            ecwTimeOff: @actions.ecwTimeOff
+                with Details = ...
+            ecwOpenRoles: @actions.ecwOpenRoles
+                with Details = ...
+            ecwOnboarding: @actions.ecwOnboarding
+                with Details = ...
+            ecwCampaignFunnel: @actions.ecwCampaignFunnel
+                with Details = ...
+            ecwPerformanceMatrix: @actions.ecwPerformanceMatrix
+                with Details = ...
+            ecwAbTest: @actions.ecwAbTest
+                with Details = ...
+            ecwAudienceExplorer: @actions.ecwAudienceExplorer
+                with Details = ...
+
+subagent ap_approval:
+    label: "AP approvals"
+    description: "Collects the finance user's approve/hold selection on the interactive AP approvals card and confirms the result."
+
+    reasoning:
+        instructions: ->
+            | The finance user wants to approve or place on hold invoices or POs.
+              Call {!@actions.approveApInvoices} user_input to show the interactive AP
+              approvals card so the user can pick invoices and tap Approve or Hold.
+              When the card is submitted (an ACTION_CONFIRM message), call
+              {!@actions.approveApInvoices} with the submitted selection, then relay the
+              returned confirmation to the user in one short sentence. Do not output any
+              other text and do not ask for confirmation.
+
+        actions:
+            approveApInvoices: @actions.approveApInvoices
+                with selection = ...
+
+    actions:
+        approveApInvoices:
+            description: "Submits the finance user's approve/hold selection for AP invoices or POs and returns a confirmation."
+            label: "Finance · Approve AP invoices"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            target: "apex://EcwApApprove"
+            inputs:
+                "selection": object
+                    description: "The invoices/POs the user chose to approve or hold."
+                    label: "selection"
+                    is_required: True
+                    is_user_input: True
+                    complex_data_type_name: "c__ecwApApprovalsInput"
+            outputs:
+                "confirmation": string
+                    description: "Confirmation of the approval/hold to relay to the user in one short sentence."
+                    label: "confirmation"
+
+subagent field_dispatch:
+    label: "Field dispatch"
+    description: "Shows the at-risk appointment with ranked candidate technicians on the interactive field dispatch card, collects the dispatcher's reassignment, and confirms the result."
+
+    reasoning:
+        instructions: ->
+            | The dispatcher wants to reassign an at-risk service appointment to a
+              better technician. Call {!@actions.reassignDispatch} user_input to show the
+              interactive field dispatch card so the dispatcher can pick a technician and
+              tap Reassign. When the card is submitted (an ACTION_CONFIRM message), call
+              {!@actions.reassignDispatch} with the submitted selection, then relay the
+              returned confirmation to the user in one short sentence. Do not output any
+              other text and do not ask for confirmation.
+
+        actions:
+            reassignDispatch: @actions.reassignDispatch
+                with selection = ...
+
+    actions:
+        reassignDispatch:
+            description: "Submits the dispatcher's technician reassignment for an at-risk service appointment and returns a confirmation."
+            label: "Service · Reassign dispatch"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            target: "apex://EcwReassignDispatch"
+            inputs:
+                "selection": object
+                    description: "The technician the user chose to reassign the appointment to."
+                    label: "selection"
+                    is_required: True
+                    is_user_input: True
+                    complex_data_type_name: "c__ecwFieldDispatchInput"
+            outputs:
+                "confirmation": string
+                    description: "Confirmation of the reassignment to relay to the user in one short sentence."
+                    label: "confirmation"
+
+subagent escalation:
+    label: "Escalate case"
+    description: "Shows the case escalation summary on the interactive escalation card, collects the agent's escalation, and confirms the result."
+
+    reasoning:
+        instructions: ->
+            | The support agent wants to escalate a case to the on-call team. Call
+              {!@actions.raiseEscalation} user_input to show the interactive escalation
+              card so the agent can acknowledge the criteria and tap Escalate. When the
+              card is submitted (an ACTION_CONFIRM message), call
+              {!@actions.raiseEscalation} with the submitted selection, then relay the
+              returned confirmation to the user in one short sentence. Do not output any
+              other text and do not ask for confirmation.
+
+        actions:
+            raiseEscalation: @actions.raiseEscalation
+                with selection = ...
+
+    actions:
+        raiseEscalation:
+            description: "Submits the agent's case escalation and returns a confirmation."
+            label: "Service · Raise escalation"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            target: "apex://EcwRaiseEscalation"
+            inputs:
+                "selection": object
+                    description: "The case escalation the user confirmed."
+                    label: "selection"
+                    is_required: True
+                    is_user_input: True
+                    complex_data_type_name: "c__ecwEscalationInput"
+            outputs:
+                "confirmation": string
+                    description: "Confirmation of the escalation to relay to the user in one short sentence."
+                    label: "confirmation"

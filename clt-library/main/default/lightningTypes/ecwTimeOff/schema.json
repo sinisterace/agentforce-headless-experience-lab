@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · HR · Who's out",
+  "description" : "Who is out this week with dates, leave type, and coverage.",
+  "lightning:type" : "@apexClassType/c__EcwTimeOffData"
+}

@@ -1,0 +1,95 @@
+/* ASA Automotive · Vehicle Configurator — a build-and-price card: model header,
+   a paint-color swatch row, single-select option chips per group (each with a
+   price delta), and a live estimated price. rem units + inherited font so the
+   card matches the host chat theme in Enhanced Chat v2. Racing-red BRAND accent
+   (used for selection/CTA — never as an error color) + neutrals are local props. */
+:host {
+    --asa-accent: #dc2626;
+    --asa-line: #e2e8f0;
+    --asa-ink: #0f172a;
+    --asa-muted: #64748b;
+    --asa-good: #15803d;
+    --asa-warn: #b45309;
+    --asa-radius: 14px;
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after { box-sizing: border-box; }
+
+.asa-test-badge { margin: 0 0 0.5rem; padding: 0.3rem 0.5rem; border-radius: 8px; background: #fef2f2; color: #b91c1c; font-size: 0.68rem; font-weight: 600; }
+
+.asa-cfg-head { margin-bottom: 0.7rem; }
+.selector-title { font-size: 1.12rem; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 0.12rem; overflow-wrap: break-word; word-break: normal; }
+.asa-cfg-model { margin: 0; font-size: 0.78rem; color: var(--asa-muted); overflow-wrap: break-word; }
+.asa-cfg-base { font-weight: 650; color: var(--asa-ink); white-space: nowrap; }
+
+/* Color swatches */
+.asa-cfg-colors { margin-bottom: 0.8rem; min-width: 0; }
+.asa-cfg-color-name { color: var(--asa-ink); font-weight: 650; text-transform: none; letter-spacing: 0; }
+.asa-cfg-swatches { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.35rem; }
+.asa-cfg-swatch {
+    width: 2.15rem; height: 2.15rem; flex-shrink: 0; padding: 0; cursor: pointer;
+    border: 0; border-radius: 999px; background: transparent;
+    display: inline-flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 0 1.5px var(--asa-line); transition: box-shadow 0.12s ease, transform 0.12s ease;
+}
+.asa-cfg-swatch:hover { transform: translateY(-1px); }
+.asa-cfg-swatch.is-selected { box-shadow: 0 0 0 2px var(--asa-accent), 0 0 0 4px color-mix(in srgb, var(--asa-accent) 22%, transparent); }
+.asa-cfg-swatch-dot { width: 1.55rem; height: 1.55rem; border-radius: 999px; box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.12); }
+
+/* Option groups */
+.asa-cfg-groups { display: flex; flex-direction: column; gap: 0.7rem; }
+.asa-cfg-group { min-width: 0; }
+.asa-cfg-group-label { display: block; font-size: 0.64rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--asa-muted); margin-bottom: 0.35rem; overflow-wrap: break-word; }
+.asa-cfg-chips { display: flex; flex-direction: column; gap: 0.4rem; }
+.asa-cfg-chip {
+    display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; width: 100%;
+    padding: 0.55rem 0.65rem; border: 1.5px solid var(--asa-line); border-radius: 11px;
+    background: #fff; color: inherit; font-family: inherit; text-align: left; cursor: pointer;
+    transition: border-color 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+}
+.asa-cfg-chip:hover { border-color: color-mix(in srgb, var(--asa-accent) 45%, var(--asa-line)); }
+.asa-cfg-chip.is-selected { border-color: var(--asa-accent); background: color-mix(in srgb, var(--asa-accent) 6%, #fff); box-shadow: 0 0 0 3px color-mix(in srgb, var(--asa-accent) 14%, transparent); }
+.asa-cfg-chip-main { display: flex; flex-direction: column; gap: 0.05rem; min-width: 0; flex: 1; }
+.asa-cfg-chip-label { font-size: 0.84rem; font-weight: 620; color: var(--asa-ink); overflow-wrap: break-word; }
+.asa-cfg-chip.is-selected .asa-cfg-chip-label { font-weight: 720; }
+.asa-cfg-chip-detail { font-size: 0.68rem; color: var(--asa-muted); overflow-wrap: break-word; }
+.asa-cfg-chip-delta { flex-shrink: 0; font-size: 0.74rem; font-weight: 700; color: var(--asa-muted); white-space: nowrap; }
+.asa-cfg-chip.is-selected .asa-cfg-chip-delta { color: var(--asa-accent); }
+
+/* Live estimate */
+.asa-cfg-estimate {
+    display: grid; grid-template-columns: 1fr auto; align-items: baseline; column-gap: 0.6rem; row-gap: 0.1rem;
+    margin-top: 0.8rem; padding: 0.65rem 0.75rem; border-radius: 12px;
+    background: #0f172a; color: #f8fafc;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.2);
+}
+.asa-cfg-est-label { grid-column: 1; grid-row: 1; font-size: 0.66rem; font-weight: 650; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; }
+.asa-cfg-est-value { grid-column: 2; grid-row: 1 / span 2; align-self: center; font-size: 1.5rem; font-weight: 780; letter-spacing: -0.02em; white-space: nowrap; }
+.asa-cfg-est-note { grid-column: 1; grid-row: 2; font-size: 0.68rem; color: #94a3b8; overflow-wrap: break-word; }
+
+.asa-cfg-cta {
+    margin-top: 0.6rem; width: 100%; min-height: 2.8rem; padding: 0.6rem;
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem;
+    border: 0; border-radius: 11px; background: var(--asa-accent); color: #fff;
+    font-size: 0.86rem; font-weight: 680; cursor: pointer;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--asa-accent) 26%, transparent);
+    transition: filter 0.15s ease;
+}
+.asa-cfg-cta:hover { filter: brightness(1.08); }
+.asa-cfg-cta svg { width: 1.05rem; height: 1.05rem; flex-shrink: 0; }
+
+@container (max-width: 300px) {
+    .asa-cfg-est-value { font-size: 1.3rem; }
+    .asa-cfg-swatch { width: 1.95rem; height: 1.95rem; }
+    .asa-cfg-swatch-dot { width: 1.4rem; height: 1.4rem; }
+}

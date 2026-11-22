@@ -1,0 +1,59 @@
+<template>
+    <div class="asa-card">
+
+        <div class="asa-svp-head">
+            <h3 class="selector-title">{title}</h3>
+            <template if:true={hasSubtitle}>
+                <p class="asa-card-sub">{subtitle}</p>
+            </template>
+        </div>
+
+        <ul class="asa-svp-list">
+            <template for:each={plans} for:item="p">
+                <li key={p.id} class={p._class}>
+                    <div class="asa-svp-btn" role="button" tabindex="0" data-id={p.id} onclick={handleSelect} onkeydown={handleKey}>
+                        <template if:true={p.hasBadge}>
+                            <span class="asa-svp-ribbon">{p.badge}</span>
+                        </template>
+                        <template if:true={p.isCurrent}>
+                            <span class="asa-svp-ribbon is-current-tag">Current plan</span>
+                        </template>
+
+                        <span class="asa-svp-top">
+                            <span class="asa-svp-name-col">
+                                <span class="asa-svp-name">{p.name}</span>
+                                <template if:true={p.hasTagline}>
+                                    <span class="asa-svp-tagline">{p.tagline}</span>
+                                </template>
+                            </span>
+                            <span class="asa-svp-price-col">
+                                <span class="asa-svp-price">{p.price}</span>
+                                <span class="asa-svp-cadence">{p.cadence}</span>
+                            </span>
+                        </span>
+
+                        <template if:true={p.hasFeatures}>
+                            <ul class="asa-svp-features">
+                                <template for:each={p.features} for:item="f">
+                                    <li key={f.key} class="asa-svp-feature">
+                                        <svg class="asa-svp-check" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10.5 8 14.5 16 5.5"></path></svg>
+                                        <span class="asa-svp-feature-text">{f.text}</span>
+                                    </li>
+                                </template>
+                            </ul>
+                        </template>
+
+                        <span class="asa-svp-state">
+                            <span class="asa-svp-radio" aria-hidden="true"></span>
+                            <span class="asa-svp-state-label">{p._btnLabel}</span>
+                        </span>
+                    </div>
+                </li>
+            </template>
+        </ul>
+
+        <template if:true={hasSubmit}>
+            <button type="button" class="asa-svp-cta" onclick={handleSubmit}>{submitText}</button>
+        </template>
+    </div>
+</template>

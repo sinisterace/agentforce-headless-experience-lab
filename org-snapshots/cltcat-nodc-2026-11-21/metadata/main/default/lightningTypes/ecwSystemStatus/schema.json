@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · IT · System status",
+  "description" : "Health of the apps and services an employee uses, with an overall status banner.",
+  "lightning:type" : "@apexClassType/c__EcwSystemStatusData"
+}

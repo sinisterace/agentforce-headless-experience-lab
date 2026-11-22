@@ -1,0 +1,362 @@
+/* ASA Financial Services · Recent Transactions — "private-bank statement".
+   Bespoke FinServ design language: deep-navy accent, cool slate neutrals,
+   MONOSPACE numerics (statement/meter feel), squared geometry (6px) and flat
+   hairline rows — NOT rounded chip cards. Composition: a cash-flow readout
+   (big money-out figure + money-in), a spend-by-category segmented meter with
+   hairline legend, then a typographic statement ledger where each charge is
+   tappable to dispute. rem units + inherited font so it matches the host chat
+   theme in Enhanced Chat v2. */
+:host {
+    --asa-accent: #0b2a4a;      /* deep private-bank navy */
+    --asa-line: #e6e8ec;
+    --asa-ink: #0f172a;
+    --asa-muted: #64748b;
+    --asa-credit: #15803d;
+    --asa-negative: #b42318;
+    --asa-pending: #b45309;
+    --asa-panel: #f7f9fc;
+    --asa-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    display: block;
+    color: var(--asa-ink);
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after {
+    box-sizing: border-box;
+}
+
+.asa-fs-title {
+    margin: 0 0 0.65rem 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--asa-ink);
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* ---- cash-flow readout ---- */
+.asa-fs-readout {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem 0.75rem;
+    flex-wrap: wrap;
+    padding: 0.8rem 0.85rem;
+    border: 1px solid var(--asa-line);
+    border-radius: 6px;
+    background: var(--asa-panel);
+}
+.asa-fs-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0.05rem;
+    min-width: 0;
+}
+.asa-fs-eyebrow {
+    font-size: 0.56rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--asa-muted);
+}
+.asa-fs-out {
+    font-family: var(--asa-mono);
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    color: var(--asa-ink);
+    font-variant-numeric: tabular-nums;
+}
+.asa-fs-in {
+    font-family: var(--asa-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--asa-credit);
+    font-variant-numeric: tabular-nums;
+    margin-top: 0.12rem;
+}
+.asa-fs-acct {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.12rem;
+    text-align: right;
+    min-width: 0;
+}
+.asa-fs-acct-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--asa-ink);
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-fs-count {
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: var(--asa-muted);
+}
+
+/* ---- spend-by-category meter + legend ---- */
+.asa-fs-breakdown {
+    margin-top: 0.75rem;
+}
+.asa-fs-meter {
+    display: flex;
+    width: 100%;
+    height: 0.62rem;
+    border-radius: 3px;
+    overflow: hidden;
+    background: #eef1f5;
+}
+.asa-fs-seg {
+    height: 100%;
+    min-width: 3px;
+}
+.asa-fs-seg + .asa-fs-seg {
+    border-left: 1.5px solid #fff;
+}
+.asa-fs-legend {
+    list-style: none;
+    margin: 0.5rem 0 0;
+    padding: 0;
+}
+.asa-fs-leg {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.38rem 0;
+    border-top: 1px solid var(--asa-line);
+}
+.asa-fs-leg:first-child {
+    border-top: 0;
+}
+.asa-fs-leg-dot {
+    width: 0.58rem;
+    height: 0.58rem;
+    border-radius: 2px;
+    flex-shrink: 0;
+}
+.asa-fs-leg-label {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: var(--asa-ink);
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-fs-leg-amt {
+    font-family: var(--asa-mono);
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--asa-ink);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+}
+
+/* ---- statement ledger ---- */
+.asa-fs-ledger {
+    margin-top: 0.85rem;
+}
+.asa-fs-ledger-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 2px solid var(--asa-ink);
+}
+.asa-fs-ledger-eyebrow {
+    font-size: 0.58rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--asa-ink);
+}
+.asa-fs-ledger-hint {
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: var(--asa-muted);
+}
+.asa-fs-rows {
+    display: flex;
+    flex-direction: column;
+}
+.asa-fs-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 0.62rem 0.15rem;
+    border: none;
+    border-bottom: 1px solid var(--asa-line);
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.13s ease;
+}
+.asa-fs-row:last-child {
+    border-bottom: none;
+}
+.asa-fs-row:hover:not(.is-disabled) {
+    background: #f4f7fb;
+}
+.asa-fs-row.selected {
+    background: color-mix(in srgb, var(--asa-accent) 7%, #fff);
+}
+.asa-fs-row.is-disabled {
+    cursor: default;
+    opacity: 0.5;
+}
+.asa-fs-dot {
+    width: 0.72rem;
+    height: 0.72rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 1.5px solid #cbd5e1;
+    background: #fff;
+    transition: border-color 0.13s ease, background 0.13s ease, box-shadow 0.13s ease;
+}
+.asa-fs-dot.on {
+    border-color: var(--asa-accent);
+    background: var(--asa-accent);
+    box-shadow: inset 0 0 0 2px #fff;
+}
+.asa-fs-row.is-disabled .asa-fs-dot {
+    visibility: hidden;
+}
+.asa-fs-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.18rem;
+    min-width: 0;
+    flex: 1;
+}
+.asa-fs-merchant {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.3rem 0.4rem;
+    font-weight: 600;
+    font-size: 0.88rem;
+    letter-spacing: -0.006em;
+    color: var(--asa-ink);
+}
+.asa-fs-merchant-text {
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-fs-badge {
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: 0.54rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.1rem 0.36rem;
+    border-radius: 3px;
+    background: color-mix(in srgb, var(--asa-pending) 13%, #fff);
+    color: var(--asa-pending);
+}
+.asa-fs-sub {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-width: 0;
+}
+.asa-fs-tag {
+    flex-shrink: 0;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    padding: 0.08rem 0.36rem;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+.asa-fs-date {
+    font-family: var(--asa-mono);
+    font-size: 0.66rem;
+    font-weight: 600;
+    color: var(--asa-muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+.asa-fs-amt {
+    font-family: var(--asa-mono);
+    font-size: 0.9rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    color: var(--asa-ink);
+    flex-shrink: 0;
+}
+.asa-fs-amt.is-credit {
+    color: var(--asa-credit);
+}
+
+/* ---- dispute CTA ---- */
+.asa-fs-cta {
+    margin-top: 0.85rem;
+    width: 100%;
+    min-height: 2.7rem;
+    padding: 0.62rem 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    border: 0;
+    border-radius: 6px;
+    background: var(--asa-accent);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 680;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--asa-accent) 24%, transparent);
+    transition: filter 0.15s ease, transform 0.05s ease;
+}
+.asa-fs-cta:hover {
+    filter: brightness(1.12);
+}
+.asa-fs-cta:active {
+    transform: translateY(1px);
+}
+.asa-fs-cta svg {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}
+
+.asa-error {
+    color: var(--asa-negative);
+    font-size: 0.875rem;
+}
+
+@container (max-width: 300px) {
+    .asa-fs-out {
+        font-size: 1.4rem;
+    }
+    .asa-fs-row {
+        gap: 0.5rem;
+    }
+    .asa-fs-merchant {
+        font-size: 0.85rem;
+    }
+    .asa-fs-amt {
+        font-size: 0.85rem;
+    }
+}

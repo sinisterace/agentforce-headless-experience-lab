@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>ASA HVAC · Technician ETA Tracker</masterLabel>
+    <description>Shows the live status of a dispatched HVAC service technician — status, ETA, arrival window, the technician's identity, a horizontal en-route track, and job details, with message/reschedule actions.</description>
+    <targets>
+        <target>lightning__AgentforceOutput</target>
+        <target>lightningSnapin__ChatMessage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AgentforceOutput">
+            <sourceType name="c__asaHvacTechTracker"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

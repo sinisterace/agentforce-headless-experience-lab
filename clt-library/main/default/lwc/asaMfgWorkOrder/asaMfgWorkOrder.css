@@ -1,0 +1,86 @@
+/* ASA Manufacturing · Work Order Tracker — a header (order number + priority
+   chip + product) above a vertical milestone timeline (done / current / todo),
+   an estimated ship-date callout, and a message-team CTA. rem units + inherited
+   font so the card matches the host chat theme in Enhanced Chat v2. Steel-slate
+   accent + neutrals are local props. */
+:host {
+    --asa-accent: #334155;
+    --asa-line: #e2e8f0;
+    --asa-ink: #0f172a;
+    --asa-muted: #64748b;
+    --asa-done: #15803d;
+    --asa-radius: 14px;
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after { box-sizing: border-box; }
+
+.asa-test-badge { margin: 0 0 0.5rem; padding: 0.3rem 0.5rem; border-radius: 8px; background: #f1f5f9; color: #475569; font-size: 0.68rem; font-weight: 600; }
+
+.asa-wo-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.6rem; margin-bottom: 0.75rem; }
+.asa-wo-head-main { min-width: 0; flex: 1; }
+.selector-title { font-size: 1.12rem; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 0.1rem; overflow-wrap: break-word; word-break: normal; }
+.asa-wo-product { margin: 0; font-size: 0.76rem; color: var(--asa-muted); overflow-wrap: break-word; }
+.asa-wo-priority { --pc: var(--asa-muted); flex-shrink: 0; padding: 0.24rem 0.55rem; border-radius: 999px; font-size: 0.64rem; font-weight: 750; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; background: color-mix(in srgb, var(--pc) 13%, #fff); color: var(--pc); border: 1px solid color-mix(in srgb, var(--pc) 30%, transparent); }
+.asa-wo-priority.is-low { --pc: #64748b; }
+.asa-wo-priority.is-normal { --pc: #2563eb; }
+.asa-wo-priority.is-high { --pc: #b45309; }
+.asa-wo-priority.is-urgent { --pc: #c0392b; }
+
+/* Vertical milestone timeline */
+.asa-wo-track { list-style: none; margin: 0; padding: 0; }
+.asa-wo-step { position: relative; display: flex; gap: 0.7rem; padding: 0 0 0.95rem 0; }
+.asa-wo-step.is-last { padding-bottom: 0; }
+/* connector rail */
+.asa-wo-step::before { content: ''; position: absolute; left: 0.6rem; top: 1.25rem; bottom: -0.05rem; width: 2px; background: var(--asa-line); transform: translateX(-50%); }
+.asa-wo-step.is-last::before { display: none; }
+.asa-wo-step.is-done::before { background: var(--asa-done); }
+.asa-wo-node {
+    position: relative; z-index: 1; flex-shrink: 0;
+    width: 1.2rem; height: 1.2rem; margin-top: 0.05rem; border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: #fff; border: 2px solid var(--asa-line); color: #fff;
+}
+.asa-wo-node svg { width: 0.72rem; height: 0.72rem; }
+.asa-wo-step.is-done .asa-wo-node { background: var(--asa-done); border-color: var(--asa-done); }
+.asa-wo-step.is-current .asa-wo-node { background: var(--asa-accent); border-color: var(--asa-accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--asa-accent) 18%, transparent); }
+.asa-wo-step.is-current .asa-wo-node::after { content: ''; position: absolute; inset: -2px; border-radius: 999px; box-shadow: 0 0 0 0 color-mix(in srgb, var(--asa-accent) 45%, transparent); animation: asaWoPing 1.9s ease-out infinite; }
+.asa-wo-step-text { display: flex; flex-direction: column; gap: 0.06rem; min-width: 0; flex: 1; padding-top: 0.02rem; }
+.asa-wo-step-label { font-size: 0.86rem; font-weight: 600; color: var(--asa-muted); overflow-wrap: break-word; }
+.asa-wo-step.is-done .asa-wo-step-label { color: var(--asa-ink); }
+.asa-wo-step.is-current .asa-wo-step-label { color: var(--asa-ink); font-weight: 720; }
+.asa-wo-step-meta { font-size: 0.7rem; color: var(--asa-muted); overflow-wrap: break-word; }
+
+/* ETA callout */
+.asa-wo-eta { display: flex; align-items: center; gap: 0.45rem; margin-top: 0.8rem; padding: 0.55rem 0.65rem; border-radius: 11px; background: #f1f5f9; border: 1px solid var(--asa-line); font-size: 0.8rem; font-weight: 680; color: var(--asa-ink); }
+.asa-wo-eta-ico { width: 1.05rem; height: 1.05rem; color: var(--asa-accent); flex-shrink: 0; }
+.asa-wo-eta-text { min-width: 0; overflow-wrap: break-word; }
+.asa-wo-updated { margin-left: auto; font-size: 0.66rem; font-weight: 600; color: var(--asa-muted); white-space: nowrap; flex-shrink: 0; padding-left: 0.4rem; }
+
+.asa-wo-cta {
+    margin-top: 0.65rem; width: 100%; min-height: 2.7rem; padding: 0.6rem;
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem;
+    border: 1px solid var(--asa-accent); border-radius: 11px; background: #fff; color: var(--asa-accent);
+    font-size: 0.82rem; font-weight: 670; cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.asa-wo-cta:hover { background: var(--asa-accent); color: #fff; }
+.asa-wo-cta svg { width: 1rem; height: 1rem; }
+
+@keyframes asaWoPing {
+    0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--asa-accent) 45%, transparent); }
+    70%, 100% { box-shadow: 0 0 0 0.65rem transparent; }
+}
+
+@container (max-width: 300px) {
+    .asa-wo-step-label { font-size: 0.82rem; }
+}

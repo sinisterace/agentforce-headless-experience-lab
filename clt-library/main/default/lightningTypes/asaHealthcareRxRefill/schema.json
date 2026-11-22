@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Healthcare · Prescription Refill",
+  "description" : "Lets a customer pick which medications to refill and confirm a pickup pharmacy.",
+  "lightning:type" : "@apexClassType/c__AsaHealthcareRxRefillData"
+}

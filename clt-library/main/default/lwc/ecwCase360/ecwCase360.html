@@ -1,0 +1,102 @@
+<template>
+    <div class="ecw-c3">
+
+        <!-- Header lockup -->
+        <header class="ecw-c3-head">
+            <span class="ecw-c3-mono" aria-hidden="true">{monogram}</span>
+            <div class="ecw-c3-head-main">
+                <span class="ecw-c3-eyebrow">{eyebrow}</span>
+                <strong class="ecw-c3-subject">{subject}</strong>
+                <div class="ecw-c3-metaline">
+                    <span class="ecw-c3-status"><span class={statusDotClass}></span>{statusLabel}</span>
+                    <span class={priorityClass}>{priorityLabel}</span>
+                    <template if:true={hasAge}><span class="ecw-c3-age">{ageText}</span></template>
+                    <template if:true={hasSentiment}><span class={sentimentClass}>{sentimentLabel}</span></template>
+                </div>
+            </div>
+        </header>
+
+        <!-- Key facts: hairline-ruled spec grid -->
+        <template if:true={hasStrip}>
+            <div class="ecw-c3-strip">
+                <template for:each={strip} for:item="s">
+                    <div key={s.key} class="ecw-c3-cell">
+                        <span class="ecw-c3-cell-l">{s.label}</span>
+                        <span class="ecw-c3-cell-v">{s.value}<template if:true={s.hasSub}><span class="ecw-c3-cell-sub">{s.sub}</span></template></span>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <!-- Contact -->
+        <template if:true={hasContact}>
+            <div class="ecw-c3-contact">
+                <template if:true={hasContactName}><span class="ecw-c3-contact-name">{contactName}</span></template>
+                <template for:each={contactLines} for:item="l">
+                    <span key={l.key} class="ecw-c3-cline">
+                        <template if:true={l.isEmail}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5"/><path d="m4 7 8 5.5L20 7"/></svg></template>
+                        <template if:true={l.isPhone}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h3l2 5-2 1a12 12 0 0 0 5 5l1-2 5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 4 5a2 2 0 0 1 2-2Z"/></svg></template>
+                        {l.value}
+                    </span>
+                </template>
+            </div>
+        </template>
+
+        <!-- The ask -->
+        <template if:true={hasDescription}>
+            <p class="ecw-c3-lead">{description}</p>
+        </template>
+
+        <!-- Next step -->
+        <template if:true={hasNextAction}>
+            <div class="ecw-c3-nba">
+                <svg class="ecw-c3-nba-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4.5 13H11l-1 9 8.5-11H12l1-9z"/></svg>
+                <span class="ecw-c3-nba-body">
+                    <span class="ecw-c3-nba-label">Suggested next step</span>
+                    <span class="ecw-c3-nba-text">{nextAction}</span>
+                </span>
+            </div>
+        </template>
+
+        <!-- Activity -->
+        <template if:true={hasTimeline}>
+            <section class="ecw-c3-sect">
+                <span class="ecw-c3-sectlabel">Activity</span>
+                <ul class="ecw-c3-tl-list">
+                    <template for:each={timeline} for:item="t">
+                        <li key={t.key} class={t.itemClass}>
+                            <span class="ecw-c3-trail" aria-hidden="true"><span class={t.nodeClass}></span></span>
+                            <span class="ecw-c3-tlabel">{t.label}</span>
+                            <template if:true={t.hasTime}><span class="ecw-c3-ttime">{t.time}</span></template>
+                        </li>
+                    </template>
+                </ul>
+            </section>
+        </template>
+
+        <!-- Related -->
+        <template if:true={hasRelated}>
+            <section class="ecw-c3-sect">
+                <span class="ecw-c3-sectlabel">Also in your queue</span>
+                <ul class="ecw-c3-related-list">
+                    <template for:each={related} for:item="r">
+                        <li key={r.key} class={r.rowClass}>
+                            <button type="button" class="ecw-c3-related-head" data-key={r.key} onclick={toggleRelated}>
+                                <span class={r.tickClass} aria-hidden="true"></span>
+                                <span class="ecw-c3-related-subj">{r.subject}</span>
+                                <span class="ecw-c3-related-num">{r.caseNumber}</span>
+                                <svg class={r.caretClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m8 10 4 4 4-4"/></svg>
+                            </button>
+                            <template if:true={r.expanded}>
+                                <div class="ecw-c3-related-body">
+                                    <span>{r.account}</span>
+                                    <span class="ecw-c3-related-meta">{r.meta}</span>
+                                </div>
+                            </template>
+                        </li>
+                    </template>
+                </ul>
+            </section>
+        </template>
+    </div>
+</template>

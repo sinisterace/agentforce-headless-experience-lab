@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <actionCalls>
+        <name>Get_Data</name><label>Get Data</label>
+        <locationX>176</locationX><locationY>158</locationY>
+        <actionName>EcwKnownIssues</actionName><actionType>apex</actionType>
+        <connector><targetReference>Assign_To_Options</targetReference></connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters><name>details</name><value><elementReference>Details</elementReference></value></inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <assignments>
+        <name>Assign_To_Options</name><label>Assign To Options</label>
+        <locationX>176</locationX><locationY>278</locationY>
+        <assignmentItems><assignToReference>Options.ecwKnownIssuesJSON</assignToReference><operator>Assign</operator><value><elementReference>Get_Data.json</elementReference></value></assignmentItems>
+    </assignments>
+    <description>Agentforce Coworker · IT · Known issues</description>
+    <environments>Default</environments>
+    <interviewLabel>ecwKnownIssues {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Agentforce Coworker · IT · Known issues</label>
+    <processType>AutoLaunchedFlow</processType>
+    <start><locationX>176</locationX><locationY>48</locationY><connector><targetReference>Get_Data</targetReference></connector></start>
+    <status>Active</status>
+    <variables><name>Details</name><dataType>String</dataType><isCollection>false</isCollection><isInput>true</isInput><isOutput>false</isOutput></variables>
+    <variables><description>Show to the user</description><name>Options</name><apexClass>EcwKnownIssuesData</apexClass><dataType>Apex</dataType><isCollection>false</isCollection><isInput>false</isInput><isOutput>true</isOutput></variables>
+</Flow>

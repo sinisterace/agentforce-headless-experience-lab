@@ -1,0 +1,61 @@
+<template>
+    <div class="asa-iid-wrap">
+
+        <template if:true={title}>
+            <p class="asa-iid-eyebrow">{title}</p>
+        </template>
+
+        <div class="asa-iid-card">
+            <span class="asa-iid-sheen" aria-hidden="true"></span>
+
+            <div class="asa-iid-top">
+                <span class="asa-iid-carrier">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                    {carrier}
+                </span>
+                <template if:true={hasStatus}>
+                    <span class="asa-iid-status">{status}</span>
+                </template>
+            </div>
+
+            <template if:true={hasKind}>
+                <span class="asa-iid-kind">{kindLabel}</span>
+            </template>
+
+            <div class="asa-iid-grid">
+                <template for:each={fields} for:item="f">
+                    <div class="asa-iid-field" key={f.label}>
+                        <span class="asa-iid-flabel">{f.label}</span>
+                        <span class={f.valClass}>{f.value}</span>
+                    </div>
+                </template>
+            </div>
+
+            <template if:true={hasCoverages}>
+                <div class="asa-iid-cov">
+                    <template for:each={coverages} for:item="c">
+                        <span class="asa-iid-cov-chip" key={c.key}>
+                            {c.label}
+                            <template if:true={c.hasDetail}>
+                                <em class="asa-iid-cov-detail">{c.detail}</em>
+                            </template>
+                        </span>
+                    </template>
+                </div>
+            </template>
+        </div>
+
+        <div class="asa-iid-actions">
+            <button type="button" class="asa-iid-submit" onclick={handleSubmit}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+                {submitText}
+            </button>
+            <template if:true={hasSecondary}>
+                <button type="button" class="asa-iid-secondary" onclick={handleSecondary}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v3"></path><path d="M4 5v14a2 2 0 0 0 2 2h13a1 1 0 0 0 1-1v-3"></path><path d="M18 12a2 2 0 0 0 0 4h4v-4z"></path></svg>
+                    {secondaryText}
+                </button>
+            </template>
+        </div>
+    </div>
+</template>

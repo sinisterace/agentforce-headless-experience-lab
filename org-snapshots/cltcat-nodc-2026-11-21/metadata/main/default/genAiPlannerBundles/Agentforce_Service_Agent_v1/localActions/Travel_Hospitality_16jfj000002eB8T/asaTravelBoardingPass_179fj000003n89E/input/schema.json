@@ -1,0 +1,15 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full digital boarding pass payload as a JSON string, formatted EXACTLY like this: {\"title\":\"Boarding pass\",\"airline\":\"Aero Air\",\"passenger\":\"J. RIVERA\",\"from\":\"SFO\",\"fromCity\":\"San Francisco\",\"to\":\"JFK\",\"toCity\":\"New York\",\"flight\":\"AF128\",\"date\":\"Jul 12\",\"boardingTime\":\"10:05 AM\",\"departTime\":\"10:35 AM\",\"gate\":\"A12\",\"terminal\":\"2\",\"seat\":\"12A\",\"group\":\"B\",\"status\":\"Boarding\",\"submitText\":\"Add to wallet\",\"submitValue\":\"Add my boarding pass to my wallet\",\"secondaryText\":\"Email pass\"} Rules: - 'title' (string, optional): eyebrow above the pass. Defaults to 'Boarding pass'. - 'airline' (string, recommended): the airline / brand name shown at the top of the pass. - 'passenger' (string, optional): passenger name, shown in the times row (e.g. 'J. RIVERA'). - 'from' (string, recommended): origin airport code, e.g. 'SFO'. Shown large on the left of the route. - 'fromCity' (string, optional): origin city name shown under the origin code. - 'to' (string, recommended): destination airport code, e.g. 'JFK'. Shown large on the right of the route. - 'toCity' (string, optional): destination city name shown under the destination code. - 'flight' (string, recommended): flight number, e.g. 'AF128'. Shown bold on the stub. - 'date' (string, optional): travel date, e.g. 'Jul 12'. - 'boardingTime' (string, optional): boarding time, e.g. '10:05 AM'; labelled 'Boards'. - 'departTime' (string, optional): departure time, e.g. '10:35 AM'; labelled 'Departs'. - 'gate' (string, optional): departure gate, e.g. 'A12'. Shown bold on the stub. - 'terminal' (string, optional): departure terminal, e.g. '2'; part of the pass data. - 'seat' (string, optional): assigned seat, e.g. '12A'. Shown bold on the stub. - 'group' (string, optional): boarding group, e.g. 'B'. Shown bold on the stub. - 'status' (string, optional): e.g. 'Boarding' or 'On time'; rendered as a pill. - 'submitText' (string, optional): primary button label; defaults to 'Add to wallet'. - 'submitValue' (string, optional): the EXACT message sent back to the agent when the primary button is tapped; defaults to a sensible 'Add my boarding pass to my wallet' phrase. - 'secondaryText' (string, optional): a ghost secondary button label, e.g. 'Email pass'. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType",
+  "lightning:textIndexed" : true
+}

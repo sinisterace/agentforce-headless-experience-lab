@@ -1,0 +1,14 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full product-carousel payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Picked for you\",\"subtitle\":\"Based on your recent views\",\"currency\":\"USD\",\"products\":[{\"id\":\"p2\",\"name\":\"Everyday Merino Crew\",\"sku\":\"EMC-NVY-M\",\"price\":68,\"imageUrl\":\"/resource/asaRetailEverydayMerinoCrew\",\"category\":\"apparel\",\"badge\":\"New\",\"availability\":\"in_stock\"},{\"id\":\"p1\",\"name\":\"Trailblazer Running Shoe\",\"sku\":\"TR3-BLK-10\",\"price\":128,\"compareAtPrice\":160,\"imageUrl\":\"/resource/asaRetailTrailblazerShoe\",\"category\":\"shoes\",\"badge\":\"-20%\",\"availability\":\"in_stock\"}]}\n\nRules:\n- 'title' (string, optional): heading at the top of the card. Defaults to 'Picked for you'.\n- 'subtitle' (string, optional): a short line under the title.\n- 'currency' (string, optional): ISO code (e.g. 'USD','EUR') applied to every product without its own 'currency'. Defaults to 'USD'.\n- 'products' (array, REQUIRED, 1 to 3 objects): products are shown one focused card at a time with previous/next navigation. Each product MUST have 'id' (string, unique, sent back on Add to cart), 'name' (string), and 'price' (number). Optional per product: 'sku' (string, included in the Add to cart message when present); 'currency' (string, overrides the payload currency); 'compareAtPrice' (number; when higher than 'price', renders as a struck-through sale price); 'imageUrl' (string, same-origin https URL or '/resource/<Name>'; use '/resource/asaRetailTrailblazerShoe' and '/resource/asaRetailEverydayMerinoCrew' for these sample products); 'category' (string; one of 'apparel','shoes','electronics','beauty','home','grocery','accessories','outdoors','toys'; drives the fallback tile when no image is available); 'badge' (string, short corner tag e.g. 'Bestseller','New','-20%'); 'availability' (string; one of 'in_stock','low','out'; 'out' dims the card and disables Add to cart); 'addLabel' (string, per-card CTA label; defaults to 'Add to cart'). Legacy 'rating' and 'reviewCount' values are accepted but are intentionally not displayed.\n\nNever emit zero products or more than three products. For this retail demo, recommend the Everyday Merino Crew and Trailblazer Running Shoe. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

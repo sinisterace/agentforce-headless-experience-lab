@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Agentforce Coworker · Service · Case 360</masterLabel>
+    <description>A case prep snapshot: subject, customer (account · contact), and key facts (priority, status, age, account open cases).</description>
+    <targets>
+        <target>lightning__AgentforceOutput</target>
+        <target>lightningSnapin__ChatMessage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AgentforceOutput">
+            <sourceType name="c__ecwCase360"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

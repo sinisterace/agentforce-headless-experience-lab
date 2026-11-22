@@ -1,0 +1,90 @@
+<template>
+    <div class="clt-live-preview legal-consult-container">
+
+        <template if:true={title}>
+            <h3 class="selector-title">{title}</h3>
+        </template>
+        <template if:true={subtitle}>
+            <p class="asa-card-sub">{subtitle}</p>
+        </template>
+
+        <template if:true={attorneyName}>
+            <div class="asa-lcs-hero">
+                <span class="asa-lcs-hero-photo">
+                    <template if:true={photoSrc}>
+                        <img src={photoSrc} alt="" />
+                    </template>
+                    <template if:false={photoSrc}>
+                        <span class="asa-lcs-hero-initials">{initials}</span>
+                    </template>
+                </span>
+                <span class="asa-lcs-hero-body">
+                    <span class="asa-lcs-hero-name">{attorneyName}</span>
+                    <template if:true={attorneyTitle}>
+                        <span class="asa-lcs-hero-title">{attorneyTitle}</span>
+                    </template>
+                    <span class="asa-lcs-hero-badge">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h5"></path><path d="M17.5 17.5 16 16.3V14"></path><circle cx="16" cy="16" r="6"></circle></svg>
+                        Free 30-min consult
+                    </span>
+                </span>
+            </div>
+        </template>
+
+        <template if:true={hasModes}>
+            <div class="asa-lcs-modes" role="tablist" aria-label="Consultation type">
+                <template for:each={modesView} for:item="m">
+                    <button type="button" role="tab" key={m.id} class={m.cssClass} aria-selected={m.selected} data-id={m.id} onclick={handleModeClick}>
+                        <template if:true={m.iconMap}>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        </template>
+                        <template if:true={m.iconPhone}>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                        </template>
+                        <template if:true={m.iconVideo}>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 8-6 4 6 4V8Z"></path><rect width="14" height="12" x="2" y="6" rx="2" ry="2"></rect></svg>
+                        </template>
+                        <template if:true={m.iconCal}>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h5"></path><path d="M17.5 17.5 16 16.3V14"></path><circle cx="16" cy="16" r="6"></circle></svg>
+                        </template>
+                        <span>{m.label}</span>
+                    </button>
+                </template>
+            </div>
+        </template>
+
+        <span class="asa-lcs-eyebrow">Select a day</span>
+        <div class="asa-lcs-days" role="tablist" aria-label="Choose a day">
+            <template for:each={daysView} for:item="d">
+                <button type="button" role="tab" key={d.key} class={d.cssClass} aria-selected={d.selected} data-index={d.index} onclick={handleDayClick}>
+                    <span class="asa-lcs-day-wd">{d.label}</span>
+                    <template if:true={d.hasSublabel}>
+                        <span class="asa-lcs-day-num">{d.sublabel}</span>
+                    </template>
+                </button>
+            </template>
+        </div>
+
+        <span class="asa-lcs-eyebrow">Choose a time</span>
+        <div class="asa-lcs-slots">
+            <template for:each={activeSlotsView} for:item="s">
+                <button type="button" key={s.key} class={s.cssClass} disabled={s.disabled} aria-pressed={s.selected} data-id={s.id} onclick={handleSlotClick}>
+                    {s.label}
+                </button>
+            </template>
+        </div>
+
+        <template if:true={note}>
+            <p class="asa-lcs-note">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                {note}
+            </p>
+        </template>
+
+        <template if:true={hasSelectedSlot}>
+            <div class="submit-container">
+                <button type="button" class="asa-lcs-submit" onclick={handleSubmit}>{submitText}</button>
+            </div>
+        </template>
+    </div>
+</template>

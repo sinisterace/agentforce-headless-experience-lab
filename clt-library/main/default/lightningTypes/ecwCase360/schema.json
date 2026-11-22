@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · Service · Case 360",
+  "description" : "A case prep snapshot: subject, customer (account · contact), and key facts (priority, status, age, account open cases).",
+  "lightning:type" : "@apexClassType/c__EcwCase360Data"
+}

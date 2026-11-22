@@ -1,0 +1,51 @@
+<template>
+    <div class="asa-card">
+
+        <div class="asa-wo-head">
+            <div class="asa-wo-head-main">
+                <h3 class="selector-title">{title}</h3>
+                <template if:true={hasProduct}>
+                    <p class="asa-wo-product">{product}</p>
+                </template>
+            </div>
+            <template if:true={hasPriority}>
+                <span class={priorityClass}>{priorityLabel}</span>
+            </template>
+        </div>
+
+        <ol class="asa-wo-track">
+            <template for:each={milestones} for:item="m">
+                <li key={m.key} class={m.itemClass}>
+                    <span class="asa-wo-node" aria-hidden="true">
+                        <template if:true={m.isDone}>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+                        </template>
+                    </span>
+                    <span class="asa-wo-step-text">
+                        <span class="asa-wo-step-label">{m.label}</span>
+                        <template if:true={m.hasMeta}>
+                            <span class="asa-wo-step-meta">{m.meta}</span>
+                        </template>
+                    </span>
+                </li>
+            </template>
+        </ol>
+
+        <template if:true={hasEta}>
+            <div class="asa-wo-eta">
+                <svg class="asa-wo-eta-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1" y="3" width="15" height="13" rx="1"></rect><path d="M16 8h4l3 3v5h-7z"></path><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                <span class="asa-wo-eta-text">{etaText}</span>
+                <template if:true={hasUpdated}>
+                    <span class="asa-wo-updated">{updatedText}</span>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={hasSubmit}>
+            <button type="button" class="asa-wo-cta" onclick={handleSubmit}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                {submitText}
+            </button>
+        </template>
+    </div>
+</template>

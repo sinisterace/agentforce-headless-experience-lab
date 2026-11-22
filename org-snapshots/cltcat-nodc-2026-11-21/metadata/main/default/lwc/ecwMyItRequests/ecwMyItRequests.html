@@ -1,0 +1,50 @@
+<template>
+    <div class="ecw-ir">
+
+        <!-- Hero: open-request count -->
+        <div class="ecw-ir-hero">
+            <span class="ecw-ir-hero-label">My IT requests</span>
+            <div class="ecw-ir-hero-row">
+                <strong class="ecw-ir-hero-val">{count}</strong>
+                <span class="ecw-ir-hero-unit">{countUnit}</span>
+            </div>
+            <template if:true={headline}><span class="ecw-ir-hero-meta">{headline}</span></template>
+        </div>
+
+        <!-- Request rows -->
+        <template if:true={hasRequests}>
+            <ul class="ecw-ir-list">
+                <template for:each={requests} for:item="r">
+                    <li key={r.key} class="ecw-ir-row">
+                        <div class="ecw-ir-top">
+                            <span class={r.typeClass}>
+                                <template if:true={r.isHardware}><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M2 20h20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></template>
+                                <template if:true={r.isAccess}><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="10" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11 12l9 9m-3 0 2-2m-4-2 2-2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></template>
+                                <template if:true={r.isSoftware}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 21 8v8l-9 5-9-5V8z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></template>
+                                <template if:true={r.isOther}><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></template>
+                                {r.type}
+                            </span>
+                            <span class="ecw-ir-title">{r.title}</span>
+                            <template if:true={r.id}><span class="ecw-ir-id">{r.id}</span></template>
+                        </div>
+
+                        <div class="ecw-ir-stepper">
+                            <template for:each={r.steps} for:item="s">
+                                <div key={s.key} class="ecw-ir-step">
+                                    <template if:true={s.showConn}><span class={s.connClass}></span></template>
+                                    <span class={s.nodeClass}></span>
+                                    <span class="ecw-ir-steplabel">{s.label}</span>
+                                </div>
+                            </template>
+                        </div>
+
+                        <div class="ecw-ir-foot">
+                            <span class={r.currentClass}>{r.currentText}</span>
+                            <template if:true={r.hasDetail}><span class="ecw-ir-detail">{r.detail}</span></template>
+                        </div>
+                    </li>
+                </template>
+            </ul>
+        </template>
+    </div>
+</template>

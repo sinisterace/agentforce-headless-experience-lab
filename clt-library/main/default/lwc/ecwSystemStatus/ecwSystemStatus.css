@@ -1,0 +1,91 @@
+/* Agentforce Coworker · IT · System status — adopts the ASA Energy & Utilities
+   design language (warm-stone neutrals + amber accent, squared 6px geometry,
+   hairline rows, flat baselines, monospace tabular numerals — NOT rounded chip
+   cards, no gradient-fill headers or sheens). Composition mirrors asaEnergyUsageCost:
+   a projected-readout hero (30-day uptime), a status-mix meter, a real SVG vertical
+   column chart of per-service uptime on a labeled flat baseline, and a hairline
+   legend of services with exact uptime + any incident note. rem units + inherited
+   font so the card matches the host chat theme in ECv2. */
+:host {
+    --ss-accent: #d97706;
+    --ss-line: #e7e5e4;
+    --ss-ink: #1c1917;
+    --ss-muted: #78716c;
+    --ss-panel: #faf7f2;
+    --ss-good: #15803d;
+    --ss-warn: #b45309;
+    --ss-bad: #b91c1c;
+    display: block;
+}
+
+.ecw-ss {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--ss-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.ecw-ss *, .ecw-ss *::before, .ecw-ss *::after { box-sizing: border-box; }
+
+/* Head */
+.ecw-ss-head { display: flex; flex-direction: column; align-items: flex-start; gap: 0.12rem; margin-bottom: 0.65rem; }
+.ecw-ss-title { font-size: 1.12rem; font-weight: 700; letter-spacing: -0.02em; margin: 0; overflow-wrap: break-word; word-break: normal; }
+.ecw-ss-cycle { font-size: 0.62rem; font-weight: 650; color: var(--ss-muted); overflow-wrap: break-word; }
+
+/* Hero readout — 30-day uptime + status chip */
+.ecw-ss-projbar { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 0.4rem 0.6rem; padding: 0.7rem 0.75rem; border-radius: 6px; background: var(--ss-panel); }
+.ecw-ss-proj { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; flex: 1 1 8rem; }
+.ecw-ss-proj-eyebrow { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ss-muted); }
+.ecw-ss-proj-value { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1.62rem; font-weight: 750; line-height: 1.05; letter-spacing: -0.02em; color: var(--ss-ink); font-variant-numeric: tabular-nums; }
+.ecw-ss-used { font-size: 0.66rem; font-weight: 600; color: var(--ss-muted); margin-top: 0.12rem; }
+.ecw-ss-chip { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.64rem; font-weight: 750; padding: 0.2rem 0.45rem; border-radius: 4px; white-space: nowrap; }
+.ecw-ss-chip.is-operational { color: var(--ss-good); background: color-mix(in srgb, var(--ss-good) 12%, #fff); }
+.ecw-ss-chip.is-degraded { color: var(--ss-warn); background: color-mix(in srgb, var(--ss-warn) 13%, #fff); }
+.ecw-ss-chip.is-down { color: var(--ss-bad); background: color-mix(in srgb, var(--ss-bad) 12%, #fff); }
+.ecw-ss-chip-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; flex-shrink: 0; background: currentColor; }
+.ecw-ss-chip.is-degraded .ecw-ss-chip-dot, .ecw-ss-chip.is-down .ecw-ss-chip-dot { animation: ss-pulse 1.6s ease-in-out infinite; }
+@keyframes ss-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+@media (prefers-reduced-motion: reduce) { .ecw-ss-chip-dot { animation: none; } }
+
+/* Status-mix meter — quick health glance */
+.ecw-ss-mix-wrap { margin-top: 0.6rem; }
+.ecw-ss-mix { display: flex; width: 100%; height: 0.5rem; border-radius: 3px; overflow: hidden; background: #f1efec; }
+.ecw-ss-mix-seg { height: 100%; }
+.ecw-ss-mix-seg + .ecw-ss-mix-seg { border-left: 1.5px solid #fff; }
+.ecw-ss-mix-seg.is-operational { background: var(--ss-good); }
+.ecw-ss-mix-seg.is-degraded { background: var(--ss-warn); }
+.ecw-ss-mix-seg.is-down { background: var(--ss-bad); }
+.ecw-ss-mix-cap { margin-top: 0.3rem; font-size: 0.6rem; font-weight: 650; color: var(--ss-muted); font-variant-numeric: tabular-nums; }
+
+/* SVG column chart — per-service uptime on a flat baseline */
+.ecw-ss-chart-wrap { margin-top: 0.75rem; border: 1px solid var(--ss-line); border-radius: 6px; background: #fff; padding: 0.5rem 0.55rem 0.35rem; }
+.ecw-ss-chart-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.3rem; }
+.ecw-ss-chart-title { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ss-muted); }
+.ecw-ss-chart-axis { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.56rem; font-weight: 650; color: var(--ss-muted); font-variant-numeric: tabular-nums; }
+.ecw-ss-chart { display: block; width: 100%; height: auto; overflow: visible; }
+.ecw-ss-grid { stroke: var(--ss-line); stroke-width: 1; stroke-dasharray: 2 3; }
+.ecw-ss-baseline { stroke: #d6d3d1; stroke-width: 1.5; }
+.ecw-ss-bar { rx: 1.5; }
+.ecw-ss-bar.is-operational { fill: var(--ss-good); }
+.ecw-ss-bar.is-degraded { fill: var(--ss-warn); }
+.ecw-ss-bar.is-down { fill: var(--ss-bad); }
+.ecw-ss-bar-label { fill: var(--ss-muted); font-size: 7.5px; font-weight: 700; letter-spacing: 0.02em; }
+.ecw-ss-bar-val { fill: var(--ss-ink); font-size: 7px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* Legend — per-service hairline rows with exact uptime + note */
+.ecw-ss-legend { list-style: none; margin: 0.6rem 0 0; padding: 0; }
+.ecw-ss-leg { display: grid; grid-template-columns: 0.62rem 1fr auto; align-items: baseline; gap: 0.45rem; padding: 0.4rem 0; border-top: 1px solid var(--ss-line); }
+.ecw-ss-leg:first-child { border-top: 0; }
+.ecw-ss-leg-dot { width: 0.62rem; height: 0.62rem; border-radius: 2px; align-self: center; flex-shrink: 0; }
+.ecw-ss-leg-dot.is-operational { background: var(--ss-good); }
+.ecw-ss-leg-dot.is-degraded { background: var(--ss-warn); }
+.ecw-ss-leg-dot.is-down { background: var(--ss-bad); }
+.ecw-ss-leg-main { min-width: 0; display: flex; flex-direction: column; gap: 0.1rem; }
+.ecw-ss-leg-label { font-size: 0.74rem; font-weight: 600; color: var(--ss-ink); overflow-wrap: break-word; }
+.ecw-ss-leg-note { font-size: 0.64rem; line-height: 1.35; color: var(--ss-warn); }
+.ecw-ss-leg-amt { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.74rem; font-weight: 700; color: var(--ss-ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
+
+@container (max-width: 300px) {
+    .ecw-ss-proj-value { font-size: 1.42rem; }
+    .ecw-ss-bar-val { display: none; }
+}

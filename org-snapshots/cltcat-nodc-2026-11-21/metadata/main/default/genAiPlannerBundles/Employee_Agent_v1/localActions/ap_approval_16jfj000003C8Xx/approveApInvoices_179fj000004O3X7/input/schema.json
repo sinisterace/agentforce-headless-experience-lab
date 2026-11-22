@@ -1,0 +1,14 @@
+{
+  "required" : [ "selection" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "selection" : {
+      "title" : "selection",
+      "description" : "The invoices/POs the user chose to approve or hold.",
+      "lightning:type" : "c__ecwApApprovalsInput",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : true
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlannerBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Deliver personalized customer interactions with an autonomous AI agent. Agentforce Service Agent intelligently supports your customers with common inquiries and escalates complex issues.</description>
+    <localTopicLinks>
+        <genAiPluginName>CaseManagement_16jgL000002IPJl</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>CustomerVerification_16jgL000002IPJl</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>EscalationWithFeedback_16jgL000002IPJl</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>FeedbackManager_16jgL000002IPJl</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>GeneralFAQ_16jgL000002IPJl</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>OffTopic_16jgL000002IPJl</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>agent_router_16jgL000002IPJl</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>ambiguous_question_16jgL000002IPJl</genAiPluginName>
+    </localTopicLinks>
+    <localTopics>
+        <fullName>ambiguous_question_16jgL000002IPJl</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Redirect conversation to relevant topics when user request is too ambiguous</description>
+        <developerName>ambiguous_question_16jgL000002IPJl</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.</description>
+            <developerName>instruction0_179gL000002fxke</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gL000002fxke</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>ambiguous_question</localDeveloperName>
+        <masterLabel>Ambiguous Question</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>CaseManagement_16jgL000002IPJl</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Handles customer inquiries and actions related to support cases, including providing case information, updating existing cases, and creating new cases.</description>
+        <developerName>CaseManagement_16jgL000002IPJl</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.</description>
+            <developerName>instruction0_179gL000002fxkd</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gL000002fxkd</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>AddCaseComment_179gL000002fxkd</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>GetCasesForVerifiedContact_179gL000002fxkd</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>CreateCaseEnhancedData_179gL000002fxkd</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>GetCaseByVerifiedCaseNumber_179gL000002fxkd</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>AnswerQuestionsWithKnowledge_179gL000002fxkd</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>GetCaseByVerifiedCaseNumber_179gL000002fxkd</fullName>
+            <description>Returns a case associated with a given contact ID and case number.</description>
+            <developerName>GetCaseByVerifiedCaseNumber_179gL000002fxkd</developerName>
+            <invocationTarget>SvcCopilotTmpl__GetCaseByVrfyCaseNbr</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>GetCaseByVerifiedCaseNumber</localDeveloperName>
+            <masterLabel>Get Case By Verified Case Number</masterLabel>
+            <source>SvcCopilotTmpl__GetCaseByVerifiedCaseNumber</source>
+        </localActions>
+        <localActions>
+            <fullName>AnswerQuestionsWithKnowledge_179gL000002fxkd</fullName>
+            <description>Answers questions about company policies and procedures, troubleshooting steps, or product information. For example: &apos;What is your return policy?&apos; &apos;How do I fix an issue?&apos; or &apos;What features does a product have?&apos;</description>
+            <developerName>AnswerQuestionsWithKnowledge_179gL000002fxkd</developerName>
+            <invocationTarget>streamKnowledgeSearch</invocationTarget>
+            <invocationTargetType>standardInvocableAction</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>AnswerQuestionsWithKnowledge</localDeveloperName>
+            <masterLabel>Answer Questions with Knowledge</masterLabel>
+            <progressIndicatorMessage>Getting answers</progressIndicatorMessage>
+            <source>EmployeeCopilot__AnswerQuestionsWithKnowledge</source>
+        </localActions>
+        <localActions>
+            <fullName>GetCasesForVerifiedContact_179gL000002fxkd</fullName>
+            <description>Returns a list of cases related to a given Contact ID.</description>
+            <developerName>GetCasesForVerifiedContact_179gL000002fxkd</developerName>
+            <invocationTarget>SvcCopilotTmpl__GetCasesVrfyCtct</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>GetCasesForVerifiedContact</localDeveloperName>
+            <masterLabel>Get Cases For Verified Contact</masterLabel>
+            <source>SvcCopilotTmpl__GetCasesForVerifiedContact</source>
+        </localActions>
+        <localActions>
+            <fullName>CreateCaseEnhancedData_179gL000002fxkd</fullName>
+            <description>Create a case for the customer that&apos;s transferred from the AI agent to a service rep. The case includes all information gathered from the customer, a summary of the progress made by the AI agent, a link to the conversation, and any attachments.</description>
+            <developerName>CreateCaseEnhancedData_179gL000002fxkd</developerName>
+            <invocationTarget>SvcCopilotTmpl__CreateCaseEnhancedData</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>true</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>CreateCaseEnhancedData</localDeveloperName>
+            <masterLabel>Create Case with Enhanced Data</masterLabel>
+            <source>SvcCopilotTmpl__CreateCaseEnhancedData</source>
+        </localActions>
+        <localActions>
+            <fullName>AddCaseComment_179gL000002fxkd</fullName>
+            <description>Let a customer add a comment to an existing case.</description>
+            <developerName>AddCaseComment_179gL000002fxkd</developerName>
+            <invocationTarget>SvcCopilotTmpl__AddCaseComment</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>true</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>AddCaseComment</localDeveloperName>
+            <masterLabel>Add Case Comment</masterLabel>
+            <source>SvcCopilotTmpl__AddCaseComment</source>
+        </localActions>
+        <localDeveloperName>CaseManagement</localDeveloperName>
+        <masterLabel>Case Management</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>FeedbackManager_16jgL000002IPJl</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Captures the user&apos;s feedback indicating if their issue was resolved. Use this subagent only when the user explicitly asks to give, leave, share, or submit feedback or a rating, or when a feedback prompt (&quot;Are you happy with the conversation so far?&quot; or &quot;Was this helpful?&quot;) is pending and the user is responding to it. Do not use this subagent for a standalone acknowledgement (such as &quot;yes,&quot; &quot;no,&quot; &quot;ok,&quot; &quot;sure,&quot; a thumbs up, or a thumbs down) when no feedback prompt is pending.</description>
+        <developerName>FeedbackManager_16jgL000002IPJl</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.</description>
+            <developerName>instruction0_179gL000002fxkc</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gL000002fxkc</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>SubmitConversationFeedback_179gL000002fxkc</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>SubmitConversationFeedback_179gL000002fxkc</fullName>
+            <description>Records the user&apos;s feedback about whether their issue was resolved and returns a success or failure status.</description>
+            <developerName>SubmitConversationFeedback_179gL000002fxkc</developerName>
+            <invocationTarget>sendConversationFeedback</invocationTarget>
+            <invocationTargetType>standardInvocableAction</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>SubmitConversationFeedback</localDeveloperName>
+            <masterLabel>Submit Conversation Feedback</masterLabel>
+            <progressIndicatorMessage>Submitting your feedback…</progressIndicatorMessage>
+            <source>SSConversationFeedback__SubmitConversationFeedback</source>
+        </localActions>
+        <localDeveloperName>FeedbackManager</localDeveloperName>
+        <masterLabel>Feedback Manager</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>OffTopic_16jgL000002IPJl</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Redirect conversation to relevant topics when user request goes off-topic</description>
+        <developerName>OffTopic_16jgL000002IPJl</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.</description>
+            <developerName>instruction0_179gL000002fxkb</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gL000002fxkb</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>OffTopic</localDeveloperName>
+        <masterLabel>Off Topic</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>EscalationWithFeedback_16jgL000002IPJl</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Connect users with a rep and collect feedback about the AI agent experience before escalating.</description>
+        <developerName>EscalationWithFeedback_16jgL000002IPJl</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.</description>
+            <developerName>instruction0_179gL000002fxka</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gL000002fxka</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>SubmitConversationFeedback_179gL000002fxka</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>SubmitConversationFeedback_179gL000002fxka</fullName>
+            <description>Records the user&apos;s feedback about whether their issue was resolved and returns a success or failure status.</description>
+            <developerName>SubmitConversationFeedback_179gL000002fxka</developerName>
+            <invocationTarget>sendConversationFeedback</invocationTarget>
+            <invocationTargetType>standardInvocableAction</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>SubmitConversationFeedback</localDeveloperName>
+            <masterLabel>Submit Conversation Feedback</masterLabel>
+            <progressIndicatorMessage>Submitting your feedback…</progressIndicatorMessage>
+            <source>SSConversationFeedback__SubmitConversationFeedback</source>
+        </localActions>
+        <localDeveloperName>EscalationWithFeedback</localDeveloperName>
+        <masterLabel>Escalation with Feedback</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>GeneralFAQ_16jgL000002IPJl</fullName>
+        <canEscalate>false</canEscalate>
+        <description>This topic is for helping answer customer&apos;s questions by searching through the knowledge articles and providing information from those articles. The questions can be about the company and its products, policies or business procedures</description>
+        <developerName>GeneralFAQ_16jgL000002IPJl</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.</description>
+            <developerName>instruction0_179gL000002fxkZ</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gL000002fxkZ</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>AnswerQuestionsWithKnowledge_179gL000002fxkZ</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>AnswerQuestionsWithKnowledge_179gL000002fxkZ</fullName>
+            <description>Answers questions about company policies and procedures, troubleshooting steps, or product information. For example: &apos;What is your return policy?&apos; &apos;How do I fix an issue?&apos; or &apos;What features does a product have?&apos;</description>
+            <developerName>AnswerQuestionsWithKnowledge_179gL000002fxkZ</developerName>
+            <invocationTarget>streamKnowledgeSearch</invocationTarget>
+            <invocationTargetType>standardInvocableAction</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>AnswerQuestionsWithKnowledge</localDeveloperName>
+            <masterLabel>Answer Questions with Knowledge</masterLabel>
+            <progressIndicatorMessage>Getting answers</progressIndicatorMessage>
+            <source>EmployeeCopilot__AnswerQuestionsWithKnowledge</source>
+        </localActions>
+        <localDeveloperName>GeneralFAQ</localDeveloperName>
+        <masterLabel>General FAQ</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>CustomerVerification_16jgL000002IPJl</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Verifies the customer&apos;s identity before granting access to sensitive data. Verification is required for inquiries related to orders and order status, deliveries, reservations, password resets, account management (e.g. contact information updates), or cases. Sensitive data includes confidential, private, or security-protected information, such as business-critical data or personally identifiable information (PII).</description>
+        <developerName>CustomerVerification_16jgL000002IPJl</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.</description>
+            <developerName>instruction0_179gL000002fxkY</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gL000002fxkY</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>VerifyCustomer_179gL000002fxkY</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>SendEmailVerificationCode_179gL000002fxkY</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>SendEmailVerificationCode_179gL000002fxkY</fullName>
+            <description>Sends a generated verification code to the user&apos;s email address.</description>
+            <developerName>SendEmailVerificationCode_179gL000002fxkY</developerName>
+            <invocationTarget>SvcCopilotTmpl__SendVerificationCode</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>SendEmailVerificationCode</localDeveloperName>
+            <masterLabel>Send Email with Verification Code</masterLabel>
+            <source>SvcCopilotTmpl__SendEmailVerificationCode</source>
+        </localActions>
+        <localActions>
+            <fullName>VerifyCustomer_179gL000002fxkY</fullName>
+            <description>Verifies whether the verification code entered by the user matches the code sent to the user&apos;s email address.</description>
+            <developerName>VerifyCustomer_179gL000002fxkY</developerName>
+            <invocationTarget>SvcCopilotTmpl__VerifyCode</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>VerifyCustomer</localDeveloperName>
+            <masterLabel>Verify Customer</masterLabel>
+            <source>SvcCopilotTmpl__VerifyCustomer</source>
+        </localActions>
+        <localDeveloperName>CustomerVerification</localDeveloperName>
+        <masterLabel>Customer Verification</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>agent_router_16jgL000002IPJl</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Welcome the user and determine the appropriate subagent based on user input</description>
+        <developerName>agent_router_16jgL000002IPJl</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.
+
+{{state.AgentScriptInternal_agent_instructions}}</description>
+            <developerName>instruction0_179gL000002fxkX</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179gL000002fxkX</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>agent_router</localDeveloperName>
+        <masterLabel>Agent Router</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <masterLabel>Help Agent 1</masterLabel>
+    <plannerSurfaces>
+        <adaptiveResponseAllowed>true</adaptiveResponseAllowed>
+        <callRecordingAllowed>false</callRecordingAllowed>
+        <outboundRouteConfigs>
+            <escalationMessage>One moment, I&apos;m transferring our conversation to get you more help.</escalationMessage>
+            <outboundRouteName>Quick_Agentforce_Service_Agent_Outbound_Messaging_Flow</outboundRouteName>
+            <outboundRouteType>OmniChannelFlow</outboundRouteType>
+        </outboundRouteConfigs>
+        <surface>SurfaceAction__Messaging</surface>
+        <surfaceType>Messaging</surfaceType>
+    </plannerSurfaces>
+    <plannerSurfaces>
+        <adaptiveResponseAllowed>true</adaptiveResponseAllowed>
+        <callRecordingAllowed>false</callRecordingAllowed>
+        <outboundRouteConfigs>
+            <escalationMessage>One moment, I&apos;m transferring our conversation to get you more help.</escalationMessage>
+            <outboundRouteName>Quick_Agentforce_Service_Agent_Outbound_Messaging_Flow</outboundRouteName>
+            <outboundRouteType>OmniChannelFlow</outboundRouteType>
+        </outboundRouteConfigs>
+        <surface>SurfaceAction__CustomerWebClient</surface>
+        <surfaceType>CustomerWebClient</surfaceType>
+    </plannerSurfaces>
+    <plannerType>Atlas__ConcurrentMultiAgentOrchestration</plannerType>
+</GenAiPlannerBundle>

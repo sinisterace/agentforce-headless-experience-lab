@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AiAgentScorerDefinition xmlns="http://soap.sforce.com/2006/04/metadata">
+    <dataType>Text</dataType>
+    <inputScope>Session</inputScope>
+    <scorerType>Predefined</scorerType>
+    <scorerVersion>
+        <agentAssociation>
+            <agentApiName>Agentforce_Service_Agent</agentApiName>
+            <inputScope>Session</inputScope>
+            <isActive>false</isActive>
+            <samplingRate>1.0</samplingRate>
+        </agentAssociation>
+        <description>Shows the outcome of a billing session. A positive outcome indicates the customer was billed for this session and a negative one indicates the no billing for this session</description>
+        <engine>
+            <engineType>BillingResolution</engineType>
+        </engine>
+        <label>Resolutions Score</label>
+        <outputEnumValue>
+            <description>There weren&apos;t enough turns in this billing session to infer an outcome</description>
+            <isFallback>false</isFallback>
+            <isSystemFallback>false</isSystemFallback>
+            <outcomeType>NotApplicable</outcomeType>
+            <value>NOT_RESOLVED: ABANDONED</value>
+        </outputEnumValue>
+        <outputEnumValue>
+            <description>The End user issue wasn&apos;t resolved indicated by an explicit negative feedback</description>
+            <isFallback>false</isFallback>
+            <isSystemFallback>false</isSystemFallback>
+            <outcomeType>NotApplicable</outcomeType>
+            <value>NOT_RESOLVED: NEGATIVE_FEEDBACK</value>
+        </outputEnumValue>
+        <outputEnumValue>
+            <description>The End user issue wasn&apos;t resolved indicated by an escalation</description>
+            <isFallback>false</isFallback>
+            <isSystemFallback>false</isSystemFallback>
+            <outcomeType>NotApplicable</outcomeType>
+            <value>NOT_RESOLVED: ESCALATION</value>
+        </outputEnumValue>
+        <outputEnumValue>
+            <description>The end-user issue was resolved, indicated by the absence of an escalation</description>
+            <isFallback>false</isFallback>
+            <isSystemFallback>false</isSystemFallback>
+            <outcomeType>NotApplicable</outcomeType>
+            <value>RESOLVED: NO_ESCALATION</value>
+        </outputEnumValue>
+        <outputEnumValue>
+            <description>The end-user issue was resolved, indicated by positive feedback.</description>
+            <isFallback>false</isFallback>
+            <isSystemFallback>false</isSystemFallback>
+            <outcomeType>NotApplicable</outcomeType>
+            <value>RESOLVED: POSITIVE_FEEDBACK</value>
+        </outputEnumValue>
+        <outputEnumValue>
+            <isFallback>true</isFallback>
+            <isSystemFallback>false</isSystemFallback>
+            <outcomeType>NotApplicable</outcomeType>
+            <value>NONE</value>
+        </outputEnumValue>
+        <status>Available</status>
+        <versionNumber>1</versionNumber>
+    </scorerVersion>
+    <semanticType>Dimension</semanticType>
+</AiAgentScorerDefinition>

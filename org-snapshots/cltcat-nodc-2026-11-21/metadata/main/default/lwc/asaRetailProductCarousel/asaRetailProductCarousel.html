@@ -1,0 +1,84 @@
+<template>
+    <div class="asa-card">
+        <div class="asa-pc-intro">
+            <div>
+                <template if:true={title}>
+                    <h3 class="selector-title">{title}</h3>
+                </template>
+                <template if:true={hasSubtitle}>
+                    <p class="asa-card-sub">{subtitle}</p>
+                </template>
+            </div>
+        </div>
+
+        <div class="asa-pc-stage" aria-live="polite">
+            <template for:each={visibleProducts} for:item="p">
+                <article key={p.id} class={p.cardClass} role="listitem">
+                    <div class="asa-pc-media" style={p.mediaStyle}>
+                        <template if:true={p.hasBadge}>
+                            <span class="asa-pc-badge">{p.badge}</span>
+                        </template>
+                        <template if:true={p.hasImage}>
+                            <img class={p.photoClass} src={p.imageUrl} alt={p.name} />
+                        </template>
+                        <template if:false={p.hasImage}>
+                            <span class="asa-pc-glyph" aria-hidden="true">
+                                <template if:true={p.isApparel}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"></path></svg></template>
+                                <template if:true={p.isShoes}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"></path><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"></path><path d="M16 17h4"></path><path d="M4 13h4"></path></svg></template>
+                                <template if:true={p.isElectronics}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"></rect><path d="M12 18h.01"></path></svg></template>
+                                <template if:true={p.isBeauty}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path><path d="M20 3v4"></path><path d="M22 5h-4"></path><path d="M4 17v2"></path><path d="M5 18H3"></path></svg></template>
+                                <template if:true={p.isHome}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></template>
+                                <template if:true={p.isGrocery}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 11 4-7"></path><path d="m19 11-4-7"></path><path d="M2 11h20"></path><path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.7-7.4"></path><path d="m9 11 1 9"></path><path d="m15 11-1 9"></path></svg></template>
+                                <template if:true={p.isAccessories}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="6"></circle><polyline points="12 10 12 12 13 13"></polyline><path d="m16.13 7.66-.81-4.05a2 2 0 0 0-2-1.61h-2.68a2 2 0 0 0-2 1.61l-.78 4.05"></path><path d="m7.88 16.36.8 4a2 2 0 0 0 2 1.61h2.72a2 2 0 0 0 2-1.61l.81-4.05"></path></svg></template>
+                                <template if:true={p.isOutdoors}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m8 3 4 8 5-5 5 15H2L8 3z"></path></svg></template>
+                                <template if:true={p.isToys}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="12" x="3" y="8" rx="1"></rect><path d="M10 8V5c0-.6-.4-1-1-1H6a1 1 0 0 0-1 1v3"></path><path d="M19 8V5c0-.6-.4-1-1-1h-3a1 1 0 0 0-1 1v3"></path></svg></template>
+                                <template if:true={p.isGeneral}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"></path><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg></template>
+                            </span>
+                        </template>
+                        <template if:true={p.isOut}>
+                            <span class="asa-pc-veil">Sold out</span>
+                        </template>
+                    </div>
+                    <div class="asa-pc-body">
+                        <span class="asa-pc-name" title={p.name}>{p.name}</span>
+                        <div class="asa-pc-pricerow">
+                            <span class="asa-pc-price">{p.priceText}</span>
+                            <template if:true={p.onSale}>
+                                <span class="asa-pc-was">{p.wasText}</span>
+                            </template>
+                        </div>
+                        <button
+                            type="button"
+                            class={p.addClass}
+                            data-id={p.id}
+                            disabled={p.addDisabled}
+                            onclick={handleAdd}>
+                            <template if:true={p.isAdded}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </template>
+                            <template if:false={p.isAdded}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"></circle><circle cx="19" cy="21" r="1"></circle><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"></path></svg>
+                            </template>
+                            <span>{p.addLabel}</span>
+                        </button>
+                    </div>
+                </article>
+            </template>
+        </div>
+        <template if:true={hasMultipleProducts}>
+            <div class="asa-pc-nav" aria-label="Choose product">
+                <button type="button" class="asa-pc-arrow" disabled={previousDisabled} aria-label="Previous product" onclick={handlePrevious}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"></path></svg>
+                </button>
+                <div class="asa-pc-dots">
+                    <template for:each={navDots} for:item="dot">
+                        <button key={dot.id} type="button" class={dot.dotClass} data-index={dot.index} aria-label={dot.label} aria-current={dot.ariaCurrent} onclick={handleDot}></button>
+                    </template>
+                </div>
+                <button type="button" class="asa-pc-arrow" disabled={nextDisabled} aria-label="Next product" onclick={handleNext}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"></path></svg>
+                </button>
+            </div>
+        </template>
+    </div>
+</template>

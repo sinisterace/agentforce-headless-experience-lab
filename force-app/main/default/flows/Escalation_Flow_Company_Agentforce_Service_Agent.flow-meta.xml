@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Minimal Omni-Channel (RoutingFlow) escalation flow for the Company Agentforce Service Agent.
+  Filler route: looks up the Company ASA Escalation Queue and routes the messaging work to it.
+  Exists so the agent's Messaging connection can resolve a valid outbound route; escalation
+  isn't a core part of the FAQ experience. Shape mirrors the org's working routing flow.
+-->
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <actionCalls>
+        <name>Route_to_Queue</name>
+        <label>Route to Escalation Queue</label>
+        <locationX>176</locationX>
+        <locationY>350</locationY>
+        <actionName>routeWork</actionName>
+        <actionType>routeWork</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>recordId</name>
+            <value>
+                <elementReference>recordId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>serviceChannelLabel</name>
+            <value>
+                <stringValue>Messaging</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>serviceChannelDevName</name>
+            <value>
+                <stringValue>sfdc_livemessage</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>routingType</name>
+            <value>
+                <stringValue>QueueBased</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>serviceChannelId</name>
+            <value>
+                <setupReference>sfdc_livemessage</setupReference>
+                <setupReferenceType>ServiceChannel</setupReferenceType>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>queueId</name>
+            <value>
+                <elementReference>Lookup_Queue.Id</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>isQueueVariable</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <interviewLabel>Escalation Flow - Company Agentforce Service Agent {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Escalation Flow - Company Agentforce Service Agent</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>RoutingFlow</processType>
+    <recordLookups>
+        <name>Lookup_Queue</name>
+        <label>Lookup Escalation Queue</label>
+        <locationX>176</locationX>
+        <locationY>242</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Route_to_Queue</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>DeveloperName</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Company_ASA_Escalation_Queue</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Group</object>
+        <queriedFields>Id</queriedFields>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
+    <start>
+        <locationX>50</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Lookup_Queue</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>recordId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+</Flow>

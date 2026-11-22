@@ -1,0 +1,14 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full usage-and-cost payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Your energy this cycle\",\"cycleText\":\"Sep 1–30 · 8 days left\",\"projectedCost\":142.50,\"currency\":\"USD\",\"projectedText\":\"Projected bill\",\"usedUnits\":612,\"unit\":\"kWh\",\"deltaPct\":-8,\"deltaText\":\"less than last month\",\"bars\":[{\"label\":\"Wk1\",\"value\":158},{\"label\":\"Wk2\",\"value\":171},{\"label\":\"Wk3\",\"value\":149},{\"label\":\"Wk4\",\"value\":134}],\"breakdown\":[{\"label\":\"Heating & cooling\",\"amount\":74.20,\"color\":\"#d97706\"},{\"label\":\"Water heating\",\"amount\":31.00},{\"label\":\"Always-on\",\"amount\":22.40},{\"label\":\"Other\",\"amount\":14.90}],\"submitText\":\"See ways to save\",\"submitValue\":\"Show me ways to lower my energy bill\"}\n\nRules:\n- 'title' (string, optional): heading. Defaults to 'Your energy this cycle'.\n- 'cycleText' (string, optional): billing-cycle status line, e.g. 'Sep 1–30 · 8 days left'.\n- 'projectedCost' (number, optional): the projected bill amount; rendered large.\n- 'currency' (string, optional): ISO code, default USD.\n- 'projectedText' (string, optional): label above the projected cost, default 'Projected bill'.\n- 'usedUnits' (number, optional): energy consumed this cycle.\n- 'unit' (string, optional): unit of measure, default 'kWh'.\n- 'deltaPct' (number, optional): change vs last month as a percent — negative renders green ('down/less'), positive amber ('up/more').\n- 'deltaText' (string, optional): trailing words after the delta, e.g. 'less than last month'.\n- 'bars' (array, optional): usage columns, each { 'label' (string), 'value' (number) }. Rendered as a vertical bar chart (2–8 bars). Omit to hide the chart.\n- 'breakdown' (array, optional): cost drivers, each { 'label' (string, REQUIRED), 'amount' (number, REQUIRED), 'color' (optional hex) }. Rendered as a segmented meter + legend; colors auto-assign from a palette when absent.\n- 'submitText' (string, optional): action-button label, e.g. 'See ways to save'. Omit for no button.\n- 'submitValue' (string, optional): the message sent back when the button is tapped; defaults to the label.\n\nUse these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

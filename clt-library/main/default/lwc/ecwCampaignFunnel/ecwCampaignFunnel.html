@@ -1,0 +1,43 @@
+<template>
+    <div class="ecw-cf">
+        <!-- Hero -->
+        <div class="ecw-cf-hero">
+            <span class="ecw-cf-eyebrow">{title}</span>
+            <div class="ecw-cf-hero-row">
+                <strong class="ecw-cf-campaign">{campaign}</strong>
+                <template if:true={periodLabel}><span class="ecw-cf-period">{periodLabel}</span></template>
+            </div>
+            <template if:true={hasOutcome}><span class="ecw-cf-outcome">{outcome}</span></template>
+        </div>
+
+        <!-- Funnel: deepening bands joined by tapering flow connectors -->
+        <template if:true={hasStages}>
+            <ul class="ecw-cf-funnel">
+                <template for:each={stages} for:item="s">
+                    <li key={s.key} class={s.rowClass} data-key={s.key} tabindex="0"
+                        onmouseover={handleActivate} onfocus={handleActivate} onmouseout={handleReset} onblur={handleReset}>
+                        <div class="ecw-cf-rowtop">
+                            <span class="ecw-cf-label">{s.label}</span>
+                            <span class="ecw-cf-count">{s.countText}</span>
+                        </div>
+                        <div class={s.bandClass} style={s.bandStyle}></div>
+                        <template if:true={s.active}>
+                            <template if:true={s.hasDetail}>
+                                <div class="ecw-cf-detail">{s.detailText}</div>
+                            </template>
+                        </template>
+                        <template if:true={s.hasNext}>
+                            <div class="ecw-cf-conn">
+                                <div class="ecw-cf-taper" style={s.taperStyle}></div>
+                                <span class={s.convClass}>
+                                    <span class="ecw-cf-conv-val">{s.convText}</span>
+                                    <template if:true={s.isLeak}><span class="ecw-cf-leak">biggest drop</span></template>
+                                </span>
+                            </div>
+                        </template>
+                    </li>
+                </template>
+            </ul>
+        </template>
+    </div>
+</template>

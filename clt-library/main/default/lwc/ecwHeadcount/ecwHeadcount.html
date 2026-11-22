@@ -1,0 +1,68 @@
+<template>
+    <div class="ecw-hc">
+
+        <!-- Header: team icon + title + growth pill + sub-line -->
+        <div class="ecw-hc-head">
+            <span class="ecw-hc-ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+            </span>
+            <div class="ecw-hc-head-body">
+                <div class="ecw-hc-head-top">
+                    <h3 class="ecw-hc-title">{eyebrow}</h3>
+                    <template if:true={growthText}><span class={pillClass}>{growthText}</span></template>
+                </div>
+                <p class="ecw-hc-sub">
+                    <span><b>{deptCountText}</b> departments</span>
+                    <template if:true={hasOpenRoles}>
+                        <span class="ecw-hc-sub-dot" aria-hidden="true">·</span>
+                        <span><b>{openRolesValue}</b> open roles</span>
+                    </template>
+                </p>
+            </div>
+        </div>
+
+        <!-- Department ledger -->
+        <template if:true={hasDepts}>
+            <span class="ecw-hc-sec">Headcount by department</span>
+            <div class="ecw-hc-table">
+                <div class="ecw-hc-thead" aria-hidden="true">
+                    <span>#</span>
+                    <span>Department</span>
+                    <span class="ecw-hc-th-count">People</span>
+                </div>
+                <template for:each={depts} for:item="d">
+                    <div key={d.key} class="ecw-hc-row">
+                        <span class="ecw-hc-rank">{d.rank}</span>
+                        <span class="ecw-hc-dept">
+                            <span class="ecw-hc-name">{d.name}</span>
+                            <span class="ecw-hc-share">
+                                <span class="ecw-hc-track"><span class="ecw-hc-bar" style={d.barStyle}></span></span>
+                                <span class="ecw-hc-pct">{d.pctText}</span>
+                            </span>
+                        </span>
+                        <span class="ecw-hc-count">{d.countText}</span>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <!-- Summary -->
+        <div class="ecw-hc-sum">
+            <template if:true={hasOpenRoles}>
+                <div class="ecw-hc-sum-row">
+                    <span class="ecw-hc-sum-key">Open roles</span>
+                    <span class="ecw-hc-sum-val">{openRolesValue}</span>
+                </div>
+            </template>
+            <div class="ecw-hc-sum-row ecw-hc-sum-total">
+                <span class="ecw-hc-sum-key">Total headcount</span>
+                <span class="ecw-hc-sum-val">{heroValue}</span>
+            </div>
+        </div>
+    </div>
+</template>

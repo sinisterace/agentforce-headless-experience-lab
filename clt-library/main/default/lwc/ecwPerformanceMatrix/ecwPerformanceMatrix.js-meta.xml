@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Agentforce Coworker · Marketing · Performance matrix</masterLabel>
+    <description>Content/campaign performance as a strategy quadrant — bubbles placed by reach and engagement, sized by conversions, across Scale / Optimize / Test / Cut; hover or tap to reveal metrics.</description>
+    <targets>
+        <target>lightning__AgentforceOutput</target>
+        <target>lightningSnapin__ChatMessage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AgentforceOutput">
+            <sourceType name="c__ecwPerformanceMatrix"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

@@ -1,0 +1,67 @@
+/* Agentforce Coworker · IT · Change calendar — Ask-native "timeline" archetype.
+   Family-standard airy white surface, deep-navy ink, hairline dividers, monospace
+   numerals. Hero = count of upcoming changes; signature = a vertical timeline rail
+   with flat date chips (a thin risk-colored cap, no gradient fills) and hairline
+   change blocks. Risk reads through a small chip + the node ring, not a loud fill. */
+:host {
+    --ecw-ink: #06234d;
+    --ecw-ink-2: #35507a;
+    --ecw-muted: #6a7891;
+    --ecw-line: #e9edf4;
+    --ecw-accent: #0d6fd1;
+    --ecw-low: #15803d;
+    --ecw-med: #b45309;
+    --ecw-high: #b91c1c;
+    display: block;
+}
+.ecw-cc, .ecw-cc * { box-sizing: border-box; }
+.ecw-cc {
+    container-type: inline-size;
+    display: flex; flex-direction: column; gap: 1rem;
+    padding: 1.15rem 1.2rem; border-radius: 0.9rem; background: #fff;
+    border: 1px solid var(--ecw-line); font-family: inherit; color: var(--ecw-ink);
+    box-shadow: 0 22px 48px -34px rgba(6, 35, 77, 0.6);
+}
+
+/* hero — count of upcoming changes */
+.ecw-cc-hero { display: flex; flex-direction: column; gap: 0.15rem; padding: 0 0 1rem; border-bottom: 1px solid var(--ecw-line); }
+.ecw-cc-hero-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ecw-accent); }
+.ecw-cc-hero-row { display: flex; align-items: baseline; gap: 0.4rem; flex-wrap: wrap; }
+.ecw-cc-hero-val { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 2.6rem; line-height: 1; font-weight: 820; letter-spacing: -0.03em; color: var(--ecw-ink); font-variant-numeric: tabular-nums; }
+.ecw-cc-hero-unit { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ecw-muted); }
+.ecw-cc-hero-meta { font-size: 0.7rem; font-weight: 600; color: var(--ecw-muted); margin-top: 0.1rem; }
+
+/* timeline */
+.ecw-cc-timeline { display: flex; flex-direction: column; }
+.ecw-cc-item { display: grid; grid-template-columns: 2.9rem 1rem 1fr; gap: 0.55rem; padding-bottom: 1rem; }
+.ecw-cc-item.is-last { padding-bottom: 0; }
+
+/* flat date chip — hairline card with a thin risk-colored cap */
+.ecw-cc-cal { display: flex; flex-direction: column; align-items: stretch; align-self: start; width: 2.9rem; border-radius: 0.5rem; overflow: hidden; background: #fff; border: 1px solid var(--ecw-line); }
+.ecw-cc-cal-day { width: 100%; text-align: center; padding: 0.16rem 0; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; }
+.ecw-cc-cal.is-low .ecw-cc-cal-day { background: var(--ecw-low); }
+.ecw-cc-cal.is-med .ecw-cc-cal-day { background: var(--ecw-med); }
+.ecw-cc-cal.is-high .ecw-cc-cal-day { background: var(--ecw-high); }
+.ecw-cc-cal-time { padding: 0.24rem 0.1rem; font-size: 0.56rem; font-weight: 700; color: var(--ecw-ink-2); text-align: center; line-height: 1.15; font-variant-numeric: tabular-nums; }
+
+/* rail */
+.ecw-cc-rail { position: relative; display: flex; justify-content: center; }
+.ecw-cc-rail::before { content: ''; position: absolute; top: 0.25rem; bottom: -1rem; width: 1.5px; background: var(--ecw-line); }
+.ecw-cc-item.is-last .ecw-cc-rail::before { display: none; }
+.ecw-cc-node { position: relative; z-index: 1; width: 0.72rem; height: 0.72rem; margin-top: 0.25rem; border-radius: 50%; background: #fff; border: 2.5px solid var(--ecw-accent); flex: none; box-shadow: 0 0 0 3px #fff; }
+.ecw-cc-node.is-low { border-color: var(--ecw-low); }
+.ecw-cc-node.is-med { border-color: var(--ecw-med); }
+.ecw-cc-node.is-high { border-color: var(--ecw-high); }
+
+/* change block — hairline, no heavy shadow */
+.ecw-cc-block { min-width: 0; align-self: start; }
+.ecw-cc-block-top { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+.ecw-cc-title { font-size: 0.88rem; font-weight: 740; color: var(--ecw-ink); line-height: 1.25; }
+.ecw-cc-risk { flex: none; font-size: 0.58rem; font-weight: 800; letter-spacing: 0.02em; padding: 0.1rem 0.45rem; border-radius: 999px; }
+.ecw-cc-risk.is-low { color: var(--ecw-low); background: rgba(21,128,61,0.09); }
+.ecw-cc-risk.is-med { color: var(--ecw-med); background: rgba(180,83,9,0.1); }
+.ecw-cc-risk.is-high { color: var(--ecw-high); background: rgba(185,28,28,0.1); }
+.ecw-cc-impact { margin: 0.35rem 0 0; font-size: 0.78rem; line-height: 1.4; color: var(--ecw-ink-2); }
+.ecw-cc-state { display: inline-block; margin-top: 0.45rem; font-size: 0.56rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ecw-muted); background: #eef2f8; padding: 0.1rem 0.45rem; border-radius: 999px; }
+
+@container (max-width: 360px) { .ecw-cc-hero-val { font-size: 2.1rem; } }

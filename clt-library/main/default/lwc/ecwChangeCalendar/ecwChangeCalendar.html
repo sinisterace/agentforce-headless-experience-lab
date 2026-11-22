@@ -1,0 +1,39 @@
+<template>
+    <div class="ecw-cc">
+
+        <!-- Hero: count of upcoming changes -->
+        <div class="ecw-cc-hero">
+            <span class="ecw-cc-hero-label">Scheduled changes</span>
+            <div class="ecw-cc-hero-row">
+                <strong class="ecw-cc-hero-val">{count}</strong>
+                <span class="ecw-cc-hero-unit">{countUnit}</span>
+            </div>
+            <template if:true={headline}><span class="ecw-cc-hero-meta">{headline}</span></template>
+        </div>
+
+        <!-- Timeline -->
+        <template if:true={hasChanges}>
+            <div class="ecw-cc-timeline">
+                <template for:each={changes} for:item="c">
+                    <div key={c.key} class={c.itemClass}>
+                        <div class={c.calClass}>
+                            <span class="ecw-cc-cal-day">{c.day}</span>
+                            <span class="ecw-cc-cal-time">{c.time}</span>
+                        </div>
+                        <div class="ecw-cc-rail">
+                            <span class={c.nodeClass}></span>
+                        </div>
+                        <div class="ecw-cc-block">
+                            <div class="ecw-cc-block-top">
+                                <span class="ecw-cc-title">{c.title}</span>
+                                <span class={c.riskClass}>{c.riskLabel}</span>
+                            </div>
+                            <template if:true={c.hasImpact}><p class="ecw-cc-impact">{c.impact}</p></template>
+                            <template if:true={c.hasState}><span class="ecw-cc-state">{c.state}</span></template>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </template>
+    </div>
+</template>

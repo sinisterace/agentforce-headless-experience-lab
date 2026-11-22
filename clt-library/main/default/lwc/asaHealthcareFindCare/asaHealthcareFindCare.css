@@ -1,0 +1,242 @@
+/* ASA Healthcare · Find Care Near You — a stack of facility cards, each with a
+   color-coded type icon, an open-now pill, distance/wait/hours lines, service
+   chips, and Directions/Call redirect links. Wayfinding only, no health info.
+   rem units + inherited font so it matches the host chat theme in ECv2. */
+:host {
+    --asa-accent: #0f766e;
+    --asa-line: #e5e7eb;
+    --asa-ink: #101828;
+    --asa-muted: #667085;
+    --asa-open: #15803d;
+    --asa-closed: #6b7280;
+    --asa-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+    --asa-shadow-md: 0 8px 22px rgba(15, 23, 42, 0.12);
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after {
+    box-sizing: border-box;
+}
+
+.asa-card-title {
+    margin: 0 0 0.2rem 0;
+    font-size: 1.05rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-card-sub {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.78rem;
+    color: var(--asa-muted);
+}
+
+.asa-fnd-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.asa-fnd-card {
+    --type: var(--asa-accent);
+    border: 1px solid var(--asa-line);
+    border-radius: 14px;
+    padding: 0.7rem;
+    background: #fff;
+}
+
+.asa-fnd-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+}
+.asa-fnd-ico {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.3rem;
+    height: 2.3rem;
+    flex-shrink: 0;
+    border-radius: 11px;
+    background: color-mix(in srgb, var(--type) 13%, transparent);
+    color: var(--type);
+}
+.asa-fnd-ico svg {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+/* Facility-type hues so ER / urgent care / pharmacy read apart instantly. */
+.asa-fnd-ico.is-urgentcare { --type: #b45309; }
+.asa-fnd-ico.is-er { --type: #c0392b; }
+.asa-fnd-ico.is-primarycare { --type: #0f766e; }
+.asa-fnd-ico.is-pharmacy { --type: #15803d; }
+.asa-fnd-ico.is-hospital { --type: #2563eb; }
+.asa-fnd-ico.is-lab { --type: #7c3aed; }
+.asa-fnd-ico.is-telehealth { --type: #0e7490; }
+.asa-fnd-ico.is-clinic { --type: #0f766e; }
+
+.asa-fnd-headtext {
+    display: flex;
+    flex-direction: column;
+    gap: 0.12rem;
+    min-width: 0;
+    flex: 1;
+}
+.asa-fnd-name {
+    font-weight: 650;
+    font-size: 0.9rem;
+    letter-spacing: -0.005em;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-fnd-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.74rem;
+    color: var(--asa-muted);
+    flex-wrap: wrap;
+}
+.asa-fnd-dot {
+    opacity: 0.6;
+}
+.asa-fnd-dist {
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.asa-fnd-status {
+    flex-shrink: 0;
+    align-self: flex-start;
+    padding: 0.15rem 0.45rem;
+    border-radius: 999px;
+    font-size: 0.66rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+}
+.asa-fnd-status.is-open {
+    color: var(--asa-open);
+    background: color-mix(in srgb, var(--asa-open) 12%, #fff);
+}
+.asa-fnd-status.is-closed {
+    color: var(--asa-closed);
+    background: color-mix(in srgb, var(--asa-closed) 12%, #fff);
+}
+
+.asa-fnd-line {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.4rem;
+    font-size: 0.76rem;
+    color: var(--asa-ink);
+    opacity: 0.82;
+    min-width: 0;
+}
+.asa-fnd-line svg {
+    width: 0.85rem;
+    height: 0.85rem;
+    flex-shrink: 0;
+    opacity: 0.8;
+}
+.asa-fnd-line span {
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+.asa-fnd-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-top: 0.5rem;
+}
+.asa-fnd-chip {
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid var(--asa-line);
+    background: #f8fafb;
+    font-size: 0.68rem;
+    font-weight: 550;
+    color: var(--asa-muted);
+    white-space: nowrap;
+}
+
+.asa-fnd-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.65rem;
+}
+.asa-fnd-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    flex: 1;
+    padding: 0.5rem 0.6rem;
+    border-radius: 10px;
+    border: 1px solid var(--asa-line);
+    background: #fff;
+    color: var(--asa-accent);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+.asa-fnd-btn svg {
+    width: 0.95rem;
+    height: 0.95rem;
+    flex-shrink: 0;
+}
+.asa-fnd-btn:hover {
+    background: color-mix(in srgb, var(--asa-accent) 7%, #fff);
+    box-shadow: var(--asa-shadow-sm);
+}
+.asa-fnd-btn.is-primary {
+    background: var(--asa-accent);
+    border-color: var(--asa-accent);
+    color: #fff;
+}
+.asa-fnd-btn.is-primary:hover {
+    filter: brightness(1.06);
+    background: var(--asa-accent);
+}
+/* Directions button in Google Maps chrome: white surface, Google hairline
+   border, neutral #3c4043 ink, and the red Maps pin. Reads as a "get
+   directions" affordance without leaning on the teal accent. */
+.asa-fnd-btn.is-maps {
+    border: 1px solid #dadce0;
+    background: #fff;
+    color: #3c4043;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+}
+.asa-fnd-btn.is-maps:hover {
+    background: #f8f9fa;
+    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.15);
+    filter: none;
+}
+.asa-fnd-btn .asa-fnd-gmaps {
+    width: 1rem;
+    height: 1rem;
+}
+
+@container (max-width: 300px) {
+    .asa-fnd-actions {
+        flex-direction: column;
+    }
+}

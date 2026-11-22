@@ -1,0 +1,1407 @@
+system:
+    instructions: "You are an AI Agent."
+
+    messages:
+        welcome: |
+            Hi, I'm an AI service assistant. How can I help you?
+        error: "Sorry, it looks like something has gone wrong."
+
+config:
+    agent_label: "Agentforce Service Agent"
+    agent_template: "SvcCopilotTmpl__AgentforceServiceAgent"
+    developer_name: "Agentforce_Service_Agent"
+    description: "Deliver personalized customer interactions with an autonomous AI agent. Agentforce Service Agent intelligently supports your customers with common inquiries and escalates complex issues."
+
+access:
+    default_agent_user: "agentforce_service_agent@yourorgid360649302.ext"
+
+variables:
+    authenticationKey: mutable string
+        description: "Stores the authentication key that's used to generate the verification code."
+        visibility: "Internal"
+    customerId: mutable string
+        description: "Stores the Salesforce user ID or contact ID."
+        visibility: "Internal"
+    customerType: mutable string
+        description: "Stores the customer ID type, whether it's a Salesforce user or a contact."
+        visibility: "Internal"
+    isVerified: mutable boolean = False
+        label: "isVerified"
+        description: "Stores a boolean value that indicates whether the customer code is verified."
+        visibility: "Internal"
+    EndUserId: linked string
+        source: @MessagingSession.MessagingEndUserId
+        description: "This variable may also be referred to as MessagingEndUser Id"
+    RoutableId: linked string
+        source: @MessagingSession.Id
+        description: "This variable may also be referred to as MessagingSession Id"
+    ContactId: linked string
+        source: @MessagingEndUser.ContactId
+        description: "This variable may also be referred to as MessagingEndUser ContactId"
+    EndUserLanguage: linked string
+        source: @MessagingSession.EndUserLanguage
+        description: "This variable may also be referred to as MessagingSession EndUserLanguage"
+    ChannelType: linked string
+        source: @MessagingSession.ChannelType
+        description: "This variable may also be referred to as MessagingSession ChannelType"
+    VerifiedCustomerId: mutable string
+        description: "This variable may also be referred to as VerifiedCustomerId"
+        visibility: "Internal"
+    emailCaseId: mutable string
+        description: "Stores the Salesforce Case ID created by an inbound email."
+        visibility: "External"
+    endUserEmail: mutable string
+        description: "Stores email address of the end user who sent the inbound email."
+        visibility: "External"
+    endUserContactId: mutable string
+        description: "Stores the Salesforce Contact ID associated with the end user who sent the inbound email."
+        visibility: "External"
+    industry: mutable string
+        description: "The active company's industry key (e.g. retail, manufacturing). Set from the active Company_Knowledge__c so the router exposes only that industry's CLT topic."
+        visibility: "External"
+
+language:
+    additional_locales: "en_GB"
+    default_locale: "en_US"
+    all_additional_locales: False
+
+knowledge:
+    rag_feature_config_id: ""
+    citations_url: ""
+    citations_enabled: False
+
+start_agent agent_router:
+    label: "Agent Router"
+    description: "Welcome the user and route to the right topic based on their intent and the company's industry."
+    model_config:
+        model: "model://sfdc_ai__DefaultEinsteinHyperClassifier"
+    reasoning:
+        instructions: ->
+            if @variables.industry == None:
+                run @actions.LookupCompanyContext
+                    with query = "startup"
+                    set @variables.industry = @outputs.industryKey
+            | Route the customer's request to the single best topic based on their intent. Use Answer Company FAQ for general questions about the company (hours, policies, how to get help). Use the industry topic for product or service tasks. Do not mention topics or industries to the customer.
+        actions:
+            go_to_Answer_Company_FAQ: @utils.transition to @subagent.Answer_Company_FAQ
+            go_to_Financial_Services: @utils.transition to @subagent.Financial_Services
+                description: "Banking and financial-services tasks: view or choose an account, review recent transactions or dispute a charge, move money or pay a bill, and book time with an advisor."
+                available when @variables.industry == "financial_services"
+            go_to_Insurance: @utils.transition to @subagent.Insurance
+                description: "Insurance tasks: view or select a policy, file a claim, check a claim's status, or show a digital insurance ID card."
+                available when @variables.industry == "insurance"
+            go_to_Healthcare: @utils.transition to @subagent.Healthcare
+                description: "Healthcare tasks: schedule an appointment, find care near you, choose a care option, or refill a prescription."
+                available when @variables.industry == "healthcare"
+            go_to_Retail: @utils.transition to @subagent.Retail
+                description: "Retail shopping tasks: track an order or delivery, see recommended products, start a return or exchange, or find in-store pickup."
+                available when @variables.industry == "retail"
+            go_to_Technology_Comms: @utils.transition to @subagent.Technology_Comms
+                description: "Telecom, media and communications tasks: compare plans, check data usage, check service or outage status, or explain a bill."
+                available when @variables.industry == "technology_comms"
+            go_to_Manufacturing: @utils.transition to @subagent.Manufacturing
+                description: "Manufacturing tasks: monitor equipment status, reorder a part, track a work order, or build a quote."
+                available when @variables.industry == "manufacturing"
+            go_to_Energy_Utilities: @utils.transition to @subagent.Energy_Utilities
+                description: "Energy and utility tasks: check outages, view usage and cost, set up budget billing, or find rebates and offers."
+                available when @variables.industry == "energy_utilities"
+            go_to_HVAC: @utils.transition to @subagent.HVAC
+                description: "HVAC tasks: control the thermostat, track a technician's arrival, view comfort-system health, or choose a service plan."
+                available when @variables.industry == "hvac"
+            go_to_Automotive: @utils.transition to @subagent.Automotive
+                description: "Automotive tasks: configure a vehicle, schedule a test drive, check connected-car status, or estimate a trade-in."
+                available when @variables.industry == "automotive"
+            go_to_Public_Sector: @utils.transition to @subagent.Public_Sector
+                description: "Public-sector and education tasks: check an application's status, find programs and benefits, submit a service request, or see a required-documents checklist."
+                available when @variables.industry == "public_sector"
+            go_to_Legal: @utils.transition to @subagent.Legal
+                description: "Legal tasks: browse practice areas, get a free case evaluation, meet a matched attorney, or schedule a consultation."
+                available when @variables.industry == "legal"
+            go_to_Travel_Hospitality: @utils.transition to @subagent.Travel_Hospitality
+                description: "Travel and hospitality tasks: choose a seat, check flight status, show a digital boarding pass, or select a hotel room."
+                available when @variables.industry == "travel_hospitality"
+    actions:
+        LookupCompanyContext:
+            description: "Silently look up the active company's industry at the start of the conversation so the correct industry topic becomes available. Not shown to the customer."
+            label: "Lookup Company Context"
+            require_user_confirmation: False
+            include_in_progress_indicator: False
+            source: "AnswerCompanyFaq"
+            target: "flow://AnswerCompanyFaq"
+            inputs:
+                "query": string
+                    description: "Startup context lookup; value is ignored."
+                    label: "Query"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "faqContent": object
+                    description: "Company FAQ (unused by the router)."
+                    label: "FAQ Knowledge"
+                    is_displayable: False
+                    filter_from_agent: True
+                    complex_data_type_name: "lightning__richTextType"
+                "industryKey": string
+                    description: "The active company's industry key."
+                    label: "Industry Key"
+                    is_displayable: False
+                    filter_from_agent: True
+
+connection customer_web_client:
+    adaptive_response_allowed: True
+    outbound_route_name: "flow://Escalation_Flow_Company_Agentforce_Service_Agent"
+    outbound_route_type: "OmniChannelFlow"
+    escalation_message: "One moment, I'm transferring our conversation to get you more help."
+
+connection messaging:
+    outbound_route_type: "OmniChannelFlow"
+    outbound_route_name: "flow://Escalation_Flow_Company_Agentforce_Service_Agent"
+    escalation_message: "One moment, I'm transferring our conversation to get you more help."
+    adaptive_response_allowed: True
+
+subagent Answer_Company_FAQ:
+    label: "Answer Company FAQ"
+    description: "Answers general questions about the company, its products, services, policies, hours, or how to get help, from the company's curated FAQ knowledge."
+    reasoning:
+        instructions: ->
+            |Call the {!@actions.AnswerCompanyFaq} action, passing the customer's question as the query, to retrieve the company's FAQ knowledge. Then answer ONLY the specific question the customer asked, grounded in the retrieved company knowledge. Give a genuinely helpful, direct answer - a short paragraph or up to about 6 sentences, and use a numbered list when the customer asks how to do something. Do not dump the full FAQ or list unrelated questions, and always respond in your own natural wording. Do NOT include URLs, web addresses, or links in your reply; if you would normally link out, describe the action in words instead.
+        actions:
+            AnswerCompanyFaq: @actions.AnswerCompanyFaq
+                with query = ...
+    actions:
+        AnswerCompanyFaq:
+            description: |
+                Answers general questions about the company, its products, services, policies, hours, and how to get help, using the company's curated FAQ knowledge. Use this for any general "about the company" question.
+            label: "Answer Company FAQ"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            progress_indicator_message: "Looking that up"
+            source: "AnswerCompanyFaq"
+            target: "flow://AnswerCompanyFaq"
+            inputs:
+                "query": string
+                    description: |
+                      The customer's question about the company, its products, services, policies, hours, or how to get help.
+                    label: "Customer Question"
+                    is_required: True
+                    is_user_input: True
+            outputs:
+                "faqContent": object
+                    description: |
+                      The company FAQ and overview. Ground your answer to the customer in this content; do not invent facts beyond it.
+                    label: "FAQ Knowledge"
+                    is_displayable: False
+                    filter_from_agent: False
+                    complex_data_type_name: "lightning__richTextType"
+
+subagent Financial_Services:
+    label: "Financial Services"
+    description: "Banking and financial-services tasks: view or choose an account, review recent transactions or dispute a charge, move money or pay a bill, and book time with an advisor."
+    reasoning:
+        instructions: ->
+            | Help the customer with their request by calling the single most relevant action for exactly what they asked, then briefly confirm the result in your own words. Call only one action unless the customer asks for another thing. Do not include URLs or links.
+        actions:
+            asaFinServAccountSelector: @actions.asaFinServAccountSelector
+                with Details = ...
+            asaFinServAdvisorMeeting: @actions.asaFinServAdvisorMeeting
+                with Details = ...
+            asaFinServMoneyMovement: @actions.asaFinServMoneyMovement
+                with Details = ...
+            asaFinServTransactions: @actions.asaFinServTransactions
+                with Details = ...
+    actions:
+        asaFinServAccountSelector:
+            description: "Use this when the customer needs to choose one or more of their own financial accounts (checking, savings, credit card, loan, investment) — for example to check a balance, pay from, transfer, or start a dispute. Shows an interactive account list with balances."
+            label: "ASA Financial Services · Account Selector"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaFinServAccountSelector_Output_acc7"
+            target: "flow://asaFinServAccountSelector_Output_acc7"
+            inputs:
+                "Details": string
+                    description: |
+                      The full account-selector payload as a JSON string, formatted EXACTLY like this: {"title":"Which account can I help you with?","mode":"single","accounts":[{"id":"chk-1234","name":"Everyday Checking","type":"Checking","mask":"1234","balance":4820.55,"currency":"USD","badge":"Primary"},{"id":"sav-5678","name":"High-Yield Savings","type":"Savings","mask":"5678","balance":15230.00,"currency":"USD"},{"id":"crd-9012","name":"Rewards Card","type":"Credit Card","mask":"9012","balance":-742.18,"currency":"USD","available":9257.82}],"submitText":"Continue"} Rules: - 'title' (string, optional): the prompt shown above the list. - 'mode' (string, required): 'single' or 'multiple'. Use 'single' when the customer should pick exactly one account (the card sends the choice immediately on click). Use 'multiple' when they may pick several (a submit button appears). - 'accounts' (array, REQUIRED, at least one object): each account MUST have 'id' (string, unique, sent back on selection), 'name' (string), 'type' (string; one of 'Checking','Savings','Credit Card','Loan','Investment' — drives the row icon), 'mask' (string, the last 4 digits of the account number), and 'balance' (number; may be negative for amounts owed). Optional per account: 'currency' (ISO code string, defaults to 'USD'), 'available' (number, e.g. available credit or balance after holds), 'badge' (short string tag such as 'Primary'). - 'submitText' (string, optional): button label used only in 'multiple' mode; defaults to 'Continue'. Never emit an empty 'accounts' array. Use the customer's real accounts from context; if none are known, ask the customer rather than inventing account numbers. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaFinServAccountSelector"
+        asaFinServAdvisorMeeting:
+            description: "Use this when the customer wants to schedule, book, or set up a meeting or appointment with their financial advisor. Shows the matched advisor and interactive day/time slots; the customer taps a slot and confirms to request the appointment."
+            label: "ASA Financial Services · Advisor Appointment"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaFinServAdvisorMeeting_Output_9b41"
+            target: "flow://asaFinServAdvisorMeeting_Output_9b41"
+            inputs:
+                "Details": string
+                    description: |
+                      The full advisor-appointment payload as a JSON string, formatted EXACTLY like this: {"title":"Book time with your advisor","advisor":{"name":"Jordan Lee","title":"Senior Financial Advisor","specialty":"Retirement & investment planning","initials":"JL"},"days":[{"date":"2026-09-18","slots":[{"id":"slot-1","time":"09:00","meetingType":"video"},{"id":"slot-2","time":"10:30","meetingType":"phone"},{"id":"slot-3","time":"13:00","meetingType":"in-branch"}]},{"date":"2026-09-19","slots":[{"id":"slot-4","time":"11:00","meetingType":"video"},{"id":"slot-5","time":"14:30","meetingType":"in-branch"}]}],"submitText":"Book appointment"} Rules: - 'title' (string, optional): the heading shown above the card. - 'advisor' (object, REQUIRED): the advisor the customer is booking with. MUST have 'name' (string). Optional: 'title' (string, e.g. 'Senior Financial Advisor'), 'specialty' (string, a short focus line, e.g. 'Retirement planning'), 'photoUrl' (string, https image URL for the avatar), 'initials' (string, 1-2 letters shown when there is no photo; auto-derived from the name if omitted). - 'days' (array, REQUIRED, at least one object): each MUST have 'date' (string, ISO 'YYYY-MM-DD') and 'slots' (array, at least one object). Each slot MUST have 'id' (string, unique, sent back when the customer books it) and 'time' (string; 24-hour 'HH:MM' preferred, e.g. '09:00' or '14:30' — it is rendered as '9:00 AM' / '2:30 PM'). Optional per slot: 'meetingType' (string; one of 'video','phone','in-branch' — drives the slot icon; defaults to 'video'). - 'submitText' (string, optional): the confirm-button label; defaults to 'Book appointment'. Never emit an empty 'days' array or a day with no slots. Use the advisor and availability from context; if none are known, ask the customer rather than inventing times. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaFinServAdvisorMeeting"
+        asaFinServMoneyMovement:
+            description: "Use this when the customer wants to send money, pay someone, pay a bill or card, or transfer funds between accounts. Shows an interactive card of recipients and preset amounts; the customer taps a recipient and an amount, then confirms."
+            label: "ASA Financial Services · Money Movement"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaFinServMoneyMovement_Output_c3e7"
+            target: "flow://asaFinServMoneyMovement_Output_c3e7"
+            inputs:
+                "Details": string
+                    description: |
+                      The full money-movement payload as a JSON string, formatted EXACTLY like this: {"title":"Send money","fromAccount":{"label":"Everyday Checking","mask":"1234"},"recipients":[{"id":"rcp-1","name":"Alex Rivera","type":"person","mask":"4821","detail":"Checking"},{"id":"rcp-2","name":"Rewards Card","type":"card","mask":"9012","detail":"Credit Card"},{"id":"rcp-3","name":"High-Yield Savings","type":"account","mask":"5678","detail":"Savings"}],"amountPresets":[{"id":"amt-1","label":"$50","amount":50},{"id":"amt-2","label":"$100","amount":100},{"id":"amt-3","label":"$250","amount":250},{"id":"amt-4","label":"Minimum","amount":35}],"currency":"USD","allowOther":true,"otherText":"Other amount","submitText":"Continue"} Rules: - 'title' (string, optional): the heading shown above the card. - 'fromAccount' (object, optional): the account the money comes FROM. Has 'label' (string, e.g. 'Everyday Checking') and optional 'mask' (string, last 4 digits). Shown as 'From Everyday Checking ••1234'. - 'recipients' (array, REQUIRED, at least one object): who the money can go TO. Each MUST have 'id' (string, unique, sent back on selection) and 'name' (string). Optional per recipient: 'type' (string; one of 'person','card','account','business','external' — drives the row icon; 'account' means one of the customer's own accounts), 'mask' (string, last 4 digits), 'detail' (string, a short descriptor like 'Checking' or 'Credit Card'). - 'amountPresets' (array, optional but recommended): tappable amounts. Each has 'id' (string, unique), 'amount' (number), and optional 'label' (string; if omitted the amount is formatted as currency). Use contextual presets when relevant, e.g. {"id":"amt-min","label":"Minimum","amount":35} or {"id":"amt-stmt","label":"Statement balance","amount":742.18}. - 'currency' (string, optional): ISO code used to format amounts; defaults to 'USD'. - 'allowOther' (boolean, optional): set true to show an 'Other amount' chip that hands the custom amount back to the conversation. - 'otherText' (string, optional): the 'Other amount' chip label; defaults to 'Other amount'. - 'submitText' (string, optional): the confirm-button label; defaults to 'Continue'. Never emit an empty 'recipients' array. Use the customer's real payees/accounts from context; if none are known, ask the customer rather than inventing recipients. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaFinServMoneyMovement"
+        asaFinServTransactions:
+            description: "Use this when the customer wants to see their recent transactions or wants to dispute, question, or report a charge. Shows an interactive list of recent transactions; the customer taps one and confirms to start a dispute."
+            label: "ASA Financial Services · Recent Transactions"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaFinServTransactions_Output_d15b"
+            target: "flow://asaFinServTransactions_Output_d15b"
+            inputs:
+                "Details": string
+                    description: |
+                      The full recent-transactions payload as a JSON string, formatted EXACTLY like this: {"title":"Your recent transactions","accountLabel":"Everyday Checking ••1234","transactions":[{"id":"txn-1","merchant":"Whole Foods Market","date":"2026-08-09","amount":-84.23,"currency":"USD","category":"Groceries","status":"Posted"},{"id":"txn-2","merchant":"Delta Air Lines","date":"2026-08-07","amount":-412.60,"currency":"USD","category":"Travel","status":"Posted"},{"id":"txn-3","merchant":"Payroll Deposit","date":"2026-08-06","amount":2450.00,"currency":"USD","category":"Income","status":"Posted"},{"id":"txn-4","merchant":"Corner Bistro","date":"2026-08-05","amount":-56.80,"currency":"USD","category":"Dining","status":"Pending","disputable":false}],"disputeText":"Dispute this charge"} Rules: - 'title' (string, optional): the heading shown above the list. - 'accountLabel' (string, optional): the account these transactions belong to, e.g. 'Everyday Checking ••1234'. - 'transactions' (array, REQUIRED, at least one object): each MUST have 'id' (string, unique, sent back when the customer disputes it), 'merchant' (string), 'date' (string, ISO 'YYYY-MM-DD'), and 'amount' (number; NEGATIVE for money out/debits, POSITIVE for money in/credits). Optional per transaction: 'currency' (ISO code string, defaults to 'USD'), 'category' (string; one of 'Groceries','Dining','Travel','Shopping','Bills','Transfer','Income','Other' — drives the row icon), 'status' (string, e.g. 'Posted' or 'Pending'; 'Pending' shows a pill), and 'disputable' (boolean; set false to show the row but prevent the customer from selecting it — e.g. income or already-disputed items). - 'disputeText' (string, optional): the confirm-button label; defaults to 'Dispute this charge'. Never emit an empty 'transactions' array. Use the customer's real transactions from context; if none are known, ask the customer rather than inventing charges. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaFinServTransactions"
+
+subagent Insurance:
+    label: "Insurance"
+    description: "Insurance tasks: view or select a policy, file a claim, check a claim's status, or show a digital insurance ID card."
+    reasoning:
+        instructions: ->
+            | Help the customer with their request by calling the single most relevant action for exactly what they asked, then briefly confirm the result in your own words. Call only one action unless the customer asks for another thing. Do not include URLs or links.
+        actions:
+            asaInsuranceClaimStatus: @actions.asaInsuranceClaimStatus
+                with Details = ...
+            asaInsuranceFileClaim: @actions.asaInsuranceFileClaim
+                with Details = ...
+            asaInsuranceIdCard: @actions.asaInsuranceIdCard
+                with Details = ...
+            asaInsurancePolicySelector: @actions.asaInsurancePolicySelector
+                with Details = ...
+    actions:
+        asaInsuranceClaimStatus:
+            description: "Use this when the customer wants to check the status or progress of an insurance claim they have already filed — for example \"where is my claim\", \"was my claim approved\", or \"when will I be paid\". Shows each claim with a step-by-step progress tracker and the next action needed."
+            label: "ASA Insurance · Claim Status Tracker"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaInsuranceClaimStatus_Output_c3e9"
+            target: "flow://asaInsuranceClaimStatus_Output_c3e9"
+            inputs:
+                "Details": string
+                    description: |
+                      The full claim-status payload as a JSON string, formatted EXACTLY like this: {"title":"Your claims","claims":[{"id":"clm-4471","claimNumber":"CLM-4471","type":"Collision","policyLabel":"Auto — 2022 Tesla Model 3","filedDate":"2026-07-28","amount":3200.00,"currency":"USD","status":"Review","statusLabel":"In review","updatedDate":"2026-08-05","nextActionText":"Upload the repair estimate","steps":[{"label":"Submitted","state":"done"},{"label":"Review","state":"current"},{"label":"Approved","state":"upcoming"},{"label":"Paid","state":"upcoming"}]},{"id":"clm-3120","claimNumber":"CLM-3120","type":"Water damage","policyLabel":"Homeowners — 14 Elm St","filedDate":"2026-06-10","amount":8750.00,"currency":"USD","status":"Paid","statusLabel":"Paid","updatedDate":"2026-07-02","steps":[{"label":"Submitted","state":"done"},{"label":"Review","state":"done"},{"label":"Approved","state":"done"},{"label":"Paid","state":"done"}]}],"submitText":"Ask about a claim"} Rules: - 'title' (string, optional): heading shown above the list. Defaults to 'Your claims'. - 'claims' (array, REQUIRED, at least one object): each claim MUST have 'id' (string, unique, sent back if the customer taps it), 'claimNumber' (string, the human-readable claim reference), and 'status' (string; one of 'Submitted','Review','Approved','Paid','Denied' — drives the accent colour and which step is current). Optional per claim: 'type' (string, e.g. 'Collision','Water damage'), 'policyLabel' (string, the policy the claim is on), 'filedDate' (string, ISO yyyy-mm-dd), 'amount' (number, the claimed or paid amount), 'currency' (ISO code string, defaults to 'USD'), 'statusLabel' (string, a friendly label for the status pill; defaults to the status), 'updatedDate' (string, ISO yyyy-mm-dd of the last update), 'nextActionText' (string, one short line describing what the customer needs to do next), and 'steps' (array of { 'label' (string), 'state' (string; one of 'done','current','upcoming') } describing the progress tracker). If 'steps' is omitted the card derives a default Submitted → Review → Approved → Paid tracker from 'status'. - 'submitText' (string, optional): label for the footer button that lets the customer ask about a claim; defaults to 'Ask about a claim'. Never emit an empty 'claims' array. Use the customer's real claims from context; if none are known, say so rather than inventing claim numbers. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaInsuranceClaimStatus"
+        asaInsuranceFileClaim:
+            description: "Use this when the customer wants to start or file an insurance claim and needs to say what happened — for example a car accident, storm or water damage, theft, or a broken window. Shows an interactive form where the customer picks the type of incident for a specific policy."
+            label: "ASA Insurance · File a Claim"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaInsuranceFileClaim_Output_b2d4"
+            target: "flow://asaInsuranceFileClaim_Output_b2d4"
+            inputs:
+                "Details": string
+                    description: |
+                      The full file-a-claim payload as a JSON string, formatted EXACTLY like this: {"title":"What happened?","policy":{"label":"Auto — 2022 Tesla Model 3","policyNumber":"8842","imageUrl":"/resource/asaInsuranceTeslaModel3"},"incidentTypes":[{"id":"collision","label":"Collision","description":"Accident with another vehicle or object","icon":"collision"},{"id":"theft","label":"Theft or break-in","description":"Vehicle or contents stolen","icon":"theft"},{"id":"weather","label":"Weather or storm","description":"Hail, wind, flood, or fallen tree","icon":"weather"},{"id":"glass","label":"Glass or windshield","description":"Cracked or shattered glass","icon":"glass"}],"submitText":"Start claim"} Rules: - 'title' (string, optional): the prompt shown at the top of the card. Defaults to 'What happened?'. - 'policy' (object, optional but strongly recommended): the policy the claim is filed against. 'label' (string) is the plain-language policy name; 'policyNumber' (string, optional) is shown masked; 'imageUrl' (string, optional) is a photo of the insured item (e.g. the vehicle) shown as a rounded hero image above the policy label. Use a same-origin URL such as a Salesforce static resource ('/resource/<Name>') so it renders in Enhanced Chat v2 without cross-origin issues. Include the policy whenever it is known so the customer sees which policy the claim applies to. - 'incidentTypes' (array, REQUIRED, at least two objects): the kinds of incident the customer can choose from. Each MUST have 'id' (string, unique, sent back on selection) and 'label' (string, short). Optional: 'description' (string, one short line under the label) and 'icon' (string; one of 'collision','theft','weather','water','fire','glass','liability','medical','other' — drives the tile icon; defaults to 'other'). Choose incident types that fit the policy type (e.g. collision/theft/weather/glass for auto; water/fire/weather/theft/liability for home). - 'submitText' (string, optional): the confirm-button label; defaults to 'Start claim'. Never emit fewer than two incident types. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaInsuranceFileClaim"
+        asaInsuranceIdCard:
+            description: "Use this when the customer asks for their proof of insurance or insurance ID card — for example \"show me my insurance card\", \"I need proof of insurance\", or \"send me my ID card\". Shows a wallet-style digital ID card with the carrier, policy number, insured item, coverage dates, and coverages, plus email-a-copy and add-to-wallet actions."
+            label: "ASA Insurance · Digital ID Card"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaInsuranceIdCard_Output_e5f7"
+            target: "flow://asaInsuranceIdCard_Output_e5f7"
+            inputs:
+                "Details": string
+                    description: |
+                      The full digital insurance ID card payload as a JSON string, formatted EXACTLY like this: {"title":"Proof of insurance","carrier":"Meridian Mutual","policyType":"Auto","policyholder":"Jordan Rivera","policyNumber":"AUTO-8842-XY","vehicle":"2022 Tesla Model 3","plate":"8ABC123","effectiveDate":"Jan 1, 2026","expirationDate":"Jul 1, 2028","status":"Active","coverages":[{"label":"Liability"},{"label":"Collision","detail":"$500 ded."},{"label":"Comprehensive","detail":"$500 ded."},{"label":"Uninsured motorist"}],"submitText":"Email me a copy","submitValue":"Email me a copy of my insurance ID card","secondaryText":"Add to wallet"} Rules: - 'title' (string, optional): eyebrow above the card. Defaults to 'Proof of insurance'. - 'carrier' (string, recommended): the insurer / brand name shown on the card. - 'policyType' (string, optional): line of business, e.g. 'Auto' or 'Home'; rendered as '<policyType> · ID Card'. - 'policyholder','policyNumber','vehicle','plate','effectiveDate','expirationDate' (strings, optional): shown in the card's detail grid. 'policyNumber' and 'plate' render in monospace. Include the ones that apply to the policy type ('vehicle'/'plate' for auto; omit them for other lines). - 'status' (string, optional): e.g. 'Active' or 'Lapsed'; rendered as a pill. - 'coverages' (array, optional): each item MUST have 'label' (string) and MAY have 'detail' (string, e.g. '$500 ded.'). Shown as chips under the details. - 'submitText' (string, optional): primary button label; defaults to 'Email me a copy'. - 'submitValue' (string, optional): the EXACT message sent back to the agent when the primary button is tapped; defaults to a sensible 'Email me a copy...' phrase. - 'secondaryText' (string, optional): a ghost secondary button label, e.g. 'Add to wallet'. This card is administrative proof-of-insurance only — never include data beyond what a physical insurance ID card shows. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaInsuranceIdCard"
+        asaInsurancePolicySelector:
+            description: "Use this when the customer needs to choose one or more of their own insurance policies (auto, home, life, health, renters, etc.) — for example to review coverage, check a renewal or premium, file a claim against it, or update it. Shows an interactive policy list with coverage and renewal details."
+            label: "ASA Insurance · Policy Selector"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaInsurancePolicySelector_Output_a1c7"
+            target: "flow://asaInsurancePolicySelector_Output_a1c7"
+            inputs:
+                "Details": string
+                    description: |
+                      The full policy-selector payload as a JSON string, formatted EXACTLY like this: {"title":"Which policy can I help you with?","mode":"single","policies":[{"id":"pol-8842","name":"Auto — 2022 Tesla Model 3","type":"Auto","policyNumber":"8842","premium":142.50,"cadence":"monthly","currency":"USD","renewalDate":"2026-11-01","status":"Active","coverage":"Collision + Comprehensive · $500 deductible","badge":"Primary"},{"id":"pol-3391","name":"Homeowners — 14 Elm St","type":"Home","policyNumber":"3391","premium":1820.00,"cadence":"annual","currency":"USD","renewalDate":"2027-02-15","status":"Active","coverage":"Dwelling $420k · $1,000 deductible"},{"id":"pol-5567","name":"Term Life — 20yr","type":"Life","policyNumber":"5567","premium":48.00,"cadence":"monthly","currency":"USD","renewalDate":"2038-06-01","status":"Active","coverage":"$500,000 benefit"}],"submitText":"Continue"} Rules: - 'title' (string, optional): the prompt shown above the list. - 'mode' (string, required): 'single' or 'multiple'. Use 'single' when the customer should pick exactly one policy (the card sends the choice immediately on click). Use 'multiple' when they may pick several (a submit button appears). - 'policies' (array, REQUIRED, at least one object): each policy MUST have 'id' (string, unique, sent back on selection), 'name' (string, the plain-language policy name), 'type' (string; one of 'Auto','Home','Renters','Life','Health','Umbrella','Pet','Travel' — drives the card icon), and 'status' (string; one of 'Active','Pending','Lapsed','Cancelled'). Optional per policy: 'policyNumber' (string, shown masked as the last characters of the policy number), 'premium' (number, the recurring premium amount), 'cadence' (string such as 'monthly','annual','6-month' — how often the premium is billed), 'currency' (ISO code string, defaults to 'USD'), 'renewalDate' (string, ISO yyyy-mm-dd), 'coverage' (short string summarising limits/deductible), 'badge' (short string tag such as 'Primary'). - 'submitText' (string, optional): button label used only in 'multiple' mode; defaults to 'Continue'. Never emit an empty 'policies' array. Use the customer's real policies from context; if none are known, ask the customer rather than inventing policy numbers. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaInsurancePolicySelector"
+
+subagent Healthcare:
+    label: "Healthcare"
+    description: "Healthcare tasks: schedule an appointment, find care near you, choose a care option, or refill a prescription."
+    reasoning:
+        instructions: ->
+            | Help the customer with their request by calling the single most relevant action for exactly what they asked, then briefly confirm the result in your own words. Call only one action unless the customer asks for another thing. Do not include URLs or links.
+        actions:
+            asaHealthcareApptScheduler: @actions.asaHealthcareApptScheduler
+                with Details = ...
+            asaHealthcareCareOptions: @actions.asaHealthcareCareOptions
+                with Details = ...
+            asaHealthcareFindCare: @actions.asaHealthcareFindCare
+                with Details = ...
+            asaHealthcareRxRefill: @actions.asaHealthcareRxRefill
+                with Details = ...
+    actions:
+        asaHealthcareApptScheduler:
+            description: "Use this when the customer wants to book, schedule, or change a healthcare appointment — for example an annual physical, a follow-up, or a visit with a specific doctor. Shows an interactive scheduler with a provider, day tabs, and pickable time slots (in-person, video, or phone)."
+            label: "ASA Healthcare · Appointment Scheduler"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaHealthcareApptScheduler_Output_e5b1"
+            target: "flow://asaHealthcareApptScheduler_Output_e5b1"
+            inputs:
+                "Details": string
+                    description: |
+                      The full appointment-scheduler payload as a JSON string, formatted EXACTLY like this: {"title":"Book a visit","provider":{"name":"Dr. Maya Chen","specialty":"Primary Care · Internal Medicine","initials":"MC"},"location":{"name":"Downtown Health Center","address":"500 Market St, Suite 300"},"days":[{"date":"2026-08-14","slots":[{"id":"s1","time":"09:00","visitType":"in-person"},{"id":"s2","time":"10:30","visitType":"video"},{"id":"s3","time":"13:15","visitType":"phone"}]},{"date":"2026-08-15","slots":[{"id":"s4","time":"09:30","visitType":"video"},{"id":"s5","time":"15:00","visitType":"in-person"}]}],"submitText":"Confirm appointment"} Rules: - 'title' (string, optional): the heading shown at the top of the card. Defaults to 'Book a visit'. - 'provider' (object, optional but strongly recommended): the clinician the visit is with. 'name' (string) e.g. 'Dr. Maya Chen'; 'specialty' (string, optional) e.g. 'Primary Care'; 'initials' (string, optional, 1-2 letters) shown in the avatar when there is no photo — derived from the name if omitted; 'imageUrl' (string, optional) same-origin photo URL (e.g. a Salesforce static resource '/resource/<Name>'). - 'location' (object, optional): where the visit takes place. 'name' (string) and 'address' (string, optional). - 'days' (array, REQUIRED, at least one object): the bookable days. Each day MUST have 'date' (string, ISO 'yyyy-mm-dd') and 'slots' (array, at least one). Each slot MUST have 'id' (string, unique across the whole payload, sent back on selection) and 'time' (string, 24-hour 'HH:MM' e.g. '09:00','14:30' — rendered as '9:00 AM'). Optional per slot: 'visitType' (string; one of 'in-person','video','phone'; drives the slot icon; defaults to 'in-person'). - 'submitText' (string, optional): the confirm-button label; defaults to 'Confirm appointment'. Never emit zero days or a day with zero slots. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaHealthcareApptScheduler"
+        asaHealthcareCareOptions:
+            description: "Use this when the customer is unsure how to get care and wants to see their options — for example a 24/7 nurse advice line, a video visit, scheduling an in-person visit, or emergency care. Shows a list of care channels, each with its own action (call, open a link, or start booking). Does not collect or store symptoms."
+            label: "ASA Healthcare · Care Options"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaHealthcareCareOptions_Output_a9d3"
+            target: "flow://asaHealthcareCareOptions_Output_a9d3"
+            inputs:
+                "Details": string
+                    description: |
+                      The full care-options payload as a JSON string, formatted EXACTLY like this: {"title":"How would you like to get care?","subtitle":"Choose the option that fits your needs","options":[{"id":"o1","channel":"nurse_line","label":"24/7 Nurse Advice Line","description":"Talk to a registered nurse now","meta":"Avg wait 3 min","actionType":"call","actionValue":"+18005551234"},{"id":"o2","channel":"video","label":"Video visit","description":"See a provider by video in about 15 minutes","meta":"$0 with your plan","actionType":"link","actionValue":"https://example.com/video-visit","recommended":true},{"id":"o3","channel":"in_person","label":"Schedule an in-person visit","description":"Book a time at a clinic near you","actionType":"book","actionValue":"Schedule an in-person visit"},{"id":"o4","channel":"er","label":"Emergency care","description":"For severe or life-threatening symptoms","actionType":"call","actionValue":"911"}],"disclaimer":"If this is a medical emergency, call 911. This tool does not provide medical advice.","submitText":"Continue"} Rules: - 'title' (string, optional): heading; defaults to 'How would you like to get care?'. - 'subtitle' (string, optional): a short line under the title. - 'options' (array, REQUIRED, at least two objects): the care channels. Each MUST have 'id' (string, unique), 'label' (string, short) and 'actionType' (string; one of 'call','link','book'). Optional per option: 'channel' (string; one of 'nurse_line','video','in_person','urgent','er','pharmacy','message' — drives the icon/hue; defaults to 'message'); 'description' (string, one short line); 'meta' (string, a small tag like 'Avg wait 3 min' or '$0 with your plan'); 'recommended' (boolean — highlights the option and adds a Recommended ribbon); 'actionValue' (string): for actionType 'call' a phone number (E.164 like '+18005551234', or '911'); for 'link' a full https URL (opens in a new tab); for 'book' a short instruction sent back to the agent to continue the conversation (e.g. 'Schedule an in-person visit'). - 'disclaimer' (string, optional but recommended): a safety line shown at the bottom with an alert icon. - 'submitText' (string, optional): reserved; safe to omit. Do NOT include or ask for symptoms or any patient health information in this payload. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaHealthcareCareOptions"
+        asaHealthcareFindCare:
+            description: "Use this when the customer wants to find a place to get care near them — for example an urgent care, ER, primary care clinic, pharmacy, or lab. Shows a list of nearby facilities with distance, open-now status, hours, and buttons to open directions in maps or call."
+            label: "ASA Healthcare · Find Care Near You"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaHealthcareFindCare_Output_f7c2"
+            target: "flow://asaHealthcareFindCare_Output_f7c2"
+            inputs:
+                "Details": string
+                    description: |
+                      The full find-care payload as a JSON string, formatted EXACTLY like this: {"title":"Care near you","subtitle":"Near Moscone Center · SoMa, San Francisco","facilities":[{"id":"f1","name":"GoHealth Urgent Care – SoMa","type":"urgent_care","distance":"0.3 mi","openNow":true,"hours":"Open until 8:00 PM","waitTime":"15 min wait","address":"876 Folsom St, San Francisco","phone":"+14155550142","services":["X-ray","Labs","Stitches"],"mapsUrl":"https://www.google.com/maps/dir/?api=1&destination=876%20Folsom%20St%2C%20San%20Francisco%2C%20CA%2094107"},{"id":"f2","name":"Saint Francis Memorial Hospital ER","type":"er","distance":"1.5 mi","openNow":true,"hours":"Open 24 hours","address":"900 Hyde St, San Francisco","phone":"+14155550190","mapsUrl":"https://www.google.com/maps/dir/?api=1&destination=900%20Hyde%20St%2C%20San%20Francisco%2C%20CA%2094109"}],"submitText":"Get directions"} Rules: - 'title' (string, optional): heading; defaults to 'Care near you'. - 'subtitle' (string, optional): a short line under the title, e.g. 'Near Moscone Center · SoMa, San Francisco'. - 'facilities' (array, REQUIRED, at least one object): the nearby places to get care. Each MUST have 'id' (string, unique, sent back on selection) and 'name' (string). Optional per facility: 'type' (string; one of 'urgent_care','er','primary_care','pharmacy','clinic','hospital','lab','telehealth' — drives the icon/hue; defaults to 'clinic'); 'distance' (string, e.g. '0.8 mi'); 'openNow' (boolean — shows a green Open / grey Closed pill); 'hours' (string, e.g. 'Open until 9:00 PM' or 'Open 24 hours'); 'waitTime' (string, e.g. '12 min wait'); 'address' (string); 'phone' (string, E.164 like '+14155550142' preferred — becomes a Call link); 'services' (array of short strings, shown as chips); 'mapsUrl' (string, a full https maps URL — becomes the Google Maps 'Directions' button; prefer the directions form 'https://www.google.com/maps/dir/?api=1&destination=<url-encoded address>'). - 'submitText' (string, optional): unused label reserved for future; safe to omit. Do NOT include any patient health information — this card is wayfinding only. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaHealthcareFindCare"
+        asaHealthcareRxRefill:
+            description: "Use this when the customer wants to refill or reorder a prescription, or says they are running low on their medication. Shows a checklist of their medications with supply status, lets them pick which to refill, and shows the pickup pharmacy. Confirms the request back to the agent."
+            label: "ASA Healthcare · Prescription Refill"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaHealthcareRxRefill_Output_c4e6"
+            target: "flow://asaHealthcareRxRefill_Output_c4e6"
+            inputs:
+                "Details": string
+                    description: |
+                      The full prescription-refill payload as a JSON string, formatted EXACTLY like this: {"title":"Refill prescriptions","subtitle":"Select the medications to refill","medications":[{"id":"m1","name":"Atorvastatin","dosage":"20 mg tablet","supplyText":"3 days left","status":"low","refillsLeft":2},{"id":"m2","name":"Lisinopril","dosage":"10 mg tablet","supplyText":"In stock","status":"ok","refillsLeft":5},{"id":"m3","name":"Metformin","dosage":"500 mg tablet","supplyText":"No refills left","status":"out","refillsLeft":0}],"pharmacy":{"name":"Walgreens · Market St","address":"700 Market St","hours":"Open until 10 PM"},"submitText":"Request refill"} Rules: - 'title' (string, optional): heading; defaults to 'Refill prescriptions'. - 'subtitle' (string, optional): a short line under the title. - 'medications' (array, REQUIRED, at least one object): the medications available to refill. Each MUST have 'id' (string, unique, sent back on selection) and 'name' (string). Optional per medication: 'dosage' (string, e.g. '20 mg tablet'); 'supplyText' (string, a short supply note e.g. '3 days left' or 'In stock'); 'status' (string; one of 'ok','low','out' — drives the supply pill color: ok=green, low=amber, out=red; defaults to 'ok'); 'refillsLeft' (integer). A medication with status 'out' is shown but NOT selectable (the customer must contact their provider to renew it). - 'pharmacy' (object, optional but recommended): the pickup pharmacy shown at the foot. 'name' (string), 'address' (string, optional), 'hours' (string, optional). - 'submitText' (string, optional): confirm-button label; defaults to 'Request refill'. The button shows the count of selected medications. Keep the medication list to what the customer is refilling now; do not include broader clinical history. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaHealthcareRxRefill"
+
+subagent Retail:
+    label: "Retail"
+    description: "Retail shopping tasks: track an order or delivery, see recommended products, start a return or exchange, or find in-store pickup."
+    reasoning:
+        instructions: ->
+            | Help the customer with their request by calling the single most relevant action for exactly what they asked, then briefly confirm the result in your own words. Call only one action unless the customer asks for another thing. Do not include URLs or links.
+        actions:
+            asaRetailOrderTracking: @actions.asaRetailOrderTracking
+                with Details = ...
+            asaRetailProductCarousel: @actions.asaRetailProductCarousel
+                with Details = ...
+            asaRetailReturns: @actions.asaRetailReturns
+                with Details = ...
+            asaRetailStorePickup: @actions.asaRetailStorePickup
+                with Details = ...
+    actions:
+        asaRetailOrderTracking:
+            description: "Use this when the customer wants to track, follow, or check on the status or delivery of an order or shipment that is on its way. Shows a live delivery map with the courier's position, an ETA, a courier row, and a status timeline."
+            label: "ASA Retail · Order Tracking"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaRetailOrderTracking_Output_b7c2"
+            target: "flow://asaRetailOrderTracking_Output_b7c2"
+            inputs:
+                "Details": string
+                    description: |
+                      The full order-tracking payload as a JSON string, formatted EXACTLY like this: {"title":"Track order #4821","live":true,"status":"out_for_delivery","etaText":"Arriving 2:15–2:30 PM","courier":{"name":"Alex Rivera","vehicle":"bike","initials":"AR","rating":"4.9 ★"},"destination":{"label":"Home","address":"150 4th St, San Francisco"},"submitText":"Message courier"} Rules: - 'title' (string, optional): heading at the top of the card. Defaults to 'Track your order'. - 'live' (boolean, optional): when true, shows a pulsing LIVE badge next to the title and animates the courier marker on the map. Defaults to false. - 'status' (string, optional): one of 'submitted','packed','out_for_delivery','delivered'. Drives the courier's position along the map route AND seeds the default timeline when 'steps' is omitted. Defaults to 'submitted'. - 'etaText' (string, optional): free-form arrival estimate, e.g. 'Arriving 2:15–2:30 PM'. When present, an Estimated Arrival block is shown above the courier row. - 'courier' (object, optional): { 'name' (string, REQUIRED to show the row), 'vehicle' (string, optional, one of 'bike','van','car','foot'; defaults to 'bike'), 'initials' (string, optional, shown in the avatar when no photo; auto-derived from 'name' when omitted), 'photoUrl' (string, optional, same-origin https URL or '/resource/<Name>'; shown instead of initials when present), 'rating' (string, optional, free-form e.g. '4.9 ★') }. - 'destination' (object, optional): { 'label' (string, optional, e.g. 'Home'), 'address' (string, optional) }. Shown on the Estimated Arrival line when either is present. - 'steps' (array, optional): the status timeline. Each entry is { 'label' (string, REQUIRED), 'state' (string, REQUIRED, one of 'done','current','todo'), 'time' (string, optional, e.g. '2:04 PM') }. When omitted, a default 4-step timeline (Order placed / Packed & ready / Out for delivery / Delivered) is derived from 'status'. - 'submitText' (string, optional): label for an optional CTA button at the bottom of the card, e.g. 'Message courier'. Omit to hide the button. - 'submitValue' (string, optional): the text sent back to the agent when the CTA is tapped. Defaults to 'submitText' when omitted. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaRetailOrderTracking"
+        asaRetailProductCarousel:
+            description: "Use this when the customer wants to browse, discover, or shop for products — for example recommendations, \"show me options\", a lineup for a category, or picking something to buy. Shows a horizontally scrollable carousel of product cards with image tiles, price, rating, and an Add to cart button."
+            label: "ASA Retail · Product Carousel"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaRetailProductCarousel_Output_a3f1"
+            target: "flow://asaRetailProductCarousel_Output_a3f1"
+            inputs:
+                "Details": string
+                    description: |
+                      The full product-carousel payload as a JSON string, formatted EXACTLY like this: {"title":"Picked for you","subtitle":"Based on your recent views","currency":"USD","products":[{"id":"p1","name":"Trailblazer Running Shoe","sku":"TR3-BLK-10","price":128,"compareAtPrice":160,"imageUrl":"/resource/asaRetailTrailblazerShoe","category":"shoes","badge":"-20%","availability":"in_stock"},{"id":"p2","name":"Everyday Merino Crew","sku":"EMC-NVY-M","price":68,"imageUrl":"/resource/asaRetailEverydayMerinoCrew","category":"apparel","badge":"New","availability":"in_stock"}]} Rules: - 'title' (string, optional): heading at the top of the card. Defaults to 'Picked for you'. - 'subtitle' (string, optional): a short line under the title. - 'currency' (string, optional): ISO code (e.g. 'USD','EUR') applied to every product without its own 'currency'. Defaults to 'USD'. - 'products' (array, REQUIRED, 1 to 3 objects): products are shown one focused card at a time with previous/next navigation. Each product MUST have 'id' (string, unique, sent back on Add to cart), 'name' (string), and 'price' (number). Optional per product: 'sku' (string, included in the Add to cart message when present); 'currency' (string, overrides the payload currency); 'compareAtPrice' (number; when higher than 'price', renders as a struck-through sale price); 'imageUrl' (string, same-origin https URL or '/resource/<Name>'; use '/resource/asaRetailTrailblazerShoe' and '/resource/asaRetailEverydayMerinoCrew' for these sample products); 'category' (string; one of 'apparel','shoes','electronics','beauty','home','grocery','accessories','outdoors','toys'; drives the fallback tile when no image is available); 'badge' (string, short corner tag e.g. 'Bestseller','New','-20%'); 'availability' (string; one of 'in_stock','low','out'; 'out' dims the card and disables Add to cart); 'addLabel' (string, per-card CTA label; defaults to 'Add to cart'). Legacy 'rating' and 'reviewCount' values are accepted but are intentionally not displayed. Never emit zero products or more than three products. For this retail demo, recommend the Trailblazer Running Shoe and Everyday Merino Crew. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaRetailProductCarousel"
+        asaRetailReturns:
+            description: "Use this when the customer wants to return, send back, exchange, or get a refund for something they bought. Shows the order's items to select, a reason picker, and refund/exchange/store-credit resolution options."
+            label: "ASA Retail · Returns &amp; Exchange"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaRetailReturns_Output_c4d8"
+            target: "flow://asaRetailReturns_Output_c4d8"
+            inputs:
+                "Details": string
+                    description: |
+                      The full returns-and-exchange payload as a JSON string, formatted EXACTLY like this: {"title":"Start a return","orderLabel":"Order #4821 · Mar 2","items":[{"id":"i1","name":"Trailblazer Running Shoe","sku":"TR3-BLK-10","variant":"Size 10 · Black","price":128,"imageUrl":"/resource/asaRetailTrailblazerShoe","category":"shoes"},{"id":"i2","name":"Everyday Merino Crew","sku":"EMC-NVY-M","variant":"Medium · Navy","price":68,"imageUrl":"/resource/asaRetailEverydayMerinoCrew","category":"apparel"}],"reasons":[{"id":"too_small","label":"Too small"},{"id":"changed_mind","label":"Changed my mind"}],"resolutions":[{"id":"refund","kind":"refund","label":"Refund","description":"Back to original payment"}]} Rules: - 'title' (string, optional): heading at the top of the card. Defaults to 'Start a return'. - 'subtitle' (string, optional): a short line under the title, e.g. "Choose what you'd like to send back". - 'orderLabel' (string, optional): the order this return is for, e.g. 'Order #4821 · Mar 2'. Shown next to the subtitle. - 'items' (array, REQUIRED, at least one object): the items the customer can select to send back. Each item MUST have 'id' (string, unique, sent back when the customer confirms) and 'name' (string). Optional per item: 'sku' (string); 'variant' (string, e.g. 'Size 10 · Black'); 'price' (number); 'currency' (string, ISO code, defaults to 'USD'); 'imageUrl' (string, same-origin https URL or '/resource/<Name>'; use the supplied ASA retail static-resource URLs for the sample shoe and shirt); 'category' (string; one of 'apparel','shoes','electronics','beauty','home','grocery','accessories','outdoors','toys'; drives the fallback tile when no image is available). - 'reasons' (array, REQUIRED, at least one object): the reason choices the customer picks from. Each reason MUST have 'id' (string, unique) and 'label' (string), e.g. {"id":"too_small","label":"Too small"}. - 'resolutions' (array, optional): the ways the return can be resolved. Each resolution MUST have 'label' (string) and SHOULD have 'id' (string, unique) and 'kind' (string; one of 'refund','exchange','credit'; defaults to 'refund'). Optional: 'description' (string, short line under the label). When omitted, defaults to Refund / Exchange / Store credit. - 'submitText' (string, optional): label for the confirm button before the item count is appended. Defaults to 'Continue return'. Never emit zero items or zero reasons. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaRetailReturns"
+        asaRetailStorePickup:
+            description: "Use this when the customer wants to pick up an item in a store, find a nearby store, check in-store availability, or reserve something for pickup. Shows nearby stores with stock status, distance, pickup ETA, hours, and Directions/Call links; the customer picks a store to reserve."
+            label: "ASA Retail · Store Pickup"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaRetailStorePickup_Output_d9e3"
+            target: "flow://asaRetailStorePickup_Output_d9e3"
+            inputs:
+                "Details": string
+                    description: |
+                      The full store-pickup payload as a JSON string, formatted EXACTLY like this: {"title":"Pick up in store","product":{"name":"Trailblazer Running Shoe","variant":"Size 10 · Black","imageUrl":"/resource/asaRetailTrailblazerShoe","category":"shoes"},"stores":[{"id":"s1","name":"Union Square","distance":"0.4 mi","availability":"in_stock","pickupEta":"Ready in 2 hours","address":"333 Post St, San Francisco","hours":"Open until 9:00 PM","phone":"+14155550142","mapsUrl":"https://www.google.com/maps/dir/?api=1&destination=..."}]} Rules: - 'title' (string, optional): heading at the top of the card. Defaults to 'Pick up in store'. - 'subtitle' (string, optional): a short line under the title. - 'product' (object, optional): the item being picked up, shown as a context row above the store list. Optional fields: 'name' (string; the row only renders when present), 'variant' (string, e.g. size/color), 'imageUrl' (string, same-origin https URL or '/resource/<Name>'; use '/resource/asaRetailTrailblazerShoe' for the sample shoe), 'category' (string; one of 'apparel','shoes','electronics','beauty','home','grocery','accessories','outdoors','toys'; drives the fallback tile when no image is available). - 'stores' (array, REQUIRED, at least one object): the nearby stores to choose from. Each store MUST have 'id' (string, unique, sent back when the customer picks it) and 'name' (string). Optional per store: 'distance' (string, e.g. '0.4 mi'); 'address' (string); 'hours' (string, e.g. 'Open until 9:00 PM'); 'availability' (string; one of 'in_stock','low','out'; 'out' stores are shown but cannot be selected); 'pickupEta' (string, e.g. 'Ready in 2 hours'; hidden when 'out'); 'phone' (string; rendered as a tappable Call link); 'mapsUrl' (string; rendered as a Directions link, opened in a new tab). - 'submitText' (string, optional): label for the reserve button. Defaults to 'Reserve for pickup'. Never emit zero stores. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaRetailStorePickup"
+
+subagent Technology_Comms:
+    label: "Technology, Media & Communications"
+    description: "Telecom, media and communications tasks: compare plans, check data usage, check service or outage status, or explain a bill."
+    reasoning:
+        instructions: ->
+            | Help the customer with their request by calling the single most relevant action for exactly what they asked, then briefly confirm the result in your own words. Call only one action unless the customer asks for another thing. Do not include URLs or links.
+        actions:
+            asaTmcBillExplainer: @actions.asaTmcBillExplainer
+                with Details = ...
+            asaTmcDataUsage: @actions.asaTmcDataUsage
+                with Details = ...
+            asaTmcPlanCompare: @actions.asaTmcPlanCompare
+                with Details = ...
+            asaTmcServiceStatus: @actions.asaTmcServiceStatus
+                with Details = ...
+    actions:
+        asaTmcBillExplainer:
+            description: "Use this when the customer asks about their bill — the amount due, when it is due, why it changed, what a charge is, or how to pay. Shows a statement card with the total due, a stacked charge-category bar, itemized line items, a month-over-month delta explanation, and pay / autopay actions."
+            label: "ASA Technology, Media &amp; Comms · Bill Explainer"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaTmcBillExplainer_Output_b4d7"
+            target: "flow://asaTmcBillExplainer_Output_b4d7"
+            inputs:
+                "Details": string
+                    description: |
+                      The full bill-explainer payload as a JSON string, formatted EXACTLY like this: {"title":"Your September bill","currency":"USD","total":118.4,"dueDateText":"Due Sep 28","periodText":"Sep 1 – Sep 30","items":[{"id":"plan","label":"Unlimited Plus plan","amount":70,"category":"plan"},{"id":"device","label":"iPhone installment","amount":27.08,"category":"device"},{"id":"stream","label":"Streaming add-on","amount":9.99,"category":"streaming"},{"id":"taxes","label":"Taxes & fees","amount":11.33,"category":"taxes"}],"deltaAmount":12.4,"deltaText":"You added the Streaming add-on this cycle.","note":"Autopay is on. This amount will be charged automatically.","submitText":"Pay now","submitValue":"I'd like to pay my bill now","secondaryText":"Set up autopay","secondaryValue":"Help me set up autopay"} Rules: - 'title' (string, optional): heading at the top of the card. Defaults to 'Your bill'. - 'currency' (string, optional): ISO code (e.g. 'USD','EUR','GBP') for all amounts. Defaults to 'USD'. - 'total' (number, optional): the total amount due. When omitted it is computed by summing 'items'. - 'dueDateText' (string, optional): the due date shown as a pill, e.g. 'Due Sep 28'. - 'periodText' (string, optional): the billing period, e.g. 'Sep 1 – Sep 30'. - 'items' (array, REQUIRED, 2 to 7 objects): the itemized charges. Each MUST have 'label' (string) and 'amount' (number). Use a NEGATIVE amount, or 'category':'discount', for credits/discounts (shown in green as a credit). Optional per item: 'id' (string); 'category' (string; one of 'plan','data','device','streaming','taxes','onetime','discount','other' — drives the color used in the bar and the row dot). - 'deltaAmount' (number, optional): the change versus last month; positive means the bill went UP (tinted amber), negative means it went DOWN (tinted green). - 'deltaText' (string, optional): a short plain-language reason for the change, e.g. 'You added the Streaming add-on this cycle.' - 'note' (string, optional): a small footnote, e.g. an autopay reminder. - 'submitText' (string, optional): primary button label, e.g. 'Pay now'. Omit to hide it. - 'submitValue' (string, optional): the exact message sent back when the primary button is tapped; defaults to 'submitText'. - 'secondaryText' (string, optional): secondary button label, e.g. 'Set up autopay'. Omit to hide it. - 'secondaryValue' (string, optional): the message sent back when the secondary button is tapped; defaults to 'secondaryText'. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaTmcBillExplainer"
+        asaTmcDataUsage:
+            description: "Use this when the customer asks how much data, minutes, or texts they have used or have left this billing cycle, or wants to check their usage or allowance. Shows a radial gauge of used vs. allowance, days left in the cycle, a per-category breakdown, and an optional add-on action."
+            label: "ASA Technology, Media &amp; Comms · Data Usage Meter"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaTmcDataUsage_Output_f2b5"
+            target: "flow://asaTmcDataUsage_Output_f2b5"
+            inputs:
+                "Details": string
+                    description: |
+                      The full data-usage payload as a JSON string, formatted EXACTLY like this: {"title":"Your data this cycle","cycleText":"12 days left · resets Sep 30","used":42.1,"total":50,"unit":"GB","categories":[{"label":"Streaming","amount":24.6},{"label":"Social","amount":9.8},{"label":"Other","amount":7.7}],"note":"You're on track to stay under your limit.","submitText":"Add a data pass","submitValue":"I'd like to add a data pass to my plan"} Rules: - 'title' (string, optional): heading at the top of the card. Defaults to 'Your usage'. - 'cycleText' (string, optional): the billing-cycle status line, e.g. '12 days left · resets Sep 30'. - 'used' (number, REQUIRED): amount consumed so far this cycle, in the same unit as 'total'. - 'total' (number, optional): the allowance. Omit it (or set 0) for an unlimited plan — the gauge then fills fully and shows 'Unlimited'. - 'unit' (string, optional): the unit of measure, e.g. 'GB','MB','min','texts'. Defaults to 'GB'. - 'categories' (array, optional, up to 6 objects): a usage breakdown shown as a stacked bar with a legend. Each object has 'label' (string), 'amount' (number, same unit), and optional 'color' (string, hex like '#0891b2'). Only categories with a positive amount are shown. - 'note' (string, optional): a short callout under the gauge, e.g. an overage warning or reassurance. It is automatically tinted amber near the limit and red when over. - 'submitText' (string, optional): label for an optional action button, e.g. 'Add a data pass' or 'Upgrade plan'. Omit to hide the button. - 'submitValue' (string, optional): the exact message sent back to you when the button is tapped; defaults to 'submitText'. The gauge turns amber at 80% of the allowance and red at or over 100%. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaTmcDataUsage"
+        asaTmcPlanCompare:
+            description: "Use this when the customer wants to compare plans, see pricing options, upgrade or downgrade, or switch to a different plan or package — for example mobile, internet, TV, or streaming tiers. Shows a stack of plan cards with monthly price, a feature checklist, a recommended highlight, and the customer's current plan marked; the customer picks one to switch to."
+            label: "ASA Technology, Media &amp; Comms · Plan Comparison"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaTmcPlanCompare_Output_e1a4"
+            target: "flow://asaTmcPlanCompare_Output_e1a4"
+            inputs:
+                "Details": string
+                    description: |
+                      The full plan-comparison payload as a JSON string, formatted EXACTLY like this: {"title":"Compare plans","subtitle":"Pick the plan that fits how you use your phone","currency":"USD","cadence":"mo","currentPlanId":"essential","plans":[{"id":"essential","name":"Essential","price":45,"tagline":"For light users","features":["10 GB premium data","5G nationwide","SD streaming"]},{"id":"unlimited","name":"Unlimited Plus","price":70,"tagline":"Our most popular plan","badge":"Most popular","recommended":true,"features":["Unlimited premium data","HD streaming","50 GB hotspot","5G Ultra Capacity"]},{"id":"premium","name":"Premium 5G","price":90,"tagline":"Everything, maxed out","features":["Unlimited premium data","4K UHD streaming","100 GB hotspot","Global roaming"]}],"submitText":"Switch plan"} Rules: - 'title' (string, optional): heading at the top of the card. Defaults to 'Compare plans'. - 'subtitle' (string, optional): a short line under the title. - 'currency' (string, optional): ISO code (e.g. 'USD','EUR','GBP') applied to every plan without its own 'currency'. Defaults to 'USD'. - 'cadence' (string, optional): billing period suffix shown next to price; one of 'mo' (per month), 'yr' (per year), 'wk' (per week). Defaults to 'mo'. - 'currentPlanId' (string, optional): the 'id' of the plan the customer is already on. That plan is marked 'Current plan' and cannot be selected. - 'plans' (array, REQUIRED, 2 to 4 objects): the plans to compare, shown top to bottom in the order given. Each plan MUST have 'id' (string, unique, sent back when the customer picks it), 'name' (string), and 'price' (number). Optional per plan: 'tagline' (string, one short line under the name); 'currency' (string, overrides the payload currency); 'badge' (string, short corner tag e.g. 'Most popular','Best value','New' — ignored on the current plan); 'recommended' (boolean; highlights the plan with an accent border — set true on at most one plan, and not on the current plan); 'features' (array of short strings shown as a check-marked list — keep each under ~40 characters and list 2 to 5 per plan). - 'submitText' (string, optional): confirm-button label; defaults to 'Switch plan'. Never emit fewer than two plans or more than four. Do not mark the customer's current plan as 'recommended'. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaTmcPlanCompare"
+        asaTmcServiceStatus:
+            description: "Use this when the customer reports an outage or asks whether a service is down, slow, or being worked on — for example \"is my internet down\", \"why is my TV out\", or checking network status in their area. Shows a service-health board with an overall banner, per-service status rows, the affected area, an estimated restore time, and a notify-me action."
+            label: "ASA Technology, Media &amp; Comms · Service Status"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaTmcServiceStatus_Output_a3c6"
+            target: "flow://asaTmcServiceStatus_Output_a3c6"
+            inputs:
+                "Details": string
+                    description: |
+                      The full service-status payload as a JSON string, formatted EXACTLY like this: {"title":"Service status","overall":"degraded","headline":"We're aware of an issue affecting your area","area":"SoMa, San Francisco 94103","etaText":"Est. restore by 4:30 PM","updatedText":"Updated 2 min ago","services":[{"id":"internet","name":"Internet","status":"down","detail":"Fiber node offline","icon":"internet"},{"id":"tv","name":"TV","status":"degraded","detail":"Some channels affected","icon":"tv"},{"id":"mobile","name":"Mobile","status":"operational","icon":"mobile"},{"id":"voice","name":"Home phone","status":"operational","icon":"voice"}],"submitText":"Notify me when it's fixed","submitValue":"Please text me when service is restored"} Rules: - 'title' (string, optional): heading at the top of the card. Defaults to 'Service status'. - 'overall' (string, optional): the summary banner state; one of 'operational','degraded','outage','maintenance'. If omitted it is derived automatically from the worst individual service. - 'headline' (string, optional): a short sentence under the banner label. - 'area' (string, optional): the affected location, e.g. a neighborhood + ZIP. - 'etaText' (string, optional): estimated restore time, e.g. 'Est. restore by 4:30 PM'. - 'updatedText' (string, optional): freshness stamp shown top-right, e.g. 'Updated 2 min ago'. - 'services' (array, REQUIRED, 1 to 6 objects): the services to show, top to bottom. Each MUST have 'name' (string). Optional per service: 'id' (string); 'status' (string; one of 'operational','degraded','down','maintenance'; defaults to 'operational'); 'detail' (string, one short line — defaults to the status label); 'icon' (string; one of 'internet','tv','mobile','voice','home' — picks the glyph; inferred from the name when omitted). - 'submitText' (string, optional): label for an optional action button, e.g. 'Notify me when it's fixed'. Omit to hide the button. - 'submitValue' (string, optional): the exact message sent back to you when the button is tapped; defaults to 'submitText'. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaTmcServiceStatus"
+
+subagent Manufacturing:
+    label: "Manufacturing"
+    description: "Manufacturing tasks: monitor equipment status, reorder a part, track a work order, or build a quote."
+    reasoning:
+        instructions: ->
+            | Help the customer with their request by calling the single most relevant action for exactly what they asked, then briefly confirm the result in your own words. Call only one action unless the customer asks for another thing. Do not include URLs or links.
+        actions:
+            asaMfgEquipmentMonitor: @actions.asaMfgEquipmentMonitor
+                with Details = ...
+            asaMfgPartReorder: @actions.asaMfgPartReorder
+                with Details = ...
+            asaMfgQuoteBuilder: @actions.asaMfgQuoteBuilder
+                with Details = ...
+            asaMfgWorkOrder: @actions.asaMfgWorkOrder
+                with Details = ...
+    actions:
+        asaMfgEquipmentMonitor:
+            description: "Use this when the customer asks about a machine's or asset's health, live status, performance metrics (OEE, temperature, throughput, uptime), or whether equipment is running, idle, or in a fault. Shows an equipment monitor card with an asset photo, a live status, metric tiles, a trend sparkline, and a create-work-order action."
+            label: "ASA Manufacturing · Equipment Monitor"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaMfgEquipmentMonitor_Output_a5f2"
+            target: "flow://asaMfgEquipmentMonitor_Output_a5f2"
+            inputs:
+                "Details": string
+                    description: |
+                      The full equipment-monitor payload as a JSON string, formatted EXACTLY like this: {"title":"Machine health","asset":{"name":"Trailblazer Assembly Cell","model":"TB-9000","assetId":"LINE-3","location":"Plant 2 · Bay 4","imageUrl":"/resource/asaMfgTrailblazerCell"},"status":"running","statusLabel":"Running","updatedText":"Live · updated 12s ago","metrics":[{"label":"OEE","value":"87","unit":"%","state":"good"},{"label":"Spindle temp","value":"62","unit":"°C","state":"warn"},{"label":"Throughput","value":"142","unit":"/hr","state":"good"},{"label":"Uptime","value":"6d 4h","state":"good"}],"trend":{"label":"OEE · last 12h","points":[72,78,74,80,83,81,85,84,86,88,87,87]},"submitText":"Create work order","submitValue":"Open a work order for the Trailblazer Assembly Cell (LINE-3)"} Rules: - 'title' (string, optional): heading at the top of the card. Defaults to 'Machine health'. - 'asset' (object, REQUIRED): the machine. 'name' (string, REQUIRED); optional 'model','assetId','location' (strings, joined into a meta line); 'imageUrl' (string, same-origin https URL or '/resource/<Name>'; use '/resource/asaMfgTrailblazerCell' for the sample machine). - 'status' (string, optional): one of 'running','idle','fault','maintenance','offline'. Defaults to 'running'; drives the status pill color. - 'statusLabel' (string, optional): overrides the displayed status text. - 'updatedText' (string, optional): a freshness line, e.g. 'Live · updated 12s ago'. - 'metrics' (array, REQUIRED, 1 to 4 objects): the metric tiles. Each has 'label' (string) and 'value' (string or number); optional 'unit' (string, e.g. '%','°C','/hr') and 'state' (one of 'good','warn','bad' — colors the tile; defaults to 'good'). More than four are ignored. - 'trend' (object, optional): a sparkline. 'points' (array of 2+ numbers, REQUIRED for the sparkline to draw); optional 'label' (string). - 'submitText' (string, optional): action-button label, e.g. 'Create work order'. Omit to hide it. - 'submitValue' (string, optional): the exact message sent back when tapped; defaults to 'submitText'. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaMfgEquipmentMonitor"
+        asaMfgPartReorder:
+            description: "Use this when the customer wants to reorder or buy more of a specific spare part or component, check its stock/lead time, or set a reorder quantity. Shows a single part card with its photo, stock level, lead time, unit price, a quantity stepper, and a reorder action."
+            label: "ASA Manufacturing · Part Reorder"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaMfgPartReorder_Output_b6c3"
+            target: "flow://asaMfgPartReorder_Output_b6c3"
+            inputs:
+                "Details": string
+                    description: |
+                      The full part-reorder payload as a JSON string, formatted EXACTLY like this: {"title":"Reorder part","part":{"name":"Industrial I/O Controller","sku":"IOC-4820-DIN","category":"controller","imageUrl":"/resource/asaMfgIoController","unitPrice":486,"currency":"USD","leadTime":"Ships in 3–5 business days","inStock":142,"minOrder":1,"incrementStep":1},"quantity":2,"submitText":"Reorder"} This card shows ONE part only. Rules: - 'title' (string, optional): heading. Defaults to 'Reorder part'. - 'part' (object, REQUIRED): 'name' (string, REQUIRED). Optional: 'sku' (string, shown monospace); 'category' (string); 'imageUrl' (string, same-origin https URL or '/resource/<Name>'; use '/resource/asaMfgIoController' for the sample part); 'unitPrice' (number; enables the live subtotal); 'currency' (ISO code, default USD); 'leadTime' (string, e.g. 'Ships in 3–5 business days'); 'inStock' (number; renders a stock bar — ≤10 shows amber 'low', ≤0 shows red 'Out of stock' and caps the quantity); 'minOrder' (number, minimum + starting quantity, default 1); 'incrementStep' (number, +/- step size, default 1). - 'quantity' (number, optional): initial quantity; clamped to at least 'minOrder' and at most 'inStock' when known. The customer adjusts it with the stepper before submitting. - 'submitText' (string, optional): button label prefix; defaults to 'Reorder'. The button also shows the live subtotal (or unit count). - 'submitValue' (string, optional): a base message; the card appends the chosen quantity + SKU when sending back. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaMfgPartReorder"
+        asaMfgQuoteBuilder:
+            description: "Use this when the customer wants a price or quote for a configurable, made-to-order product — choosing options like material, controls, or warranty, and seeing how the price changes. Shows a configure-to-order card with option chips carrying price deltas, a quantity stepper, a live estimated total, and a request-quote action."
+            label: "ASA Manufacturing · Quote Builder"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaMfgQuoteBuilder_Output_d8e5"
+            target: "flow://asaMfgQuoteBuilder_Output_d8e5"
+            inputs:
+                "Details": string
+                    description: |
+                      The full quote-builder payload as a JSON string, formatted EXACTLY like this: {"title":"Configure your quote","product":"TB-9000 Assembly Cell","currency":"USD","basePrice":48000,"optionGroups":[{"id":"material","label":"Frame material","selectedId":"steel","options":[{"id":"steel","label":"Powder-coated steel","priceDelta":0},{"id":"stainless","label":"Stainless 304","priceDelta":3200,"detail":"Washdown-rated"}]},{"id":"controls","label":"Control package","options":[{"id":"standard","label":"Standard PLC","priceDelta":0},{"id":"advanced","label":"Advanced PLC + HMI","priceDelta":5400}]},{"id":"warranty","label":"Warranty","options":[{"id":"1yr","label":"1 year","priceDelta":0},{"id":"3yr","label":"3 years","priceDelta":2600}]}],"quantity":1,"submitText":"Request quote","submitValue":"Request a formal quote for the configured TB-9000 Assembly Cell"} Rules: - 'title' (string, optional): heading. Defaults to 'Configure your quote'. - 'product' (string, optional): the product being configured. - 'currency' (string, optional): ISO code (default USD). Prices are shown with no cents. - 'basePrice' (number, optional): the starting price before options. The live estimate is (basePrice + sum of selected option priceDeltas) × quantity. - 'optionGroups' (array, REQUIRED, 1 to 5 objects): each has 'id' (string), 'label' (string, REQUIRED), optional 'selectedId' (the option 'id' chosen by default — defaults to the first option), and 'options' (array, 2+ objects). Each option has 'id' (string, REQUIRED), 'label' (string, REQUIRED), optional 'priceDelta' (number, added to the price; 0 shows as 'Included'), and 'detail' (string, one short line). Exactly one option per group is selected at a time. - 'quantity' (number, optional): starting quantity (min 1); the customer adjusts it with the stepper. - 'minQuantity' (number, optional): minimum quantity (default 1). - 'submitText' (string, optional): action-button label; defaults to 'Request quote'. - 'submitValue' (string, optional): a base message; the card appends the chosen options, quantity, and estimated total when sending back. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaMfgQuoteBuilder"
+        asaMfgWorkOrder:
+            description: "Use this when the customer asks about the status or progress of a production build, repair, or work order — where it is in the process, which stage it is at, or when it will ship. Shows a work-order card with a priority chip and a vertical milestone timeline (received, machining, assembly, QC, ready to ship) plus an estimated ship date."
+            label: "ASA Manufacturing · Work Order Tracker"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaMfgWorkOrder_Output_c7d4"
+            target: "flow://asaMfgWorkOrder_Output_c7d4"
+            inputs:
+                "Details": string
+                    description: |
+                      The full work-order payload as a JSON string, formatted EXACTLY like this: {"title":"Work order WO-4821","orderNumber":"WO-4821","product":"Trailblazer Assembly Cell · 2 units","priority":"high","etaText":"Est. ship Oct 2","updatedText":"Updated 1h ago","milestones":[{"label":"Order received","state":"done","timeText":"Sep 18","owner":"Intake"},{"label":"Machining","state":"done","timeText":"Sep 22","owner":"Cell A"},{"label":"Assembly","state":"current","timeText":"In progress","owner":"Bay 4"},{"label":"Quality check","state":"todo"},{"label":"Ready to ship","state":"todo"}],"submitText":"Message production team","submitValue":"I have a question about work order WO-4821"} Rules: - 'title' (string, optional): heading. Defaults to 'Work order <orderNumber>' when omitted. - 'orderNumber' (string, optional): the work-order id. - 'product' (string, optional): one line describing what is being built. - 'priority' (string, optional): one of 'low','normal','high','urgent'. Shown as a colored chip; omit to hide it. - 'etaText' (string, optional): estimated ship/completion, e.g. 'Est. ship Oct 2'. - 'updatedText' (string, optional): freshness stamp, e.g. 'Updated 1h ago'. - 'milestones' (array, REQUIRED, 2 to 7 objects, in order top to bottom): each has 'label' (string, REQUIRED) and 'state' (one of 'done','current','todo'); optional 'timeText' (string) and 'owner' (string), joined into a meta line. Mark exactly one as 'current' (the stage in progress); earlier stages 'done', later ones 'todo'. - 'submitText' (string, optional): action-button label, e.g. 'Message production team'. Omit to hide it. - 'submitValue' (string, optional): the exact message sent back when tapped; defaults to 'submitText'. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaMfgWorkOrder"
+
+subagent Energy_Utilities:
+    label: "Energy & Utilities"
+    description: "Energy and utility tasks: check outages, view usage and cost, set up budget billing, or find rebates and offers."
+    reasoning:
+        instructions: ->
+            | Help the customer with their request by calling the single most relevant action for exactly what they asked, then briefly confirm the result in your own words. Call only one action unless the customer asks for another thing. Do not include URLs or links.
+        actions:
+            asaEnergyBudgetBilling: @actions.asaEnergyBudgetBilling
+                with Details = ...
+            asaEnergyOutageTracker: @actions.asaEnergyOutageTracker
+                with Details = ...
+            asaEnergyRebateOffers: @actions.asaEnergyRebateOffers
+                with Details = ...
+            asaEnergyUsageCost: @actions.asaEnergyUsageCost
+                with Details = ...
+    actions:
+        asaEnergyBudgetBilling:
+            description: "Use this when the customer wants steadier monthly bills, asks about Budget Billing / levelized / average payment plans, or is worried about seasonal bill spikes. Shows a plan card with an actual-vs-budget chart, the flat monthly amount, terms, and an enroll action."
+            label: "ASA Energy &amp; Utilities · Budget Billing"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaEnergyBudgetBilling_Output_c9d5"
+            target: "flow://asaEnergyBudgetBilling_Output_c9d5"
+            inputs:
+                "Details": string
+                    description: |
+                      The full Budget Billing payload as a JSON string, formatted EXACTLY like this: {"title":"Smooth out your bill","subtitle":"Budget Billing keeps your payment the same every month","currency":"USD","monthlyAmount":118,"currentAvgText":"Your bills now swing $64–$210","termText":"Recalculated every 12 months","series":{"actual":[96,120,168,210,150,88,64,72,110,175,190,140],"budget":118},"bullets":["No surprises in peak season","Cancel anytime","Settles up once a year"],"submitText":"Enroll in Budget Billing","submitValue":"Enroll me in Budget Billing","secondaryText":"Maybe later","secondaryValue":"I'd like to think about Budget Billing"} Rules: - 'title' (string, optional): heading. Defaults to 'Smooth out your bill'. - 'subtitle' (string, optional): one short line under the title. - 'currency' (string, optional): ISO code, default USD. - 'monthlyAmount' (number, optional): the flat monthly payment; rendered large. - 'currentAvgText' (string, optional): describes today's swing, e.g. 'Your bills now swing $64–$210'. - 'termText' (string, optional): plan terms, e.g. 'Recalculated every 12 months'. - 'series' (object, optional): { 'actual' (array of 6–12 numbers = recent monthly bills), 'budget' (number = the flat line) }. Rendered as a jagged actual line vs a flat budget line. Omit to hide the chart. - 'bullets' (array of strings, optional): benefit checklist (2–4 items). - 'submitText' (string, optional): primary button label, e.g. 'Enroll in Budget Billing'. - 'submitValue' (string, optional): message sent back on enroll; defaults to the label. - 'secondaryText' (string, optional): secondary/ghost button label, e.g. 'Maybe later'. - 'secondaryValue' (string, optional): message sent back for the secondary button; defaults to the label. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaEnergyBudgetBilling"
+        asaEnergyOutageTracker:
+            description: "Use this when the customer reports a power outage, asks if the power is out in their area, or wants to know when service will be restored. Shows an outage card with the cause, number of customers affected, crew status, a restoration progress track, and an estimated restore time."
+            label: "ASA Energy &amp; Utilities · Outage Tracker"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaEnergyOutageTracker_Output_a7f3"
+            target: "flow://asaEnergyOutageTracker_Output_a7f3"
+            inputs:
+                "Details": string
+                    description: |
+                      The full outage payload as a JSON string, formatted EXACTLY like this: {"title":"Outage status","status":"restoring","headline":"Crews are on site restoring power","area":"Maple Grove · ZIP 55311","cause":"Storm — downed line","affectedText":"1,240 customers affected","etaText":"Est. restore by 6:45 PM","updatedText":"Updated 4 min ago","crew":"Crew #17 on site","steps":[{"label":"Outage detected","state":"done","timeText":"3:02 PM"},{"label":"Crew dispatched","state":"done","timeText":"3:40 PM"},{"label":"On site — repairing","state":"current","timeText":"5:15 PM"},{"label":"Power restored","state":"todo"}],"submitText":"Text me when power is back","submitValue":"Please text me when power is restored"} Rules: - 'title' (string, optional): heading. Defaults to 'Outage status'. - 'status' (string, optional): one of investigating | outage | restoring | restored. Drives the hero color + label (investigating/restoring = amber, outage = red, restored = green). Defaults to 'outage'. - 'headline' (string, optional): one short sentence under the status. - 'area' (string, optional): the affected location, e.g. neighborhood + ZIP. - 'cause' (string, optional): what caused the outage. - 'affectedText' (string, optional): e.g. '1,240 customers affected'. - 'etaText' (string, optional): estimated restore time. - 'updatedText' (string, optional): freshness stamp, e.g. 'Updated 4 min ago'. - 'crew' (string, optional): crew status line. - 'steps' (array, optional): the restoration track, each { 'label' (string, REQUIRED), 'state' ('done'|'current'|'todo'), 'timeText' (string, optional) }. Order them chronologically. If omitted, a default track is derived from 'status'. - 'submitText' (string, optional): action-button label, e.g. 'Text me when power is back'. Omit for no button. - 'submitValue' (string, optional): the message sent back when the button is tapped; defaults to the label. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaEnergyOutageTracker"
+        asaEnergyRebateOffers:
+            description: "Use this when the customer asks about rebates, incentives, or ways to save on energy-efficient upgrades (smart thermostat, heat pump, EV charger, insulation, solar). Shows voucher tiles for the rebates they qualify for, each with its rebate amount, and lets them apply for one."
+            label: "ASA Energy &amp; Utilities · Rebate Offers"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaEnergyRebateOffers_Output_d1e6"
+            target: "flow://asaEnergyRebateOffers_Output_d1e6"
+            inputs:
+                "Details": string
+                    description: |
+                      The full rebate-offers payload as a JSON string, formatted EXACTLY like this: {"title":"Rebates you qualify for","subtitle":"Save on energy-efficient upgrades","currency":"USD","offers":[{"id":"thermostat","name":"Smart thermostat","category":"thermostat","rebateAmount":75,"detail":"ENERGY STAR models","badge":"Popular"},{"id":"heatpump","name":"Heat pump HVAC","category":"heat_pump","rebateAmount":1200,"detail":"Whole-home system"},{"id":"evcharger","name":"Level 2 EV charger","category":"ev_charger","rebateAmount":500,"detail":"Install included"},{"id":"insulation","name":"Attic insulation","category":"insulation","rebateAmount":350,"detail":"Up to R-49"}],"submitText":"Apply for rebate","submitValue":"Apply for the rebate"} Rules: - 'title' (string, optional): heading. Defaults to 'Rebates you qualify for'. - 'subtitle' (string, optional): one short line under the title. - 'currency' (string, optional): ISO code, default USD. - 'offers' (array, REQUIRED): each { 'id' (string, REQUIRED — sent back on selection); 'name' (string, REQUIRED); 'category' (string, optional — one of thermostat | hvac | heat_pump | ev_charger | solar | insulation | water_heater | appliance; drives the tile glyph); 'rebateAmount' (number, optional — shown large in the voucher stub); 'detail' (string, optional — one short line); 'badge' (string, optional — small corner tag e.g. 'Popular') }. - 'submitText' (string, optional): confirm-button label; defaults to 'Apply for rebate'. The customer taps a voucher to select it, then this button applies. - 'submitValue' (string, optional): a base message; the card appends the chosen offer name when sending back. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaEnergyRebateOffers"
+        asaEnergyUsageCost:
+            description: "Use this when the customer asks about their energy usage, how much they have used this cycle, their projected bill, or why their usage changed. Shows a usage card with a daily/weekly column chart, a projected bill amount, the change vs last month, and a cost breakdown by category."
+            label: "ASA Energy &amp; Utilities · Usage &amp; Cost"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaEnergyUsageCost_Output_b8c4"
+            target: "flow://asaEnergyUsageCost_Output_b8c4"
+            inputs:
+                "Details": string
+                    description: |
+                      The full usage-and-cost payload as a JSON string, formatted EXACTLY like this: {"title":"Your energy this cycle","cycleText":"Sep 1–30 · 8 days left","projectedCost":142.50,"currency":"USD","projectedText":"Projected bill","usedUnits":612,"unit":"kWh","deltaPct":-8,"deltaText":"less than last month","bars":[{"label":"Wk1","value":158},{"label":"Wk2","value":171},{"label":"Wk3","value":149},{"label":"Wk4","value":134}],"breakdown":[{"label":"Heating & cooling","amount":74.20,"color":"#d97706"},{"label":"Water heating","amount":31.00},{"label":"Always-on","amount":22.40},{"label":"Other","amount":14.90}],"submitText":"See ways to save","submitValue":"Show me ways to lower my energy bill"} Rules: - 'title' (string, optional): heading. Defaults to 'Your energy this cycle'. - 'cycleText' (string, optional): billing-cycle status line, e.g. 'Sep 1–30 · 8 days left'. - 'projectedCost' (number, optional): the projected bill amount; rendered large. - 'currency' (string, optional): ISO code, default USD. - 'projectedText' (string, optional): label above the projected cost, default 'Projected bill'. - 'usedUnits' (number, optional): energy consumed this cycle. - 'unit' (string, optional): unit of measure, default 'kWh'. - 'deltaPct' (number, optional): change vs last month as a percent — negative renders green ('down/less'), positive amber ('up/more'). - 'deltaText' (string, optional): trailing words after the delta, e.g. 'less than last month'. - 'bars' (array, optional): usage columns, each { 'label' (string), 'value' (number) }. Rendered as a vertical bar chart (2–8 bars). Omit to hide the chart. - 'breakdown' (array, optional): cost drivers, each { 'label' (string, REQUIRED), 'amount' (number, REQUIRED), 'color' (optional hex) }. Rendered as a segmented meter + legend; colors auto-assign from a palette when absent. - 'submitText' (string, optional): action-button label, e.g. 'See ways to save'. Omit for no button. - 'submitValue' (string, optional): the message sent back when the button is tapped; defaults to the label. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaEnergyUsageCost"
+
+subagent HVAC:
+    label: "HVAC"
+    description: "HVAC tasks: control the thermostat, track a technician's arrival, view comfort-system health, or choose a service plan."
+    reasoning:
+        instructions: ->
+            | Help the customer with their request by calling the single most relevant action for exactly what they asked, then briefly confirm the result in your own words. Call only one action unless the customer asks for another thing. Do not include URLs or links.
+        actions:
+            asaHvacServicePlan: @actions.asaHvacServicePlan
+                with Details = ...
+            asaHvacSystemHealth: @actions.asaHvacSystemHealth
+                with Details = ...
+            asaHvacTechTracker: @actions.asaHvacTechTracker
+                with Details = ...
+            asaHvacThermostat: @actions.asaHvacThermostat
+                with Details = ...
+    actions:
+        asaHvacServicePlan:
+            description: "Use this when the customer asks about maintenance plans, service memberships, protection plans, or ways to save on tune-ups and repairs. Shows the available HVAC comfort-plan tiers as price-forward cards with a feature checklist and lets them enroll in one."
+            label: "ASA HVAC · Service Plan Selector"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaHvacServicePlan_Output_d7e8"
+            target: "flow://asaHvacServicePlan_Output_d7e8"
+            inputs:
+                "Details": string
+                    description: |
+                      The full service-plan payload as a JSON string, formatted EXACTLY like this: {"title":"Choose a comfort plan","subtitle":"Annual maintenance memberships that keep your system running","currency":"USD","cadence":"yr","currentPlanId":"basic","plans":[{"id":"basic","name":"Comfort Basic","price":149,"tagline":"Seasonal peace of mind","features":["1 annual tune-up","Priority scheduling","10% off repairs"]},{"id":"plus","name":"Comfort Plus","price":249,"tagline":"Most popular","badge":"Most popular","recommended":true,"features":["2 tune-ups (heating + cooling)","Priority scheduling","15% off repairs","No overtime fees","Filter delivery"]},{"id":"total","name":"Comfort Total","price":399,"tagline":"Total protection","features":["2 tune-ups + mid-season check","24/7 priority dispatch","20% off repairs","Free diagnostics","Extended parts warranty"]}],"submitText":"Enroll in plan"} Rules: - 'title' (string, optional): heading. Defaults to 'Choose a comfort plan'. - 'subtitle' (string, optional): one short line under the title. - 'currency' (string, optional): ISO code, default USD. - 'cadence' (string, optional): billing cadence, one of mo | yr | wk. Rendered as a price suffix (/mo, /yr, /wk). Default /mo. - 'currentPlanId' (string, optional): the id of the customer's current plan; that card is shown locked/dashed as 'Current plan' and is NOT selectable. - 'plans' (array, REQUIRED): each { 'id' (string, REQUIRED — sent back on selection); 'name' (string, REQUIRED); 'price' (number, optional — shown large); 'tagline' (string, optional — one short line under the name); 'badge' (string, optional — small ribbon tag, e.g. 'Most popular'); 'recommended' (boolean, optional — adds an accent highlight border); 'features' (array of strings, optional — the plan's included benefits as a checklist) }. At most 4 plans render. - 'submitText' (string, optional): confirm-button label; defaults to 'Enroll in plan'. The customer taps a plan to select it, then this button enrolls. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaHvacServicePlan"
+        asaHvacSystemHealth:
+            description: "Use this when the customer asks about the health of their HVAC/comfort system, a system checkup, a maintenance tune-up, or their air filter. Shows an overall health score, per-system status (furnace, AC, thermostat, ductwork, filter), a filter-life bar, the next maintenance due date, a recommendation, and lets them book a maintenance visit."
+            label: "ASA HVAC · Comfort System Health Report"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaHvacSystemHealth_Output_c5d6"
+            target: "flow://asaHvacSystemHealth_Output_c5d6"
+            inputs:
+                "Details": string
+                    description: |
+                      The full comfort-system-health payload as a JSON string, formatted EXACTLY like this: {"title":"Your comfort system checkup","score":82,"scoreLabel":"Good","statusText":"One item needs attention soon","updatedText":"Checked today","systems":[{"label":"Furnace","status":"good","detail":"Operating normally","icon":"furnace"},{"label":"AC condenser","status":"watch","detail":"Coil could use a cleaning","icon":"ac"},{"label":"Thermostat","status":"good","detail":"Firmware up to date","icon":"thermostat"},{"label":"Air filter","status":"due","detail":"Replace within a week","icon":"filter"}],"filter":{"lifePct":18,"daysLeft":6,"label":"20x25x1 filter"},"nextServiceText":"Next maintenance due Nov 3","recommendationText":"Book a tune-up to clean the AC coil before summer.","submitText":"Book maintenance","submitValue":"I'd like to book a maintenance visit"} Rules: - 'title' (string, optional): heading. Defaults to 'Your comfort system checkup'. - 'score' (number, REQUIRED, 0-100): overall comfort-system health; rendered as a radial gauge. The gauge is green at 80+, amber at 50-79, red below 50. If omitted the card shows its built-in sample. - 'scoreLabel' (string, optional): short label under the score (e.g. 'Good'). Derived from the score when omitted. - 'statusText' (string, optional): one short summary line under the gauge. - 'updatedText' (string, optional): small 'checked' timestamp shown by the title. - 'systems' (array, optional): per-system rows. Each { 'label' (string, REQUIRED); 'status' (string, REQUIRED — one of good | watch | due | fault; drives the pill + rail color); 'detail' (string, optional — one short line); 'icon' (string, optional — one of furnace | ac | thermostat | ductwork | filter | heatpump | water_heater; drives the glyph) }. - 'filter' (object, optional): the air-filter life bar — { 'lifePct' (number 0-100, REQUIRED within filter — the bar fill; green above 50, amber 20-50, red below 20); 'daysLeft' (number, optional); 'label' (string, optional — e.g. filter size) }. Omit the whole object to hide the bar. - 'nextServiceText' (string, optional): a scheduling callout, e.g. next maintenance due date. - 'recommendationText' (string, optional): a one-line recommendation callout. - 'submitText' (string, optional): CTA label; defaults to nothing (no button). 'submitValue' (string, optional): the message sent back when tapped; defaults to submitText. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaHvacSystemHealth"
+        asaHvacTechTracker:
+            description: "Use this when the customer asks where their technician is, when the tech will arrive, or for the status of a scheduled HVAC service visit. Shows a live dispatch card — status, ETA and arrival window, the technician's identity, an en-route progress track, and job details — with message and reschedule actions."
+            label: "ASA HVAC · Technician ETA Tracker"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaHvacTechTracker_Output_b3c4"
+            target: "flow://asaHvacTechTracker_Output_b3c4"
+            inputs:
+                "Details": string
+                    description: |
+                      The full technician-tracker payload as a JSON string, formatted EXACTLY like this: {"title":"Your technician is on the way","status":"enroute","headline":"Marcus is heading to your home","etaText":"Arriving in ~15 min","windowText":"Arrival window 1:00–3:00 PM","updatedText":"Updated 1 min ago","technician":{"name":"Marcus Reed","role":"Senior HVAC Technician","rating":4.9,"photoUrl":"","initials":"MR","skills":"AC repair · Heat pumps"},"job":{"number":"WO-48213","type":"AC not cooling","address":"128 Maple Ave"},"steps":[{"label":"Scheduled","state":"done","timeText":"9:00 AM"},{"label":"Dispatched","state":"done","timeText":"12:40 PM"},{"label":"En route","state":"current","timeText":"1:05 PM"},{"label":"Arriving","state":"todo"},{"label":"On site","state":"todo"}],"submitText":"Message technician","submitValue":"I'd like to message my technician","secondaryText":"Reschedule visit","secondaryValue":"I'd like to reschedule my service visit"} Rules: - 'title' (string, optional): heading. Defaults to 'Your technician is on the way'. - 'status' (string, optional): one of scheduled | dispatched | enroute | arriving | onsite | complete. Drives the hero color + label AND derives the 5-step track when 'steps' is omitted. Defaults to enroute. - 'headline' (string, optional): one short line in the hero, e.g. the technician's first name + what they're doing. - 'etaText' (string, optional): estimated arrival, shown as a chip, e.g. 'Arriving in ~15 min'. - 'windowText' (string, optional): the booked arrival window, shown as a chip. - 'updatedText' (string, optional): small freshness stamp in the hero. - 'technician' (object, optional but recommended): { 'name' (string, REQUIRED for real content); 'role' (string, optional); 'rating' (number, optional — shown as a star + value); 'photoUrl' (string, optional — falls back to initials if it fails to load); 'initials' (string, optional — 1–2 letters); 'skills' (string, optional — short specialties line) }. - 'job' (object, optional): { 'number' (string), 'type' (string — the service reason), 'address' (string) } — rendered as ledger rows. - 'steps' (array, optional): each { 'label' (string, REQUIRED); 'state' (string — done | current | todo); 'timeText' (string, optional) }. If omitted, the track is derived from 'status'. - 'submitText' (string, optional): primary button label; defaults to no button when absent. - 'submitValue' (string, optional): message sent when the primary button is tapped; defaults to submitText. - 'secondaryText' (string, optional): ghost button label (e.g. 'Reschedule visit'). - 'secondaryValue' (string, optional): message sent when the secondary button is tapped; defaults to secondaryText. TEST MODE: if none of headline, technician.name, or steps is present, the card renders built-in sample data. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaHvacTechTracker"
+        asaHvacThermostat:
+            description: "Use this when the customer wants to see or adjust their thermostat — check the current temperature, change the target setpoint, switch mode (heat/cool/auto/off), or apply a preset (Eco, Comfort, Away, Sleep). Shows a climate dial with mode chips, a target stepper, and quick-set presets, and lets them apply a setting."
+            label: "ASA HVAC · Smart Thermostat Control"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaHvacThermostat_Output_f1a2"
+            target: "flow://asaHvacThermostat_Output_f1a2"
+            inputs:
+                "Details": string
+                    description: |
+                      The full thermostat payload as a JSON string, formatted EXACTLY like this: {"title":"Living room thermostat","currentTemp":71,"targetTemp":72,"mode":"cool","unit":"F","humidity":44,"statusText":"Cooling to 72°","minTemp":50,"maxTemp":90,"presets":[{"id":"eco","label":"Eco","targetTemp":78,"mode":"cool"},{"id":"comfort","label":"Comfort","targetTemp":72,"mode":"cool"},{"id":"away","label":"Away","targetTemp":82,"mode":"off"},{"id":"sleep","label":"Sleep","targetTemp":68,"mode":"cool"}],"submitText":"Set thermostat","submitValue":"Set my thermostat"} Rules: - 'title' (string, optional): heading, e.g. the thermostat/zone name. Defaults to 'Thermostat'. - 'currentTemp' (number, REQUIRED): the current indoor temperature; shown large in the center of the dial. If omitted, the card renders generic sample data. - 'targetTemp' (number, optional): the target setpoint; defaults to currentTemp. - 'mode' (string, optional): one of heat | cool | auto | off | fan; drives the dial + accent color (heat = orange, cool = blue, auto = green, off = muted). Defaults to auto. - 'unit' (string, optional): F or C. Defaults to F. - 'humidity' (number, optional): indoor humidity percent, shown as a small chip. - 'statusText' (string, optional): one short line under the dial, e.g. 'Cooling to 72°'. - 'minTemp' / 'maxTemp' (number, optional): dial + stepper bounds. Default 50 / 90 for F (10 / 32 for C). - 'presets' (array, optional): quick-set chips, each { 'id' (string, REQUIRED), 'label' (string, REQUIRED), 'targetTemp' (number, REQUIRED), 'mode' (string, optional) }. Max 4 shown. - 'submitText' (string, optional): confirm-button label; defaults to 'Set thermostat'. The customer adjusts the target + mode, then this button applies. - 'submitValue' (string, optional): a base message; the card appends the chosen target + mode when sending back. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaHvacThermostat"
+
+subagent Automotive:
+    label: "Automotive"
+    description: "Automotive tasks: configure a vehicle, schedule a test drive, check connected-car status, or estimate a trade-in."
+    reasoning:
+        instructions: ->
+            | Help the customer with their request by calling the single most relevant action for exactly what they asked, then briefly confirm the result in your own words. Call only one action unless the customer asks for another thing. Do not include URLs or links.
+        actions:
+            asaAutoConfigurator: @actions.asaAutoConfigurator
+                with Details = ...
+            asaAutoTestDrive: @actions.asaAutoTestDrive
+                with Details = ...
+            asaAutoTradeIn: @actions.asaAutoTradeIn
+                with Details = ...
+            asaAutoVehicleStatus: @actions.asaAutoVehicleStatus
+                with Details = ...
+    actions:
+        asaAutoConfigurator:
+            description: "Use this when the customer wants to build, configure, or price a vehicle — choosing paint color, trim, drivetrain, or option packages. Shows a build-and-price configurator with color swatches and option groups (each with its price delta), a live estimated price, and a reserve action."
+            label: "ASA Automotive · Vehicle Configurator"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaAutoConfigurator_Output_e1f2"
+            target: "flow://asaAutoConfigurator_Output_e1f2"
+            inputs:
+                "Details": string
+                    description: |
+                      The full vehicle-configurator payload as a JSON string, formatted EXACTLY like this: {"title":"Build your electric SUV","model":"Electric SUV","currency":"USD","basePrice":41990,"colors":[{"id":"white","label":"Glacier White","hex":"#f3f4f6","priceDelta":0},{"id":"black","label":"Midnight Black","hex":"#111827"},{"id":"red","label":"Radiant Red","hex":"#dc2626","priceDelta":595,"selected":true}],"optionGroups":[{"id":"trim","label":"Trim","selectedId":"rs","options":[{"id":"lt","label":"LT","priceDelta":0},{"id":"rs","label":"RS","priceDelta":3200,"detail":"Sport-tuned"}]},{"id":"drive","label":"Drivetrain","selectedId":"awd","options":[{"id":"fwd","label":"FWD","priceDelta":0},{"id":"awd","label":"AWD","priceDelta":2500}]},{"id":"pkg","label":"Packages","selectedId":"tech","options":[{"id":"none","label":"None","priceDelta":0},{"id":"tech","label":"Technology Package","priceDelta":1800,"detail":"Adaptive cruise, HUD"}]}],"submitText":"Reserve this build","submitValue":"I'd like to reserve this configuration"} Rules: - 'title' (string, optional): heading. Defaults to 'Build your vehicle'. - 'model' (string, optional): the model name shown under the title. - 'currency' (string, optional): ISO code, default USD. - 'basePrice' (number, optional): the starting price; the estimate builds up from here. - 'colors' (array, optional): paint choices rendered as single-select circular swatches. Each { 'id' (string, REQUIRED); 'label' (string, REQUIRED — the color name); 'hex' (string, optional — a CSS color like '#dc2626' for the swatch); 'priceDelta' (number, optional — added to the estimate; default 0); 'selected' (boolean, optional — the default color) }. - 'optionGroups' (array, REQUIRED unless colors are provided): each group { 'id' (string, REQUIRED); 'label' (string, REQUIRED — e.g. Trim, Drivetrain, Packages); 'selectedId' (string, optional — the default option; else the first option); 'options' (array, REQUIRED) of { 'id' (string, REQUIRED — sent back on selection); 'label' (string, REQUIRED); 'priceDelta' (number, optional — added to the estimate; 0 shows as 'Included'); 'detail' (string, optional — one short line) } }. Each group is single-select. - 'submitText' (string, optional): confirm-button label; defaults to 'Reserve this build'. - 'submitValue' (string, optional): a base message; the card appends the chosen color, options, and estimated price when sending back. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaAutoConfigurator"
+        asaAutoTestDrive:
+            description: "Use this when the customer wants to book, schedule, or set up a test drive for a vehicle. Shows the vehicle, the dealership, selectable days, and available time slots (in showroom or at home), and lets them book one."
+            label: "ASA Automotive · Test Drive Scheduler"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaAutoTestDrive_Output_a3b4"
+            target: "flow://asaAutoTestDrive_Output_a3b4"
+            inputs:
+                "Details": string
+                    description: |
+                      The full test-drive-scheduler payload as a JSON string, formatted EXACTLY like this: {"title":"Book a test drive","vehicle":{"name":"Electric SUV","trim":"RS AWD · Radiant Red","imageUrl":"","initials":"EV"},"location":{"name":"Downtown Dealership","address":"500 Market St, San Francisco"},"days":[{"date":"2026-09-16","slots":[{"id":"a","time":"09:30","driveType":"showroom"},{"id":"b","time":"13:00","driveType":"at_home"}]},{"date":"2026-09-17","slots":[{"id":"c","time":"10:00","driveType":"showroom"},{"id":"d","time":"15:30","driveType":"showroom"}]},{"date":"2026-09-18","slots":[{"id":"e","time":"11:00","driveType":"at_home"},{"id":"f","time":"16:00","driveType":"showroom"}]},{"date":"2026-09-21","slots":[{"id":"g","time":"09:00","driveType":"showroom"},{"id":"h","time":"14:00","driveType":"at_home"}]},{"date":"2026-09-22","slots":[{"id":"i","time":"10:30","driveType":"showroom"},{"id":"j","time":"17:00","driveType":"showroom"}]}],"submitText":"Book test drive"} Rules: - 'title' (string, optional): heading. Defaults to 'Book a test drive'. - 'vehicle' (object, optional): { 'name' (string, REQUIRED when present — the model being driven); 'trim' (string, optional — trim/color line); 'imageUrl' (string, optional — a full https image URL; falls back to initials if it fails to load); 'initials' (string, optional — 1-2 letters shown when there is no image) }. - 'location' (object, optional): { 'name' (string), 'address' (string) } — the dealership. - 'days' (array, REQUIRED): each { 'date' (string, REQUIRED — ISO 'YYYY-MM-DD'); 'slots' (array, REQUIRED) of { 'id' (string, REQUIRED — sent back on selection); 'time' (string, REQUIRED — 24h 'HH:MM', rendered as '1:30 PM'); 'driveType' (string, optional — one of showroom | at_home; drives the slot glyph + hue) } }. Do NOT emit empty days or empty slot arrays. - 'submitText' (string, optional): confirm-button label; defaults to 'Book test drive'. The customer taps a time slot to select it, then this button books it. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaAutoTestDrive"
+        asaAutoTradeIn:
+            description: "Use this when the customer asks what their vehicle is worth, wants a trade-in value, or is considering trading in or selling a car. Shows an estimated trade-in value with a low–high value-range bar, the factors driving it (mileage, condition, market demand), an optional instant-offer note, and actions to apply the trade-in toward a purchase or book an appraisal."
+            label: "ASA Automotive · Trade-In Estimator"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaAutoTradeIn_Output_e9f0"
+            target: "flow://asaAutoTradeIn_Output_e9f0"
+            inputs:
+                "Details": string
+                    description: |
+                      The full trade-in estimate payload as a JSON string, formatted EXACTLY like this: {"title":"Your trade-in estimate","vehicle":{"name":"2021 Midsize SUV","detail":"42,300 mi · Good condition","imageUrl":"","initials":"SV"},"currency":"USD","estimate":18400,"low":16900,"high":19800,"offerText":"Instant offer good for 7 days","factors":[{"label":"Mileage","detail":"42,300 mi — below average","impact":"positive"},{"label":"Condition","detail":"Good","impact":"neutral"},{"label":"Market demand","detail":"High for this trim","impact":"positive"}],"submitText":"Apply to a purchase","submitValue":"I'd like to apply my trade-in toward a purchase","secondaryText":"Book an appraisal","secondaryValue":"I'd like to book an in-person appraisal"} Rules: - 'title' (string, optional): heading. Defaults to 'Your trade-in estimate'. - 'vehicle' (object, optional): { 'name' (string, REQUIRED — the vehicle being traded); 'detail' (string, optional — one line, e.g. mileage + condition); 'imageUrl' (string, optional — falls back to initials if it fails to load); 'initials' (string, optional — 1-2 letters) }. - 'currency' (string, optional): ISO code, default USD. - 'estimate' (number, REQUIRED): the estimated trade-in value, shown large. If omitted the card shows sample data. - 'low' (number, optional): low end of the value range. Defaults to estimate * 0.9. - 'high' (number, optional): high end of the value range. Defaults to estimate * 1.1. The card draws a range bar from low to high with a marker at 'estimate'. - 'offerText' (string, optional): a short instant-offer callout, e.g. 'Instant offer good for 7 days'. - 'factors' (array, optional): each { 'label' (string, REQUIRED); 'detail' (string, optional — one short line); 'impact' (string, optional — one of positive | neutral | negative; drives the row's up/down glyph + color) }. - 'submitText' (string, optional): primary button label. 'submitValue' (string, optional): the message sent back when tapped (defaults to submitText). - 'secondaryText' (string, optional): a secondary ghost-button label. 'secondaryValue' (string, optional): its sent-back message. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaAutoTradeIn"
+        asaAutoVehicleStatus:
+            description: "Use this when the customer asks about their vehicle's status, driving range, battery/charge or fuel, tire pressure, odometer, or whether service is due. Shows a connected-car status card — a range/charge ring gauge, a four-corner tire-pressure diagram, service items, and any alerts — and lets them schedule service."
+            label: "ASA Automotive · Connected Car Status"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaAutoVehicleStatus_Output_c7d8"
+            target: "flow://asaAutoVehicleStatus_Output_c7d8"
+            inputs:
+                "Details": string
+                    description: |
+                      The full connected-car status payload as a JSON string, formatted EXACTLY like this: {"title":"Your vehicle","vehicle":{"name":"Electric SUV","trim":"RS AWD","imageUrl":"","initials":"EV"},"isElectric":true,"range":{"value":248,"total":312,"unit":"mi"},"battery":78,"odometer":18452,"odometerUnit":"mi","tires":[{"pos":"FL","psi":34,"status":"good"},{"pos":"FR","psi":33,"status":"good"},{"pos":"RL","psi":28,"status":"low"},{"pos":"RR","psi":35,"status":"good"}],"items":[{"label":"Charge","value":"78%","status":"good"},{"label":"Next service","value":"in 1,200 mi","status":"good"},{"label":"Oil life","value":"N/A","status":"good"},{"label":"Tire pressure","value":"1 low","status":"watch"}],"alerts":["Rear-left tire pressure is low (28 psi)"],"updatedText":"Updated 3 min ago","submitText":"Schedule service","submitValue":"I'd like to schedule service for my vehicle"} Rules: - 'title' (string, optional): card heading. Defaults to 'Your vehicle'. - 'vehicle' (object, REQUIRED for real content): { 'name' (string, REQUIRED); 'trim' (string, optional); 'imageUrl' (string, optional — falls back to initials); 'initials' (string, optional — 1-2 letters, derived from name if absent) }. - 'isElectric' (boolean, optional): true for EV/PHEV; affects charge vs fuel wording. - 'range' (object, optional): { 'value' (number — remaining range), 'total' (number, optional — full range), 'unit' (string, optional — mi | km) }. Drives the ring gauge (value/total). If 'total' is omitted the ring shows a healthy arc with the range value. - 'battery' (number, optional): 0-100 percent. Used for the ring when 'range.value' is absent, else shown as a subline. - 'odometer' (number, optional) + 'odometerUnit' (string, optional — mi | km): shown as a subline when range has no battery. - 'tires' (array, optional): up to four { 'pos' (string, REQUIRED — one of FL | FR | RL | RR); 'psi' (number); 'status' (string — good | low | high) }. Rendered as a four-corner diagram; low/high tires turn red. - 'items' (array, optional): up to four { 'label' (string, REQUIRED); 'value' (string); 'status' (string — good | watch | bad) }. Rendered as a service-item grid with a colored status rail. - 'alerts' (array of strings, optional): active alerts shown in an amber banner. - 'updatedText' (string, optional): freshness stamp, e.g. 'Updated 3 min ago'. - 'submitText' (string, optional): CTA label; defaults to 'Schedule service'. - 'submitValue' (string, optional): message sent back when the CTA is tapped. At least a 'vehicle.name' or a 'range.value'/'battery' must be present, or the card falls back to sample data. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaAutoVehicleStatus"
+
+subagent Public_Sector:
+    label: "Public Sector & Education"
+    description: "Public-sector and education tasks: check an application's status, find programs and benefits, submit a service request, or see a required-documents checklist."
+    reasoning:
+        instructions: ->
+            | Help the customer with their request by calling the single most relevant action for exactly what they asked, then briefly confirm the result in your own words. Call only one action unless the customer asks for another thing. Do not include URLs or links.
+        actions:
+            asaPseAppStatus: @actions.asaPseAppStatus
+                with Details = ...
+            asaPseDocsChecklist: @actions.asaPseDocsChecklist
+                with Details = ...
+            asaPseProgramsFinder: @actions.asaPseProgramsFinder
+                with Details = ...
+            asaPseServiceRequest: @actions.asaPseServiceRequest
+                with Details = ...
+    actions:
+        asaPseAppStatus:
+            description: "Use this when the resident or student asks about the status of an application, permit, benefits case, admission, or enrollment. Shows a single application as a progress track (Submitted, Under review, Approved, Issued) with its reference number, current status, and an optional next-action note."
+            label: "ASA Public Sector &amp; Education · Application Status Tracker"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaPseAppStatus_Output_f3a1"
+            target: "flow://asaPseAppStatus_Output_f3a1"
+            inputs:
+                "Details": string
+                    description: |
+                      The full application-status payload as a JSON string, formatted EXACTLY like this: {"title":"Your application status","applicationType":"Building permit","referenceNumber":"APP-2026-1043","status":"review","statusLabel":"Under review","steps":[{"label":"Submitted","state":"done"},{"label":"Under review","state":"current"},{"label":"Approved","state":"todo"},{"label":"Issued","state":"todo"}],"nextActionText":"We may request additional documents — no action needed right now.","submitText":"Message the office","submitValue":"I'd like to message the office about my application"} Rules: - 'title' (string, optional): card heading. Defaults to 'Your application status'. - 'applicationType' (string, optional): what the application is for, e.g. 'Building permit', 'Admission application', 'Benefits case'. Shown under the reference number. - 'referenceNumber' (string, optional): the case/reference id, shown prominently. - 'status' (string, REQUIRED): one of submitted | review | approved | issued | denied. Drives the tracker position + the status pill colour. 'denied' renders a terminal Submitted -> Denied track. - 'statusLabel' (string, optional): human label for the status stamp, e.g. 'Under review'. Defaults to the status. - 'steps' (array, optional): the progress track. Each { 'label' (string, REQUIRED), 'state' (string — one of done | current | todo | denied) }. Do NOT include dates. If omitted, a default 4-step track (Submitted -> Under review -> Approved -> Issued) is derived from 'status'. - 'nextActionText' (string, optional): a short callout telling the applicant what happens next or what they must do. - 'submitText' (string, optional): label for an optional button (e.g. 'Message the office'). 'submitValue' (string, optional): the message sent back to the agent when tapped; defaults to submitText. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaPseAppStatus"
+        asaPseDocsChecklist:
+            description: "Use this when the customer asks what documents they need for an application, permit, benefit, or enrollment, or wants to upload documents. Shows a checklist of the required, optional, and already-received documents, and lets them pick which to upload."
+            label: "ASA Public Sector &amp; Education · Documents Checklist"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaPseDocsChecklist_Output_a9f6"
+            target: "flow://asaPseDocsChecklist_Output_a9f6"
+            inputs:
+                "Details": string
+                    description: |
+                      The full documents-checklist payload as a JSON string, formatted EXACTLY like this: {"title":"Required documents","subtitle":"For your building permit application","documents":[{"id":"id","name":"Government-issued ID","detail":"Driver's license or passport","status":"received"},{"id":"proof","name":"Proof of residency","detail":"Utility bill within 60 days","status":"required"},{"id":"site","name":"Site plan","detail":"PDF, drawn to scale","status":"required"},{"id":"insurance","name":"Contractor insurance","detail":"Only if using a contractor","status":"optional"}],"submitText":"Upload selected","submitValue":"I'd like to upload the selected documents"} Rules: - 'title' (string, optional): heading; defaults to "Required documents". - 'subtitle' (string, optional): a short line under the title (e.g. what the documents are for). - 'documents' (array, REQUIRED, at least one object): the documents for this application/enrollment. Each MUST have 'id' (string, unique, sent back on selection) and 'name' (string). Optional per document: 'detail' (string, one short line, e.g. an accepted format or condition); 'status' (string; one of 'required','received','optional' — drives the status pill: required=navy, received=green, optional=muted; defaults to 'required'). A document with status 'received' is shown checked and is NOT selectable (it has already been provided). 'required' and 'optional' documents are multi-selectable. - 'submitText' (string, optional): confirm-button label; defaults to 'Upload selected'. The button shows the count of selected documents. - 'submitValue' (string, optional): a base message; the card appends the selected document names when sending back. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaPseDocsChecklist"
+        asaPseProgramsFinder:
+            description: "Use this when the resident or student asks what programs, benefits, financial assistance, or scholarships they qualify for or could apply to. Shows the relevant programs as selectable cards, each with an eligibility note, and lets them apply for one."
+            label: "ASA Public Sector &amp; Education · Programs &amp; Benefits Finder"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaPseProgramsFinder_Output_b5c2"
+            target: "flow://asaPseProgramsFinder_Output_b5c2"
+            inputs:
+                "Details": string
+                    description: |
+                      The full programs-and-benefits-finder payload as a JSON string, formatted EXACTLY like this: {"title":"Programs & benefits you may qualify for","subtitle":"Based on what you've told us","programs":[{"id":"snap","name":"Food assistance (SNAP)","category":"assistance","detail":"Monthly grocery benefits","eligibility":"Likely eligible","badge":"Popular"},{"id":"liheap","name":"Energy bill relief (LIHEAP)","category":"utility","detail":"Help with heating & cooling costs","eligibility":"May be eligible"},{"id":"grant","name":"State tuition grant","category":"education","detail":"Up to $4,000/yr for residents","eligibility":"Likely eligible"},{"id":"childcare","name":"Childcare subsidy","category":"assistance","detail":"Sliding-scale childcare help"}],"submitText":"Apply for selected","submitValue":"I'd like to apply for the selected program"} Rules: - 'title' (string, optional): heading. Defaults to 'Programs & benefits you may qualify for'. - 'subtitle' (string, optional): one short line under the title. - 'programs' (array, REQUIRED): each { 'id' (string, REQUIRED — sent back on selection); 'name' (string, REQUIRED); 'category' (string, optional — one of assistance | education | health | housing | tax | employment | utility; drives the card glyph); 'detail' (string, optional — one short line); 'eligibility' (string, optional — a short pill, e.g. 'Likely eligible' / 'May be eligible'); 'badge' (string, optional — small corner tag e.g. 'Popular') }. - 'submitText' (string, optional): confirm-button label; defaults to 'Apply for selected'. The person taps a program to select it, then this button applies. - 'submitValue' (string, optional): a base message; the card appends the chosen program name when sending back. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaPseProgramsFinder"
+        asaPseServiceRequest:
+            description: "Use this when a resident or student wants to report a problem or request a service — for example a pothole, a broken streetlight, graffiti, missed trash pickup, a water leak, or a building/campus facilities issue. Shows an interactive tile grid where they pick the type of request to start a 311 / service report."
+            label: "ASA Public Sector &amp; Education · Service Request"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaPseServiceRequest_Output_d7e4"
+            target: "flow://asaPseServiceRequest_Output_d7e4"
+            inputs:
+                "Details": string
+                    description: |
+                      The full service-request payload as a JSON string, formatted EXACTLY like this: {"title":"Report a problem","subtitle":"Choose what you'd like to report","locationText":"Near 123 Main St","requestTypes":[{"id":"pothole","label":"Pothole / road","description":"Damaged road or pavement","icon":"road"},{"id":"streetlight","label":"Streetlight out","description":"Broken or flickering light","icon":"light"},{"id":"graffiti","label":"Graffiti","description":"Vandalism or tagging","icon":"graffiti"},{"id":"trash","label":"Trash / dumping","description":"Missed pickup or illegal dumping","icon":"trash"},{"id":"water","label":"Water / leak","description":"Leak, flooding, or hydrant","icon":"water"},{"id":"facility","label":"Facilities","description":"Building or campus maintenance","icon":"building"}],"submitText":"Start report","submitValue":"I'd like to report a"} Rules: - 'title' (string, optional): the prompt shown at the top of the card. Defaults to 'Report a problem'. - 'subtitle' (string, optional): one short line under the title. - 'locationText' (string, optional): the place the report is about (e.g. an address or intersection), shown as a context banner above the grid. Include it whenever the location is known. - 'requestTypes' (array, REQUIRED, at least two objects): the kinds of problem the person can choose from. Each MUST have 'id' (string, unique, sent back on selection) and 'label' (string, short). Optional: 'description' (string, one short line under the label) and 'icon' (string; one of 'road','light','graffiti','trash','water','building','tree','sidewalk','noise','other' — drives the tile icon; defaults to 'other'). Choose request types that fit the agency or campus (e.g. road/light/graffiti/trash/water for a city 311; building/water/light/other for campus facilities). - 'submitText' (string, optional): the confirm-button label; defaults to 'Start report'. - 'submitValue' (string, optional): a base message; the card appends the chosen request label and id when sending back. Defaults to "I'd like to report a". Never emit fewer than two request types. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaPseServiceRequest"
+
+subagent Legal:
+    label: "Legal"
+    description: "Legal tasks: browse practice areas, get a free case evaluation, meet a matched attorney, or schedule a consultation."
+    reasoning:
+        instructions: ->
+            | Help the customer with their request by calling the single most relevant action for exactly what they asked, then briefly confirm the result in your own words. Call only one action unless the customer asks for another thing. Do not include URLs or links.
+        actions:
+            asaLegalAttorneyMatch: @actions.asaLegalAttorneyMatch
+                with Details = ...
+            asaLegalCaseEvaluation: @actions.asaLegalCaseEvaluation
+                with Details = ...
+            asaLegalConsultScheduler: @actions.asaLegalConsultScheduler
+                with Details = ...
+            asaLegalPracticeAreas: @actions.asaLegalPracticeAreas
+                with Details = ...
+    actions:
+        asaLegalAttorneyMatch:
+            description: "Use this when the visitor wants to meet, choose, or be matched with an attorney — for example \"who would handle my case\", \"show me your lawyers\", or \"I want to book with someone\". Shows attorneys matched to the visitor's matter as trust-building cards (role, practice focus, experience, rating, cases handled and bar number) and lets them pick one to book a free consult with."
+            label: "ASA Legal · Meet Your Attorney"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaLegalAttorneyMatch_Output_7c3e"
+            target: "flow://asaLegalAttorneyMatch_Output_7c3e"
+            inputs:
+                "Details": string
+                    description: |
+                      The full Meet-Your-Attorney payload as a JSON string, formatted EXACTLY like this: {"title":"Meet your attorney","subtitle":"Matched to your matter - book a free consult","attorneys":[{"id":"vale","name":"Marcus Vale","title":"Managing Partner","focus":"Personal Injury & Litigation","photo":"lawyer-1","years":22,"rating":4.9,"casesWon":"500+ cases","bar":"CA #148203","blurb":"Trial-tested advocate for serious injury and negligence claims."},{"id":"tanaka","name":"Kenji Tanaka","title":"Associate","focus":"Business & Immigration","photo":"lawyer-2","years":8,"rating":4.8,"casesWon":"120+ matters","bar":"CA #276514","blurb":"Guides founders and families through formation, contracts and visas."},{"id":"shaw","name":"Eleanor Shaw","title":"Partner","focus":"Family & Estate Planning","photo":"lawyer-3","years":25,"rating":5.0,"casesWon":"600+ cases","bar":"CA #093117","blurb":"Compassionate counsel for divorce, custody, wills and trusts."}],"submitText":"Book a consult","submitValue":"I would like to book with"} Rules: - 'title' (string, optional): heading above the attorney list. Defaults to 'Meet your attorney'. - 'subtitle' (string, optional): a short supporting line under the title, e.g. how the attorneys were matched to the visitor's matter. - 'attorneys' (array, recommended): the matched attorneys, rendered as selectable cards. If empty or omitted the card shows a neutral sample in test mode (never blank). Each attorney object: - 'id' (string, recommended): stable identifier; sent back with the attorney's name when the visitor books. - 'name' (string, required): the attorney's full name. - 'title' (string, optional): role, e.g. 'Managing Partner'. Rendered together with 'focus' as '<title> · <focus>'. - 'focus' (string, optional): practice focus, e.g. 'Personal Injury & Litigation'. - 'photo' (string, optional): a full hosted headshot image URL. OMIT it unless you have a real image URL — the card then shows the attorney's initials instead (the 'lawyer-1'/'lawyer-2'/'lawyer-3' values above are placeholders and will render as initials). - 'initials' (string, optional): 1-2 letters shown when there is no photo; defaults to the initials of 'name'. - 'years' (number, optional): years of experience; rendered as '<years> yrs'. - 'rating' (number 0-5, optional): star rating; rendered to one decimal, e.g. 4.9. - 'casesWon' (string, optional): matters handled, e.g. '500+ cases'. - 'bar' (string, optional): bar admission, e.g. 'CA #148203'. - 'blurb' (string, optional): a one- to two-line description of the attorney. - 'submitText' (string, optional): label for the book button; defaults to 'Book with <first name>' once an attorney is chosen. - 'submitValue' (string, optional): the base message sent back to the agent when the visitor books; the chosen attorney's name is appended to it (e.g. 'I would like to book with Marcus Vale'). This card shows administrative attorney-profile information only. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaLegalAttorneyMatch"
+        asaLegalCaseEvaluation:
+            description: "Use this when a law-firm website visitor wants a free case review / case evaluation, or asks the firm to look at their situation — for example \"can you review my case\", \"I want a free consultation about my accident\", or \"get help with my matter\". Shows a guided intake form (a few quick questions, a description box, and contact fields) with a clear note that submitting does not create an attorney-client relationship, then hands the intake to the firm."
+            label: "ASA Legal · Free Case Evaluation"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaLegalCaseEvaluation_Output_7b2d"
+            target: "flow://asaLegalCaseEvaluation_Output_7b2d"
+            inputs:
+                "Details": string
+                    description: |
+                      The full free case-evaluation intake payload as a JSON string, formatted EXACTLY like this: {"title":"Free case review","subtitle":"Tell us a little and we'll assess your options","matter":"Personal Injury","questions":[{"id":"when","label":"When did this happen?","type":"choice","options":["Past week","Past month","1-6 months ago","Over 6 months ago"]},{"id":"injured","label":"Was anyone injured?","type":"choice","options":["Yes","No","Not sure"]},{"id":"represented","label":"Have you hired a lawyer for this?","type":"choice","options":["No","Yes"]}],"describeLabel":"Briefly describe your situation","describePlaceholder":"Share what happened, in your own words.","consentText":"I agree to the Privacy Policy and Terms of Use.","disclaimer":"Submitting this form does not create an attorney-client relationship. Please do not share confidential or time-sensitive information until we have agreed to represent you.","footerNote":"An attorney will review your request and respond within 1 business day.","submitText":"Request my free review","submitValue":"I would like a free case review"} Rules: - 'title' (string, optional): heading above the form. Defaults to 'Free case review'. - 'subtitle' (string, optional): a short supporting line under the title. - 'matter' (string, recommended): the practice area / matter this review is about, shown as a banner chip (e.g. 'Personal Injury', 'Family Law'). - 'questions' (array, REQUIRED): the quick structured questions. Each item MUST have 'id' (string, unique) and 'label' (string), and MAY have 'type' ('choice' or 'date'; defaults to 'choice') and 'options' (array of strings — the selectable pills; used for 'choice' type only, ignored for 'date'). Keep it to a few high-signal questions. If you truly have none, the card falls back to a sample. - 'describeLabel' (string, optional): label for the free-text 'describe your situation' box. Defaults to 'Briefly describe your situation'. - 'describePlaceholder' (string, optional): placeholder text for that box. - 'consentText' (string, optional): the consent checkbox label (agree to Privacy Policy / Terms of Use). A sensible default is used if omitted. - 'disclaimer' (string, optional): the disclaimer text. Keep it LEGALLY ACCURATE — submitting a public web form does NOT create an attorney-client relationship, and the submission is not privileged. Pass an empty string '' to hide it. A safe default is used if omitted. - 'footerNote' (string, optional): a small footer note, e.g. expected response time. Pass '' to hide it. - 'submitText' (string, optional): primary button label; defaults to 'Request my free review'. - 'submitValue' (string, optional): the EXACT message sent back to the agent when the visitor taps submit; defaults to 'I would like a free case review'. Never pre-fill the visitor's personal contact details (first/last name, email, phone) — the form collects those from the visitor. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaLegalCaseEvaluation"
+        asaLegalConsultScheduler:
+            description: "Use this when the visitor wants to book, schedule, or set up a free consultation or meeting with the firm or an attorney — for example \"book a free consultation\", \"I want to meet with a lawyer\", or \"schedule a call\". Shows a consultation scheduler with an attorney hero, a meeting-type toggle (in person, phone, video), a day picker, and time slots to choose from."
+            label: "ASA Legal · Consultation Scheduler"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaLegalConsultScheduler_Output_7d4f"
+            target: "flow://asaLegalConsultScheduler_Output_7d4f"
+            inputs:
+                "Details": string
+                    description: |
+                      The full consultation-scheduler payload as a JSON string, formatted EXACTLY like this: {"title":"Book your free consultation","attorneyName":"Marcus Vale","attorneyTitle":"Managing Partner - Personal Injury","attorneyPhoto":"lawyer-1","modes":[{"id":"in_person","label":"In person","icon":"in_person"},{"id":"phone","label":"Phone","icon":"phone"},{"id":"video","label":"Video","icon":"video"}],"days":[{"id":"mon","label":"Mon","sublabel":"Sep 21","slots":[{"id":"m1","label":"9:00 AM"},{"id":"m2","label":"11:30 AM"},{"id":"m3","label":"2:00 PM"}]},{"id":"tue","label":"Tue","sublabel":"Sep 22","slots":[{"id":"t1","label":"10:00 AM"},{"id":"t2","label":"1:00 PM","disabled":true},{"id":"t3","label":"3:30 PM"}]},{"id":"wed","label":"Wed","sublabel":"Sep 23","slots":[{"id":"w1","label":"9:30 AM"},{"id":"w2","label":"12:00 PM"},{"id":"w3","label":"4:00 PM"}]},{"id":"thu","label":"Thu","sublabel":"Sep 24","slots":[{"id":"h1","label":"11:00 AM"},{"id":"h2","label":"2:30 PM"}]},{"id":"fri","label":"Fri","sublabel":"Sep 25","slots":[{"id":"f1","label":"9:00 AM"},{"id":"f2","label":"10:30 AM"},{"id":"f3","label":"1:30 PM"}]}],"note":"Free 30-minute consultation - no obligation","submitText":"Confirm consultation","submitValue":"I would like to book"} Rules: - 'title' (string, optional): heading above the scheduler. Defaults to 'Book your free consultation'. - 'subtitle' (string, optional): a short supporting line. ONLY shown when there is no attorney (omit it whenever 'attorneyName' is set). - 'attorneyName' (string, recommended): the attorney the visitor is booking with; drives the hero header. - 'attorneyTitle' (string, optional): the attorney's role/focus, e.g. 'Managing Partner - Personal Injury'. - 'attorneyPhoto' (string, optional): a full image URL (https://...) for the headshot; if omitted or not a URL, the attorney's initials are shown instead. - 'modes' (array, optional): the meeting types, rendered as a toggle. Each item MUST have 'id' (string) and 'label' (string) and SHOULD have 'icon' (one of 'in_person', 'phone', 'video'; any other value falls back to a calendar icon). Typical set is in person / phone / video. - 'days' (array, REQUIRED for real content): each item MUST have 'id' (string), 'label' (string, e.g. 'Mon') and a non-empty 'slots' array, and SHOULD have 'sublabel' (string, e.g. 'Sep 21'). A day with no slots is dropped; if NO day has slots the card shows a generic sample (test mode) — always include real days with slots. - 'days[].slots' (array): each slot MUST have 'id' (string) and 'label' (string, e.g. '9:00 AM') and MAY have 'disabled' (boolean) to show an unavailable time struck through. - 'note' (string, optional): a reassurance line under the picker. Defaults to 'Free 30-minute consultation - no obligation'. - 'submitText' (string, optional): the confirm button label; defaults to 'Confirm consultation'. - 'submitValue' (string, optional): the base intent sent back to the agent when the visitor confirms; the card appends the chosen meeting type, day and time. Defaults to 'I would like to book'. Offer only genuinely available appointment times. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaLegalConsultScheduler"
+        asaLegalPracticeAreas:
+            description: "Use this when a law-firm website visitor asks what the firm does, which areas of law it handles, or for help finding the right practice area — for example \"what kind of cases do you take?\", \"I was in a car accident\", \"do you handle divorce?\", or \"how can you help me?\". Shows an expandable \"How can we help?\" practice-area guide; each area opens to reveal a description, common matter types, a trust stat, and a display-only link, plus a Get-help action per area."
+            label: "ASA Legal · Practice-Area Selector"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaLegalPracticeAreas_Output_7a1c"
+            target: "flow://asaLegalPracticeAreas_Output_7a1c"
+            inputs:
+                "Details": string
+                    description: |
+                      The full practice-area selector payload as a JSON string, formatted EXACTLY like this: {"title":"How can we help?","subtitle":"Tap an area to see how we can help - then start your conversation","areas":[{"id":"injury","name":"Personal Injury","blurb":"Accidents, negligence & claims","icon":"injury","description":"We pursue full compensation for accident and negligence victims - medical bills, lost wages, and pain and suffering. No fee unless we win.","services":["Car & truck accidents","Slip & fall","Medical malpractice","Wrongful death"],"stat":"$50M+ recovered","href":"/practice-areas/personal-injury"},{"id":"family","name":"Family Law","blurb":"Divorce, custody & support","icon":"family","description":"Compassionate guidance through divorce, custody, and support - protecting your family and your future at every step.","services":["Divorce","Child custody","Child & spousal support","Prenuptial agreements"],"stat":"1,200+ families helped","href":"/practice-areas/family-law"},{"id":"estate","name":"Estate Planning","blurb":"Wills, trusts & probate","icon":"estate","description":"Plan ahead with wills, trusts, and powers of attorney so your wishes are honored and your loved ones are protected.","services":["Wills","Living trusts","Probate","Power of attorney"],"stat":"Flat-fee packages","href":"/practice-areas/estate-planning"},{"id":"business","name":"Business & Corporate","blurb":"Formation, contracts & disputes","icon":"business","description":"From formation to contracts to disputes, we help businesses operate and grow with confidence.","services":["Entity formation","Contracts","Partnership disputes","M&A"],"stat":"500+ businesses advised","href":"/practice-areas/business-law"},{"id":"immigration","name":"Immigration","blurb":"Visas, green cards & citizenship","icon":"immigration","description":"Guiding individuals, families, and employers through visas, green cards, and citizenship.","services":["Family visas","Work visas","Green cards","Naturalization"],"stat":"98% approval rate","href":"/practice-areas/immigration"},{"id":"criminal","name":"Criminal Defense","blurb":"Charges, DUI & expungement","icon":"criminal","description":"Aggressive, confidential defense against charges - protecting your rights, your record, and your freedom.","services":["DUI / DWI","Drug charges","Assault","Expungement"],"stat":"Available 24/7","href":"/practice-areas/criminal-defense"},{"id":"employment","name":"Employment","blurb":"Disputes, contracts & rights","icon":"employment","description":"Standing up for employees and advising employers on workplace rights and compliance.","services":["Wrongful termination","Discrimination","Wage & hour","Severance review"],"stat":"Free consultation","href":"/practice-areas/employment-law"},{"id":"realestate","name":"Real Estate","blurb":"Purchases, leases & closings","icon":"realestate","description":"Smooth closings and sound advice for buyers, sellers, landlords, and investors.","services":["Purchases & sales","Leases","Title review","Zoning & disputes"],"stat":"2,000+ closings","href":"/practice-areas/real-estate"}],"linkText":"Learn more","submitText":"Get help with {name}","submitValue":"I need help with"} Rules: - 'title' (string, optional): heading above the list. Defaults to 'How can we help?'. - 'subtitle' (string, optional): a short supporting line under the title. - 'areas' (array, required): the practice areas the firm handles. Each item MUST have 'id' (string, a stable key sent back on selection) and 'name' (string). Each MAY have: 'blurb' (string, a short one-liner under the name), 'icon' (string, one of injury|family|estate|business|immigration|criminal|employment|realestate|other — picks the row icon; unknown values fall back to a scales-of-justice icon), 'description' (string, shown when the row is expanded), 'services' (array of strings — common matter types, shown as chips), 'stat' (string, a trust signal, e.g. '$50M+ recovered'), and 'href' (string, the firm's page — rendered as a display-only 'Learn more' affordance, NOT a working link). - 'linkText' (string, optional): label for the display-only link. Defaults to 'Learn more'. - 'submitText' (string, optional): the per-area Get-help button label; use '{name}' to interpolate the area name. Defaults to 'Get help with {name}'. - 'submitValue' (string, optional): the message sent back to the agent when a Get-help button is tapped. If it contains '{name}' it is interpolated; otherwise the area name is appended (e.g. 'I need help with' becomes 'I need help with Personal Injury'). Include only real practice areas the firm actually handles; leave 'areas' empty only to preview the built-in sample. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaLegalPracticeAreas"
+
+subagent Travel_Hospitality:
+    label: "Travel & Hospitality"
+    description: "Travel and hospitality tasks: choose a seat, check flight status, show a digital boarding pass, or select a hotel room."
+    reasoning:
+        instructions: ->
+            | Help the customer with their request by calling the single most relevant action for exactly what they asked, then briefly confirm the result in your own words. Call only one action unless the customer asks for another thing. Do not include URLs or links.
+        actions:
+            asaTravelBoardingPass: @actions.asaTravelBoardingPass
+                with Details = ...
+            asaTravelFlightStatus: @actions.asaTravelFlightStatus
+                with Details = ...
+            asaTravelRoomSelector: @actions.asaTravelRoomSelector
+                with Details = ...
+            asaTravelSeatMap: @actions.asaTravelSeatMap
+                with Details = ...
+    actions:
+        asaTravelBoardingPass:
+            description: "Use this when the customer asks for their boarding pass — for example \"show me my boarding pass\", \"pull up my boarding pass\", or \"add my boarding pass to my wallet\". Shows a wallet-style digital boarding pass with the airline, route, flight, gate, seat, boarding group and a barcode, plus add-to-wallet and email actions."
+            label: "ASA Travel · Digital Boarding Pass"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaTravelBoardingPass_Output_8c3e"
+            target: "flow://asaTravelBoardingPass_Output_8c3e"
+            inputs:
+                "Details": string
+                    description: |
+                      The full digital boarding pass payload as a JSON string, formatted EXACTLY like this: {"title":"Boarding pass","airline":"Aero Air","passenger":"J. RIVERA","from":"SFO","fromCity":"San Francisco","to":"JFK","toCity":"New York","flight":"AF128","date":"Jul 12","boardingTime":"10:05 AM","departTime":"10:35 AM","gate":"A12","terminal":"2","seat":"12A","group":"B","status":"Boarding","submitText":"Add to wallet","submitValue":"Add my boarding pass to my wallet","secondaryText":"Email pass"} Rules: - 'title' (string, optional): eyebrow above the pass. Defaults to 'Boarding pass'. - 'airline' (string, recommended): the airline / brand name shown at the top of the pass. - 'passenger' (string, optional): passenger name, shown in the times row (e.g. 'J. RIVERA'). - 'from' (string, recommended): origin airport code, e.g. 'SFO'. Shown large on the left of the route. - 'fromCity' (string, optional): origin city name shown under the origin code. - 'to' (string, recommended): destination airport code, e.g. 'JFK'. Shown large on the right of the route. - 'toCity' (string, optional): destination city name shown under the destination code. - 'flight' (string, recommended): flight number, e.g. 'AF128'. Shown bold on the stub. - 'date' (string, optional): travel date, e.g. 'Jul 12'. - 'boardingTime' (string, optional): boarding time, e.g. '10:05 AM'; labelled 'Boards'. - 'departTime' (string, optional): departure time, e.g. '10:35 AM'; labelled 'Departs'. - 'gate' (string, optional): departure gate, e.g. 'A12'. Shown bold on the stub. - 'terminal' (string, optional): departure terminal, e.g. '2'; part of the pass data. - 'seat' (string, optional): assigned seat, e.g. '12A'. Shown bold on the stub. - 'group' (string, optional): boarding group, e.g. 'B'. Shown bold on the stub. - 'status' (string, optional): e.g. 'Boarding' or 'On time'; rendered as a pill. - 'submitText' (string, optional): primary button label; defaults to 'Add to wallet'. - 'submitValue' (string, optional): the EXACT message sent back to the agent when the primary button is tapped; defaults to a sensible 'Add my boarding pass to my wallet' phrase. - 'secondaryText' (string, optional): a ghost secondary button label, e.g. 'Email pass'. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaTravelBoardingPass"
+        asaTravelFlightStatus:
+            description: "Use this when the customer asks about the status of a flight — for example \"where is my flight\", \"is flight AF128 on time\", \"what gate does my flight leave from\", or \"which baggage belt\". Shows a live flight status card with the route (a plane along the arc between origin and destination), a status pill, gates, terminals and baggage claim, plus a get-updates action."
+            label: "ASA Travel · Flight Status Tracker"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaTravelFlightStatus_Output_8b2d"
+            target: "flow://asaTravelFlightStatus_Output_8b2d"
+            inputs:
+                "Details": string
+                    description: |
+                      The full flight-status card payload as a JSON string, formatted EXACTLY like this: {"title":"Flight AF128","status":"in_air","origin":{"code":"SFO","city":"San Francisco","time":"10:35 AM","gate":"A12","terminal":"2"},"dest":{"code":"JFK","city":"New York","time":"7:05 PM","terminal":"4","baggage":"Belt 6"},"progressPct":62,"aircraft":"Airbus A321neo","durationText":"5h 30m","updatedText":"Live · updated just now","submitText":"Get gate updates","submitValue":"Send me gate and delay updates for flight AF128"} Rules: - 'title' (string, optional): the card heading, usually the flight number, e.g. 'Flight AF128'. Defaults to 'Flight status'. - 'status' (string, recommended): the live flight state. Use ONE of exactly: 'scheduled', 'boarding', 'departed', 'in_air', 'landed', 'delayed', 'cancelled'. Drives the coloured status pill and the plane's position. - 'statusLabel' (string, optional): a display override for the pill text; if omitted a sensible label is derived from 'status' (e.g. 'in_air' shows 'In air'). - 'origin' (object, recommended): the departure airport — { 'code' (string, e.g. 'SFO'), 'city' (string, optional), 'time' (string, optional, e.g. '10:35 AM'), 'gate' (string, optional), 'terminal' (string, optional) }. - 'dest' (object, recommended): the arrival airport — same shape as 'origin' plus 'baggage' (string, optional, the baggage-claim belt, e.g. 'Belt 6'). Note: 'baggage' applies to the destination only. - 'progressPct' (number, optional): 0-100, the plane's position along the route arc. Ignored when status is 'scheduled' or 'boarding' (forced to 0) or 'landed' (forced to 100). - 'aircraft' (string, optional): aircraft type, e.g. 'Airbus A321neo'; shown under the title. - 'durationText' (string, optional): flight duration, e.g. '5h 30m'; appended after the aircraft as '<aircraft> · <durationText>'. - 'updatedText' (string, optional): a freshness caption, e.g. 'Live · updated just now'. - 'submitText' (string, optional): the get-updates button label; defaults to 'Get updates'. - 'submitValue' (string, optional): the EXACT message sent back to the agent when the button is tapped; defaults to a sensible 'Send me gate and delay updates...' phrase. Use these EXACT field names — they are the single contract the card reads. Only include fields you actually have; omit unknown ones rather than inventing values.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaTravelFlightStatus"
+        asaTravelRoomSelector:
+            description: "Use this ONLY when the guest wants to see or choose a HOTEL room — for example \"show me available rooms\", \"what rooms do you have\", or \"I want to book a room\". Shows a set of hotel-room cards (bed, size, occupancy, amenities and nightly rate) the guest picks from, plus a Reserve action. Do NOT use this for flights, flight search, flight booking, or seat selection — it is for hotel rooms only. If the customer wants to search or book a flight (there is no flight-search card), do not force a card: help conversationally and offer Flight Status, Seat Map, or Boarding Pass instead."
+            label: "ASA Travel · Room Selector"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaTravelRoomSelector_Output_8d4f"
+            target: "flow://asaTravelRoomSelector_Output_8d4f"
+            inputs:
+                "Details": string
+                    description: |
+                      The full room-selector payload as a JSON string, formatted EXACTLY like this: {"title":"Choose your room","subtitle":"The Shoreline Resort · Jul 12-15 · 2 guests","currency":"USD","rooms":[{"id":"r1","name":"Ocean View King","bed":"1 King bed","size":"420 sq ft","sleeps":2,"amenities":["Ocean view","Balcony","Free WiFi"],"price":389,"cadence":"night","badge":"Best value"},{"id":"r2","name":"Garden Double Queen","bed":"2 Queen beds","size":"480 sq ft","sleeps":4,"amenities":["Garden view","Free WiFi","Mini bar"],"price":329,"cadence":"night"},{"id":"r3","name":"Beachfront Suite","bed":"1 King + sofa bed","size":"720 sq ft","sleeps":3,"amenities":["Beachfront","Living room","Soaking tub"],"price":612,"cadence":"night","badge":"Only 2 left"}],"submitText":"Reserve","submitValue":"I would like to reserve this room"} Rules: - 'title' (string, optional): heading above the room list. Defaults to 'Choose your room'. - 'subtitle' (string, optional): context line under the title, e.g. 'property · dates · guests'. - 'currency' (string, optional): ISO currency code used to format room prices. Defaults to 'USD'. - 'rooms' (array, recommended): the rooms to choose from. Each item MUST have 'name' (string) and SHOULD have 'id' (string) — the 'id'/name is echoed back to you when the guest reserves. Per-room optional fields: 'bed' (string, e.g. '1 King bed'), 'size' (string, e.g. '420 sq ft'), 'sleeps' (number, occupancy), 'amenities' (array of strings; only the first 3 are shown, as chips), 'price' (number, per cadence), 'cadence' (string, defaults to 'night'), 'currency' (string, per-room override of the top-level currency), 'imageUrl' (string, optional; a gradient placeholder is shown if omitted), 'badge' (string, e.g. 'Best value' or 'Only 2 left'). If 'rooms' is empty or omitted the card shows a test-mode sample so it never renders blank — always include real rooms. - 'submitText' (string, optional): the Reserve button label; defaults to 'Reserve'. - 'submitValue' (string, optional): the base message sent back to the agent when the guest reserves; the chosen room name and price are appended automatically. Defaults to 'I would like to reserve this room'. Use these EXACT field names — they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaTravelRoomSelector"
+        asaTravelSeatMap:
+            description: "Use this when the customer wants to choose or change a seat on an ALREADY-BOOKED flight — for example \"I want to pick my seat\", \"show me the seat map\", or \"can I change my seat\". Shows an interactive cabin seat map colour-coded by seat kind (standard, extra legroom, exit row, premium) and status (open / taken), with a live selected-seat detail and price, and a select-seat action. Do NOT use this to search for or book a flight, or to list flights — only for seat selection on a booked flight."
+            label: "ASA Travel · Seat Map"
+            require_user_confirmation: False
+            include_in_progress_indicator: True
+            source: "asaTravelSeatMap_Output_8a1c"
+            target: "flow://asaTravelSeatMap_Output_8a1c"
+            inputs:
+                "Details": string
+                    description: |
+                      The full seat map payload as a JSON string, formatted EXACTLY like this: {"title":"Choose your seat","flight":"SFO to JFK · Flight AF128","columns":["A","B","C","D","E","F"],"aisleAfter":"C","currency":"USD","seats":[{"id":"12A","row":12,"col":"A","status":"open","kind":"extra_legroom","price":45},{"id":"12B","row":12,"col":"B","status":"open","kind":"extra_legroom","price":45},{"id":"12C","row":12,"col":"C","status":"taken","kind":"extra_legroom","price":45},{"id":"12D","row":12,"col":"D","status":"open","kind":"extra_legroom","price":45},{"id":"12E","row":12,"col":"E","status":"open","kind":"extra_legroom","price":45},{"id":"12F","row":12,"col":"F","status":"open","kind":"extra_legroom","price":45},{"id":"13A","row":13,"col":"A","status":"taken","kind":"standard","price":0},{"id":"13B","row":13,"col":"B","status":"open","kind":"standard","price":0},{"id":"13C","row":13,"col":"C","status":"open","kind":"standard","price":0},{"id":"13D","row":13,"col":"D","status":"open","kind":"standard","price":0},{"id":"13E","row":13,"col":"E","status":"open","kind":"standard","price":0},{"id":"13F","row":13,"col":"F","status":"taken","kind":"standard","price":0},{"id":"14A","row":14,"col":"A","status":"open","kind":"exit","price":30},{"id":"14B","row":14,"col":"B","status":"open","kind":"exit","price":30},{"id":"14C","row":14,"col":"C","status":"open","kind":"exit","price":30},{"id":"14D","row":14,"col":"D","status":"taken","kind":"exit","price":30},{"id":"14E","row":14,"col":"E","status":"open","kind":"exit","price":30},{"id":"14F","row":14,"col":"F","status":"open","kind":"exit","price":30},{"id":"15A","row":15,"col":"A","status":"open","kind":"standard","price":0},{"id":"15B","row":15,"col":"B","status":"taken","kind":"standard","price":0},{"id":"15C","row":15,"col":"C","status":"open","kind":"standard","price":0},{"id":"15D","row":15,"col":"D","status":"open","kind":"standard","price":0},{"id":"15E","row":15,"col":"E","status":"taken","kind":"standard","price":0},{"id":"15F","row":15,"col":"F","status":"open","kind":"standard","price":0},{"id":"16A","row":16,"col":"A","status":"taken","kind":"standard","price":0},{"id":"16B","row":16,"col":"B","status":"open","kind":"standard","price":0},{"id":"16C","row":16,"col":"C","status":"open","kind":"standard","price":0},{"id":"16D","row":16,"col":"D","status":"open","kind":"standard","price":0},{"id":"16E","row":16,"col":"E","status":"open","kind":"standard","price":0},{"id":"16F","row":16,"col":"F","status":"open","kind":"standard","price":0},{"id":"17A","row":17,"col":"A","status":"open","kind":"standard","price":0},{"id":"17B","row":17,"col":"B","status":"open","kind":"standard","price":0},{"id":"17C","row":17,"col":"C","status":"open","kind":"standard","price":0},{"id":"17D","row":17,"col":"D","status":"open","kind":"standard","price":0},{"id":"17E","row":17,"col":"E","status":"open","kind":"standard","price":0},{"id":"17F","row":17,"col":"F","status":"taken","kind":"standard","price":0},{"id":"18A","row":18,"col":"A","status":"open","kind":"standard","price":0},{"id":"18B","row":18,"col":"B","status":"open","kind":"standard","price":0},{"id":"18C","row":18,"col":"C","status":"taken","kind":"standard","price":0},{"id":"18D","row":18,"col":"D","status":"taken","kind":"standard","price":0},{"id":"18E","row":18,"col":"E","status":"open","kind":"standard","price":0},{"id":"18F","row":18,"col":"F","status":"open","kind":"standard","price":0}],"submitText":"Select seat","submitValue":"I would like to select this seat"} Rules: - 'title' (string, optional): heading above the map. Defaults to 'Choose your seat'. - 'flight' (string, optional): context line under the title, e.g. 'SFO to JFK · Flight AF128'. - 'columns' (array of strings, optional): the seat column letters in order, e.g. ["A","B","C","D","E","F"]. Defaults to A-F. - 'aisleAfter' (string, optional): the column letter the aisle gap is drawn after, e.g. 'C'. - 'seats' (array, REQUIRED): every seat in the cabin. Each item MUST have 'id' (string, e.g. '14A' - this exact value is sent back when the seat is chosen), 'row' (number) and 'col' (string, the column letter). Each item MAY have 'status' (string: 'open' or 'taken'; default 'open' - taken seats are not selectable), 'kind' (string: 'standard', 'extra_legroom', 'exit' or 'premium'; drives the seat colour; default 'standard') and 'price' (number: the seat add-on charge, 0 = included). - 'currency' (string, optional): ISO currency code for the seat price, e.g. 'USD'. Defaults to USD. - 'submitText' (string, optional): the select-seat button label; defaults to 'Select seat'. - 'submitValue' (string, optional): the base message sent back to the agent when the traveler confirms a seat; the chosen seat id is appended automatically. Defaults to a sensible 'I would like to select this seat' phrase. Provide every seat you want shown - the map renders exactly the seats in 'seats'. Use these EXACT field names - they are the single contract the card reads.
+                    label: "Details"
+                    is_required: True
+                    is_user_input: False
+            outputs:
+                "Options": object
+                    description: "Show to the user."
+                    label: "Options"
+                    is_displayable: True
+                    filter_from_agent: False
+                    complex_data_type_name: "c__asaTravelSeatMap"

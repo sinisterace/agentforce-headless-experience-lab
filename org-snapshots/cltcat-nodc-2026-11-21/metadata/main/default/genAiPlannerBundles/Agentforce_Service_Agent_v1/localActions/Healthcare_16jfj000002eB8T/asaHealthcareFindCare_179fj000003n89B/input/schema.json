@@ -1,0 +1,15 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full find-care payload as a JSON string, formatted EXACTLY like this: {\"title\":\"Care near you\",\"subtitle\":\"Near Moscone Center · SoMa, San Francisco\",\"facilities\":[{\"id\":\"f1\",\"name\":\"GoHealth Urgent Care – SoMa\",\"type\":\"urgent_care\",\"distance\":\"0.3 mi\",\"openNow\":true,\"hours\":\"Open until 8:00 PM\",\"waitTime\":\"15 min wait\",\"address\":\"876 Folsom St, San Francisco\",\"phone\":\"+14155550142\",\"services\":[\"X-ray\",\"Labs\",\"Stitches\"],\"mapsUrl\":\"https://www.google.com/maps/dir/?api=1&destination=876%20Folsom%20St%2C%20San%20Francisco%2C%20CA%2094107\"},{\"id\":\"f2\",\"name\":\"Saint Francis Memorial Hospital ER\",\"type\":\"er\",\"distance\":\"1.5 mi\",\"openNow\":true,\"hours\":\"Open 24 hours\",\"address\":\"900 Hyde St, San Francisco\",\"phone\":\"+14155550190\",\"mapsUrl\":\"https://www.google.com/maps/dir/?api=1&destination=900%20Hyde%20St%2C%20San%20Francisco%2C%20CA%2094109\"}],\"submitText\":\"Get directions\"} Rules: - 'title' (string, optional): heading; defaults to 'Care near you'. - 'subtitle' (string, optional): a short line under the title, e.g. 'Near Moscone Center · SoMa, San Francisco'. - 'facilities' (array, REQUIRED, at least one object): the nearby places to get care. Each MUST have 'id' (string, unique, sent back on selection) and 'name' (string). Optional per facility: 'type' (string; one of 'urgent_care','er','primary_care','pharmacy','clinic','hospital','lab','telehealth' — drives the icon/hue; defaults to 'clinic'); 'distance' (string, e.g. '0.8 mi'); 'openNow' (boolean — shows a green Open / grey Closed pill); 'hours' (string, e.g. 'Open until 9:00 PM' or 'Open 24 hours'); 'waitTime' (string, e.g. '12 min wait'); 'address' (string); 'phone' (string, E.164 like '+14155550142' preferred — becomes a Call link); 'services' (array of short strings, shown as chips); 'mapsUrl' (string, a full https maps URL — becomes the Google Maps 'Directions' button; prefer the directions form 'https://www.google.com/maps/dir/?api=1&destination=<url-encoded address>'). - 'submitText' (string, optional): unused label reserved for future; safe to omit. Do NOT include any patient health information — this card is wayfinding only. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType",
+  "lightning:textIndexed" : true
+}

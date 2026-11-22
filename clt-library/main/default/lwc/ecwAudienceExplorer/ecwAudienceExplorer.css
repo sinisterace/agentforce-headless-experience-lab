@@ -1,0 +1,61 @@
+@font-face {
+    font-family: 'ecwAvantGarde';
+    src: url('/resource/ecwAvantGarde') format('woff2');
+    font-weight: 400 700; font-style: normal; font-display: swap;
+}
+* { box-sizing: border-box; }
+/* Agentforce Coworker · Marketing · Audience builder — live-sizing segment Venn.
+   ecw family: airy white surface, deep-navy ink, hairline dividers, mono numerals.
+   Toggle criteria + drag the threshold → the Venn resizes and the audience count tweens. */
+:host {
+    --ecw-ink: #06234d; --ecw-ink-2: #35507a; --ecw-muted: #6a7891; --ecw-line: #e9edf4;
+    --ecw-accent: #0d6fd1; --ecw-track: #eef2f8;
+    display: block;
+}
+.ecw-ae {
+    container-type: inline-size; display: flex; flex-direction: column; gap: 1rem;
+    padding: 1.15rem 1.2rem; border: 1px solid var(--ecw-line); border-radius: 0.9rem;
+    background: #fff; font-family: 'ecwAvantGarde', 'Futura', 'Avenir Next', 'Century Gothic', 'Trebuchet MS', sans-serif; color: var(--ecw-ink);
+    box-shadow: 0 22px 48px -34px rgba(6, 35, 77, 0.6);
+}
+
+.ecw-ae-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap; }
+.ecw-ae-eyebrow { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ecw-accent); }
+.ecw-ae-base { font-size: 0.72rem; font-weight: 600; color: var(--ecw-muted); font-variant-numeric: tabular-nums; }
+
+/* Venn stage */
+.ecw-ae-stage { position: relative; display: flex; justify-content: center; padding: 0.4rem 0 0.2rem; min-height: 9.5rem; }
+.ecw-ae-venn { width: 14rem; max-width: 100%; height: 9.5rem; display: block; }
+.ecw-ae-circle { fill-opacity: 0.22; mix-blend-mode: multiply; transition: r 0.4s cubic-bezier(.2,.8,.2,1), cx 0.4s cubic-bezier(.2,.8,.2,1), cy 0.4s cubic-bezier(.2,.8,.2,1); }
+.ecw-ae-empty { stroke: var(--ecw-line); stroke-width: 2; stroke-dasharray: 4 5; }
+.ecw-ae-count { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.15rem; pointer-events: none; }
+.ecw-ae-count-val { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 2.3rem; line-height: 1; font-weight: 820; letter-spacing: -0.035em; color: var(--ecw-ink); font-variant-numeric: tabular-nums; }
+.ecw-ae-count-sub { font-size: 0.66rem; font-weight: 650; color: var(--ecw-muted); font-variant-numeric: tabular-nums; }
+
+/* criteria toggles */
+.ecw-ae-criteria { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.ecw-ae-crit { display: flex; align-items: center; gap: 0.6rem; padding: 0.55rem 0; border-top: 1px solid var(--ecw-line); }
+.ecw-ae-crit:first-child { border-top: 0; }
+.ecw-ae-switch { flex: none; width: 2.1rem; height: 1.2rem; border-radius: 999px; border: 0; background: #cdd6e4; padding: 0; cursor: pointer; position: relative; transition: background 0.18s ease; }
+.ecw-ae-switch.is-on { background: var(--ecw-accent); }
+.ecw-ae-switch-thumb { position: absolute; top: 0.15rem; left: 0.15rem; width: 0.9rem; height: 0.9rem; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(6,35,77,0.3); transition: transform 0.18s cubic-bezier(.2,.8,.2,1); }
+.ecw-ae-switch.is-on .ecw-ae-switch-thumb { transform: translateX(0.9rem); }
+.ecw-ae-switch:focus-visible { outline: 2px solid var(--ecw-accent); outline-offset: 2px; }
+.ecw-ae-crit-dot { flex: none; width: 0.55rem; height: 0.55rem; border-radius: 50%; }
+.ecw-ae-crit-label { flex: 1; min-width: 0; font-size: 0.82rem; font-weight: 600; color: var(--ecw-ink); }
+.ecw-ae-crit-frac { flex: none; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.72rem; font-weight: 700; color: var(--ecw-muted); font-variant-numeric: tabular-nums; }
+
+/* threshold slider */
+.ecw-ae-threshold { display: flex; flex-direction: column; gap: 0.45rem; padding-top: 0.9rem; border-top: 1px solid var(--ecw-line); }
+.ecw-ae-threshold-top { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
+.ecw-ae-threshold-label { font-size: 0.74rem; font-weight: 650; color: var(--ecw-ink-2); }
+.ecw-ae-threshold-val { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.86rem; font-weight: 800; color: var(--ecw-ink); font-variant-numeric: tabular-nums; }
+.ecw-ae-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 0.4rem; border-radius: 999px; background: var(--ecw-track); outline: none; cursor: pointer; }
+.ecw-ae-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 1.1rem; height: 1.1rem; border-radius: 50%; background: var(--ecw-accent); border: 2px solid #fff; box-shadow: 0 1px 3px rgba(6,35,77,0.4); cursor: pointer; }
+.ecw-ae-slider::-moz-range-thumb { width: 1.1rem; height: 1.1rem; border-radius: 50%; background: var(--ecw-accent); border: 2px solid #fff; box-shadow: 0 1px 3px rgba(6,35,77,0.4); cursor: pointer; }
+.ecw-ae-slider:focus-visible { outline: 2px solid var(--ecw-accent); outline-offset: 3px; }
+
+@container (max-width: 340px) {
+    .ecw-ae-count-val { font-size: 2rem; }
+    .ecw-ae-venn { height: 8.5rem; }
+}

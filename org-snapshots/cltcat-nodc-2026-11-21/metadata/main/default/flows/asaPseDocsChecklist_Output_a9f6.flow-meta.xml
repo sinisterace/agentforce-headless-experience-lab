@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <name>Assign_Details_To_Options</name>
+        <label>Assign Details To Options</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>Options.pseDocsChecklistJSON</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Details</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <description>Show the documents needed for an application or enrollment as a checklist, mark which are already received, and let the customer pick which to upload.</description>
+    <environments>Default</environments>
+    <interviewLabel>ASA Public Sector Education Documents Checklist {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>ASA Public Sector &amp; Education · Documents Checklist</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Assign_Details_To_Options</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <variables>
+        <description>The JSON payload for the card. See the genAiFunction input schema for the exact format.</description>
+        <name>Details</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <description>Show to the user</description>
+        <name>Options</name>
+        <apexClass>AsaPseDocsChecklistData</apexClass>
+        <dataType>Apex</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+</Flow>

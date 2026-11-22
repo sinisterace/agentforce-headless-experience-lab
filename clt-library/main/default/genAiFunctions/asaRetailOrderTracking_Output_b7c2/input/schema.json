@@ -1,0 +1,16 @@
+{
+  "required": [
+    "Details"
+  ],
+  "unevaluatedProperties": false,
+  "properties": {
+    "Details": {
+      "title": "Details",
+      "description": "The full order-tracking payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Track order #4821\",\"live\":true,\"status\":\"out_for_delivery\",\"etaText\":\"Arriving 2:15–2:30 PM\",\"courier\":{\"name\":\"Alex Rivera\",\"vehicle\":\"bike\",\"initials\":\"AR\",\"rating\":\"4.9 ★\"},\"destination\":{\"label\":\"Home\",\"address\":\"150 4th St, San Francisco\"},\"submitText\":\"Message courier\"}\n\nRules:\n- 'title' (string, optional): heading at the top of the card. Defaults to 'Track your order'.\n- 'live' (boolean, optional): when true, shows a pulsing LIVE badge next to the title and animates the courier marker on the map. Defaults to false.\n- 'status' (string, optional): one of 'submitted','packed','out_for_delivery','delivered'. Drives the courier's position along the map route AND seeds the default timeline when 'steps' is omitted. Defaults to 'submitted'.\n- 'etaText' (string, optional): free-form arrival estimate, e.g. 'Arriving 2:15–2:30 PM'. When present, an Estimated Arrival block is shown above the courier row.\n- 'courier' (object, optional): { 'name' (string, REQUIRED to show the row), 'vehicle' (string, optional, one of 'bike','van','car','foot'; defaults to 'bike'), 'initials' (string, optional, shown in the avatar when no photo; auto-derived from 'name' when omitted), 'photoUrl' (string, optional, same-origin https URL or '/resource/<Name>'; shown instead of initials when present), 'rating' (string, optional, free-form e.g. '4.9 ★') }.\n- 'destination' (object, optional): { 'label' (string, optional, e.g. 'Home'), 'address' (string, optional) }. Shown on the Estimated Arrival line when either is present.\n- 'steps' (array, optional): the status timeline. Each entry is { 'label' (string, REQUIRED), 'state' (string, REQUIRED, one of 'done','current','todo'), 'time' (string, optional, e.g. '2:04 PM') }. When omitted, a default 4-step timeline (Order placed / Packed & ready / Out for delivery / Delivered) is derived from 'status'.\n- 'submitText' (string, optional): label for an optional CTA button at the bottom of the card, e.g. 'Message courier'. Omit to hide the button.\n- 'submitValue' (string, optional): the text sent back to the agent when the CTA is tapped. Defaults to 'submitText' when omitted.\n\nUse these EXACT field names — they are the single contract the card reads.",
+      "lightning:type": "lightning__textType",
+      "lightning:isPII": false,
+      "copilotAction:isUserInput": false
+    }
+  },
+  "lightning:type": "lightning__objectType"
+}

@@ -1,0 +1,14 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full digital insurance ID card payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Proof of insurance\",\"carrier\":\"Meridian Mutual\",\"policyType\":\"Auto\",\"policyholder\":\"Jordan Rivera\",\"policyNumber\":\"AUTO-8842-XY\",\"vehicle\":\"2022 Tesla Model 3\",\"plate\":\"8ABC123\",\"effectiveDate\":\"Jan 1, 2026\",\"expirationDate\":\"Jul 1, 2026\",\"status\":\"Active\",\"coverages\":[{\"label\":\"Liability\"},{\"label\":\"Collision\",\"detail\":\"$500 ded.\"},{\"label\":\"Comprehensive\",\"detail\":\"$500 ded.\"},{\"label\":\"Uninsured motorist\"}],\"submitText\":\"Email me a copy\",\"submitValue\":\"Email me a copy of my insurance ID card\",\"secondaryText\":\"Add to wallet\"}\n\nRules:\n- 'title' (string, optional): eyebrow above the card. Defaults to 'Proof of insurance'.\n- 'carrier' (string, recommended): the insurer / brand name shown on the card.\n- 'policyType' (string, optional): line of business, e.g. 'Auto' or 'Home'; rendered as '<policyType> · ID Card'.\n- 'policyholder','policyNumber','vehicle','plate','effectiveDate','expirationDate' (strings, optional): shown in the card's detail grid. 'policyNumber' and 'plate' render in monospace. Include the ones that apply to the policy type ('vehicle'/'plate' for auto; omit them for other lines).\n- 'status' (string, optional): e.g. 'Active' or 'Lapsed'; rendered as a pill.\n- 'coverages' (array, optional): each item MUST have 'label' (string) and MAY have 'detail' (string, e.g. '$500 ded.'). Shown as chips under the details.\n- 'submitText' (string, optional): primary button label; defaults to 'Email me a copy'.\n- 'submitValue' (string, optional): the EXACT message sent back to the agent when the primary button is tapped; defaults to a sensible 'Email me a copy...' phrase.\n- 'secondaryText' (string, optional): a ghost secondary button label, e.g. 'Add to wallet'.\n\nThis card is administrative proof-of-insurance only — never include data beyond what a physical insurance ID card shows. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

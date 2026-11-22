@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Technology, Media & Comms · Plan Comparison",
+  "description" : "Compares up to four plans as price-forward cards with feature lists, a recommended highlight, and a current-plan marker; the customer picks one to switch to.",
+  "lightning:type" : "@apexClassType/c__AsaTmcPlanCompareData"
+}

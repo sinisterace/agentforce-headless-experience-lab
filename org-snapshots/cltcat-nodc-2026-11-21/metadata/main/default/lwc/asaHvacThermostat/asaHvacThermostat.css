@@ -1,0 +1,199 @@
+/* ASA HVAC · Smart Thermostat Control — a self-contained SVG climate dial
+   (270° arc) with a centered current/target readout, a mode-chip row, a target
+   stepper, and quick-set presets. rem units + inherited font so the card matches
+   the host chat theme in Enhanced Chat v2. Comfort-blue accent with a heat/cool
+   duality (heat = warm orange, cool = cool blue, auto = green, off = muted) as
+   local custom props for easy theming. */
+:host {
+    --asa-accent: #0369a1;
+    --asa-line: #e2e8f0;
+    --asa-track: #eef2f6;
+    --asa-ink: #0f172a;
+    --asa-muted: #64748b;
+    --asa-heat: #ea580c;
+    --asa-cool: #0284c7;
+    --asa-good: #15803d;
+    --asa-radius: 14px;
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after { box-sizing: border-box; }
+
+.asa-test-badge {
+    margin: 0 0 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 8px;
+    background: #eff6ff;
+    color: #0369a1;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.asa-th-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.35rem; }
+.selector-title {
+    font-size: 1.12rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+    min-width: 0;
+}
+.asa-th-humidity { display: inline-flex; align-items: center; gap: 0.28rem; font-size: 0.72rem; font-weight: 650; color: var(--asa-cool); white-space: nowrap; flex-shrink: 0; }
+.asa-th-humidity svg { width: 0.85rem; height: 0.85rem; }
+
+/* --- Dial --- */
+.asa-th-meter { position: relative; width: 12.5rem; max-width: 100%; margin: 0.35rem auto 0.2rem; }
+.asa-th-dial { --hue: var(--asa-good); display: block; width: 100%; height: auto; }
+.asa-th-dial.is-heat { --hue: var(--asa-heat); }
+.asa-th-dial.is-cool { --hue: var(--asa-cool); }
+.asa-th-dial.is-auto { --hue: var(--asa-good); }
+.asa-th-dial.is-off { --hue: var(--asa-muted); }
+.asa-th-dial.is-fan { --hue: var(--asa-accent); }
+.asa-th-track {
+    fill: none;
+    stroke: var(--asa-track);
+    stroke-width: 11;
+    stroke-linecap: round;
+}
+.asa-th-value {
+    fill: none;
+    stroke: var(--hue);
+    stroke-width: 11;
+    stroke-linecap: round;
+    transition: stroke-dasharray 0.5s ease, stroke 0.3s ease;
+}
+
+.asa-th-center {
+    position: absolute;
+    top: 46%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.05rem;
+    pointer-events: none;
+}
+.asa-th-current { font-size: 2.35rem; font-weight: 780; letter-spacing: -0.04em; line-height: 1; color: var(--asa-ink); white-space: nowrap; }
+.asa-th-deg { font-size: 1rem; font-weight: 640; margin-left: 0.1rem; color: var(--asa-muted); }
+.asa-th-target { font-size: 0.74rem; font-weight: 680; color: var(--hue, var(--asa-muted)); white-space: nowrap; }
+.asa-th-dial.is-heat ~ .asa-th-center .asa-th-target { color: var(--asa-heat); }
+.asa-th-dial.is-cool ~ .asa-th-center .asa-th-target { color: var(--asa-cool); }
+.asa-th-dial.is-auto ~ .asa-th-center .asa-th-target { color: var(--asa-good); }
+.asa-th-dial.is-off ~ .asa-th-center .asa-th-target { color: var(--asa-muted); }
+
+.asa-th-status {
+    margin: 0.1rem 0 0.6rem;
+    text-align: center;
+    font-size: 0.76rem;
+    font-weight: 640;
+    color: var(--asa-muted);
+    overflow-wrap: break-word;
+}
+
+/* --- Mode chips --- */
+.asa-th-modes { display: flex; gap: 0.35rem; margin-bottom: 0.55rem; }
+.asa-th-mode {
+    flex: 1;
+    min-width: 0;
+    padding: 0.42rem 0.3rem;
+    border: 1px solid var(--asa-line);
+    border-radius: 9px;
+    background: #fff;
+    color: var(--asa-muted);
+    font-family: inherit;
+    font-size: 0.74rem;
+    font-weight: 660;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.asa-th-mode:hover { border-color: color-mix(in srgb, var(--asa-accent) 40%, var(--asa-line)); }
+.asa-th-mode.is-on { color: #fff; border-color: transparent; }
+.asa-th-mode.is-heat.is-on { background: var(--asa-heat); }
+.asa-th-mode.is-cool.is-on { background: var(--asa-cool); }
+.asa-th-mode.is-auto.is-on { background: var(--asa-good); }
+.asa-th-mode.is-off.is-on { background: var(--asa-muted); }
+
+/* --- Target stepper --- */
+.asa-th-stepper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.55rem;
+    padding: 0.32rem 0.42rem;
+    border: 1px solid var(--asa-line);
+    border-radius: 11px;
+    background: #f8fafc;
+}
+.asa-th-step {
+    width: 2.1rem;
+    height: 2.1rem;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--asa-line);
+    border-radius: 9px;
+    background: #fff;
+    color: var(--asa-ink);
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease;
+}
+.asa-th-step:hover { border-color: var(--asa-accent); color: var(--asa-accent); }
+.asa-th-step svg { width: 1.05rem; height: 1.05rem; }
+.asa-th-step-label { font-size: 0.82rem; font-weight: 700; color: var(--asa-ink); white-space: nowrap; min-width: 0; overflow-wrap: break-word; text-align: center; flex: 1; }
+
+/* --- Presets --- */
+.asa-th-presets { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.15rem; }
+.asa-th-preset {
+    padding: 0.34rem 0.66rem;
+    border: 1px solid var(--asa-line);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--asa-ink);
+    font-family: inherit;
+    font-size: 0.72rem;
+    font-weight: 640;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.asa-th-preset:hover { border-color: color-mix(in srgb, var(--asa-accent) 40%, var(--asa-line)); }
+.asa-th-preset.is-on { border-color: var(--asa-accent); background: color-mix(in srgb, var(--asa-accent) 9%, #fff); color: var(--asa-accent); }
+
+.asa-th-cta {
+    margin-top: 0.65rem;
+    width: 100%;
+    min-height: 2.7rem;
+    padding: 0.6rem;
+    border: 0;
+    border-radius: 11px;
+    background: var(--asa-accent);
+    color: #fff;
+    font-size: 0.84rem;
+    font-weight: 680;
+    cursor: pointer;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--asa-accent) 22%, transparent);
+    transition: filter 0.15s ease;
+}
+.asa-th-cta:hover { filter: brightness(1.06); }
+
+@container (max-width: 300px) {
+    .asa-th-meter { width: 11rem; }
+    .asa-th-current { font-size: 2rem; }
+    .asa-th-mode { font-size: 0.68rem; padding: 0.4rem 0.2rem; }
+}

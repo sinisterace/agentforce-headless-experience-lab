@@ -1,0 +1,14 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full store-pickup payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Pick up in store\",\"product\":{\"name\":\"Trailblazer Running Shoe\",\"variant\":\"Size 10 · Black\",\"imageUrl\":\"/resource/asaRetailTrailblazerShoe\",\"category\":\"shoes\"},\"stores\":[{\"id\":\"s1\",\"name\":\"Union Square\",\"distance\":\"0.4 mi\",\"availability\":\"in_stock\",\"pickupEta\":\"Ready in 2 hours\",\"address\":\"333 Post St, San Francisco\",\"hours\":\"Open until 9:00 PM\",\"phone\":\"+14155550142\",\"mapsUrl\":\"https://www.google.com/maps/dir/?api=1&destination=...\"}]}\n\nRules:\n- 'title' (string, optional): heading at the top of the card. Defaults to 'Pick up in store'.\n- 'subtitle' (string, optional): a short line under the title.\n- 'product' (object, optional): the item being picked up, shown as a context row above the store list. Optional fields: 'name' (string; the row only renders when present), 'variant' (string, e.g. size/color), 'imageUrl' (string, same-origin https URL or '/resource/<Name>'; use '/resource/asaRetailTrailblazerShoe' for the sample shoe), 'category' (string; one of 'apparel','shoes','electronics','beauty','home','grocery','accessories','outdoors','toys'; drives the fallback tile when no image is available).\n- 'stores' (array, REQUIRED, at least one object): the nearby stores to choose from. Each store MUST have 'id' (string, unique, sent back when the customer picks it) and 'name' (string). Optional per store: 'distance' (string, e.g. '0.4 mi'); 'address' (string); 'hours' (string, e.g. 'Open until 9:00 PM'); 'availability' (string; one of 'in_stock','low','out'; 'out' stores are shown but cannot be selected); 'pickupEta' (string, e.g. 'Ready in 2 hours'; hidden when 'out'); 'phone' (string; rendered as a tappable Call link); 'mapsUrl' (string; rendered as a Directions link, opened in a new tab).\n- 'submitText' (string, optional): label for the reserve button. Defaults to 'Reserve for pickup'.\n\nNever emit zero stores. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

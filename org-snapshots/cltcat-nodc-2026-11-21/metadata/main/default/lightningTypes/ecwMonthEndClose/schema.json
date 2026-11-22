@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · Finance · Month-end close",
+  "description" : "Month-end close checklist with percent complete and blockers.",
+  "lightning:type" : "@apexClassType/c__EcwMonthEndCloseData"
+}

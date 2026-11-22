@@ -1,0 +1,86 @@
+/* ASA Travel · Flight Status Tracker — a live-status card: a plane glides along
+   the route arc between origin and destination, with a status pill, gates /
+   terminals and baggage claim, over a get-updates action. rem units + inherited
+   font so it matches the host chat theme in Enhanced Chat v2. Accent is a local
+   custom prop for theming. Ported from the CltCatalogue playground .asa-fs- rules. */
+:host {
+    --customer-accent: #0b5cab;
+    display: block;
+}
+
+.clt-live-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+.clt-live-preview *,
+.clt-live-preview *::before,
+.clt-live-preview *::after {
+    box-sizing: border-box;
+}
+
+.travel-flightstatus-container {
+    /* ECv2 renders this in a ~320px column; size to the card, not the viewport. */
+    container-type: inline-size;
+    --tv-accent: var(--customer-accent, #0b5cab);
+    --tv-ink: #14202e;
+    --tv-muted: #5b6b82;
+    --tv-line: color-mix(in srgb, #14202e 14%, transparent);
+    --tv-card: #ffffff;
+}
+
+.clt-test-badge {
+    font-size: 0.72rem;
+    padding: 0.3rem 0.55rem;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--customer-accent) 15%, transparent);
+    color: var(--customer-accent);
+    align-self: flex-start;
+    margin: 0;
+}
+
+.selector-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: var(--tv-ink);
+}
+
+/* --- Flight Status Tracker --- */
+.asa-fs-head { display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; margin-bottom: 1rem; }
+.asa-fs-headtext { min-width: 0; }
+.asa-fs-aircraft { margin: .1rem 0 0; font-size: .74rem; color: var(--tv-muted); }
+.asa-fs-status { --st: #2563eb; flex-shrink: 0; display: inline-flex; align-items: center; gap: .32rem; padding: .22rem .55rem; border-radius: 999px; font-size: .66rem; font-weight: 750; color: var(--st); background: color-mix(in srgb, var(--st) 12%, #fff); border: 1px solid color-mix(in srgb, var(--st) 30%, transparent); white-space: nowrap; }
+.asa-fs-dot { width: .42rem; height: .42rem; border-radius: 999px; background: var(--st); }
+.asa-fs-status.is-scheduled { --st: #5b6b82; }
+.asa-fs-status.is-boarding { --st: #0e9488; }
+.asa-fs-status.is-departed, .asa-fs-status.is-in_air { --st: #2563eb; }
+.asa-fs-status.is-landed { --st: #15803d; }
+.asa-fs-status.is-delayed { --st: #b45309; }
+.asa-fs-status.is-cancelled { --st: #c0392b; }
+.asa-fs-route { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: .7rem; }
+.asa-fs-end { display: flex; flex-direction: column; gap: .04rem; min-width: 0; }
+.asa-fs-end.is-dest { text-align: right; }
+.asa-fs-code { font-size: 1.4rem; font-weight: 800; letter-spacing: -.02em; color: var(--tv-ink); font-family: var(--font-display, inherit); }
+.asa-fs-city { font-size: .64rem; color: var(--tv-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.asa-fs-time { font-size: .72rem; font-weight: 650; color: var(--tv-ink); }
+.asa-fs-track { position: relative; height: 2rem; min-width: 0; }
+.asa-fs-track::before, .asa-fs-track::after { content: ''; position: absolute; top: 50%; width: .5rem; height: .5rem; border-radius: 999px; transform: translate(-50%, -50%); }
+.asa-fs-track::before { left: 0; background: var(--tv-accent); }
+.asa-fs-track::after { left: 100%; background: var(--tv-line); }
+.asa-fs-line { position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: var(--tv-line); border-radius: 999px; transform: translateY(-50%); }
+.asa-fs-line-fill { position: absolute; top: 50%; left: 0; height: 2px; background: var(--tv-accent); border-radius: 999px; transform: translateY(-50%); }
+.asa-fs-plane { position: absolute; top: 50%; transform: translate(-50%, -50%) rotate(45deg); color: var(--tv-accent); background: var(--tv-card); border-radius: 999px; padding: 3px; box-shadow: 0 2px 6px -2px rgba(0,0,0,.4); }
+.asa-fs-plane svg { width: 1rem; height: 1rem; display: block; }
+.asa-fs-info { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
+.asa-fs-info-cell { flex: 1; min-width: 5rem; padding: .5rem .6rem; border: 1px solid var(--tv-line); border-radius: 10px; background: var(--tv-card); display: flex; flex-direction: column; gap: .18rem; }
+.asa-fs-info-label { display: inline-flex; align-items: center; gap: .25rem; font-size: .56rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--tv-muted); }
+.asa-fs-info-label svg { width: .78rem; height: .78rem; }
+.asa-fs-info-val { font-size: .82rem; font-weight: 650; color: var(--tv-ink); }
+.asa-fs-updated { margin: .6rem 0 0; font-size: .68rem; color: var(--tv-muted); }
+.asa-fs-cta { margin-top: .55rem; width: 100%; min-height: 2.6rem; display: inline-flex; align-items: center; justify-content: center; gap: .4rem; border: 1px solid var(--tv-accent); border-radius: 11px; background: var(--tv-card); color: var(--tv-accent); font: inherit; font-weight: 680; font-size: .84rem; cursor: pointer; }
+.asa-fs-cta svg { width: 1rem; height: 1rem; }

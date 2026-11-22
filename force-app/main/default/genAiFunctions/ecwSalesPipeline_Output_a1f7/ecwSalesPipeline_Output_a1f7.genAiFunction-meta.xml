@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Use this when the employee asks about their sales pipeline, how their quarter is looking, what is closing this month, or their win rate. Shows a pipeline snapshot card: total open pipeline, a quarter-over-quarter trend, a stage breakdown, and win-rate / closing / avg-deal stats.</description>
+    <developerName>ecwSalesPipeline_Output_a1f7</developerName>
+    <invocationTarget>ecwSalesPipeline_Output_a1f7</invocationTarget>
+    <invocationTargetType>flow</invocationTargetType>
+    <isConfirmationRequired>false</isConfirmationRequired>
+    <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+    <localDeveloperName>ecwSalesPipeline_Output_a1f7</localDeveloperName>
+    <masterLabel>Agentforce Coworker · Sales · My pipeline</masterLabel>
+    <progressIndicatorMessage>Pulling your pipeline</progressIndicatorMessage>
+</GenAiFunction>

@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · Sales · Needs attention",
+  "description" : "Open deals that need action — overdue to close, closing imminently, or stalled — ranked by urgency, with the total value at risk.",
+  "lightning:type" : "@apexClassType/c__EcwNeedsAttentionData"
+}

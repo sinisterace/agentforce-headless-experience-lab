@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Legal · Meet Your Attorney",
+  "description" : "Shows attorneys matched to the visitor's matter as trust-building cards (focus, experience, rating, bar number) and lets them pick one to book with.",
+  "lightning:type" : "@apexClassType/c__AsaLegalAttorneyMatchData"
+}

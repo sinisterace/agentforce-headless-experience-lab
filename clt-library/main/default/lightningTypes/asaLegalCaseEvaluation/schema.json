@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Legal · Free Case Evaluation",
+  "description" : "Shows a guided free case-review intake form (quick structured questions, a description, and contact details) with a clear no-attorney-client-relationship disclaimer.",
+  "lightning:type" : "@apexClassType/c__AsaLegalCaseEvaluationData"
+}

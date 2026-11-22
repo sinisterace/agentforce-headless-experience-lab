@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>Logo_Dev_Publishable_Key</fullName>
+        <categories>Config</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>logo.dev publishable key (public) for company logo URLs</shortDescription>
+        <value>pk_MWNSoa7ZTdaQs0sPi_PEew</value>
+    </labels>
+</CustomLabels>

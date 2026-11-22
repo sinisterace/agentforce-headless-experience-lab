@@ -1,0 +1,276 @@
+/* ASA Public Sector & Education · Documents Checklist — "official intake
+   manifest": a navy civic masthead with a capitol seal, a monospace
+   X-OF-Y-PROVIDED progress meter, and documents as ruled manifest rows with an
+   official form checkbox + a rubber-stamp status tag (RECEIVED / REQUIRED /
+   OPTIONAL). Part of the shared PSE "Civic Records" design language. rem units +
+   inherited font so it matches the host chat theme in ECv2. */
+:host {
+    --asa-accent: #1e3a8a;
+    --asa-navy-deep: #172554;
+    --asa-paper: #fbfbf9;
+    --asa-line: #e4e4e7;
+    --asa-ink: #1e293b;
+    --asa-muted: #64748b;
+    --asa-gold: #c79a3a;
+    --asa-good: #15803d;
+    --asa-warn: #b45309;
+    --asa-bad: #b91c1c;
+    --asa-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+    display: block;
+}
+
+.asa-card {
+    font-family: inherit;
+    color: var(--asa-ink);
+    background: var(--asa-paper);
+    border: 1px solid var(--asa-line);
+    border-radius: 12px;
+    overflow: hidden;
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after {
+    box-sizing: border-box;
+}
+
+/* --- Civic masthead --- */
+.asa-dc-masthead {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.7rem 0.8rem;
+    background: linear-gradient(135deg, var(--asa-accent), var(--asa-navy-deep));
+}
+.asa-dc-seal {
+    flex-shrink: 0;
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--asa-gold);
+    color: #fff;
+}
+.asa-dc-seal svg {
+    width: 1.2rem;
+    height: 1.2rem;
+}
+.asa-dc-mast-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+}
+.asa-dc-kicker {
+    display: block;
+    font-size: 0.55rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--asa-gold);
+}
+.asa-dc-mast-title {
+    display: block;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #fff;
+    margin: 0;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* --- Body --- */
+.asa-dc-portal {
+    padding: 0.8rem;
+}
+.asa-dc-sub {
+    margin: 0 0 0.7rem 0;
+    font-size: 0.78rem;
+    color: var(--asa-muted);
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* --- Manifest progress --- */
+.asa-dc-manifest-head {
+    margin-bottom: 0.6rem;
+}
+.asa-dc-manifest-label {
+    display: block;
+    font-family: var(--asa-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--asa-muted);
+    margin-bottom: 0.35rem;
+}
+.asa-dc-meter {
+    width: 100%;
+    height: 0.4rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--asa-accent) 12%, var(--asa-line));
+    overflow: hidden;
+}
+.asa-dc-meter-fill {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--asa-accent), var(--asa-navy-deep));
+    transition: width 0.4s ease;
+}
+
+/* --- Ruled intake manifest --- */
+.asa-dc-manifest {
+    border: 1px solid var(--asa-line);
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+}
+.asa-dc-doc {
+    --stat: var(--asa-accent);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    width: 100%;
+    padding: 0.6rem 0.65rem;
+    border: 0;
+    border-top: 1px solid var(--asa-line);
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.12s ease;
+}
+.asa-dc-doc:first-child {
+    border-top: 0;
+}
+.asa-dc-doc.is-required {
+    --stat: var(--asa-accent);
+}
+.asa-dc-doc.is-optional {
+    --stat: var(--asa-muted);
+}
+.asa-dc-doc.is-received {
+    --stat: var(--asa-good);
+}
+.asa-dc-doc:not(.is-disabled):hover {
+    background: color-mix(in srgb, var(--asa-accent) 5%, #fff);
+}
+.asa-dc-doc.is-selected {
+    background: color-mix(in srgb, var(--asa-accent) 7%, #fff);
+}
+.asa-dc-doc.is-disabled {
+    cursor: default;
+    background: color-mix(in srgb, var(--asa-good) 6%, #fff);
+}
+
+/* Official form checkbox */
+.asa-dc-box {
+    flex-shrink: 0;
+    width: 1.35rem;
+    height: 1.35rem;
+    margin-top: 0.05rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid color-mix(in srgb, var(--asa-accent) 45%, var(--asa-line));
+    border-radius: 4px;
+    background: #fff;
+    color: transparent;
+    transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+}
+.asa-dc-box svg {
+    width: 0.85rem;
+    height: 0.85rem;
+}
+.asa-dc-box.on {
+    background: var(--asa-accent);
+    border-color: var(--asa-accent);
+    color: #fff;
+}
+.asa-dc-doc.is-received .asa-dc-box.on {
+    background: var(--asa-good);
+    border-color: var(--asa-good);
+}
+
+.asa-dc-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+    flex: 1;
+}
+.asa-dc-name {
+    font-weight: 650;
+    font-size: 0.86rem;
+    letter-spacing: -0.005em;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-dc-detail {
+    font-size: 0.73rem;
+    color: var(--asa-muted);
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* Rubber-stamp status tag */
+.asa-dc-stamp {
+    flex-shrink: 0;
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.14rem 0.44rem;
+    border: 2px solid currentColor;
+    border-radius: 5px;
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transform: rotate(-3deg);
+    opacity: 0.92;
+}
+.asa-dc-stamp.is-received {
+    color: var(--asa-good);
+}
+.asa-dc-stamp.is-required {
+    color: var(--asa-accent);
+}
+.asa-dc-stamp.is-optional {
+    color: var(--asa-muted);
+}
+
+.asa-dc-submit {
+    margin-top: 0.85rem;
+    width: 100%;
+    min-height: 2.7rem;
+    padding: 0.7rem 1.15rem;
+    border-radius: 10px;
+    border: none;
+    background: var(--asa-accent);
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 680;
+    transition: filter 0.15s ease;
+}
+.asa-dc-submit:hover {
+    filter: brightness(1.1);
+}
+
+@container (max-width: 300px) {
+    .asa-dc-doc { gap: 0.5rem; padding: 0.55rem 0.5rem; }
+    .asa-dc-stamp { font-size: 0.54rem; padding: 0.1rem 0.34rem; }
+    .asa-dc-mast-title { font-size: 0.92rem; }
+}

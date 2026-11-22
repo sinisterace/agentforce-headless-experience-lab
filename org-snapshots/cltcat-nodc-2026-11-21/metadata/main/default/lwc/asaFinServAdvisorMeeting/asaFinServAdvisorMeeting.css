@@ -1,0 +1,247 @@
+/* ASA Financial Services · Advisor Appointment — advisor header + day/time slots.
+   rem units + inherited font so the card matches the host chat theme in
+   Enhanced Chat v2. Accent + neutrals are local custom props for easy theming. */
+:host {
+    --asa-accent: #0b5cab;
+    --asa-line: #e3e6ec;
+    --asa-negative: #c0392b;
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    box-sizing: border-box;
+    /* Enhanced Chat v2 renders this in a ~320px column; size the content to the
+       card, not the viewport, so it also reads well on wide desktop GenAi. */
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after {
+    box-sizing: border-box;
+}
+
+.asa-card-title {
+    margin: 0 0 0.65rem 0;
+    font-size: 1.05rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* Advisor header */
+.asa-advisor {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.65rem 0.7rem;
+    border: 1px solid var(--asa-line);
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--asa-accent) 5%, #fff);
+    margin-bottom: 0.85rem;
+}
+.asa-advisor-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.9rem;
+    height: 2.9rem;
+    flex-shrink: 0;
+    border-radius: 999px;
+    overflow: hidden;
+    background: color-mix(in srgb, var(--asa-accent) 15%, transparent);
+    color: var(--asa-accent);
+}
+.asa-advisor-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.asa-advisor-initials {
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+.asa-advisor-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+    flex: 1;
+}
+.asa-advisor-name {
+    font-weight: 650;
+    font-size: 0.95rem;
+    letter-spacing: -0.005em;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-advisor-title {
+    opacity: 0.7;
+    font-size: 0.78rem;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-advisor-specialty {
+    opacity: 0.55;
+    font-size: 0.74rem;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* Day groups — each headed by a calendar date-tile */
+.asa-appt-days {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+.asa-appt-day-head {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 0.5rem;
+}
+/* Calendar tile: stacked weekday over a big day number, with a tinted
+   "header" strip so it reads as a torn-off calendar page. */
+.asa-appt-cal {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 2.6rem;
+    flex-shrink: 0;
+    border: 1px solid var(--asa-line);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+    text-align: center;
+    line-height: 1;
+}
+.asa-appt-cal-wd {
+    padding: 0.2rem 0;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--asa-accent);
+}
+.asa-appt-cal-day {
+    padding: 0.28rem 0 0.32rem;
+    font-size: 1.15rem;
+    font-weight: 750;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+}
+.asa-appt-day-label {
+    font-size: 0.9rem;
+    font-weight: 650;
+    letter-spacing: -0.005em;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-appt-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+/* Slot chips */
+.asa-appt-slot {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0; /* chips never collapse to one glyph per line */
+    padding: 0.5rem 0.7rem;
+    border: 1px solid var(--asa-line);
+    border-radius: 999px;
+    background: #fff;
+    color: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: inherit;
+    transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease, transform 0.06s ease;
+}
+.asa-appt-slot:hover {
+    border-color: color-mix(in srgb, var(--asa-accent) 45%, var(--asa-line));
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.08);
+    transform: translateY(-1px);
+}
+.asa-appt-slot.selected {
+    border-color: var(--asa-accent);
+    background: color-mix(in srgb, var(--asa-accent) 8%, #fff);
+    box-shadow: inset 0 0 0 1px var(--asa-accent);
+}
+.asa-appt-type {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--asa-accent);
+}
+.asa-appt-type svg {
+    width: 0.95rem;
+    height: 0.95rem;
+}
+.asa-appt-time {
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.asa-appt-submit {
+    margin-top: 0.85rem;
+    width: 100%;
+    padding: 0.7rem 1.15rem;
+    border-radius: 12px;
+    border: none;
+    background: var(--asa-accent);
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: filter 0.15s ease;
+}
+.asa-appt-submit:hover {
+    filter: brightness(1.06);
+}
+
+.asa-error {
+    color: var(--asa-negative);
+    font-size: 0.875rem;
+}
+
+/* Tightest chat columns: shrink padding/avatar so slot chips keep their space. */
+@container (max-width: 300px) {
+    .asa-advisor {
+        gap: 0.55rem;
+        padding: 0.55rem;
+    }
+    .asa-advisor-avatar {
+        width: 2.4rem;
+        height: 2.4rem;
+    }
+    .asa-appt-cal {
+        width: 2.3rem;
+    }
+    .asa-appt-cal-day {
+        font-size: 1.05rem;
+    }
+    .asa-appt-slots {
+        gap: 0.4rem;
+    }
+    .asa-appt-slot {
+        padding: 0.45rem 0.6rem;
+        gap: 0.3rem;
+    }
+    .asa-appt-time {
+        font-size: 0.8rem;
+    }
+}

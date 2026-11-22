@@ -1,0 +1,47 @@
+<template>
+    <div class="ecw-ae">
+        <div class="ecw-ae-head">
+            <span class="ecw-ae-eyebrow">Audience builder</span>
+            <span class="ecw-ae-base">{baseLabel} · {baseSizeText}</span>
+        </div>
+
+        <!-- Live-sizing Venn + audience count -->
+        <div class="ecw-ae-stage">
+            <svg class="ecw-ae-venn" viewBox="0 0 120 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                <template if:false={hasAnyOn}>
+                    <circle class="ecw-ae-empty" cx="60" cy="50" r="38" fill="none"></circle>
+                </template>
+                <template for:each={vennCircles} for:item="c">
+                    <circle key={c.key} class="ecw-ae-circle" cx={c.cx} cy={c.cy} r={c.r} style={c.style}></circle>
+                </template>
+            </svg>
+            <div class="ecw-ae-count">
+                <strong class="ecw-ae-count-val">{displayAudience}</strong>
+                <span class="ecw-ae-count-sub">of {baseSizeText} · {audiencePct} of base</span>
+            </div>
+        </div>
+
+        <!-- Criteria toggles -->
+        <ul class="ecw-ae-criteria">
+            <template for:each={criteria} for:item="c">
+                <li key={c.key} class="ecw-ae-crit">
+                    <button type="button" class={c.switchClass} data-key={c.key} onclick={toggleCriterion} role="switch" aria-checked={c.on} aria-label={c.label}>
+                        <span class="ecw-ae-switch-thumb"></span>
+                    </button>
+                    <span class="ecw-ae-crit-dot" style={c.dotStyle} aria-hidden="true"></span>
+                    <span class="ecw-ae-crit-label">{c.label}</span>
+                    <span class="ecw-ae-crit-frac">{c.fracText}</span>
+                </li>
+            </template>
+        </ul>
+
+        <!-- Threshold slider -->
+        <div class="ecw-ae-threshold">
+            <div class="ecw-ae-threshold-top">
+                <span class="ecw-ae-threshold-label">{threshold.label}</span>
+                <span class="ecw-ae-threshold-val">{thresholdValText}</span>
+            </div>
+            <input type="range" class="ecw-ae-slider" min={threshold.min} max={threshold.max} value={threshold.value} oninput={onSlider} />
+        </div>
+    </div>
+</template>

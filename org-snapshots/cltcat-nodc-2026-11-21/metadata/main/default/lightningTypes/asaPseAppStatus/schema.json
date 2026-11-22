@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Public Sector & Education · Application Status Tracker",
+  "description" : "Shows the status of a resident's or student's application (permit, benefits, admissions, or enrollment) as a horizontal progress track — Submitted → Under review → Approved → Issued — with a reference number, status, and an optional next-action note.",
+  "lightning:type" : "@apexClassType/c__AsaPseAppStatusData"
+}

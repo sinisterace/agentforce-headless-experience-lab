@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Manufacturing · Quote Builder",
+  "description" : "Cart / quote review card: line items with quantity steppers and per-line totals, ship-to / bill-to, a PO field, a subtotal + shipping-fee estimate + estimated total, and an acknowledgement checkbox, then request a formal quote.",
+  "lightning:type" : "@apexClassType/c__AsaMfgQuoteBuilderData"
+}

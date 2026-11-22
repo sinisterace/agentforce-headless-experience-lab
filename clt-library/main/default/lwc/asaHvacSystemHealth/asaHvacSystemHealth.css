@@ -1,0 +1,124 @@
+/* ASA HVAC · Comfort System Health Report — a whole-home comfort checkup: an
+   overall health SCORE radial gauge (270° arc), per-system status rows with a
+   colored status rail, a filter-life bar, next-maintenance + recommendation
+   callouts, and a book-maintenance CTA. rem units + inherited font so the card
+   matches the host chat theme in Enhanced Chat v2. HVAC design language:
+   comfort-blue accent + cool-slate neutrals; status hues are local custom
+   props for easy theming. */
+:host {
+    --asa-accent: #0369a1;
+    --asa-line: #e2e8f0;
+    --asa-track: #eef2f6;
+    --asa-ink: #0f172a;
+    --asa-muted: #64748b;
+    --asa-good: #15803d;
+    --asa-warn: #b45309;
+    --asa-bad: #c0392b;
+    --asa-radius: 14px;
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after { box-sizing: border-box; }
+
+.asa-test-badge {
+    margin: 0 0 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 8px;
+    background: #eff6ff;
+    color: #0369a1;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.asa-sh-head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.35rem; }
+.selector-title { font-size: 1.12rem; font-weight: 700; letter-spacing: -0.02em; margin: 0; overflow-wrap: break-word; word-break: normal; }
+.asa-sh-updated { font-size: 0.64rem; font-weight: 650; color: var(--asa-muted); white-space: nowrap; flex-shrink: 0; }
+
+/* --- Score gauge --- */
+.asa-sh-meter { position: relative; width: 11.5rem; max-width: 100%; margin: 0.2rem auto 0.1rem; }
+.asa-sh-gauge { display: block; width: 100%; height: auto; }
+.asa-sh-track { fill: none; stroke: var(--asa-track); stroke-width: 11; stroke-linecap: round; }
+.asa-sh-value { fill: none; stroke: var(--asa-good); stroke-width: 11; stroke-linecap: round; transition: stroke-dasharray 0.6s ease; }
+.asa-sh-gauge.is-good .asa-sh-value { stroke: var(--asa-good); }
+.asa-sh-gauge.is-fair .asa-sh-value { stroke: var(--asa-warn); }
+.asa-sh-gauge.is-poor .asa-sh-value { stroke: var(--asa-bad); }
+
+.asa-sh-center { position: absolute; top: 46%; left: 0; right: 0; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; gap: 0.05rem; pointer-events: none; }
+.asa-sh-score { font-size: 2.1rem; font-weight: 780; letter-spacing: -0.03em; line-height: 1; color: var(--asa-ink); }
+.asa-sh-score-label { font-size: 0.74rem; font-weight: 700; color: var(--asa-muted); }
+.asa-sh-gauge.is-good ~ .asa-sh-center .asa-sh-score-label { color: var(--asa-good); }
+.asa-sh-gauge.is-fair ~ .asa-sh-center .asa-sh-score-label { color: var(--asa-warn); }
+.asa-sh-gauge.is-poor ~ .asa-sh-center .asa-sh-score-label { color: var(--asa-bad); }
+
+.asa-sh-status { margin: 0.1rem 0 0.7rem; text-align: center; font-size: 0.78rem; font-weight: 620; color: var(--asa-ink); overflow-wrap: break-word; }
+
+/* --- Per-system rows --- */
+.asa-sh-systems { list-style: none; margin: 0 0 0.65rem; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.asa-sh-sys { --st: var(--asa-good); display: flex; align-items: center; gap: 0.55rem; padding: 0.5rem 0.6rem; border: 1px solid var(--asa-line); border-left: 3px solid var(--st); border-radius: 10px; background: #fff; min-width: 0; }
+.asa-sh-sys.is-good { --st: var(--asa-good); }
+.asa-sh-sys.is-watch { --st: var(--asa-warn); }
+.asa-sh-sys.is-due { --st: var(--asa-accent); }
+.asa-sh-sys.is-fault { --st: var(--asa-bad); }
+.asa-sh-sys-icon { display: inline-flex; align-items: center; justify-content: center; width: 1.75rem; height: 1.75rem; border-radius: 8px; flex-shrink: 0; background: color-mix(in srgb, var(--st) 12%, #fff); color: var(--st); }
+.asa-sh-sys-icon svg { width: 1.02rem; height: 1.02rem; }
+.asa-sh-sys-text { display: flex; flex-direction: column; gap: 0.06rem; min-width: 0; flex: 1; }
+.asa-sh-sys-label { font-size: 0.82rem; font-weight: 680; color: var(--asa-ink); overflow-wrap: break-word; }
+.asa-sh-sys-detail { font-size: 0.68rem; color: var(--asa-muted); overflow-wrap: break-word; }
+.asa-sh-pill { flex-shrink: 0; padding: 0.16rem 0.5rem; border-radius: 999px; font-size: 0.6rem; font-weight: 750; text-transform: uppercase; letter-spacing: 0.04em; white-space: nowrap; background: color-mix(in srgb, var(--st) 14%, #fff); color: var(--st); }
+
+/* --- Filter-life bar --- */
+.asa-sh-filter { --st: var(--asa-good); margin-bottom: 0.65rem; padding: 0.6rem 0.7rem; border: 1px solid var(--asa-line); border-radius: 12px; background: #f8fafc; }
+.asa-sh-filter.is-good { --st: var(--asa-good); }
+.asa-sh-filter.is-watch { --st: var(--asa-warn); }
+.asa-sh-filter.is-low { --st: var(--asa-bad); }
+.asa-sh-filter-top { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.35rem; }
+.asa-sh-filter-label { font-size: 0.74rem; font-weight: 680; color: var(--asa-ink); min-width: 0; overflow-wrap: break-word; }
+.asa-sh-filter-pct { font-size: 0.78rem; font-weight: 780; color: var(--st); white-space: nowrap; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+.asa-sh-filter-bar { width: 100%; height: 0.55rem; border-radius: 999px; background: var(--asa-track); overflow: hidden; }
+.asa-sh-filter-fill { display: block; height: 100%; border-radius: 999px; background: var(--st); transition: width 0.6s ease; }
+.asa-sh-filter-cap { display: block; margin-top: 0.3rem; font-size: 0.64rem; font-weight: 600; color: var(--asa-muted); }
+
+/* --- Callouts --- */
+.asa-sh-callout { display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 0.5rem; padding: 0.55rem 0.65rem; border-radius: 10px; font-size: 0.74rem; line-height: 1.35; overflow-wrap: break-word; }
+.asa-sh-callout svg { width: 1rem; height: 1rem; flex-shrink: 0; margin-top: 0.05rem; }
+.asa-sh-callout.is-schedule { background: #f1f5f9; border: 1px solid var(--asa-line); color: var(--asa-ink); }
+.asa-sh-callout.is-schedule svg { color: var(--asa-muted); }
+.asa-sh-callout.is-rec { background: color-mix(in srgb, var(--asa-accent) 7%, #fff); border: 1px solid color-mix(in srgb, var(--asa-accent) 22%, var(--asa-line)); color: var(--asa-ink); }
+.asa-sh-callout.is-rec svg { color: var(--asa-accent); }
+
+.asa-sh-cta {
+    margin-top: 0.55rem;
+    width: 100%;
+    min-height: 2.7rem;
+    padding: 0.6rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    border: 0;
+    border-radius: 11px;
+    background: var(--asa-accent);
+    color: #fff;
+    font-size: 0.84rem;
+    font-weight: 680;
+    cursor: pointer;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--asa-accent) 22%, transparent);
+    transition: filter 0.15s ease;
+}
+.asa-sh-cta:hover { filter: brightness(1.08); }
+.asa-sh-cta svg { width: 1rem; height: 1rem; flex-shrink: 0; }
+
+@container (max-width: 300px) {
+    .asa-sh-meter { width: 10rem; }
+    .asa-sh-score { font-size: 1.8rem; }
+    .asa-sh-sys { gap: 0.4rem; padding: 0.45rem 0.5rem; }
+}

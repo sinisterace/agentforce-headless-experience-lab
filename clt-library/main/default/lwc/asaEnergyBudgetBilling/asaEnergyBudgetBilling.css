@@ -1,0 +1,106 @@
+/* ASA Energy & Utilities · Budget Billing — a flat monthly amount (monospace
+   meter numerics), a self-contained SVG chart contrasting jagged actual bills
+   with a flat budget line, a benefits checklist, and primary + ghost actions.
+   Energy & Utilities design language: warm-stone neutrals + amber accent,
+   squared geometry (6px), hairline dividers — NOT rounded chip cards.
+   rem units + inherited font so the card matches the host chat theme in ECv2. */
+:host {
+    --asa-accent: #d97706;
+    --asa-line: #e7e5e4;
+    --asa-ink: #1c1917;
+    --asa-muted: #78716c;
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after { box-sizing: border-box; }
+
+.asa-test-badge {
+    margin: 0 0 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 4px;
+    background: #f5f5f4;
+    color: #57534e;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.asa-bb-head { margin-bottom: 0.65rem; }
+.selector-title { font-size: 1.12rem; font-weight: 700; letter-spacing: -0.02em; margin: 0; overflow-wrap: break-word; word-break: normal; }
+.asa-bb-sub { margin: 0.2rem 0 0; font-size: 0.72rem; color: var(--asa-muted); overflow-wrap: break-word; }
+
+/* Flat monthly amount */
+.asa-bb-amount { display: flex; flex-direction: column; gap: 0.08rem; padding: 0.7rem 0.75rem; border-radius: 6px; background: #1c1917; color: #f5f0e8; }
+.asa-bb-amount-eyebrow { font-size: 0.58rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; color: #c9a06a; }
+.asa-bb-amount-value { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1.85rem; font-weight: 750; line-height: 1.02; letter-spacing: -0.02em; color: #fbbf24; font-variant-numeric: tabular-nums; }
+.asa-bb-amount-per { font-family: var(--asa-font, inherit); font-size: 0.8rem; font-weight: 600; color: #a8a099; margin-left: 0.12rem; }
+.asa-bb-swing { font-size: 0.66rem; font-weight: 600; color: #cbc3ba; margin-top: 0.28rem; }
+
+/* Actual-vs-budget chart */
+.asa-bb-chart { margin-top: 0.7rem; padding: 0.55rem 0.6rem 0.45rem; border: 1px solid var(--asa-line); border-radius: 6px; background: #fff; }
+.asa-bb-chart svg { display: block; width: 100%; height: 3.4rem; }
+.asa-bb-actual-area { fill: color-mix(in srgb, var(--asa-accent) 12%, transparent); stroke: none; }
+.asa-bb-actual-line { fill: none; stroke: var(--asa-accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.asa-bb-budget-line { fill: none; stroke: #1c1917; stroke-width: 2; stroke-dasharray: 4 3; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.asa-bb-legend { display: flex; gap: 0.9rem; margin-top: 0.4rem; }
+.asa-bb-leg { display: inline-flex; align-items: center; gap: 0.32rem; font-size: 0.6rem; font-weight: 650; color: var(--asa-muted); }
+.asa-bb-leg-swatch { width: 0.85rem; height: 0.2rem; border-radius: 2px; flex-shrink: 0; }
+.asa-bb-leg-swatch.is-actual { background: var(--asa-accent); }
+.asa-bb-leg-swatch.is-budget { background: repeating-linear-gradient(90deg, #1c1917 0 3px, transparent 3px 5px); }
+
+.asa-bb-bullets { list-style: none; margin: 0.7rem 0 0; padding: 0; }
+.asa-bb-bullet { display: flex; align-items: flex-start; gap: 0.45rem; padding: 0.28rem 0; font-size: 0.76rem; font-weight: 600; color: var(--asa-ink); }
+.asa-bb-bullet svg { width: 0.82rem; height: 0.82rem; flex-shrink: 0; margin-top: 0.12rem; color: var(--asa-accent); }
+.asa-bb-bullet span { min-width: 0; overflow-wrap: break-word; }
+
+.asa-bb-term { margin: 0.55rem 0 0; font-size: 0.62rem; color: var(--asa-muted); text-align: center; }
+
+.asa-bb-cta {
+    margin-top: 0.7rem;
+    width: 100%;
+    min-height: 2.7rem;
+    padding: 0.6rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 6px;
+    background: var(--asa-accent);
+    color: #fff;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 8px 18px color-mix(in srgb, var(--asa-accent) 26%, transparent);
+    transition: filter 0.15s ease;
+}
+.asa-bb-cta:hover { filter: brightness(1.08); }
+.asa-bb-cta2 {
+    margin-top: 0.4rem;
+    width: 100%;
+    min-height: 2.4rem;
+    padding: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--asa-line);
+    border-radius: 6px;
+    background: #fff;
+    color: var(--asa-muted);
+    font-size: 0.78rem;
+    font-weight: 650;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+.asa-bb-cta2:hover { background: #faf7f2; }
+
+@container (max-width: 300px) {
+    .asa-bb-amount-value { font-size: 1.6rem; }
+}

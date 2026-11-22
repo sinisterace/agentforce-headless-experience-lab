@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · Finance · AP approvals",
+  "description" : "Vendor invoices and POs awaiting approval, with amount, due, and aging.",
+  "lightning:type" : "@apexClassType/c__EcwApApprovalsData"
+}

@@ -1,0 +1,15 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full trade-in estimate payload as a JSON string, formatted EXACTLY like this: {\"title\":\"Your trade-in estimate\",\"vehicle\":{\"name\":\"2021 Midsize SUV\",\"detail\":\"42,300 mi · Good condition\",\"imageUrl\":\"\",\"initials\":\"SV\"},\"currency\":\"USD\",\"estimate\":18400,\"low\":16900,\"high\":19800,\"offerText\":\"Instant offer good for 7 days\",\"factors\":[{\"label\":\"Mileage\",\"detail\":\"42,300 mi — below average\",\"impact\":\"positive\"},{\"label\":\"Condition\",\"detail\":\"Good\",\"impact\":\"neutral\"},{\"label\":\"Market demand\",\"detail\":\"High for this trim\",\"impact\":\"positive\"}],\"submitText\":\"Apply to a purchase\",\"submitValue\":\"I'd like to apply my trade-in toward a purchase\",\"secondaryText\":\"Book an appraisal\",\"secondaryValue\":\"I'd like to book an in-person appraisal\"} Rules: - 'title' (string, optional): heading. Defaults to 'Your trade-in estimate'. - 'vehicle' (object, optional): { 'name' (string, REQUIRED — the vehicle being traded); 'detail' (string, optional — one line, e.g. mileage + condition); 'imageUrl' (string, optional — falls back to initials if it fails to load); 'initials' (string, optional — 1-2 letters) }. - 'currency' (string, optional): ISO code, default USD. - 'estimate' (number, REQUIRED): the estimated trade-in value, shown large. If omitted the card shows sample data. - 'low' (number, optional): low end of the value range. Defaults to estimate * 0.9. - 'high' (number, optional): high end of the value range. Defaults to estimate * 1.1. The card draws a range bar from low to high with a marker at 'estimate'. - 'offerText' (string, optional): a short instant-offer callout, e.g. 'Instant offer good for 7 days'. - 'factors' (array, optional): each { 'label' (string, REQUIRED); 'detail' (string, optional — one short line); 'impact' (string, optional — one of positive | neutral | negative; drives the row's up/down glyph + color) }. - 'submitText' (string, optional): primary button label. 'submitValue' (string, optional): the message sent back when tapped (defaults to submitText). - 'secondaryText' (string, optional): a secondary ghost-button label. 'secondaryValue' (string, optional): its sent-back message. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType",
+  "lightning:textIndexed" : true
+}

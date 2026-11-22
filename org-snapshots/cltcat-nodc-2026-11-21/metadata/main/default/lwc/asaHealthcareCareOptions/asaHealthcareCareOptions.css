@@ -1,0 +1,252 @@
+/* ASA Healthcare · Care Options — a bespoke "Care Navigator": each care channel
+   is an elevated card with a round channel medallion (haloed), a label +
+   description, an optional Recommended banner + accent ring, a typed meta chip
+   (wait-time / cost / info icon), and a full-width channel-colored action
+   (call / open / choose). ER auto-reads red via its channel hue. Clinical, calm,
+   trustworthy: teal base, soft neutrals, generous spacing, rounded-but-refined.
+   The per-card channel hue arrives inline as --chan. rem units + inherited font
+   so the card matches the host chat theme in Enhanced Chat v2. */
+:host {
+    --asa-accent: #0f766e;
+    --asa-line: #e5e7eb;
+    --asa-ink: #101828;
+    --asa-muted: #667085;
+    --asa-warn: #b45309;
+    --asa-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+    --asa-shadow-md: 0 10px 24px rgba(15, 23, 42, 0.1);
+    display: block;
+}
+
+.asa-co {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-co *,
+.asa-co *::before,
+.asa-co *::after {
+    box-sizing: border-box;
+}
+
+.asa-co-title {
+    margin: 0 0 0.18rem 0;
+    font-size: 1.08rem;
+    font-weight: 680;
+    letter-spacing: -0.015em;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-co-sub {
+    margin: 0 0 0.8rem 0;
+    font-size: 0.8rem;
+    color: var(--asa-muted);
+    line-height: 1.35;
+}
+
+.asa-co-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+/* ---- care card ---- */
+.asa-co-card {
+    --chan: var(--asa-accent);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.62rem;
+    padding: 0.85rem;
+    border: 1px solid var(--asa-line);
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: var(--asa-shadow-sm);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.asa-co-card:hover {
+    border-color: color-mix(in srgb, var(--chan) 40%, var(--asa-line));
+    box-shadow: var(--asa-shadow-md);
+}
+.asa-co-card.is-recommended {
+    border-color: var(--chan);
+    box-shadow: 0 0 0 1px var(--chan), var(--asa-shadow-sm);
+    background: color-mix(in srgb, var(--chan) 4%, #fff);
+}
+/* Channel hues so nurse line / video / in-person / ER read apart at a glance. */
+.asa-co-card.is-nurseline { --chan: #0e7490; }
+.asa-co-card.is-video { --chan: #2563eb; }
+.asa-co-card.is-inperson { --chan: #0f766e; }
+.asa-co-card.is-urgent { --chan: #b45309; }
+.asa-co-card.is-er { --chan: #c0392b; }
+.asa-co-card.is-pharmacy { --chan: #15803d; }
+.asa-co-card.is-message { --chan: #475467; }
+
+.asa-co-ribbon {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.28rem;
+    padding: 0.16rem 0.5rem;
+    border-radius: 999px;
+    background: var(--chan);
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+.asa-co-ribbon svg {
+    width: 0.72rem;
+    height: 0.72rem;
+}
+
+/* ---- header row: medallion + text ---- */
+.asa-co-top {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    min-width: 0;
+}
+.asa-co-medallion {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.8rem;
+    height: 2.8rem;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--chan) 14%, #fff);
+    color: var(--chan);
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--chan) 7%, transparent);
+}
+.asa-co-medallion svg {
+    width: 1.35rem;
+    height: 1.35rem;
+}
+.asa-co-headtext {
+    display: flex;
+    flex-direction: column;
+    gap: 0.14rem;
+    min-width: 0;
+    flex: 1;
+}
+.asa-co-label {
+    font-weight: 660;
+    font-size: 0.92rem;
+    letter-spacing: -0.006em;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-co-desc {
+    font-size: 0.78rem;
+    color: var(--asa-muted);
+    line-height: 1.35;
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+/* ---- typed meta chip ---- */
+.asa-co-chip {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.34rem;
+    padding: 0.24rem 0.55rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--chan) 10%, #fff);
+    color: color-mix(in srgb, var(--chan) 80%, #000);
+    border: 1px solid color-mix(in srgb, var(--chan) 22%, transparent);
+    font-size: 0.7rem;
+    font-weight: 650;
+    white-space: nowrap;
+    max-width: 100%;
+}
+.asa-co-chip svg {
+    width: 0.85rem;
+    height: 0.85rem;
+    flex-shrink: 0;
+}
+.asa-co-chip-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ---- full-width channel action ---- */
+.asa-co-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.42rem;
+    width: 100%;
+    min-height: 2.65rem;
+    padding: 0.6rem 1rem;
+    border: 0;
+    border-radius: 12px;
+    background: var(--chan);
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.83rem;
+    font-weight: 660;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    text-decoration: none;
+    white-space: nowrap;
+    box-shadow: 0 6px 14px color-mix(in srgb, var(--chan) 24%, transparent);
+    transition: filter 0.15s ease, transform 0.05s ease;
+}
+.asa-co-action:hover {
+    filter: brightness(1.1);
+}
+.asa-co-action:active {
+    transform: translateY(1px);
+}
+.asa-co-action svg {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}
+
+/* ---- safety disclaimer ---- */
+.asa-co-disclaimer {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    margin: 0.8rem 0 0 0;
+    padding: 0.55rem 0.65rem;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--asa-warn) 8%, #fff);
+    border: 1px solid color-mix(in srgb, var(--asa-warn) 20%, var(--asa-line));
+    font-size: 0.72rem;
+    line-height: 1.35;
+    color: color-mix(in srgb, var(--asa-warn) 78%, #000);
+}
+.asa-co-disclaimer svg {
+    width: 0.95rem;
+    height: 0.95rem;
+    flex-shrink: 0;
+    margin-top: 0.06rem;
+    color: var(--asa-warn);
+}
+.asa-co-disclaimer span {
+    min-width: 0;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+
+@container (max-width: 300px) {
+    .asa-co-card {
+        padding: 0.75rem;
+    }
+    .asa-co-medallion {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+    .asa-co-label {
+        font-size: 0.88rem;
+    }
+}

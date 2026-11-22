@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Retail · Order Tracking",
+  "description" : "Shows a live delivery map with the courier's position, an ETA, a courier row, and a status timeline.",
+  "lightning:type" : "@apexClassType/c__AsaRetailOrderTrackingData"
+}

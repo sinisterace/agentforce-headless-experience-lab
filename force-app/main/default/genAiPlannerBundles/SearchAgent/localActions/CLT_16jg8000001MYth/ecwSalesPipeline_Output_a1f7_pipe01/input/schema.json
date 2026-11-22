@@ -1,0 +1,15 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full sales-pipeline payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"My pipeline\",\"periodLabel\":\"This quarter · QTD\",\"updatedText\":\"Updated 2 min ago\",\"currency\":\"USD\",\"openTotal\":1420000,\"deltaPct\":8,\"deltaText\":\"vs last quarter\",\"stages\":[{\"label\":\"Prospecting\",\"amount\":420000},{\"label\":\"Qualification\",\"amount\":380000},{\"label\":\"Proposal\",\"amount\":350000},{\"label\":\"Negotiation\",\"amount\":270000}],\"stats\":[{\"label\":\"Open opportunities\",\"value\":\"12\"},{\"label\":\"Closing this month\",\"value\":\"$320K\"},{\"label\":\"Win rate (QTD)\",\"value\":\"34%\",\"state\":\"good\"},{\"label\":\"Avg deal size\",\"value\":\"$118K\"}],\"submitText\":\"Open in CRM\"}\n\nRules:\n- 'title' (string, optional): card heading; defaults to 'My pipeline'.\n- 'periodLabel' (string, optional): small eyebrow above the title, e.g. 'This quarter · QTD'.\n- 'updatedText' (string, optional): freshness label shown with a live dot.\n- 'currency' (string, optional): ISO code; defaults to USD.\n- 'openTotal' (number, optional): total open pipeline amount; the big hero number (1420000 renders '$1.42M').\n- 'deltaPct' (number, optional): quarter-over-quarter change percent; positive renders green, negative red.\n- 'deltaText' (string, optional): short qualifier after the delta, e.g. 'vs last quarter'.\n- 'stages' (array, optional): open pipeline by stage, each { 'label' (string, REQUIRED), 'amount' (number, REQUIRED) }.\n- 'stats' (array, optional): headline tiles, each { 'label' (string, REQUIRED), 'value' (string, REQUIRED), 'state' (optional 'good'|'warn'|'bad') }.\n- 'submitText' (string, optional): primary button label.\n- 'submitValue' (string, optional): message sent back when the button is tapped.\n\nUse the employee's real pipeline from context when known. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType",
+  "lightning:textIndexed" : true
+}

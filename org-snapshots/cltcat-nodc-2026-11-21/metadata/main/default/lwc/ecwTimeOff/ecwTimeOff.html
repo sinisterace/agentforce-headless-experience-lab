@@ -1,0 +1,85 @@
+<template>
+    <div class="ecw-to">
+        <!-- Header -->
+        <div class="ecw-to-head">
+            <div class="ecw-to-head-text">
+                <span class="ecw-to-eyebrow">Time off</span>
+                <template if:true={headline}><span class="ecw-to-headline">{headline}</span></template>
+            </div>
+            <span class="ecw-to-period">{eyebrow}</span>
+        </div>
+
+        <!-- Week strip -->
+        <div class="ecw-to-week">
+            <template for:each={days} for:item="d">
+                <button key={d.key} type="button" class={d.dayClass} data-index={d.index} onclick={handleDayClick}>
+                    <span class="ecw-to-dabbr">{d.abbr}</span>
+                    <span class="ecw-to-dnum">{d.num}</span>
+                    <div class="ecw-to-davatars">
+                        <template if:true={d.hasOut}>
+                            <template for:each={d.avatars} for:item="a">
+                                <img key={a.key} class="ecw-to-dav" src={a.photoUrl} alt="" loading="lazy" />
+                            </template>
+                            <template if:true={d.hasMore}><span class="ecw-to-dmore">+{d.moreCount}</span></template>
+                        </template>
+                        <template if:false={d.hasOut}>
+                            <span class="ecw-to-dnone" aria-hidden="true"></span>
+                        </template>
+                    </div>
+                </button>
+            </template>
+        </div>
+
+        <!-- Selected-day roster -->
+        <div class="ecw-to-roster-head">
+            <span class="ecw-to-roster-day">{selectedLabel}</span>
+        </div>
+
+        <template if:true={hasRoster}>
+            <ul class="ecw-to-roster">
+                <template for:each={roster} for:item="p">
+                    <li key={p.key} class={p.rowClass}>
+                        <button type="button" class="ecw-to-rowhead" data-key={p.key} onclick={handleTogglePerson}>
+                            <img class="ecw-to-photo" src={p.photoUrl} alt={p.name} loading="lazy" />
+                            <span class="ecw-to-meta">
+                                <span class="ecw-to-name">{p.name}</span>
+                                <template if:true={p.hasRole}><span class="ecw-to-role">{p.role}</span></template>
+                            </span>
+                            <span class="ecw-to-tags">
+                                <span class={p.typeClass}>{p.type}</span>
+                                <template if:true={p.hasDates}><span class="ecw-to-dates">{p.dates}</span></template>
+                            </span>
+                            <svg class={p.caretClass} viewBox="0 0 24 24" aria-hidden="true"><path d="m8 10 4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+
+                        <template if:true={p.expanded}>
+                            <div class="ecw-to-record">
+                                <div class="ecw-to-grid">
+                                    <template for:each={p.details} for:item="d">
+                                        <div key={d.key} class="ecw-to-field">
+                                            <span class="ecw-to-flabel">{d.label}</span>
+                                            <template if:true={d.isMono}><span class="ecw-to-fval is-mono">{d.value}</span></template>
+                                            <template if:false={d.isMono}><span class="ecw-to-fval">{d.value}</span></template>
+                                        </div>
+                                    </template>
+                                </div>
+                                <div class="ecw-to-links">
+                                    <template for:each={p.links} for:item="l">
+                                        <a key={l.key} class="ecw-to-link" href={l.url} target="_blank" rel="noopener" onclick={stopLink}>
+                                            {l.label}
+                                            <svg class="ecw-to-ext" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 5h5v5m0-5-8 8M9 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                        </a>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+                    </li>
+                </template>
+            </ul>
+        </template>
+
+        <template if:false={hasRoster}>
+            <p class="ecw-to-empty">{emptyText}</p>
+        </template>
+    </div>
+</template>

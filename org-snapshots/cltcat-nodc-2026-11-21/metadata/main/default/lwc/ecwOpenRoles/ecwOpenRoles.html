@@ -1,0 +1,77 @@
+<template>
+    <div class="ecw-or">
+
+        <!-- Header card: title + status pill + recruiting context -->
+        <div class="ecw-or-cart">
+            <span class="ecw-or-cart-ico" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="7" width="20" height="14" rx="2"></rect>
+                    <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="12" y1="12" x2="12" y2="16"></line>
+                    <line x1="10" y1="14" x2="14" y2="14"></line>
+                </svg>
+            </span>
+            <div class="ecw-or-cart-body">
+                <div class="ecw-or-cart-top">
+                    <h3 class="ecw-or-title">Open roles</h3>
+                    <template if:true={headline}><span class="ecw-or-cart-pill">{headline}</span></template>
+                </div>
+                <p class="ecw-or-cart-line">
+                    <span class="ecw-or-cart-kv"><span class="ecw-or-cart-key">Depts</span><span class="ecw-or-cart-val">{deptCountText}</span></span>
+                    <span class="ecw-or-cart-kv"><span class="ecw-or-cart-key">Offers out</span><span class="ecw-or-cart-val">{offersOutText}</span></span>
+                    <span class="ecw-or-cart-kv"><span class="ecw-or-cart-key">Avg age</span><span class="ecw-or-cart-val">{avgDaysText}</span></span>
+                </p>
+            </div>
+        </div>
+
+        <template if:true={hasRoles}>
+            <!-- Requisition ledger -->
+            <div class="ecw-or-lines">
+                <span class="ecw-or-section-title">Requisitions</span>
+                <div class="ecw-or-table">
+                    <div class="ecw-or-thead" aria-hidden="true">
+                        <span>#</span>
+                        <span>Role</span>
+                        <span class="ecw-or-th-cand">Cand.</span>
+                    </div>
+                    <template for:each={roles} for:item="r">
+                        <div key={r.key} class="ecw-or-trow">
+                            <span class="ecw-or-tnum">{r.num}</span>
+                            <span class="ecw-or-tdesc">
+                                <span class="ecw-or-tname">{r.title}</span>
+                                <span class="ecw-or-tmeta">
+                                    <template if:true={r.dept}><span class="ecw-or-tdept">{r.dept}</span></template>
+                                    <template if:true={r.stage}><span class={r.stageClass}>{r.stage}</span></template>
+                                    <span class={r.daysClass}>{r.daysText} open</span>
+                                    <template if:true={r.hasHm}><span class="ecw-or-thm">HM <b>{r.hiringManager}</b></span></template>
+                                </span>
+                            </span>
+                            <span class="ecw-or-tcand">
+                                <span class="ecw-or-tcand-n">{r.candidates}</span>
+                                <span class="ecw-or-tcand-l">cand</span>
+                            </span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <!-- Summary: recruiting KPIs + prominent open-roles total -->
+            <div class="ecw-or-details">
+                <div class="ecw-or-sum">
+                    <div class="ecw-or-sum-row">
+                        <span class="ecw-or-sum-key">In pipeline</span>
+                        <span class="ecw-or-sum-val">{totalCandidatesText}</span>
+                    </div>
+                    <div class="ecw-or-sum-row">
+                        <span class="ecw-or-sum-key">Avg days open</span>
+                        <span class="ecw-or-sum-val">{avgDaysText}</span>
+                    </div>
+                    <div class="ecw-or-sum-row ecw-or-sum-total">
+                        <span class="ecw-or-sum-key">Open roles</span>
+                        <span class="ecw-or-sum-val">{totalRolesText}</span>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

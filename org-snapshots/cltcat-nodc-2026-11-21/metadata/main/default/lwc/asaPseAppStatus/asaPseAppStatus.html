@@ -1,0 +1,73 @@
+<template>
+    <div class="asa-card">
+
+        <div class={cardClass}>
+            <!-- Civic masthead -->
+            <div class="asa-ast-masthead">
+                <span class="asa-ast-seal" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M4 21V10l8-5 8 5v11"></path><path d="M8 21v-7"></path><path d="M12 21v-7"></path><path d="M16 21v-7"></path><path d="M3 10h18"></path></svg>
+                </span>
+                <span class="asa-ast-mast-text">
+                    <span class="asa-ast-kicker">Permits &amp; Licensing</span>
+                    <span class="asa-ast-mast-title">{title}</span>
+                </span>
+            </div>
+
+            <div class="asa-ast-body">
+                <!-- Reference + status stamp -->
+                <div class="asa-ast-head">
+                    <span class="asa-ast-id-wrap">
+                        <template if:true={hasRef}>
+                            <span class="asa-ast-reflabel">Ref no.</span>
+                            <span class="asa-ast-num">{referenceNumber}</span>
+                        </template>
+                        <template if:true={hasType}>
+                            <span class="asa-ast-type">{applicationType}</span>
+                        </template>
+                    </span>
+                    <span class={stampClass}>{statusLabel}</span>
+                </div>
+
+                <!-- Numbered civic step tracker -->
+                <div class="asa-ast-track">
+                    <template for:each={steps} for:item="step">
+                        <span key={step.key} class="asa-ast-step">
+                            <template if:true={step.index}>
+                                <span class={step.barClass} aria-hidden="true"></span>
+                            </template>
+                            <span class="asa-ast-node">
+                                <span class={step.dotClass} aria-hidden="true">
+                                    <template if:true={step.isDone}>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                                    </template>
+                                    <template if:true={step.isDenied}>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+                                    </template>
+                                    <template if:true={step.isNumber}>{step.num}</template>
+                                </span>
+                                <span class={step.labelClass}>{step.label}</span>
+                            </span>
+                        </span>
+                    </template>
+                </div>
+
+                <!-- Next-step ruled callout -->
+                <template if:true={hasNextAction}>
+                    <div class="asa-ast-next">
+                        <span class="asa-ast-next-ico" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                        </span>
+                        <span class="asa-ast-next-body">
+                            <span class="asa-ast-next-label">Next step</span>
+                            <span class="asa-ast-next-text">{nextActionText}</span>
+                        </span>
+                    </div>
+                </template>
+
+                <template if:true={hasSubmit}>
+                    <button type="button" class="asa-ast-submit" onclick={handleSubmit}>{submitText}</button>
+                </template>
+            </div>
+        </div>
+    </div>
+</template>

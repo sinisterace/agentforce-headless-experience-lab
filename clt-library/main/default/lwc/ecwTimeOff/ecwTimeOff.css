@@ -1,0 +1,103 @@
+/* Agentforce Coworker · HR · Who's out — interactive week calendar.
+   A Mon–Fri strip signals who's off each day (stacked headshots + count); selecting a
+   day reveals its roster; expanding a teammate shows their record + links out. Clean
+   neutral surface, indigo accent, headshots. rem units + inherited font; container-query aware. */
+:host {
+    --to-ink: #0f172a;
+    --to-ink-2: #334155;
+    --to-muted: #64748b;
+    --to-subtle: #94a3b8;
+    --to-line: #e5e7eb;
+    --to-surface: #f7f8fa;
+    --to-accent: #4f46e5;
+    display: block;
+}
+.ecw-to, .ecw-to * { box-sizing: border-box; }
+.ecw-to {
+    container-type: inline-size;
+    font-family: inherit; color: var(--to-ink);
+    background: #fff; border: 1px solid var(--to-line); border-radius: 8px;
+    padding: 1rem 1.05rem 1.05rem;
+    box-shadow: 0 10px 26px -20px rgba(15, 23, 42, 0.5);
+    display: flex; flex-direction: column; gap: 0.85rem;
+}
+
+/* header */
+.ecw-to-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.6rem; }
+.ecw-to-head-text { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+.ecw-to-eyebrow { font-size: 0.6rem; font-weight: 800; letter-spacing: 0.11em; text-transform: uppercase; color: var(--to-accent); }
+.ecw-to-headline { font-size: 0.95rem; font-weight: 740; letter-spacing: -0.01em; color: var(--to-ink); }
+.ecw-to-period { flex: none; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.02em; color: var(--to-muted); background: var(--to-surface); border: 1px solid var(--to-line); border-radius: 999px; padding: 0.2rem 0.6rem; }
+
+/* week strip */
+.ecw-to-week { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.4rem; }
+.ecw-to-day {
+    display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+    padding: 0.55rem 0.3rem 0.5rem; border: 1px solid var(--to-line); border-radius: 7px;
+    background: #fff; cursor: pointer; font-family: inherit; min-width: 0;
+    transition: background 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
+}
+.ecw-to-day:hover { background: var(--to-surface); }
+.ecw-to-day.has-out { border-color: #d7dae0; }
+.ecw-to-day.is-today .ecw-to-dnum { color: var(--to-accent); }
+.ecw-to-day.is-selected { background: color-mix(in srgb, var(--to-accent) 8%, #fff); border-color: var(--to-accent); box-shadow: inset 0 0 0 1px var(--to-accent); }
+.ecw-to-dabbr { font-size: 0.58rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--to-subtle); }
+.ecw-to-day.is-selected .ecw-to-dabbr { color: var(--to-accent); }
+.ecw-to-dnum { font-size: 1.15rem; font-weight: 700; line-height: 1; letter-spacing: -0.02em; color: var(--to-ink); font-variant-numeric: tabular-nums; }
+.ecw-to-day.is-selected .ecw-to-dnum { color: var(--to-accent); }
+/* per-day avatars */
+.ecw-to-davatars { display: flex; align-items: center; justify-content: center; height: 1.3rem; margin-top: 0.1rem; }
+.ecw-to-dav { width: 1.25rem; height: 1.25rem; border-radius: 50%; object-fit: cover; border: 1.5px solid #fff; box-shadow: 0 0 0 1px var(--to-line); margin-left: -0.35rem; background: var(--to-surface); }
+.ecw-to-dav:first-child { margin-left: 0; }
+.ecw-to-dmore { margin-left: 0.2rem; font-size: 0.56rem; font-weight: 800; color: var(--to-muted); font-variant-numeric: tabular-nums; }
+.ecw-to-dnone { width: 0.35rem; height: 0.35rem; border-radius: 50%; background: var(--to-line); }
+
+/* roster head */
+.ecw-to-roster-head { display: flex; align-items: baseline; gap: 0.5rem; padding-top: 0.1rem; border-top: 1px solid var(--to-line); padding-top: 0.75rem; }
+.ecw-to-roster-day { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.03em; text-transform: uppercase; color: var(--to-muted); }
+
+/* roster */
+.ecw-to-roster { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.ecw-to-row { border: 1px solid var(--to-line); border-radius: 7px; background: #fff; overflow: hidden; transition: border-color 0.14s ease, box-shadow 0.14s ease; }
+.ecw-to-row:hover { border-color: #d7dae0; }
+.ecw-to-row.is-open { border-color: color-mix(in srgb, var(--to-accent) 40%, var(--to-line)); box-shadow: 0 8px 20px -14px rgba(79, 70, 229, 0.5); }
+.ecw-to-rowhead { width: 100%; display: flex; align-items: center; gap: 0.7rem; padding: 0.6rem 0.7rem; background: transparent; border: 0; cursor: pointer; font-family: inherit; text-align: left; }
+.ecw-to-rowhead:hover { background: var(--to-surface); }
+.ecw-to-photo { flex: none; width: 2.5rem; height: 2.5rem; border-radius: 50%; object-fit: cover; border: 1px solid var(--to-line); background: var(--to-surface); }
+.ecw-to-meta { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.08rem; }
+.ecw-to-name { font-size: 0.86rem; font-weight: 700; color: var(--to-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ecw-to-role { font-size: 0.68rem; font-weight: 600; color: var(--to-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ecw-to-tags { flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 0.2rem; }
+.ecw-to-type { font-size: 0.6rem; font-weight: 750; letter-spacing: 0.02em; padding: 0.16rem 0.5rem; border-radius: 999px; white-space: nowrap; }
+.ecw-to-type.is-info { color: #4f46e5; background: rgba(79, 70, 229, 0.1); }
+.ecw-to-type.is-warn { color: #b45309; background: rgba(180, 83, 9, 0.1); }
+.ecw-to-type.is-bad { color: #b91c1c; background: rgba(185, 28, 28, 0.1); }
+.ecw-to-dates { font-size: 0.62rem; font-weight: 650; color: var(--to-subtle); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ecw-to-caret { flex: none; width: 0.95rem; height: 0.95rem; color: var(--to-subtle); transition: transform 0.18s ease; }
+.ecw-to-caret.is-open { transform: rotate(180deg); }
+
+/* expanded record */
+.ecw-to-record { padding: 0.1rem 0.75rem 0.8rem; display: flex; flex-direction: column; gap: 0.8rem; }
+.ecw-to-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem 1rem; padding-top: 0.6rem; border-top: 1px solid var(--to-line); }
+.ecw-to-field { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+.ecw-to-flabel { font-size: 0.54rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--to-muted); }
+.ecw-to-fval { font-size: 0.78rem; font-weight: 600; color: var(--to-ink); overflow-wrap: break-word; }
+.ecw-to-fval.is-mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.72rem; letter-spacing: -0.01em; }
+.ecw-to-links { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.ecw-to-link {
+    display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.34rem 0.6rem;
+    border: 1px solid var(--to-line); border-radius: 6px; background: var(--to-surface);
+    color: var(--to-accent); font-size: 0.68rem; font-weight: 700; text-decoration: none;
+    transition: background 0.12s ease, border-color 0.12s ease;
+}
+.ecw-to-link:hover { background: color-mix(in srgb, var(--to-accent) 8%, #fff); border-color: color-mix(in srgb, var(--to-accent) 35%, var(--to-line)); }
+.ecw-to-ext { width: 0.8rem; height: 0.8rem; flex: none; }
+
+.ecw-to-empty { margin: 0; padding: 0.9rem; text-align: center; font-size: 0.78rem; color: var(--to-muted); background: var(--to-surface); border-radius: 7px; }
+
+@container (max-width: 340px) {
+    .ecw-to-dav { width: 1rem; height: 1rem; margin-left: -0.3rem; }
+    .ecw-to-dnum { font-size: 1rem; }
+    .ecw-to-grid { grid-template-columns: 1fr; }
+    .ecw-to-tags { flex-direction: row; align-items: center; gap: 0.35rem; }
+}

@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Insurance · Digital ID Card",
+  "description" : "Shows a wallet-style proof-of-insurance ID card (carrier, policy number, insured item, coverage dates and coverages).",
+  "lightning:type" : "@apexClassType/c__AsaInsuranceIdCardData"
+}

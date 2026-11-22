@@ -1,0 +1,47 @@
+<template>
+    <div class="asa-card">
+
+        <div class="asa-ro-head">
+            <h3 class="selector-title">{title}</h3>
+            <template if:true={hasSubtitle}>
+                <p class="asa-ro-sub">{subtitle}</p>
+            </template>
+        </div>
+
+        <template if:true={hasOffers}>
+            <div class="asa-ro-list">
+                <template for:each={offers} for:item="o">
+                    <div key={o.key} class={o.tileClass} data-id={o.id} role="button" tabindex="0"
+                         aria-pressed={o.selected} onclick={handleSelect} onkeydown={handleKey}>
+                        <div class="asa-ro-stub">
+                            <span class="asa-ro-bolt" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"></path></svg>
+                            </span>
+                            <template if:true={o.hasRebate}>
+                                <span class="asa-ro-stub-amt">{o.rebateText}</span>
+                                <span class="asa-ro-stub-cap">rebate</span>
+                            </template>
+                        </div>
+                        <div class="asa-ro-body">
+                            <template if:true={o.hasCategory}>
+                                <span class="asa-ro-cat">{o.categoryLabel}</span>
+                            </template>
+                            <span class="asa-ro-name">{o.name}</span>
+                            <template if:true={o.hasDetail}>
+                                <span class="asa-ro-detail">{o.detail}</span>
+                            </template>
+                        </div>
+                        <template if:true={o.hasBadge}>
+                            <span class="asa-ro-badge">{o.badge}</span>
+                        </template>
+                        <span class="asa-ro-check" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+                        </span>
+                    </div>
+                </template>
+            </div>
+
+            <button type="button" class="asa-ro-cta" onclick={handleSubmit} disabled={ctaDisabled}>{submitText}</button>
+        </template>
+    </div>
+</template>

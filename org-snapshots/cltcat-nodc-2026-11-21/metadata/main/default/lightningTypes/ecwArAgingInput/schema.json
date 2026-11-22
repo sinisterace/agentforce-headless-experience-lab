@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · Finance · AR aging — selection",
+  "description" : "The overdue accounts the finance user chose to send a payment reminder to.",
+  "lightning:type" : "@apexClassType/c__EcwArAgingInput"
+}

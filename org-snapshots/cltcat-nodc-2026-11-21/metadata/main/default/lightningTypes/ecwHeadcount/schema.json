@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · HR · Headcount",
+  "description" : "Company headcount by department with growth and open roles.",
+  "lightning:type" : "@apexClassType/c__EcwHeadcountData"
+}

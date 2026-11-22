@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Use when a marketer asks how a campaign is performing, the conversion funnel, where leads are dropping off, campaign results, or marketing-sourced pipeline. Shows a conversion funnel from impressions to won with step conversion and the biggest leak. The data is retrieved live; you do not need to supply any figures.</description>
+    <developerName>ecwCampaignFunnel_Output_m1a1</developerName>
+    <invocationTarget>ecwCampaignFunnel_Output_m1a1</invocationTarget>
+    <invocationTargetType>flow</invocationTargetType>
+    <isConfirmationRequired>false</isConfirmationRequired>
+    <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+    <localDeveloperName>ecwCampaignFunnel_Output_m1a1</localDeveloperName>
+    <masterLabel>Agentforce Coworker · Marketing · Campaign conversion</masterLabel>
+    <progressIndicatorMessage>Pulling campaign performance</progressIndicatorMessage>
+</GenAiFunction>

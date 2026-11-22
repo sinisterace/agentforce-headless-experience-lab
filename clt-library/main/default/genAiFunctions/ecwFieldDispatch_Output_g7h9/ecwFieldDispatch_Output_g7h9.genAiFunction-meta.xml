@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Use this when a service dispatcher or manager asks to reassign a service appointment, find a better technician, cover an at-risk or SLA-breaching job, or who's nearby to take a job. Shows the at-risk appointment on a live dispatch map with ranked candidate technicians (fit, skills, ETA, utilization, rating). The data is retrieved live; you do not need to supply any figures.</description>
+    <invocationTarget>ecwFieldDispatch_Output_g7h9</invocationTarget>
+    <invocationTargetType>flow</invocationTargetType>
+    <isConfirmationRequired>false</isConfirmationRequired>
+    <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+    <masterLabel>Agentforce Coworker · Service · Field dispatch</masterLabel>
+    <progressIndicatorMessage>Finding nearby technicians</progressIndicatorMessage>
+</GenAiFunction>

@@ -1,0 +1,63 @@
+<template>
+    <div class="asa-card">
+        <!-- Civic masthead -->
+        <div class="asa-dc-masthead">
+            <span class="asa-dc-seal" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"></path><path d="M4 21V10l8-5 8 5v11"></path><path d="M8 21v-7"></path><path d="M12 21v-7"></path><path d="M16 21v-7"></path><path d="M3 10h18"></path></svg>
+            </span>
+            <span class="asa-dc-mast-text">
+                <span class="asa-dc-kicker">Document Intake</span>
+                <span class="asa-dc-mast-title">{title}</span>
+            </span>
+        </div>
+
+        <div class="asa-dc-portal">
+            <template if:true={hasSubtitle}>
+                <p class="asa-dc-sub">{subtitle}</p>
+            </template>
+
+            <template if:true={hasDocs}>
+                <!-- Manifest progress -->
+                <div class="asa-dc-manifest-head">
+                    <span class="asa-dc-manifest-label">{progressLabel}</span>
+                    <div class="asa-dc-meter" role="presentation">
+                        <span class="asa-dc-meter-fill" style={progressStyle}></span>
+                    </div>
+                </div>
+
+                <!-- Ruled intake manifest -->
+                <div class="asa-dc-manifest">
+                    <template for:each={documents} for:item="doc">
+                        <button
+                            key={doc.key}
+                            type="button"
+                            class={doc.rowClass}
+                            data-key={doc.key}
+                            data-index={doc.index}
+                            aria-pressed={doc.selected}
+                            disabled={doc.disabled}
+                            onclick={handleToggle}>
+
+                            <span class={doc.boxClass} aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                            </span>
+
+                            <span class="asa-dc-body">
+                                <span class="asa-dc-name">{doc.name}</span>
+                                <template if:true={doc.hasDetail}>
+                                    <span class="asa-dc-detail">{doc.detail}</span>
+                                </template>
+                            </span>
+
+                            <span class={doc.stampClass}>{doc.stampLabel}</span>
+                        </button>
+                    </template>
+                </div>
+            </template>
+
+            <template if:true={showSubmit}>
+                <button type="button" class="asa-dc-submit" onclick={handleSubmit}>{submitLabel}</button>
+            </template>
+        </div>
+    </div>
+</template>

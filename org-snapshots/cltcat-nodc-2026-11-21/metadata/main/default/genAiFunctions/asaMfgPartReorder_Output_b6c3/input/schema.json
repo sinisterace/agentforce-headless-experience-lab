@@ -1,0 +1,14 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full part-reorder payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Reorder part\",\"part\":{\"name\":\"Industrial I/O Controller\",\"sku\":\"IOC-4820-DIN\",\"category\":\"controller\",\"imageUrl\":\"/resource/asaMfgIoController\",\"unitPrice\":486,\"currency\":\"USD\",\"leadTime\":\"Ships in 3–5 business days\",\"inStock\":142,\"minOrder\":1,\"incrementStep\":1},\"quantity\":2,\"submitText\":\"Reorder\"}\n\nThis card shows ONE part only. Rules:\n- 'title' (string, optional): heading. Defaults to 'Reorder part'.\n- 'part' (object, REQUIRED): 'name' (string, REQUIRED). Optional: 'sku' (string, shown monospace); 'category' (string); 'imageUrl' (string, same-origin https URL or '/resource/<Name>'; use '/resource/asaMfgIoController' for the sample part); 'unitPrice' (number; enables the live subtotal); 'currency' (ISO code, default USD); 'leadTime' (string, e.g. 'Ships in 3–5 business days'); 'inStock' (number; renders a stock bar — ≤10 shows amber 'low', ≤0 shows red 'Out of stock' and caps the quantity); 'minOrder' (number, minimum + starting quantity, default 1); 'incrementStep' (number, +/- step size, default 1).\n- 'quantity' (number, optional): initial quantity; clamped to at least 'minOrder' and at most 'inStock' when known. The customer adjusts it with the stepper before submitting.\n- 'submitText' (string, optional): button label prefix; defaults to 'Reorder'. The button also shows the live subtotal (or unit count).\n- 'submitValue' (string, optional): a base message; the card appends the chosen quantity + SKU when sending back.\n\nUse these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

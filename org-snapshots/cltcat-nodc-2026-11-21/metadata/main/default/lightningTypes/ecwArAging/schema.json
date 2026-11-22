@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · Finance · AR aging",
+  "description" : "Accounts-receivable aging buckets, DSO, and top overdue accounts.",
+  "lightning:type" : "@apexClassType/c__EcwArAgingData"
+}

@@ -1,0 +1,75 @@
+<template>
+    <div class="travel-seatmap-container">
+
+        <div class="asa-sm-head">
+            <div class="asa-sm-headtext">
+                <h3 class="selector-title">{title}</h3>
+                <template if:true={hasFlight}>
+                    <p class="asa-sm-flight">{flight}</p>
+                </template>
+            </div>
+            <span class="asa-sm-plane" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"></path></svg>
+            </span>
+        </div>
+
+        <div class="asa-sm-cabin">
+            <div class="asa-sm-nose" aria-hidden="true"></div>
+            <div class="asa-sm-collabels" aria-hidden="true">
+                <span class="asa-sm-rownum"></span>
+                <template for:each={colLabels} for:item="c">
+                    <span key={c.letter} class={c.cls}>{c.letter}</span>
+                </template>
+            </div>
+            <template for:each={displayRows} for:item="r">
+                <div class="asa-sm-row" key={r.key}>
+                    <span class="asa-sm-rownum">{r.row}</span>
+                    <template for:each={r.cells} for:item="cell">
+                        <template if:true={cell.isEmpty}>
+                            <span key={cell.key} class={cell.cls} aria-hidden="true"></span>
+                        </template>
+                        <template if:false={cell.isEmpty}>
+                            <button
+                                key={cell.key}
+                                type="button"
+                                class={cell.cls}
+                                disabled={cell.disabled}
+                                aria-pressed={cell.isSelected}
+                                aria-label={cell.ariaLabel}
+                                data-seatid={cell.seatId}
+                                onclick={handleSeatClick}
+                            >
+                                <template if:true={cell.isSelected}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+                                </template>
+                                <template if:false={cell.isSelected}>
+                                    <span class="asa-sm-seat-col">{cell.col}</span>
+                                </template>
+                            </button>
+                        </template>
+                    </template>
+                </div>
+            </template>
+        </div>
+
+        <div class="asa-sm-legend" aria-hidden="true">
+            <span class="asa-sm-leg"><span class="asa-sm-sw is-standard"></span> Available</span>
+            <span class="asa-sm-leg"><span class="asa-sm-sw is-extra_legroom"></span> Extra legroom</span>
+            <span class="asa-sm-leg"><span class="asa-sm-sw is-exit"></span> Exit row</span>
+            <span class="asa-sm-leg"><span class="asa-sm-sw is-taken"></span> Taken</span>
+        </div>
+
+        <template if:true={hasSelection}>
+            <div class="asa-sm-selbar">
+                <span class="asa-sm-seldetail">{selDetail}</span>
+                <span class="asa-sm-selprice">{selPrice}</span>
+            </div>
+        </template>
+
+        <template if:true={hasSelection}>
+            <div class="submit-container">
+                <button type="button" class="asa-sm-submit" onclick={handleSubmit}>{submitText}</button>
+            </div>
+        </template>
+    </div>
+</template>

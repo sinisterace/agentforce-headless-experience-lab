@@ -1,0 +1,5 @@
+{
+  "title" : "ASA HVAC · Service Plan Selector",
+  "description" : "Shows annual HVAC maintenance membership tiers as price-forward plan cards with a feature checklist, a recommended highlight, and a locked current-plan marker, and lets the customer enroll in one.",
+  "lightning:type" : "@apexClassType/c__AsaHvacServicePlanData"
+}

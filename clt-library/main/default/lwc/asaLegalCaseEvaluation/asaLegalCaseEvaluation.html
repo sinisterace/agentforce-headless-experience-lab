@@ -1,0 +1,89 @@
+<template>
+    <div class="clt-live-preview legal-eval-container">
+
+        <template if:true={title}>
+            <h3 class="selector-title">{title}</h3>
+        </template>
+        <template if:true={hasSubtitle}>
+            <p class="asa-card-sub">{subtitle}</p>
+        </template>
+
+        <template if:true={hasMatter}>
+            <div class="asa-lce-matter">
+                <span class="asa-lce-matter-label">Matter</span>
+                <span class="asa-lce-matter-name">{matter}</span>
+            </div>
+        </template>
+
+        <div class="asa-lce-form">
+            <template if:true={hasQuestions}>
+                <div class="asa-lce-section">
+                    <span class="asa-lce-section-title">About your matter</span>
+
+                    <template for:each={questions} for:item="q">
+                        <div class="asa-lce-q" key={q.qid}>
+                            <span class="asa-lce-q-label">{q.label}</span>
+                            <template if:true={q.isDate}>
+                                <label class="asa-lce-date">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path><path d="M8 14h.01"></path><path d="M12 14h.01"></path><path d="M16 14h.01"></path><path d="M8 18h.01"></path><path d="M12 18h.01"></path><path d="M16 18h.01"></path></svg>
+                                    <input type="date" value={q.dateValue} data-qid={q.qid} onchange={handleDate} />
+                                </label>
+                            </template>
+                            <template if:true={q.isChoice}>
+                                <div class="asa-lce-opts">
+                                    <template for:each={q.options} for:item="opt">
+                                        <button type="button" key={opt.key} class={opt.optClass} data-qid={q.qid} data-value={opt.value} onclick={handleOption}>
+                                            {opt.value}
+                                        </button>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+
+                    <div class="asa-lce-q">
+                        <span class="asa-lce-q-label">{describeLabel}</span>
+                        <textarea class="asa-lce-textarea" rows="3" placeholder={describePlaceholder} value={text} onchange={handleText}></textarea>
+                    </div>
+                </div>
+            </template>
+
+            <div class="asa-lce-section">
+                <span class="asa-lce-section-title">Your details</span>
+                <div class="asa-lce-row">
+                    <label class="asa-lce-field">
+                        <span class="asa-lce-flabel">First name <i aria-hidden="true">*</i></span>
+                        <input class="asa-lce-input" type="text" placeholder="e.g. Sarah" data-field="first" onchange={handleContact} />
+                    </label>
+                    <label class="asa-lce-field">
+                        <span class="asa-lce-flabel">Last name <i aria-hidden="true">*</i></span>
+                        <input class="asa-lce-input" type="text" placeholder="e.g. Johnson" data-field="last" onchange={handleContact} />
+                    </label>
+                </div>
+                <label class="asa-lce-field">
+                    <span class="asa-lce-flabel">Email address <i aria-hidden="true">*</i></span>
+                    <input class="asa-lce-input" type="email" placeholder="e.g. sarah@email.com" data-field="email" onchange={handleContact} />
+                </label>
+                <label class="asa-lce-field">
+                    <span class="asa-lce-flabel">Phone number (optional)</span>
+                    <input class="asa-lce-input" type="tel" placeholder="e.g. (555) 123-4567" data-field="phone" onchange={handleContact} />
+                </label>
+            </div>
+
+            <label class="asa-lce-consent">
+                <input type="checkbox" checked={agree} onchange={handleConsent} />
+                <span>{consentText}</span>
+            </label>
+
+            <template if:true={hasDisclaimer}>
+                <p class="asa-lce-disclaimer">{disclaimer}</p>
+            </template>
+
+            <button type="button" class="asa-lce-submit" onclick={handleSubmit}>{submitText}</button>
+
+            <template if:true={hasFooter}>
+                <p class="asa-lce-footer">{footerNote}</p>
+            </template>
+        </div>
+    </div>
+</template>

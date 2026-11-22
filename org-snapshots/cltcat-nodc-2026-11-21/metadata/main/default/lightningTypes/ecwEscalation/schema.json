@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · Service · Escalate case",
+  "description" : "A case-escalation report: context, severity, impacted line items with a business-impact total, and the on-call route.",
+  "lightning:type" : "@apexClassType/c__EcwEscalationData"
+}

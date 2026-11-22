@@ -1,0 +1,5 @@
+{
+  "title" : "ASA HVAC · Technician ETA Tracker",
+  "description" : "Shows the live status of a dispatched HVAC service technician — a dark dispatch hero with status, ETA and arrival window, the technician's identity, a horizontal en-route track, and job details, plus message/reschedule actions.",
+  "lightning:type" : "@apexClassType/c__AsaHvacTechTrackerData"
+}

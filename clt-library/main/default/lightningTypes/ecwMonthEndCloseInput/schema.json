@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · Finance · Month-end close — action",
+  "description" : "The month-end close task the finance user chose to complete or chase.",
+  "lightning:type" : "@apexClassType/c__EcwMonthEndCloseInput"
+}

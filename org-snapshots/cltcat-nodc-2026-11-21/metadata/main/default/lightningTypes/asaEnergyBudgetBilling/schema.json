@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Energy & Utilities · Budget Billing",
+  "description" : "Offers a levelized Budget Billing plan that smooths seasonal bill swings — shows an actual-vs-budget chart, the flat monthly amount, key terms, and an enroll action.",
+  "lightning:type" : "@apexClassType/c__AsaEnergyBudgetBillingData"
+}

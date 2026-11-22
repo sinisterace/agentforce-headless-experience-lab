@@ -1,0 +1,88 @@
+/* ASA Travel · Seat Map — an interactive cabin the visitor taps to pick a seat.
+   Seats are colour-coded by kind + status, with column labels, an aisle gap, a
+   legend and a live selected-seat detail bar. rem units + inherited font so it
+   matches the host chat theme in Enhanced Chat v2. Accent is a local custom prop
+   for theming. Class names are ported verbatim from the React preview
+   (asa-sm-* prefix) so the two surfaces stay visually identical. */
+:host {
+    --customer-accent: #0b5cab;
+    display: block;
+}
+
+.travel-seatmap-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    font-family: inherit;
+    /* ECv2 renders this in a narrow column; size to the card, not the viewport. */
+    container-type: inline-size;
+    --tv-accent: var(--customer-accent, #0b5cab);
+    --tv-ink: #14202e;
+    --tv-muted: #5b6b82;
+    --tv-line: color-mix(in srgb, #14202e 14%, transparent);
+    --tv-card: #ffffff;
+}
+.travel-seatmap-container *,
+.travel-seatmap-container *::before,
+.travel-seatmap-container *::after {
+    box-sizing: border-box;
+}
+
+.clt-test-badge {
+    margin: 0;
+    align-self: flex-start;
+    font-size: 0.72rem;
+    padding: 0.3rem 0.55rem;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--customer-accent) 15%, transparent);
+    color: var(--customer-accent);
+}
+
+.travel-seatmap-container .selector-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: var(--tv-ink);
+}
+
+/* --- Seat Map --- */
+.asa-sm-head { display: flex; align-items: flex-start; justify-content: space-between; gap: .5rem; margin-bottom: .6rem; }
+.asa-sm-headtext { min-width: 0; }
+.asa-sm-flight { margin: .1rem 0 0; font-size: .76rem; color: var(--tv-muted); overflow-wrap: break-word; }
+.asa-sm-plane { flex-shrink: 0; color: var(--tv-accent); }
+.asa-sm-plane svg { width: 1.3rem; height: 1.3rem; }
+.asa-sm-cabin { display: flex; flex-direction: column; align-items: center; border: 1px solid var(--tv-line); border-radius: 22px 22px 14px 14px; background: linear-gradient(180deg, color-mix(in srgb, var(--tv-accent) 7%, var(--tv-card)), var(--tv-card) 60%); padding: 1rem .9rem; overflow-x: auto; box-shadow: inset 0 1px 0 rgba(255,255,255,.5); }
+.asa-sm-nose { align-self: center; width: 40%; height: .35rem; margin-bottom: .55rem; border-radius: 999px; background: color-mix(in srgb, var(--tv-accent) 22%, transparent); }
+.asa-sm-collabels, .asa-sm-row { display: flex; align-items: center; gap: .42rem; }
+.asa-sm-collabels { margin-bottom: .5rem; }
+.asa-sm-row { margin-bottom: .42rem; }
+.asa-sm-row:last-child { margin-bottom: 0; }
+.asa-sm-rownum { width: 1.5rem; flex-shrink: 0; text-align: center; font-size: .64rem; font-weight: 700; color: var(--tv-muted); font-variant-numeric: tabular-nums; }
+.asa-sm-collabel { width: 2.1rem; flex-shrink: 0; text-align: center; font-size: .62rem; font-weight: 700; letter-spacing: .02em; color: var(--tv-muted); }
+.asa-sm-collabel.has-aisle { margin-right: 1.15rem; }
+.asa-sm-seat { position: relative; width: 2.1rem; height: 2.1rem; flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; border-radius: 9px 9px 4px 4px; border: 1.5px solid var(--tv-line); font-size: .6rem; font-weight: 700; cursor: pointer; background: var(--tv-card); box-shadow: 0 1px 1.5px rgba(15,23,42,.12), inset 0 -2px 0 color-mix(in srgb, var(--tv-line) 60%, transparent); transition: transform .12s ease, box-shadow .14s ease, background .12s ease; }
+.asa-sm-seat.has-aisle { margin-right: 1.15rem; }
+.asa-sm-seat-col { opacity: .5; }
+.asa-sm-seat.is-standard { border-color: color-mix(in srgb, var(--tv-accent) 38%, var(--tv-line)); color: var(--tv-accent); background: color-mix(in srgb, var(--tv-accent) 9%, var(--tv-card)); }
+.asa-sm-seat.is-extra_legroom { border-color: #0e9488; color: #0e9488; background: color-mix(in srgb, #14b8a6 15%, var(--tv-card)); }
+.asa-sm-seat.is-exit { border-color: #2563eb; color: #2563eb; background: color-mix(in srgb, #2563eb 13%, var(--tv-card)); }
+.asa-sm-seat.is-premium { border-color: #b0863f; color: #8a6a30; background: color-mix(in srgb, #b0863f 17%, var(--tv-card)); }
+.asa-sm-seat:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 7px 14px -6px color-mix(in srgb, var(--tv-accent) 55%, rgba(15,23,42,.4)); }
+.asa-sm-seat.is-taken { border-color: transparent; background: color-mix(in srgb, var(--tv-muted) 26%, var(--tv-card)); color: transparent; cursor: not-allowed; box-shadow: inset 0 -2px 0 color-mix(in srgb, var(--tv-muted) 30%, transparent); }
+.asa-sm-seat.is-selected { background: linear-gradient(160deg, color-mix(in srgb, var(--tv-accent) 88%, #fff), var(--tv-accent)); border-color: var(--tv-accent); color: #fff; transform: translateY(-2px); box-shadow: 0 0 0 3px color-mix(in srgb, var(--tv-accent) 28%, transparent), 0 8px 16px -6px color-mix(in srgb, var(--tv-accent) 70%, transparent); }
+.asa-sm-seat.is-selected svg { width: 1rem; height: 1rem; }
+.asa-sm-seat.is-empty { border: 0; background: transparent; box-shadow: none; pointer-events: none; }
+.asa-sm-legend { display: flex; flex-wrap: wrap; gap: .45rem .8rem; margin-top: .65rem; font-size: .66rem; color: var(--tv-muted); }
+.asa-sm-leg { display: inline-flex; align-items: center; gap: .32rem; }
+.asa-sm-sw { width: .85rem; height: .85rem; border-radius: 4px; border: 1.5px solid var(--tv-line); }
+.asa-sm-sw.is-standard { border-color: color-mix(in srgb, var(--tv-accent) 42%, var(--tv-line)); background: color-mix(in srgb, var(--tv-accent) 9%, var(--tv-card)); }
+.asa-sm-sw.is-extra_legroom { border-color: #0e9488; background: color-mix(in srgb, #14b8a6 15%, var(--tv-card)); }
+.asa-sm-sw.is-exit { border-color: #2563eb; background: color-mix(in srgb, #2563eb 13%, var(--tv-card)); }
+.asa-sm-sw.is-taken { border-color: var(--tv-line); background: color-mix(in srgb, var(--tv-muted) 22%, var(--tv-card)); }
+.asa-sm-selbar { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-top: .7rem; padding: .6rem .75rem; border-radius: 11px; background: color-mix(in srgb, var(--tv-accent) 8%, var(--tv-card)); border: 1px solid color-mix(in srgb, var(--tv-accent) 24%, transparent); }
+.asa-sm-seldetail { font-size: .82rem; font-weight: 650; color: var(--tv-ink); }
+.asa-sm-selprice { font-size: .82rem; font-weight: 750; color: var(--tv-accent); white-space: nowrap; }
+.submit-container { margin: 0; }
+.asa-sm-submit { width: 100%; min-height: 2.7rem; border: 0; border-radius: 11px; background: var(--tv-accent); color: #fff; font: inherit; font-weight: 700; font-size: .9rem; cursor: pointer; }

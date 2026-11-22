@@ -1,0 +1,14 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full returns-and-exchange payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Start a return\",\"orderLabel\":\"Order #4821 · Mar 2\",\"items\":[{\"id\":\"i1\",\"name\":\"Trailblazer Running Shoe\",\"sku\":\"TR3-BLK-10\",\"variant\":\"Size 10 · Black\",\"price\":128,\"imageUrl\":\"/resource/asaRetailTrailblazerShoe\",\"category\":\"shoes\"},{\"id\":\"i2\",\"name\":\"Everyday Merino Crew\",\"sku\":\"EMC-NVY-M\",\"variant\":\"Medium · Navy\",\"price\":68,\"imageUrl\":\"/resource/asaRetailEverydayMerinoCrew\",\"category\":\"apparel\"}],\"reasons\":[{\"id\":\"too_small\",\"label\":\"Too small\"},{\"id\":\"changed_mind\",\"label\":\"Changed my mind\"}],\"resolutions\":[{\"id\":\"refund\",\"kind\":\"refund\",\"label\":\"Refund\",\"description\":\"Back to original payment\"}]}\n\nRules:\n- 'title' (string, optional): heading at the top of the card. Defaults to 'Start a return'.\n- 'subtitle' (string, optional): a short line under the title, e.g. \"Choose what you'd like to send back\".\n- 'orderLabel' (string, optional): the order this return is for, e.g. 'Order #4821 · Mar 2'. Shown next to the subtitle.\n- 'items' (array, REQUIRED, at least one object): the items the customer can select to send back. Each item MUST have 'id' (string, unique, sent back when the customer confirms) and 'name' (string). Optional per item: 'sku' (string); 'variant' (string, e.g. 'Size 10 · Black'); 'price' (number); 'currency' (string, ISO code, defaults to 'USD'); 'imageUrl' (string, same-origin https URL or '/resource/<Name>'; use the supplied ASA retail static-resource URLs for the sample shoe and shirt); 'category' (string; one of 'apparel','shoes','electronics','beauty','home','grocery','accessories','outdoors','toys'; drives the fallback tile when no image is available).\n- 'reasons' (array, REQUIRED, at least one object): the reason choices the customer picks from. Each reason MUST have 'id' (string, unique) and 'label' (string), e.g. {\"id\":\"too_small\",\"label\":\"Too small\"}.\n- 'resolutions' (array, optional): the ways the return can be resolved. Each resolution MUST have 'label' (string) and SHOULD have 'id' (string, unique) and 'kind' (string; one of 'refund','exchange','credit'; defaults to 'refund'). Optional: 'description' (string, short line under the label). When omitted, defaults to Refund / Exchange / Store credit.\n- 'submitText' (string, optional): label for the confirm button before the item count is appended. Defaults to 'Continue return'.\n\nNever emit zero items or zero reasons. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

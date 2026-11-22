@@ -1,0 +1,15 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full service-status payload as a JSON string, formatted EXACTLY like this: {\"title\":\"Service status\",\"overall\":\"degraded\",\"headline\":\"We're aware of an issue affecting your area\",\"area\":\"SoMa, San Francisco 94103\",\"etaText\":\"Est. restore by 4:30 PM\",\"updatedText\":\"Updated 2 min ago\",\"services\":[{\"id\":\"internet\",\"name\":\"Internet\",\"status\":\"down\",\"detail\":\"Fiber node offline\",\"icon\":\"internet\"},{\"id\":\"tv\",\"name\":\"TV\",\"status\":\"degraded\",\"detail\":\"Some channels affected\",\"icon\":\"tv\"},{\"id\":\"mobile\",\"name\":\"Mobile\",\"status\":\"operational\",\"icon\":\"mobile\"},{\"id\":\"voice\",\"name\":\"Home phone\",\"status\":\"operational\",\"icon\":\"voice\"}],\"submitText\":\"Notify me when it's fixed\",\"submitValue\":\"Please text me when service is restored\"} Rules: - 'title' (string, optional): heading at the top of the card. Defaults to 'Service status'. - 'overall' (string, optional): the summary banner state; one of 'operational','degraded','outage','maintenance'. If omitted it is derived automatically from the worst individual service. - 'headline' (string, optional): a short sentence under the banner label. - 'area' (string, optional): the affected location, e.g. a neighborhood + ZIP. - 'etaText' (string, optional): estimated restore time, e.g. 'Est. restore by 4:30 PM'. - 'updatedText' (string, optional): freshness stamp shown top-right, e.g. 'Updated 2 min ago'. - 'services' (array, REQUIRED, 1 to 6 objects): the services to show, top to bottom. Each MUST have 'name' (string). Optional per service: 'id' (string); 'status' (string; one of 'operational','degraded','down','maintenance'; defaults to 'operational'); 'detail' (string, one short line — defaults to the status label); 'icon' (string; one of 'internet','tv','mobile','voice','home' — picks the glyph; inferred from the name when omitted). - 'submitText' (string, optional): label for an optional action button, e.g. 'Notify me when it's fixed'. Omit to hide the button. - 'submitValue' (string, optional): the exact message sent back to you when the button is tapped; defaults to 'submitText'. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType",
+  "lightning:textIndexed" : true
+}

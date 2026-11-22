@@ -1,0 +1,88 @@
+<template>
+    <div class="asa-card">
+        <template if:true={title}>
+            <h3 class="asa-card-title">{title}</h3>
+        </template>
+
+        <template if:true={hasVehicle}>
+            <div class="asa-td-vehicle">
+                <span class="asa-td-avatar" aria-hidden="true">
+                    <template if:true={hasVehicleImage}>
+                        <img src={vehicleImageUrl} alt={vehicleName} onerror={handleImageError} />
+                    </template>
+                    <template if:false={hasVehicleImage}>
+                        <span class="asa-td-initials">{vehicleInitials}</span>
+                    </template>
+                </span>
+                <span class="asa-td-vehicle-text">
+                    <span class="asa-td-vehicle-name">{vehicleName}</span>
+                    <template if:true={vehicleTrim}>
+                        <span class="asa-td-vehicle-trim">{vehicleTrim}</span>
+                    </template>
+                    <template if:true={hasLocation}>
+                        <span class="asa-td-location">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.4-5.4 9.2-7.3 10.7a1 1 0 0 1-1.4 0C9.4 19.2 4 14.4 4 10a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                            <span class="asa-td-location-text">{locationName}</span>
+                        </span>
+                    </template>
+                </span>
+            </div>
+        </template>
+
+        <template if:true={hasDays}>
+            <div class="asa-td-cal-head">
+                <span class="asa-td-eyebrow">Select a day</span>
+                <template if:true={monthLabel}>
+                    <span class="asa-td-month">{monthLabel}</span>
+                </template>
+            </div>
+            <div class="asa-td-days" role="tablist" aria-label="Choose a day">
+                <template for:each={days} for:item="day">
+                    <button
+                        key={day.key}
+                        type="button"
+                        role="tab"
+                        class={day.tabClass}
+                        data-index={day.index}
+                        aria-selected={day.selected}
+                        onclick={handleDaySelect}>
+                        <span class="asa-td-day-wd">{day.weekday}</span>
+                        <span class="asa-td-day-num">{day.dayNum}</span>
+                    </button>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={hasSlots}>
+            <span class="asa-td-eyebrow asa-td-eyebrow-times">Choose a time</span>
+            <div class="asa-td-slots">
+                <template for:each={slots} for:item="slot">
+                    <button
+                        key={slot.key}
+                        type="button"
+                        class={slot.chipClass}
+                        data-id={slot.id}
+                        aria-pressed={slot.selected}
+                        onclick={handleSlotSelect}>
+                        <span class="asa-td-slot-ico" aria-hidden="true">
+                            <template if:true={slot.isShowroom}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"></path><path d="M3 9h18v3a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"></path><path d="M4 12v8h16v-8"></path><path d="M9 20v-5h6v5"></path></svg>
+                            </template>
+                            <template if:true={slot.isAthome}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"></path><path d="M5 10v10h14V10"></path><path d="M9 20v-6h6v6"></path></svg>
+                            </template>
+                        </span>
+                        <span class="asa-td-slot-body">
+                            <span class="asa-td-slot-time">{slot.time}</span>
+                            <span class="asa-td-slot-type">{slot.typeLabel}</span>
+                        </span>
+                    </button>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={showSubmit}>
+            <button type="button" class="asa-td-submit" onclick={handleSubmit}>{submitLabel}</button>
+        </template>
+    </div>
+</template>

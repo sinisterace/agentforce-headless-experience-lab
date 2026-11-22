@@ -1,0 +1,14 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full care-options payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"How would you like to get care?\",\"subtitle\":\"Choose the option that fits your needs\",\"options\":[{\"id\":\"o1\",\"channel\":\"nurse_line\",\"label\":\"24/7 Nurse Advice Line\",\"description\":\"Talk to a registered nurse now\",\"meta\":\"Avg wait 3 min\",\"actionType\":\"call\",\"actionValue\":\"+18005551234\"},{\"id\":\"o2\",\"channel\":\"video\",\"label\":\"Video visit\",\"description\":\"See a provider by video in about 15 minutes\",\"meta\":\"$0 with your plan\",\"actionType\":\"link\",\"actionValue\":\"https://example.com/video-visit\",\"recommended\":true},{\"id\":\"o3\",\"channel\":\"in_person\",\"label\":\"Schedule an in-person visit\",\"description\":\"Book a time at a clinic near you\",\"actionType\":\"book\",\"actionValue\":\"Schedule an in-person visit\"},{\"id\":\"o4\",\"channel\":\"er\",\"label\":\"Emergency care\",\"description\":\"For severe or life-threatening symptoms\",\"actionType\":\"call\",\"actionValue\":\"911\"}],\"disclaimer\":\"If this is a medical emergency, call 911. This tool does not provide medical advice.\",\"submitText\":\"Continue\"}\n\nRules:\n- 'title' (string, optional): heading; defaults to 'How would you like to get care?'.\n- 'subtitle' (string, optional): a short line under the title.\n- 'options' (array, REQUIRED, at least two objects): the care channels. Each MUST have 'id' (string, unique), 'label' (string, short) and 'actionType' (string; one of 'call','link','book'). Optional per option: 'channel' (string; one of 'nurse_line','video','in_person','urgent','er','pharmacy','message' — drives the icon/hue; defaults to 'message'); 'description' (string, one short line); 'meta' (string, a small tag like 'Avg wait 3 min' or '$0 with your plan'); 'recommended' (boolean — highlights the option and adds a Recommended ribbon); 'actionValue' (string): for actionType 'call' a phone number (E.164 like '+18005551234', or '911'); for 'link' a full https URL (opens in a new tab); for 'book' a short instruction sent back to the agent to continue the conversation (e.g. 'Schedule an in-person visit').\n- 'disclaimer' (string, optional but recommended): a safety line shown at the bottom with an alert icon.\n- 'submitText' (string, optional): reserved; safe to omit.\n\nDo NOT include or ask for symptoms or any patient health information in this payload. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

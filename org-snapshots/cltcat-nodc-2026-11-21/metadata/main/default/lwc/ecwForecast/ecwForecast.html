@@ -1,0 +1,62 @@
+<template>
+    <div class="ecw-fc">
+
+        <div class="ecw-fc-head">
+            <span class="ecw-fc-eyebrow">Sales · Forecast</span>
+            <h3 class="ecw-fc-title">Forecast coverage</h3>
+        </div>
+
+        <!-- Attainment readout: committed figure + coverage of total forecast -->
+        <template if:true={hasHero}>
+            <div class="ecw-fc-readout">
+                <div class="ecw-fc-proj">
+                    <span class="ecw-fc-proj-eyebrow">Committed</span>
+                    <span class="ecw-fc-proj-value">{heroValue}</span>
+                    <template if:true={summaryText}>
+                        <span class="ecw-fc-sub">{summaryText}</span>
+                    </template>
+                </div>
+                <template if:true={hasCoverage}>
+                    <span class={coverageClass}>{coverageText}</span>
+                </template>
+            </div>
+        </template>
+
+        <!-- Confidence-tier column chart -->
+        <template if:true={hasColumns}>
+            <div class="ecw-fc-chart">
+                <svg class="ecw-fc-svg" viewBox={viewBox} preserveAspectRatio="xMidYMid meet" role="img" aria-label="Forecast amount by confidence tier">
+                    <line class="ecw-fc-base" x1="6" y1={baseLineY} x2="314" y2={baseLineY}></line>
+                    <template for:each={columns} for:item="c">
+                        <g key={c.key}>
+                            <rect class="ecw-fc-rect" x={c.x} y={c.y} width={c.barW} height={c.h} fill={c.color} rx="1.5"></rect>
+                            <text class="ecw-fc-colval" x={c.cx} y={c.valueY} text-anchor="middle">{c.valueText}</text>
+                            <text class="ecw-fc-collabel" x={c.cx} y={c.labelY} text-anchor="middle">{c.label}</text>
+                        </g>
+                    </template>
+                </svg>
+            </div>
+        </template>
+
+        <!-- Coverage breakdown: segmented meter + hairline legend -->
+        <template if:true={hasBar}>
+            <div class="ecw-fc-breakdown">
+                <div class="ecw-fc-meter">
+                    <template for:each={segments} for:item="s">
+                        <span key={s.key} class="ecw-fc-seg" style={s.segStyle}></span>
+                    </template>
+                </div>
+                <ul class="ecw-fc-legend">
+                    <template for:each={legend} for:item="t">
+                        <li key={t.key} class="ecw-fc-leg">
+                            <span class="ecw-fc-leg-dot" style={t.dotStyle} aria-hidden="true"></span>
+                            <span class="ecw-fc-leg-label">{t.label}</span>
+                            <span class="ecw-fc-leg-pct">{t.pctText}</span>
+                            <span class="ecw-fc-leg-amt">{t.amountText}</span>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · IT · Change calendar",
+  "description" : "Upcoming IT changes and maintenance windows affecting employees, with risk and impact.",
+  "lightning:type" : "@apexClassType/c__EcwChangeCalendarData"
+}

@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · Sales · My pipeline",
+  "description" : "A sales-pipeline snapshot card: total open pipeline, a quarter-over-quarter trend, a stage breakdown, and win-rate / closing / avg-deal stats.",
+  "lightning:type" : "@apexClassType/c__EcwSalesPipelineData"
+}

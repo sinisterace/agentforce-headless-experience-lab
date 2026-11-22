@@ -1,0 +1,149 @@
+/* ASA Technology, Media & Comms · Data Usage Meter — a self-contained SVG
+   radial gauge (270° arc) with a centered used/allowance readout, a
+   per-category breakdown bar, and an optional add-on CTA. rem units +
+   inherited font so the card matches the host chat theme in Enhanced Chat v2.
+   Cyan accent + threshold hues are local custom props for easy theming. */
+:host {
+    --asa-accent: #0891b2;
+    --asa-line: #e5e7eb;
+    --asa-track: #eef2f6;
+    --asa-ink: #101828;
+    --asa-muted: #667085;
+    --asa-warn: #b45309;
+    --asa-over: #c0392b;
+    --asa-radius: 14px;
+    display: block;
+}
+
+.asa-card {
+    padding: 0.75rem;
+    font-family: inherit;
+    color: var(--asa-ink);
+    box-sizing: border-box;
+    container-type: inline-size;
+}
+.asa-card *,
+.asa-card *::before,
+.asa-card *::after { box-sizing: border-box; }
+
+.asa-test-badge {
+    margin: 0 0 0.5rem;
+    padding: 0.3rem 0.5rem;
+    border-radius: 8px;
+    background: #ecfeff;
+    color: #0e7490;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.asa-du-head { text-align: center; margin-bottom: 0.55rem; }
+.selector-title {
+    font-size: 1.12rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.1rem;
+    overflow-wrap: break-word;
+    word-break: normal;
+}
+.asa-du-cycle { margin: 0; font-size: 0.72rem; font-weight: 600; color: var(--asa-muted); overflow-wrap: break-word; }
+
+/* --- Gauge --- */
+.asa-du-meter { position: relative; width: 12.5rem; max-width: 100%; margin: 0.35rem auto 0.2rem; }
+.asa-du-gauge { display: block; width: 100%; height: auto; }
+.asa-du-track {
+    fill: none;
+    stroke: var(--asa-track);
+    stroke-width: 11;
+    stroke-linecap: round;
+}
+.asa-du-value {
+    fill: none;
+    stroke: var(--asa-accent);
+    stroke-width: 11;
+    stroke-linecap: round;
+    transition: stroke-dasharray 0.6s ease;
+}
+.asa-du-gauge.is-warn .asa-du-value { stroke: var(--asa-warn); }
+.asa-du-gauge.is-over .asa-du-value { stroke: var(--asa-over); }
+.asa-du-gauge.is-unlimited .asa-du-value { stroke: var(--asa-accent); }
+
+.asa-du-center {
+    position: absolute;
+    top: 46%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.05rem;
+    pointer-events: none;
+}
+.asa-du-used { font-size: 1.85rem; font-weight: 780; letter-spacing: -0.03em; line-height: 1; color: var(--asa-ink); }
+.asa-du-unit { font-size: 0.9rem; font-weight: 640; margin-left: 0.12rem; color: var(--asa-muted); }
+.asa-du-total { font-size: 0.74rem; font-weight: 600; color: var(--asa-muted); }
+.asa-du-gauge.is-warn ~ .asa-du-center .asa-du-used { color: var(--asa-warn); }
+.asa-du-gauge.is-over ~ .asa-du-center .asa-du-used { color: var(--asa-over); }
+
+.asa-du-remaining {
+    margin: 0.1rem 0 0.7rem;
+    text-align: center;
+    font-size: 0.82rem;
+    font-weight: 680;
+    color: var(--asa-ink);
+}
+
+/* --- Category breakdown --- */
+.asa-du-breakdown { margin-bottom: 0.65rem; }
+.asa-du-bar {
+    display: flex;
+    width: 100%;
+    height: 0.6rem;
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--asa-track);
+    gap: 2px;
+}
+.asa-du-seg { height: 100%; min-width: 0.5rem; }
+.asa-du-seg:first-child { border-radius: 999px 0 0 999px; }
+.asa-du-seg:last-child { border-radius: 0 999px 999px 0; }
+.asa-du-legend { list-style: none; margin: 0.5rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.28rem; }
+.asa-du-legend-item { display: flex; align-items: center; gap: 0.45rem; font-size: 0.76rem; min-width: 0; }
+.asa-du-dot { width: 0.62rem; height: 0.62rem; border-radius: 3px; flex-shrink: 0; }
+.asa-du-legend-label { color: var(--asa-ink); min-width: 0; overflow-wrap: break-word; }
+.asa-du-legend-amt { margin-left: auto; color: var(--asa-muted); font-weight: 600; white-space: nowrap; flex-shrink: 0; padding-left: 0.4rem; }
+
+.asa-du-note {
+    margin: 0 0 0.15rem;
+    padding: 0.5rem 0.6rem;
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--asa-accent) 7%, #fff);
+    border: 1px solid color-mix(in srgb, var(--asa-accent) 22%, var(--asa-line));
+    color: var(--asa-ink);
+    font-size: 0.74rem;
+    line-height: 1.35;
+    overflow-wrap: break-word;
+}
+.asa-du-note.is-warn { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+.asa-du-note.is-over { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+
+.asa-du-cta {
+    margin-top: 0.6rem;
+    width: 100%;
+    min-height: 2.7rem;
+    padding: 0.6rem;
+    border: 1px solid var(--asa-accent);
+    border-radius: 11px;
+    background: #fff;
+    color: var(--asa-accent);
+    font-size: 0.82rem;
+    font-weight: 670;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+.asa-du-cta:hover { background: var(--asa-accent); color: #fff; }
+
+@container (max-width: 300px) {
+    .asa-du-meter { width: 11rem; }
+    .asa-du-used { font-size: 1.6rem; }
+}

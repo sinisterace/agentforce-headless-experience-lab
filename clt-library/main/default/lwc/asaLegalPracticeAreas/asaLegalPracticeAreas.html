@@ -1,0 +1,101 @@
+<template>
+    <div class="clt-live-preview legal-areas-container">
+
+        <template if:true={title}>
+            <h3 class="selector-title">{title}</h3>
+        </template>
+        <template if:true={hasSubtitle}>
+            <p class="asa-card-sub">{subtitle}</p>
+        </template>
+
+        <div class="asa-lpa-list">
+            <template for:each={areas} for:item="area">
+                <div class={area.itemClass} key={area.id}>
+                    <button
+                        type="button"
+                        class="asa-lpa-row"
+                        data-id={area.id}
+                        aria-expanded={area.isOpen}
+                        onclick={handleToggle}
+                    >
+                        <span class="asa-lpa-ico" aria-hidden="true">
+                            <template if:true={area.iconInjury}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path><path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"></path></svg>
+                            </template>
+                            <template if:true={area.iconFamily}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            </template>
+                            <template if:true={area.iconEstate}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 12h-5"></path><path d="M15 8h-5"></path><path d="M19 17V5a2 2 0 0 0-2-2H4"></path><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"></path></svg>
+                            </template>
+                            <template if:true={area.iconBusiness}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"></path><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"></path><path d="M10 6h4"></path><path d="M10 10h4"></path><path d="M10 14h4"></path><path d="M10 18h4"></path></svg>
+                            </template>
+                            <template if:true={area.iconImmigration}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path><path d="M2 12h20"></path></svg>
+                            </template>
+                            <template if:true={area.iconCriminal}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m14.5 12.5-8 8a2.119 2.119 0 1 1-3-3l8-8"></path><path d="m16 16 6-6"></path><path d="m8 8 6-6"></path><path d="m9 7 8 8"></path><path d="m21 11-8-8"></path></svg>
+                            </template>
+                            <template if:true={area.iconEmployment}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path><rect width="20" height="14" x="2" y="6" rx="2"></rect></svg>
+                            </template>
+                            <template if:true={area.iconRealestate}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                            </template>
+                            <template if:true={area.iconOther}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"></path><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"></path><path d="M7 21h10"></path><path d="M12 3v18"></path><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path></svg>
+                            </template>
+                        </span>
+                        <span class="asa-lpa-head">
+                            <span class="asa-lpa-name">{area.name}</span>
+                            <template if:true={area.hasBlurb}>
+                                <span class="asa-lpa-blurb">{area.blurb}</span>
+                            </template>
+                        </span>
+                        <template if:true={area.hasBody}>
+                            <span class="asa-lpa-chev" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
+                            </span>
+                        </template>
+                    </button>
+
+                    <template if:true={area.showBody}>
+                        <div class="asa-lpa-body">
+                            <template if:true={area.hasDesc}>
+                                <p class="asa-lpa-desc">{area.description}</p>
+                            </template>
+                            <template if:true={area.hasStat}>
+                                <span class="asa-lpa-stat">{area.stat}</span>
+                            </template>
+                            <template if:true={area.hasServices}>
+                                <div class="asa-lpa-services">
+                                    <span class="asa-lpa-services-label">Common matters</span>
+                                    <div class="asa-lpa-chips">
+                                        <template for:each={area.services} for:item="svc">
+                                            <span class="asa-lpa-chip" key={svc.key}>{svc.label}</span>
+                                        </template>
+                                    </div>
+                                </div>
+                            </template>
+                            <div class="asa-lpa-actions">
+                                <template if:true={area.hasLink}>
+                                    <span class="asa-lpa-link" aria-hidden="true">
+                                        {linkText}
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+                                    </span>
+                                </template>
+                                <button type="button" class="asa-lpa-cta" data-id={area.id} onclick={handleSelect}>{area.submitLabel}</button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </div>
+
+        <p class="asa-lpa-confidential">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"></path><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"></path><path d="M7 21h10"></path><path d="M12 3v18"></path><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path></svg>
+            Free consultation · no obligation.
+        </p>
+    </div>
+</template>

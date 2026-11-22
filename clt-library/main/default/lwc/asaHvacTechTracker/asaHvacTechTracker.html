@@ -1,0 +1,117 @@
+<template>
+    <div class="asa-card">
+
+        <template if:true={title}>
+            <h3 class="selector-title">{title}</h3>
+        </template>
+
+        <!-- Dispatch hero -->
+        <div class={heroClass}>
+            <div class="asa-tt-hero-top">
+                <span class={statusPillClass}>
+                    <span class="asa-tt-status-dot" aria-hidden="true"></span>{statusLabel}
+                </span>
+                <template if:true={hasUpdated}>
+                    <span class="asa-tt-updated">{updatedText}</span>
+                </template>
+            </div>
+            <template if:true={hasHeadline}>
+                <p class="asa-tt-headline">{headline}</p>
+            </template>
+            <template if:true={hasChips}>
+                <div class="asa-tt-chips">
+                    <template if:true={hasEta}>
+                        <span class="asa-tt-chip is-eta">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+                            {etaText}
+                        </span>
+                    </template>
+                    <template if:true={hasWindow}>
+                        <span class="asa-tt-chip">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>
+                            {windowText}
+                        </span>
+                    </template>
+                </div>
+            </template>
+
+            <!-- En-route track -->
+            <template if:true={hasSteps}>
+                <ol class="asa-tt-track">
+                    <template for:each={steps} for:item="s">
+                        <li key={s.key} class={s.nodeClass}>
+                            <span class="asa-tt-node-mark" aria-hidden="true">
+                                <template if:true={s.isDone}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg>
+                                </template>
+                                <template if:true={s.isCurrent}>
+                                    <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 6a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z"></path></svg>
+                                </template>
+                            </span>
+                            <span class="asa-tt-node-label">{s.label}</span>
+                            <template if:true={s.hasTime}>
+                                <span class="asa-tt-node-time">{s.timeText}</span>
+                            </template>
+                        </li>
+                    </template>
+                </ol>
+            </template>
+        </div>
+
+        <!-- Technician identity row -->
+        <template if:true={hasTech}>
+            <div class="asa-tt-tech">
+                <span class="asa-tt-avatar">
+                    <template if:true={hasPhoto}>
+                        <img src={techPhoto} alt={techName} onerror={handlePhotoError} />
+                    </template>
+                    <template if:false={hasPhoto}>
+                        <span class="asa-tt-avatar-fallback" aria-hidden="true">{techInitials}</span>
+                    </template>
+                </span>
+                <div class="asa-tt-tech-body">
+                    <div class="asa-tt-tech-line">
+                        <span class="asa-tt-tech-name">{techName}</span>
+                        <template if:true={hasRating}>
+                            <span class="asa-tt-rating">
+                                <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 2l2.9 6.1 6.7.9-4.9 4.6 1.2 6.6L12 18.6 6.1 20.8l1.2-6.6L2.4 9l6.7-.9L12 2Z"></path></svg>
+                                {ratingLabel}
+                            </span>
+                        </template>
+                    </div>
+                    <template if:true={hasRole}>
+                        <span class="asa-tt-tech-role">{techRole}</span>
+                    </template>
+                    <template if:true={hasSkills}>
+                        <span class="asa-tt-tech-skills">{techSkills}</span>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+        <!-- Job-detail panel (squared hairline ledger rows) -->
+        <template if:true={hasJob}>
+            <div class="asa-tt-info">
+                <template for:each={jobRows} for:item="r">
+                    <div key={r.key} class="asa-tt-row">
+                        <span class="asa-tt-row-k">{r.k}</span>
+                        <span class="asa-tt-row-v">{r.v}</span>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={hasSubmit}>
+            <button type="button" class="asa-tt-cta" onclick={handleSubmit}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"></path></svg>
+                {submitText}
+            </button>
+        </template>
+        <template if:true={hasSecondary}>
+            <button type="button" class="asa-tt-cta is-ghost" onclick={handleSecondary}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path><path d="m9 16 2 2 4-4"></path></svg>
+                {secondaryText}
+            </button>
+        </template>
+    </div>
+</template>

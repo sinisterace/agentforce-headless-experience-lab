@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Travel · Room Selector",
+  "description" : "Shows a set of hotel room cards (bed, size, occupancy, amenities and nightly rate) the guest picks from and reserves.",
+  "lightning:type" : "@apexClassType/c__AsaTravelRoomSelectorData"
+}

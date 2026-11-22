@@ -1,0 +1,1061 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlannerBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Deliver personalized customer interactions with an autonomous AI agent. Agentforce Service Agent intelligently supports your customers with common inquiries and escalates complex issues.</description>
+    <localTopicLinks>
+        <genAiPluginName>Answer_Company_FAQ_16jfj000002eB8T</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>Automotive_16jfj000002eB8T</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>Energy_Utilities_16jfj000002eB8T</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>Financial_Services_16jfj000002eB8T</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>HVAC_16jfj000002eB8T</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>Healthcare_16jfj000002eB8T</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>Insurance_16jfj000002eB8T</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>Legal_16jfj000002eB8T</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>Manufacturing_16jfj000002eB8T</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>Public_Sector_16jfj000002eB8T</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>Retail_16jfj000002eB8T</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>Technology_Comms_16jfj000002eB8T</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>Travel_Hospitality_16jfj000002eB8T</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>agent_router_16jfj000002eB8T</genAiPluginName>
+    </localTopicLinks>
+    <localTopics>
+        <fullName>Automotive_16jfj000002eB8T</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Automotive tasks: configure a vehicle, schedule a test drive, check connected-car status, or estimate a trade-in.</description>
+        <developerName>Automotive_16jfj000002eB8T</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.</description>
+            <developerName>instruction0_179fj000003n89H</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000003n89H</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>asaAutoTradeIn_179fj000003n89H</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaAutoConfigurator_179fj000003n89H</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaAutoVehicleStatus_179fj000003n89H</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaAutoTestDrive_179fj000003n89H</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>asaAutoVehicleStatus_179fj000003n89H</fullName>
+            <description>Use this when the customer asks about their vehicle&apos;s status, driving range, battery/charge or fuel, tire pressure, odometer, or whether service is due. Shows a connected-car status card — a range/charge ring gauge, a four-corner tire-pressure diagram, service items, and any alerts — and lets them schedule service.</description>
+            <developerName>asaAutoVehicleStatus_179fj000003n89H</developerName>
+            <invocationTarget>asaAutoVehicleStatus_Output_c7d8</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaAutoVehicleStatus</localDeveloperName>
+            <masterLabel>ASA Automotive · Connected Car Status</masterLabel>
+            <source>asaAutoVehicleStatus_Output_c7d8</source>
+        </localActions>
+        <localActions>
+            <fullName>asaAutoTestDrive_179fj000003n89H</fullName>
+            <description>Use this when the customer wants to book, schedule, or set up a test drive for a vehicle. Shows the vehicle, the dealership, selectable days, and available time slots (in showroom or at home), and lets them book one.</description>
+            <developerName>asaAutoTestDrive_179fj000003n89H</developerName>
+            <invocationTarget>asaAutoTestDrive_Output_a3b4</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaAutoTestDrive</localDeveloperName>
+            <masterLabel>ASA Automotive · Test Drive Scheduler</masterLabel>
+            <source>asaAutoTestDrive_Output_a3b4</source>
+        </localActions>
+        <localActions>
+            <fullName>asaAutoTradeIn_179fj000003n89H</fullName>
+            <description>Use this when the customer asks what their vehicle is worth, wants a trade-in value, or is considering trading in or selling a car. Shows an estimated trade-in value with a low–high value-range bar, the factors driving it (mileage, condition, market demand), an optional instant-offer note, and actions to apply the trade-in toward a purchase or book an appraisal.</description>
+            <developerName>asaAutoTradeIn_179fj000003n89H</developerName>
+            <invocationTarget>asaAutoTradeIn_Output_e9f0</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaAutoTradeIn</localDeveloperName>
+            <masterLabel>ASA Automotive · Trade-In Estimator</masterLabel>
+            <source>asaAutoTradeIn_Output_e9f0</source>
+        </localActions>
+        <localActions>
+            <fullName>asaAutoConfigurator_179fj000003n89H</fullName>
+            <description>Use this when the customer wants to build, configure, or price a vehicle — choosing paint color, trim, drivetrain, or option packages. Shows a build-and-price configurator with color swatches and option groups (each with its price delta), a live estimated price, and a reserve action.</description>
+            <developerName>asaAutoConfigurator_179fj000003n89H</developerName>
+            <invocationTarget>asaAutoConfigurator_Output_e1f2</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaAutoConfigurator</localDeveloperName>
+            <masterLabel>ASA Automotive · Vehicle Configurator</masterLabel>
+            <source>asaAutoConfigurator_Output_e1f2</source>
+        </localActions>
+        <localDeveloperName>Automotive</localDeveloperName>
+        <masterLabel>Automotive</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>Legal_16jfj000002eB8T</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Legal tasks: browse practice areas, get a free case evaluation, meet a matched attorney, or schedule a consultation.</description>
+        <developerName>Legal_16jfj000002eB8T</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.</description>
+            <developerName>instruction0_179fj000003n89G</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000003n89G</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>asaLegalAttorneyMatch_179fj000003n89G</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaLegalCaseEvaluation_179fj000003n89G</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaLegalConsultScheduler_179fj000003n89G</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaLegalPracticeAreas_179fj000003n89G</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>asaLegalAttorneyMatch_179fj000003n89G</fullName>
+            <description>Use this when the visitor wants to meet, choose, or be matched with an attorney — for example &quot;who would handle my case&quot;, &quot;show me your lawyers&quot;, or &quot;I want to book with someone&quot;. Shows attorneys matched to the visitor&apos;s matter as trust-building cards (role, practice focus, experience, rating, cases handled and bar number) and lets them pick one to book a free consult with.</description>
+            <developerName>asaLegalAttorneyMatch_179fj000003n89G</developerName>
+            <invocationTarget>asaLegalAttorneyMatch_Output_7c3e</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaLegalAttorneyMatch</localDeveloperName>
+            <masterLabel>ASA Legal · Meet Your Attorney</masterLabel>
+            <source>asaLegalAttorneyMatch_Output_7c3e</source>
+        </localActions>
+        <localActions>
+            <fullName>asaLegalConsultScheduler_179fj000003n89G</fullName>
+            <description>Use this when the visitor wants to book, schedule, or set up a free consultation or meeting with the firm or an attorney — for example &quot;book a free consultation&quot;, &quot;I want to meet with a lawyer&quot;, or &quot;schedule a call&quot;. Shows a consultation scheduler with an attorney hero, a meeting-type toggle (in person, phone, video), a day picker, and time slots to choose from.</description>
+            <developerName>asaLegalConsultScheduler_179fj000003n89G</developerName>
+            <invocationTarget>asaLegalConsultScheduler_Output_7d4f</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaLegalConsultScheduler</localDeveloperName>
+            <masterLabel>ASA Legal · Consultation Scheduler</masterLabel>
+            <source>asaLegalConsultScheduler_Output_7d4f</source>
+        </localActions>
+        <localActions>
+            <fullName>asaLegalPracticeAreas_179fj000003n89G</fullName>
+            <description>Use this when a law-firm website visitor asks what the firm does, which areas of law it handles, or for help finding the right practice area — for example &quot;what kind of cases do you take?&quot;, &quot;I was in a car accident&quot;, &quot;do you handle divorce?&quot;, or &quot;how can you help me?&quot;. Shows an expandable &quot;How can we help?&quot; practice-area guide; each area opens to reveal a description, common matter types, a trust stat, and a display-only link, plus a Get-help action per area.</description>
+            <developerName>asaLegalPracticeAreas_179fj000003n89G</developerName>
+            <invocationTarget>asaLegalPracticeAreas_Output_7a1c</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaLegalPracticeAreas</localDeveloperName>
+            <masterLabel>ASA Legal · Practice-Area Selector</masterLabel>
+            <source>asaLegalPracticeAreas_Output_7a1c</source>
+        </localActions>
+        <localActions>
+            <fullName>asaLegalCaseEvaluation_179fj000003n89G</fullName>
+            <description>Use this when a law-firm website visitor wants a free case review / case evaluation, or asks the firm to look at their situation — for example &quot;can you review my case&quot;, &quot;I want a free consultation about my accident&quot;, or &quot;get help with my matter&quot;. Shows a guided intake form (a few quick questions, a description box, and contact fields) with a clear note that submitting does not create an attorney-client relationship, then hands the intake to the firm.</description>
+            <developerName>asaLegalCaseEvaluation_179fj000003n89G</developerName>
+            <invocationTarget>asaLegalCaseEvaluation_Output_7b2d</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaLegalCaseEvaluation</localDeveloperName>
+            <masterLabel>ASA Legal · Free Case Evaluation</masterLabel>
+            <source>asaLegalCaseEvaluation_Output_7b2d</source>
+        </localActions>
+        <localDeveloperName>Legal</localDeveloperName>
+        <masterLabel>Legal</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>Technology_Comms_16jfj000002eB8T</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Telecom, media and communications tasks: compare plans, check data usage, check service or outage status, or explain a bill.</description>
+        <developerName>Technology_Comms_16jfj000002eB8T</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.</description>
+            <developerName>instruction0_179fj000003n89F</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000003n89F</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>asaTmcBillExplainer_179fj000003n89F</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaTmcServiceStatus_179fj000003n89F</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaTmcPlanCompare_179fj000003n89F</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaTmcDataUsage_179fj000003n89F</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>asaTmcDataUsage_179fj000003n89F</fullName>
+            <description>Use this when the customer asks how much data, minutes, or texts they have used or have left this billing cycle, or wants to check their usage or allowance. Shows a radial gauge of used vs. allowance, days left in the cycle, a per-category breakdown, and an optional add-on action.</description>
+            <developerName>asaTmcDataUsage_179fj000003n89F</developerName>
+            <invocationTarget>asaTmcDataUsage_Output_f2b5</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaTmcDataUsage</localDeveloperName>
+            <masterLabel>ASA Technology, Media &amp;amp; Comms · Data Usage Meter</masterLabel>
+            <source>asaTmcDataUsage_Output_f2b5</source>
+        </localActions>
+        <localActions>
+            <fullName>asaTmcBillExplainer_179fj000003n89F</fullName>
+            <description>Use this when the customer asks about their bill — the amount due, when it is due, why it changed, what a charge is, or how to pay. Shows a statement card with the total due, a stacked charge-category bar, itemized line items, a month-over-month delta explanation, and pay / autopay actions.</description>
+            <developerName>asaTmcBillExplainer_179fj000003n89F</developerName>
+            <invocationTarget>asaTmcBillExplainer_Output_b4d7</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaTmcBillExplainer</localDeveloperName>
+            <masterLabel>ASA Technology, Media &amp;amp; Comms · Bill Explainer</masterLabel>
+            <source>asaTmcBillExplainer_Output_b4d7</source>
+        </localActions>
+        <localActions>
+            <fullName>asaTmcServiceStatus_179fj000003n89F</fullName>
+            <description>Use this when the customer reports an outage or asks whether a service is down, slow, or being worked on — for example &quot;is my internet down&quot;, &quot;why is my TV out&quot;, or checking network status in their area. Shows a service-health board with an overall banner, per-service status rows, the affected area, an estimated restore time, and a notify-me action.</description>
+            <developerName>asaTmcServiceStatus_179fj000003n89F</developerName>
+            <invocationTarget>asaTmcServiceStatus_Output_a3c6</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaTmcServiceStatus</localDeveloperName>
+            <masterLabel>ASA Technology, Media &amp;amp; Comms · Service Status</masterLabel>
+            <source>asaTmcServiceStatus_Output_a3c6</source>
+        </localActions>
+        <localActions>
+            <fullName>asaTmcPlanCompare_179fj000003n89F</fullName>
+            <description>Use this when the customer wants to compare plans, see pricing options, upgrade or downgrade, or switch to a different plan or package — for example mobile, internet, TV, or streaming tiers. Shows a stack of plan cards with monthly price, a feature checklist, a recommended highlight, and the customer&apos;s current plan marked; the customer picks one to switch to.</description>
+            <developerName>asaTmcPlanCompare_179fj000003n89F</developerName>
+            <invocationTarget>asaTmcPlanCompare_Output_e1a4</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaTmcPlanCompare</localDeveloperName>
+            <masterLabel>ASA Technology, Media &amp;amp; Comms · Plan Comparison</masterLabel>
+            <source>asaTmcPlanCompare_Output_e1a4</source>
+        </localActions>
+        <localDeveloperName>Technology_Comms</localDeveloperName>
+        <masterLabel>Technology, Media &amp; Communications</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>Travel_Hospitality_16jfj000002eB8T</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Travel and hospitality tasks: choose a seat, check flight status, show a digital boarding pass, or select a hotel room.</description>
+        <developerName>Travel_Hospitality_16jfj000002eB8T</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.</description>
+            <developerName>instruction0_179fj000003n89E</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000003n89E</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>asaTravelBoardingPass_179fj000003n89E</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaTravelRoomSelector_179fj000003n89E</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaTravelSeatMap_179fj000003n89E</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaTravelFlightStatus_179fj000003n89E</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>asaTravelFlightStatus_179fj000003n89E</fullName>
+            <description>Use this when the customer asks about the status of a flight — for example &quot;where is my flight&quot;, &quot;is flight AF128 on time&quot;, &quot;what gate does my flight leave from&quot;, or &quot;which baggage belt&quot;. Shows a live flight status card with the route (a plane along the arc between origin and destination), a status pill, gates, terminals and baggage claim, plus a get-updates action.</description>
+            <developerName>asaTravelFlightStatus_179fj000003n89E</developerName>
+            <invocationTarget>asaTravelFlightStatus_Output_8b2d</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaTravelFlightStatus</localDeveloperName>
+            <masterLabel>ASA Travel · Flight Status Tracker</masterLabel>
+            <source>asaTravelFlightStatus_Output_8b2d</source>
+        </localActions>
+        <localActions>
+            <fullName>asaTravelRoomSelector_179fj000003n89E</fullName>
+            <description>Use this ONLY when the guest wants to see or choose a HOTEL room — for example &quot;show me available rooms&quot;, &quot;what rooms do you have&quot;, or &quot;I want to book a room&quot;. Shows a set of hotel-room cards (bed, size, occupancy, amenities and nightly rate) the guest picks from, plus a Reserve action. Do NOT use this for flights, flight search, flight booking, or seat selection — it is for hotel rooms only. If the customer wants to search or book a flight (there is no flight-search card), do not force a card: help conversationally and offer Flight Status, Seat Map, or Boarding Pass instead.</description>
+            <developerName>asaTravelRoomSelector_179fj000003n89E</developerName>
+            <invocationTarget>asaTravelRoomSelector_Output_8d4f</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaTravelRoomSelector</localDeveloperName>
+            <masterLabel>ASA Travel · Room Selector</masterLabel>
+            <source>asaTravelRoomSelector_Output_8d4f</source>
+        </localActions>
+        <localActions>
+            <fullName>asaTravelSeatMap_179fj000003n89E</fullName>
+            <description>Use this when the customer wants to choose or change a seat on an ALREADY-BOOKED flight — for example &quot;I want to pick my seat&quot;, &quot;show me the seat map&quot;, or &quot;can I change my seat&quot;. Shows an interactive cabin seat map colour-coded by seat kind (standard, extra legroom, exit row, premium) and status (open / taken), with a live selected-seat detail and price, and a select-seat action. Do NOT use this to search for or book a flight, or to list flights — only for seat selection on a booked flight.</description>
+            <developerName>asaTravelSeatMap_179fj000003n89E</developerName>
+            <invocationTarget>asaTravelSeatMap_Output_8a1c</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaTravelSeatMap</localDeveloperName>
+            <masterLabel>ASA Travel · Seat Map</masterLabel>
+            <source>asaTravelSeatMap_Output_8a1c</source>
+        </localActions>
+        <localActions>
+            <fullName>asaTravelBoardingPass_179fj000003n89E</fullName>
+            <description>Use this when the customer asks for their boarding pass — for example &quot;show me my boarding pass&quot;, &quot;pull up my boarding pass&quot;, or &quot;add my boarding pass to my wallet&quot;. Shows a wallet-style digital boarding pass with the airline, route, flight, gate, seat, boarding group and a barcode, plus add-to-wallet and email actions.</description>
+            <developerName>asaTravelBoardingPass_179fj000003n89E</developerName>
+            <invocationTarget>asaTravelBoardingPass_Output_8c3e</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaTravelBoardingPass</localDeveloperName>
+            <masterLabel>ASA Travel · Digital Boarding Pass</masterLabel>
+            <source>asaTravelBoardingPass_Output_8c3e</source>
+        </localActions>
+        <localDeveloperName>Travel_Hospitality</localDeveloperName>
+        <masterLabel>Travel &amp; Hospitality</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>Retail_16jfj000002eB8T</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Retail shopping tasks: track an order or delivery, see recommended products, start a return or exchange, or find in-store pickup.</description>
+        <developerName>Retail_16jfj000002eB8T</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.</description>
+            <developerName>instruction0_179fj000003n89L</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000003n89L</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>asaRetailProductCarousel_179fj000003n89L</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaRetailReturns_179fj000003n89L</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaRetailStorePickup_179fj000003n89L</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaRetailOrderTracking_179fj000003n89L</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>asaRetailStorePickup_179fj000003n89L</fullName>
+            <description>Use this when the customer wants to pick up an item in a store, find a nearby store, check in-store availability, or reserve something for pickup. Shows nearby stores with stock status, distance, pickup ETA, hours, and Directions/Call links; the customer picks a store to reserve.</description>
+            <developerName>asaRetailStorePickup_179fj000003n89L</developerName>
+            <invocationTarget>asaRetailStorePickup_Output_d9e3</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaRetailStorePickup</localDeveloperName>
+            <masterLabel>ASA Retail · Store Pickup</masterLabel>
+            <source>asaRetailStorePickup_Output_d9e3</source>
+        </localActions>
+        <localActions>
+            <fullName>asaRetailProductCarousel_179fj000003n89L</fullName>
+            <description>Use this when the customer wants to browse, discover, or shop for products — for example recommendations, &quot;show me options&quot;, a lineup for a category, or picking something to buy. Shows a horizontally scrollable carousel of product cards with image tiles, price, rating, and an Add to cart button.</description>
+            <developerName>asaRetailProductCarousel_179fj000003n89L</developerName>
+            <invocationTarget>asaRetailProductCarousel_Output_a3f1</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaRetailProductCarousel</localDeveloperName>
+            <masterLabel>ASA Retail · Product Carousel</masterLabel>
+            <source>asaRetailProductCarousel_Output_a3f1</source>
+        </localActions>
+        <localActions>
+            <fullName>asaRetailReturns_179fj000003n89L</fullName>
+            <description>Use this when the customer wants to return, send back, exchange, or get a refund for something they bought. Shows the order&apos;s items to select, a reason picker, and refund/exchange/store-credit resolution options.</description>
+            <developerName>asaRetailReturns_179fj000003n89L</developerName>
+            <invocationTarget>asaRetailReturns_Output_c4d8</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaRetailReturns</localDeveloperName>
+            <masterLabel>ASA Retail · Returns &amp;amp; Exchange</masterLabel>
+            <source>asaRetailReturns_Output_c4d8</source>
+        </localActions>
+        <localActions>
+            <fullName>asaRetailOrderTracking_179fj000003n89L</fullName>
+            <description>Use this when the customer wants to track, follow, or check on the status or delivery of an order or shipment that is on its way. Shows a live delivery map with the courier&apos;s position, an ETA, a courier row, and a status timeline.</description>
+            <developerName>asaRetailOrderTracking_179fj000003n89L</developerName>
+            <invocationTarget>asaRetailOrderTracking_Output_b7c2</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaRetailOrderTracking</localDeveloperName>
+            <masterLabel>ASA Retail · Order Tracking</masterLabel>
+            <source>asaRetailOrderTracking_Output_b7c2</source>
+        </localActions>
+        <localDeveloperName>Retail</localDeveloperName>
+        <masterLabel>Retail</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>Public_Sector_16jfj000002eB8T</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Public-sector and education tasks: check an application&apos;s status, find programs and benefits, submit a service request, or see a required-documents checklist.</description>
+        <developerName>Public_Sector_16jfj000002eB8T</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.</description>
+            <developerName>instruction0_179fj000003n89K</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000003n89K</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>asaPseServiceRequest_179fj000003n89K</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaPseAppStatus_179fj000003n89K</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaPseDocsChecklist_179fj000003n89K</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaPseProgramsFinder_179fj000003n89K</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>asaPseProgramsFinder_179fj000003n89K</fullName>
+            <description>Use this when the resident or student asks what programs, benefits, financial assistance, or scholarships they qualify for or could apply to. Shows the relevant programs as selectable cards, each with an eligibility note, and lets them apply for one.</description>
+            <developerName>asaPseProgramsFinder_179fj000003n89K</developerName>
+            <invocationTarget>asaPseProgramsFinder_Output_b5c2</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaPseProgramsFinder</localDeveloperName>
+            <masterLabel>ASA Public Sector &amp;amp; Education · Programs &amp;amp; Benefits Finder</masterLabel>
+            <source>asaPseProgramsFinder_Output_b5c2</source>
+        </localActions>
+        <localActions>
+            <fullName>asaPseAppStatus_179fj000003n89K</fullName>
+            <description>Use this when the resident or student asks about the status of an application, permit, benefits case, admission, or enrollment. Shows a single application as a progress track (Submitted, Under review, Approved, Issued) with its reference number, current status, and an optional next-action note.</description>
+            <developerName>asaPseAppStatus_179fj000003n89K</developerName>
+            <invocationTarget>asaPseAppStatus_Output_f3a1</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaPseAppStatus</localDeveloperName>
+            <masterLabel>ASA Public Sector &amp;amp; Education · Application Status Tracker</masterLabel>
+            <source>asaPseAppStatus_Output_f3a1</source>
+        </localActions>
+        <localActions>
+            <fullName>asaPseDocsChecklist_179fj000003n89K</fullName>
+            <description>Use this when the customer asks what documents they need for an application, permit, benefit, or enrollment, or wants to upload documents. Shows a checklist of the required, optional, and already-received documents, and lets them pick which to upload.</description>
+            <developerName>asaPseDocsChecklist_179fj000003n89K</developerName>
+            <invocationTarget>asaPseDocsChecklist_Output_a9f6</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaPseDocsChecklist</localDeveloperName>
+            <masterLabel>ASA Public Sector &amp;amp; Education · Documents Checklist</masterLabel>
+            <source>asaPseDocsChecklist_Output_a9f6</source>
+        </localActions>
+        <localActions>
+            <fullName>asaPseServiceRequest_179fj000003n89K</fullName>
+            <description>Use this when a resident or student wants to report a problem or request a service — for example a pothole, a broken streetlight, graffiti, missed trash pickup, a water leak, or a building/campus facilities issue. Shows an interactive tile grid where they pick the type of request to start a 311 / service report.</description>
+            <developerName>asaPseServiceRequest_179fj000003n89K</developerName>
+            <invocationTarget>asaPseServiceRequest_Output_d7e4</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaPseServiceRequest</localDeveloperName>
+            <masterLabel>ASA Public Sector &amp;amp; Education · Service Request</masterLabel>
+            <source>asaPseServiceRequest_Output_d7e4</source>
+        </localActions>
+        <localDeveloperName>Public_Sector</localDeveloperName>
+        <masterLabel>Public Sector &amp; Education</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>Manufacturing_16jfj000002eB8T</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Manufacturing tasks: monitor equipment status, reorder a part, track a work order, or build a quote.</description>
+        <developerName>Manufacturing_16jfj000002eB8T</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.</description>
+            <developerName>instruction0_179fj000003n89J</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000003n89J</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>asaMfgWorkOrder_179fj000003n89J</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaMfgQuoteBuilder_179fj000003n89J</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaMfgEquipmentMonitor_179fj000003n89J</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaMfgPartReorder_179fj000003n89J</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>asaMfgEquipmentMonitor_179fj000003n89J</fullName>
+            <description>Use this when the customer asks about a machine&apos;s or asset&apos;s health, live status, performance metrics (OEE, temperature, throughput, uptime), or whether equipment is running, idle, or in a fault. Shows an equipment monitor card with an asset photo, a live status, metric tiles, a trend sparkline, and a create-work-order action.</description>
+            <developerName>asaMfgEquipmentMonitor_179fj000003n89J</developerName>
+            <invocationTarget>asaMfgEquipmentMonitor_Output_a5f2</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaMfgEquipmentMonitor</localDeveloperName>
+            <masterLabel>ASA Manufacturing · Equipment Monitor</masterLabel>
+            <source>asaMfgEquipmentMonitor_Output_a5f2</source>
+        </localActions>
+        <localActions>
+            <fullName>asaMfgPartReorder_179fj000003n89J</fullName>
+            <description>Use this when the customer wants to reorder or buy more of a specific spare part or component, check its stock/lead time, or set a reorder quantity. Shows a single part card with its photo, stock level, lead time, unit price, a quantity stepper, and a reorder action.</description>
+            <developerName>asaMfgPartReorder_179fj000003n89J</developerName>
+            <invocationTarget>asaMfgPartReorder_Output_b6c3</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaMfgPartReorder</localDeveloperName>
+            <masterLabel>ASA Manufacturing · Part Reorder</masterLabel>
+            <source>asaMfgPartReorder_Output_b6c3</source>
+        </localActions>
+        <localActions>
+            <fullName>asaMfgQuoteBuilder_179fj000003n89J</fullName>
+            <description>Use this when the customer wants a price or quote for a configurable, made-to-order product — choosing options like material, controls, or warranty, and seeing how the price changes. Shows a configure-to-order card with option chips carrying price deltas, a quantity stepper, a live estimated total, and a request-quote action.</description>
+            <developerName>asaMfgQuoteBuilder_179fj000003n89J</developerName>
+            <invocationTarget>asaMfgQuoteBuilder_Output_d8e5</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaMfgQuoteBuilder</localDeveloperName>
+            <masterLabel>ASA Manufacturing · Quote Builder</masterLabel>
+            <source>asaMfgQuoteBuilder_Output_d8e5</source>
+        </localActions>
+        <localActions>
+            <fullName>asaMfgWorkOrder_179fj000003n89J</fullName>
+            <description>Use this when the customer asks about the status or progress of a production build, repair, or work order — where it is in the process, which stage it is at, or when it will ship. Shows a work-order card with a priority chip and a vertical milestone timeline (received, machining, assembly, QC, ready to ship) plus an estimated ship date.</description>
+            <developerName>asaMfgWorkOrder_179fj000003n89J</developerName>
+            <invocationTarget>asaMfgWorkOrder_Output_c7d4</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaMfgWorkOrder</localDeveloperName>
+            <masterLabel>ASA Manufacturing · Work Order Tracker</masterLabel>
+            <source>asaMfgWorkOrder_Output_c7d4</source>
+        </localActions>
+        <localDeveloperName>Manufacturing</localDeveloperName>
+        <masterLabel>Manufacturing</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>Financial_Services_16jfj000002eB8T</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Banking and financial-services tasks: view or choose an account, review recent transactions or dispute a charge, move money or pay a bill, and book time with an advisor.</description>
+        <developerName>Financial_Services_16jfj000002eB8T</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.</description>
+            <developerName>instruction0_179fj000003n89I</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000003n89I</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>asaFinServAccountSelector_179fj000003n89I</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaFinServAdvisorMeeting_179fj000003n89I</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaFinServMoneyMovement_179fj000003n89I</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaFinServTransactions_179fj000003n89I</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>asaFinServMoneyMovement_179fj000003n89I</fullName>
+            <description>Use this when the customer wants to send money, pay someone, pay a bill or card, or transfer funds between accounts. Shows an interactive card of recipients and preset amounts; the customer taps a recipient and an amount, then confirms.</description>
+            <developerName>asaFinServMoneyMovement_179fj000003n89I</developerName>
+            <invocationTarget>asaFinServMoneyMovement_Output_c3e7</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaFinServMoneyMovement</localDeveloperName>
+            <masterLabel>ASA Financial Services · Money Movement</masterLabel>
+            <source>asaFinServMoneyMovement_Output_c3e7</source>
+        </localActions>
+        <localActions>
+            <fullName>asaFinServTransactions_179fj000003n89I</fullName>
+            <description>Use this when the customer wants to see their recent transactions or wants to dispute, question, or report a charge. Shows an interactive list of recent transactions; the customer taps one and confirms to start a dispute.</description>
+            <developerName>asaFinServTransactions_179fj000003n89I</developerName>
+            <invocationTarget>asaFinServTransactions_Output_d15b</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaFinServTransactions</localDeveloperName>
+            <masterLabel>ASA Financial Services · Recent Transactions</masterLabel>
+            <source>asaFinServTransactions_Output_d15b</source>
+        </localActions>
+        <localActions>
+            <fullName>asaFinServAdvisorMeeting_179fj000003n89I</fullName>
+            <description>Use this when the customer wants to schedule, book, or set up a meeting or appointment with their financial advisor. Shows the matched advisor and interactive day/time slots; the customer taps a slot and confirms to request the appointment.</description>
+            <developerName>asaFinServAdvisorMeeting_179fj000003n89I</developerName>
+            <invocationTarget>asaFinServAdvisorMeeting_Output_9b41</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaFinServAdvisorMeeting</localDeveloperName>
+            <masterLabel>ASA Financial Services · Advisor Appointment</masterLabel>
+            <source>asaFinServAdvisorMeeting_Output_9b41</source>
+        </localActions>
+        <localActions>
+            <fullName>asaFinServAccountSelector_179fj000003n89I</fullName>
+            <description>Use this when the customer needs to choose one or more of their own financial accounts (checking, savings, credit card, loan, investment) — for example to check a balance, pay from, transfer, or start a dispute. Shows an interactive account list with balances.</description>
+            <developerName>asaFinServAccountSelector_179fj000003n89I</developerName>
+            <invocationTarget>asaFinServAccountSelector_Output_acc7</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaFinServAccountSelector</localDeveloperName>
+            <masterLabel>ASA Financial Services · Account Selector</masterLabel>
+            <source>asaFinServAccountSelector_Output_acc7</source>
+        </localActions>
+        <localDeveloperName>Financial_Services</localDeveloperName>
+        <masterLabel>Financial Services</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>agent_router_16jfj000002eB8T</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Welcome the user and route to the right topic based on their intent and the company&apos;s industry.</description>
+        <developerName>agent_router_16jfj000002eB8T</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.
+
+{{state.AgentScriptInternal_agent_instructions}}</description>
+            <developerName>instruction0_179fj000003n89O</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000003n89O</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>LookupCompanyContext_179fj000003n89O</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>LookupCompanyContext_179fj000003n89O</fullName>
+            <description>Silently look up the active company&apos;s industry at the start of the conversation so the correct industry topic becomes available. Not shown to the customer.</description>
+            <developerName>LookupCompanyContext_179fj000003n89O</developerName>
+            <invocationTarget>AnswerCompanyFaq</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>LookupCompanyContext</localDeveloperName>
+            <masterLabel>Lookup Company Context</masterLabel>
+            <source>AnswerCompanyFaq</source>
+        </localActions>
+        <localDeveloperName>agent_router</localDeveloperName>
+        <masterLabel>Agent Router</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>Insurance_16jfj000002eB8T</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Insurance tasks: view or select a policy, file a claim, check a claim&apos;s status, or show a digital insurance ID card.</description>
+        <developerName>Insurance_16jfj000002eB8T</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.</description>
+            <developerName>instruction0_179fj000003n89N</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000003n89N</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>asaInsuranceIdCard_179fj000003n89N</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaInsurancePolicySelector_179fj000003n89N</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaInsuranceFileClaim_179fj000003n89N</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaInsuranceClaimStatus_179fj000003n89N</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>asaInsurancePolicySelector_179fj000003n89N</fullName>
+            <description>Use this when the customer needs to choose one or more of their own insurance policies (auto, home, life, health, renters, etc.) — for example to review coverage, check a renewal or premium, file a claim against it, or update it. Shows an interactive policy list with coverage and renewal details.</description>
+            <developerName>asaInsurancePolicySelector_179fj000003n89N</developerName>
+            <invocationTarget>asaInsurancePolicySelector_Output_a1c7</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaInsurancePolicySelector</localDeveloperName>
+            <masterLabel>ASA Insurance · Policy Selector</masterLabel>
+            <source>asaInsurancePolicySelector_Output_a1c7</source>
+        </localActions>
+        <localActions>
+            <fullName>asaInsuranceClaimStatus_179fj000003n89N</fullName>
+            <description>Use this when the customer wants to check the status or progress of an insurance claim they have already filed — for example &quot;where is my claim&quot;, &quot;was my claim approved&quot;, or &quot;when will I be paid&quot;. Shows each claim with a step-by-step progress tracker and the next action needed.</description>
+            <developerName>asaInsuranceClaimStatus_179fj000003n89N</developerName>
+            <invocationTarget>asaInsuranceClaimStatus_Output_c3e9</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaInsuranceClaimStatus</localDeveloperName>
+            <masterLabel>ASA Insurance · Claim Status Tracker</masterLabel>
+            <source>asaInsuranceClaimStatus_Output_c3e9</source>
+        </localActions>
+        <localActions>
+            <fullName>asaInsuranceFileClaim_179fj000003n89N</fullName>
+            <description>Use this when the customer wants to start or file an insurance claim and needs to say what happened — for example a car accident, storm or water damage, theft, or a broken window. Shows an interactive form where the customer picks the type of incident for a specific policy.</description>
+            <developerName>asaInsuranceFileClaim_179fj000003n89N</developerName>
+            <invocationTarget>asaInsuranceFileClaim_Output_b2d4</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaInsuranceFileClaim</localDeveloperName>
+            <masterLabel>ASA Insurance · File a Claim</masterLabel>
+            <source>asaInsuranceFileClaim_Output_b2d4</source>
+        </localActions>
+        <localActions>
+            <fullName>asaInsuranceIdCard_179fj000003n89N</fullName>
+            <description>Use this when the customer asks for their proof of insurance or insurance ID card — for example &quot;show me my insurance card&quot;, &quot;I need proof of insurance&quot;, or &quot;send me my ID card&quot;. Shows a wallet-style digital ID card with the carrier, policy number, insured item, coverage dates, and coverages, plus email-a-copy and add-to-wallet actions.</description>
+            <developerName>asaInsuranceIdCard_179fj000003n89N</developerName>
+            <invocationTarget>asaInsuranceIdCard_Output_e5f7</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaInsuranceIdCard</localDeveloperName>
+            <masterLabel>ASA Insurance · Digital ID Card</masterLabel>
+            <source>asaInsuranceIdCard_Output_e5f7</source>
+        </localActions>
+        <localDeveloperName>Insurance</localDeveloperName>
+        <masterLabel>Insurance</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>Energy_Utilities_16jfj000002eB8T</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Energy and utility tasks: check outages, view usage and cost, set up budget billing, or find rebates and offers.</description>
+        <developerName>Energy_Utilities_16jfj000002eB8T</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.</description>
+            <developerName>instruction0_179fj000003n89M</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000003n89M</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>asaEnergyUsageCost_179fj000003n89M</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaEnergyRebateOffers_179fj000003n89M</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaEnergyOutageTracker_179fj000003n89M</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaEnergyBudgetBilling_179fj000003n89M</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>asaEnergyUsageCost_179fj000003n89M</fullName>
+            <description>Use this when the customer asks about their energy usage, how much they have used this cycle, their projected bill, or why their usage changed. Shows a usage card with a daily/weekly column chart, a projected bill amount, the change vs last month, and a cost breakdown by category.</description>
+            <developerName>asaEnergyUsageCost_179fj000003n89M</developerName>
+            <invocationTarget>asaEnergyUsageCost_Output_b8c4</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaEnergyUsageCost</localDeveloperName>
+            <masterLabel>ASA Energy &amp;amp; Utilities · Usage &amp;amp; Cost</masterLabel>
+            <source>asaEnergyUsageCost_Output_b8c4</source>
+        </localActions>
+        <localActions>
+            <fullName>asaEnergyRebateOffers_179fj000003n89M</fullName>
+            <description>Use this when the customer asks about rebates, incentives, or ways to save on energy-efficient upgrades (smart thermostat, heat pump, EV charger, insulation, solar). Shows voucher tiles for the rebates they qualify for, each with its rebate amount, and lets them apply for one.</description>
+            <developerName>asaEnergyRebateOffers_179fj000003n89M</developerName>
+            <invocationTarget>asaEnergyRebateOffers_Output_d1e6</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaEnergyRebateOffers</localDeveloperName>
+            <masterLabel>ASA Energy &amp;amp; Utilities · Rebate Offers</masterLabel>
+            <source>asaEnergyRebateOffers_Output_d1e6</source>
+        </localActions>
+        <localActions>
+            <fullName>asaEnergyOutageTracker_179fj000003n89M</fullName>
+            <description>Use this when the customer reports a power outage, asks if the power is out in their area, or wants to know when service will be restored. Shows an outage card with the cause, number of customers affected, crew status, a restoration progress track, and an estimated restore time.</description>
+            <developerName>asaEnergyOutageTracker_179fj000003n89M</developerName>
+            <invocationTarget>asaEnergyOutageTracker_Output_a7f3</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaEnergyOutageTracker</localDeveloperName>
+            <masterLabel>ASA Energy &amp;amp; Utilities · Outage Tracker</masterLabel>
+            <source>asaEnergyOutageTracker_Output_a7f3</source>
+        </localActions>
+        <localActions>
+            <fullName>asaEnergyBudgetBilling_179fj000003n89M</fullName>
+            <description>Use this when the customer wants steadier monthly bills, asks about Budget Billing / levelized / average payment plans, or is worried about seasonal bill spikes. Shows a plan card with an actual-vs-budget chart, the flat monthly amount, terms, and an enroll action.</description>
+            <developerName>asaEnergyBudgetBilling_179fj000003n89M</developerName>
+            <invocationTarget>asaEnergyBudgetBilling_Output_c9d5</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaEnergyBudgetBilling</localDeveloperName>
+            <masterLabel>ASA Energy &amp;amp; Utilities · Budget Billing</masterLabel>
+            <source>asaEnergyBudgetBilling_Output_c9d5</source>
+        </localActions>
+        <localDeveloperName>Energy_Utilities</localDeveloperName>
+        <masterLabel>Energy &amp; Utilities</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>HVAC_16jfj000002eB8T</fullName>
+        <canEscalate>false</canEscalate>
+        <description>HVAC tasks: control the thermostat, track a technician&apos;s arrival, view comfort-system health, or choose a service plan.</description>
+        <developerName>HVAC_16jfj000002eB8T</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.</description>
+            <developerName>instruction0_179fj000003n89D</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000003n89D</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>asaHvacSystemHealth_179fj000003n89D</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaHvacTechTracker_179fj000003n89D</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaHvacThermostat_179fj000003n89D</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaHvacServicePlan_179fj000003n89D</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>asaHvacTechTracker_179fj000003n89D</fullName>
+            <description>Use this when the customer asks where their technician is, when the tech will arrive, or for the status of a scheduled HVAC service visit. Shows a live dispatch card — status, ETA and arrival window, the technician&apos;s identity, an en-route progress track, and job details — with message and reschedule actions.</description>
+            <developerName>asaHvacTechTracker_179fj000003n89D</developerName>
+            <invocationTarget>asaHvacTechTracker_Output_b3c4</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaHvacTechTracker</localDeveloperName>
+            <masterLabel>ASA HVAC · Technician ETA Tracker</masterLabel>
+            <source>asaHvacTechTracker_Output_b3c4</source>
+        </localActions>
+        <localActions>
+            <fullName>asaHvacSystemHealth_179fj000003n89D</fullName>
+            <description>Use this when the customer asks about the health of their HVAC/comfort system, a system checkup, a maintenance tune-up, or their air filter. Shows an overall health score, per-system status (furnace, AC, thermostat, ductwork, filter), a filter-life bar, the next maintenance due date, a recommendation, and lets them book a maintenance visit.</description>
+            <developerName>asaHvacSystemHealth_179fj000003n89D</developerName>
+            <invocationTarget>asaHvacSystemHealth_Output_c5d6</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaHvacSystemHealth</localDeveloperName>
+            <masterLabel>ASA HVAC · Comfort System Health Report</masterLabel>
+            <source>asaHvacSystemHealth_Output_c5d6</source>
+        </localActions>
+        <localActions>
+            <fullName>asaHvacThermostat_179fj000003n89D</fullName>
+            <description>Use this when the customer wants to see or adjust their thermostat — check the current temperature, change the target setpoint, switch mode (heat/cool/auto/off), or apply a preset (Eco, Comfort, Away, Sleep). Shows a climate dial with mode chips, a target stepper, and quick-set presets, and lets them apply a setting.</description>
+            <developerName>asaHvacThermostat_179fj000003n89D</developerName>
+            <invocationTarget>asaHvacThermostat_Output_f1a2</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaHvacThermostat</localDeveloperName>
+            <masterLabel>ASA HVAC · Smart Thermostat Control</masterLabel>
+            <source>asaHvacThermostat_Output_f1a2</source>
+        </localActions>
+        <localActions>
+            <fullName>asaHvacServicePlan_179fj000003n89D</fullName>
+            <description>Use this when the customer asks about maintenance plans, service memberships, protection plans, or ways to save on tune-ups and repairs. Shows the available HVAC comfort-plan tiers as price-forward cards with a feature checklist and lets them enroll in one.</description>
+            <developerName>asaHvacServicePlan_179fj000003n89D</developerName>
+            <invocationTarget>asaHvacServicePlan_Output_d7e8</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaHvacServicePlan</localDeveloperName>
+            <masterLabel>ASA HVAC · Service Plan Selector</masterLabel>
+            <source>asaHvacServicePlan_Output_d7e8</source>
+        </localActions>
+        <localDeveloperName>HVAC</localDeveloperName>
+        <masterLabel>HVAC</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>Answer_Company_FAQ_16jfj000002eB8T</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Answers general questions about the company, its products, services, policies, hours, or how to get help, from the company&apos;s curated FAQ knowledge.</description>
+        <developerName>Answer_Company_FAQ_16jfj000002eB8T</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.</description>
+            <developerName>instruction0_179fj000003n89C</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000003n89C</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>AnswerCompanyFaq_179fj000003n89C</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>AnswerCompanyFaq_179fj000003n89C</fullName>
+            <description>Answers general questions about the company, its products, services, policies, hours, and how to get help, using the company&apos;s curated FAQ knowledge. Use this for any general &quot;about the company&quot; question.</description>
+            <developerName>AnswerCompanyFaq_179fj000003n89C</developerName>
+            <invocationTarget>AnswerCompanyFaq</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>AnswerCompanyFaq</localDeveloperName>
+            <masterLabel>Answer Company FAQ</masterLabel>
+            <progressIndicatorMessage>Looking that up</progressIndicatorMessage>
+            <source>AnswerCompanyFaq</source>
+        </localActions>
+        <localDeveloperName>Answer_Company_FAQ</localDeveloperName>
+        <masterLabel>Answer Company FAQ</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>Healthcare_16jfj000002eB8T</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Healthcare tasks: schedule an appointment, find care near you, choose a care option, or refill a prescription.</description>
+        <developerName>Healthcare_16jfj000002eB8T</developerName>
+        <genAiPluginInstructions>
+            <description>You are an AI Agent.</description>
+            <developerName>instruction0_179fj000003n89B</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj000003n89B</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>asaHealthcareApptScheduler_179fj000003n89B</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaHealthcareRxRefill_179fj000003n89B</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaHealthcareCareOptions_179fj000003n89B</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>asaHealthcareFindCare_179fj000003n89B</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>asaHealthcareApptScheduler_179fj000003n89B</fullName>
+            <description>Use this when the customer wants to book, schedule, or change a healthcare appointment — for example an annual physical, a follow-up, or a visit with a specific doctor. Shows an interactive scheduler with a provider, day tabs, and pickable time slots (in-person, video, or phone).</description>
+            <developerName>asaHealthcareApptScheduler_179fj000003n89B</developerName>
+            <invocationTarget>asaHealthcareApptScheduler_Output_e5b1</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaHealthcareApptScheduler</localDeveloperName>
+            <masterLabel>ASA Healthcare · Appointment Scheduler</masterLabel>
+            <source>asaHealthcareApptScheduler_Output_e5b1</source>
+        </localActions>
+        <localActions>
+            <fullName>asaHealthcareFindCare_179fj000003n89B</fullName>
+            <description>Use this when the customer wants to find a place to get care near them — for example an urgent care, ER, primary care clinic, pharmacy, or lab. Shows a list of nearby facilities with distance, open-now status, hours, and buttons to open directions in maps or call.</description>
+            <developerName>asaHealthcareFindCare_179fj000003n89B</developerName>
+            <invocationTarget>asaHealthcareFindCare_Output_f7c2</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaHealthcareFindCare</localDeveloperName>
+            <masterLabel>ASA Healthcare · Find Care Near You</masterLabel>
+            <source>asaHealthcareFindCare_Output_f7c2</source>
+        </localActions>
+        <localActions>
+            <fullName>asaHealthcareRxRefill_179fj000003n89B</fullName>
+            <description>Use this when the customer wants to refill or reorder a prescription, or says they are running low on their medication. Shows a checklist of their medications with supply status, lets them pick which to refill, and shows the pickup pharmacy. Confirms the request back to the agent.</description>
+            <developerName>asaHealthcareRxRefill_179fj000003n89B</developerName>
+            <invocationTarget>asaHealthcareRxRefill_Output_c4e6</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaHealthcareRxRefill</localDeveloperName>
+            <masterLabel>ASA Healthcare · Prescription Refill</masterLabel>
+            <source>asaHealthcareRxRefill_Output_c4e6</source>
+        </localActions>
+        <localActions>
+            <fullName>asaHealthcareCareOptions_179fj000003n89B</fullName>
+            <description>Use this when the customer is unsure how to get care and wants to see their options — for example a 24/7 nurse advice line, a video visit, scheduling an in-person visit, or emergency care. Shows a list of care channels, each with its own action (call, open a link, or start booking). Does not collect or store symptoms.</description>
+            <developerName>asaHealthcareCareOptions_179fj000003n89B</developerName>
+            <invocationTarget>asaHealthcareCareOptions_Output_a9d3</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>true</isIncludeInProgressIndicator>
+            <localDeveloperName>asaHealthcareCareOptions</localDeveloperName>
+            <masterLabel>ASA Healthcare · Care Options</masterLabel>
+            <source>asaHealthcareCareOptions_Output_a9d3</source>
+        </localActions>
+        <localDeveloperName>Healthcare</localDeveloperName>
+        <masterLabel>Healthcare</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <masterLabel>Agentforce Service Agent</masterLabel>
+    <plannerSurfaces>
+        <adaptiveResponseAllowed>true</adaptiveResponseAllowed>
+        <callRecordingAllowed>false</callRecordingAllowed>
+        <outboundRouteConfigs>
+            <escalationMessage>One moment, I&apos;m transferring our conversation to get you more help.</escalationMessage>
+            <outboundRouteName>Escalation_Flow_Company_Agentforce_Service_Agent</outboundRouteName>
+            <outboundRouteType>OmniChannelFlow</outboundRouteType>
+        </outboundRouteConfigs>
+        <surface>SurfaceAction__Messaging</surface>
+        <surfaceType>Messaging</surfaceType>
+    </plannerSurfaces>
+    <plannerSurfaces>
+        <adaptiveResponseAllowed>true</adaptiveResponseAllowed>
+        <callRecordingAllowed>false</callRecordingAllowed>
+        <outboundRouteConfigs>
+            <escalationMessage>One moment, I&apos;m transferring our conversation to get you more help.</escalationMessage>
+            <outboundRouteName>Escalation_Flow_Company_Agentforce_Service_Agent</outboundRouteName>
+            <outboundRouteType>OmniChannelFlow</outboundRouteType>
+        </outboundRouteConfigs>
+        <surface>SurfaceAction__CustomerWebClient</surface>
+        <surfaceType>CustomerWebClient</surfaceType>
+    </plannerSurfaces>
+    <plannerType>Atlas__ConcurrentMultiAgentOrchestration</plannerType>
+</GenAiPlannerBundle>

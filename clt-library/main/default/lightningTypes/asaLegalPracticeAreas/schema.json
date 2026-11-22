@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Legal · Practice-Area Selector",
+  "description" : "Shows an expandable 'How can we help?' practice-area guide for a law-firm site agent — each area opens to reveal a description, common matter types, a trust stat, and a display-only link, plus a Get-help action.",
+  "lightning:type" : "@apexClassType/c__AsaLegalPracticeAreasData"
+}

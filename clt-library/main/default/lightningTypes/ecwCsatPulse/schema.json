@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · Service · CSAT pulse",
+  "description" : "A satisfaction pulse: rolling CSAT score with a trend delta and sparkline, plus recent verbatim comments.",
+  "lightning:type" : "@apexClassType/c__EcwCsatPulseData"
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>67.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>Agentforce Coworker · Marketing · Campaign conversion</masterLabel>
+    <description>A marketing conversion funnel — Impressions to Won — as deepening-blue bands with tapering flow connectors, step-conversion %, and the biggest leak highlighted; hover a stage to reveal its detail.</description>
+    <targets>
+        <target>lightning__AgentforceOutput</target>
+        <target>lightningSnapin__ChatMessage</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__AgentforceOutput">
+            <sourceType name="c__ecwCampaignFunnel"/>
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

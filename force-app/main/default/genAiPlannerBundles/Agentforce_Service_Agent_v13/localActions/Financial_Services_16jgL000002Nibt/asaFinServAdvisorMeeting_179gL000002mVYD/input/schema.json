@@ -1,0 +1,15 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full advisor-appointment payload as a JSON string, formatted EXACTLY like this: {\"title\":\"Book time with your advisor\",\"advisor\":{\"name\":\"Jordan Lee\",\"title\":\"Senior Financial Advisor\",\"specialty\":\"Retirement & investment planning\",\"initials\":\"JL\"},\"days\":[{\"date\":\"2026-09-18\",\"slots\":[{\"id\":\"slot-1\",\"time\":\"09:00\",\"meetingType\":\"video\"},{\"id\":\"slot-2\",\"time\":\"10:30\",\"meetingType\":\"phone\"},{\"id\":\"slot-3\",\"time\":\"13:00\",\"meetingType\":\"in-branch\"}]},{\"date\":\"2026-09-19\",\"slots\":[{\"id\":\"slot-4\",\"time\":\"11:00\",\"meetingType\":\"video\"},{\"id\":\"slot-5\",\"time\":\"14:30\",\"meetingType\":\"in-branch\"}]}],\"submitText\":\"Book appointment\"} Rules: - 'title' (string, optional): the heading shown above the card. - 'advisor' (object, REQUIRED): the advisor the customer is booking with. MUST have 'name' (string). Optional: 'title' (string, e.g. 'Senior Financial Advisor'), 'specialty' (string, a short focus line, e.g. 'Retirement planning'), 'photoUrl' (string, https image URL for the avatar), 'initials' (string, 1-2 letters shown when there is no photo; auto-derived from the name if omitted). - 'days' (array, REQUIRED, at least one object): each MUST have 'date' (string, ISO 'YYYY-MM-DD') and 'slots' (array, at least one object). Each slot MUST have 'id' (string, unique, sent back when the customer books it) and 'time' (string; 24-hour 'HH:MM' preferred, e.g. '09:00' or '14:30' — it is rendered as '9:00 AM' / '2:30 PM'). Optional per slot: 'meetingType' (string; one of 'video','phone','in-branch' — drives the slot icon; defaults to 'video'). - 'submitText' (string, optional): the confirm-button label; defaults to 'Book appointment'. Never emit an empty 'days' array or a day with no slots. Use the advisor and availability from context; if none are known, ask the customer rather than inventing times. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType",
+  "lightning:textIndexed" : true
+}

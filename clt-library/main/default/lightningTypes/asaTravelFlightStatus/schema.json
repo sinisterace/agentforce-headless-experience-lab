@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Travel · Flight Status Tracker",
+  "description" : "Shows a live flight status card — a plane glides along the route arc between origin and destination, with a status pill, gates, terminals and baggage claim, plus a get-updates action.",
+  "lightning:type" : "@apexClassType/c__AsaTravelFlightStatusData"
+}

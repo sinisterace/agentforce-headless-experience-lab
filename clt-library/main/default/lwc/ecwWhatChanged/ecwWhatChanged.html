@@ -1,0 +1,31 @@
+<template>
+    <div class="ecw-wc">
+
+        <!-- Hero: net pipeline movement this week -->
+        <template if:true={hasHero}>
+            <div class="ecw-wc-hero">
+                <span class="ecw-wc-hero-label">Pipeline change · this week</span>
+                <div class="ecw-wc-hero-row">
+                    <strong class="ecw-wc-hero-val">{heroValue}</strong>
+                    <span class="ecw-wc-summary">{summaryText}</span>
+                </div>
+            </div>
+        </template>
+
+        <!-- Motion feed, most recent first -->
+        <template if:true={hasItems}>
+            <ul class="ecw-wc-list">
+                <template for:each={items} for:item="ev">
+                    <li key={ev.key} class="ecw-wc-row">
+                        <span class={ev.railClass}></span>
+                        <div class="ecw-wc-main">
+                            <span class="ecw-wc-deal">{ev.deal}</span>
+                            <span class="ecw-wc-meta">{ev.meta}</span>
+                        </div>
+                        <span class="ecw-wc-amount">{ev.amountText}</span>
+                    </li>
+                </template>
+            </ul>
+        </template>
+    </div>
+</template>

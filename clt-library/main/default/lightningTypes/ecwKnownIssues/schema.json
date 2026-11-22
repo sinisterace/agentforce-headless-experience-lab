@@ -1,0 +1,5 @@
+{
+  "title" : "Agentforce Coworker · IT · Known issues",
+  "description" : "Active IT incidents affecting employees, with impact, workaround, and latest update.",
+  "lightning:type" : "@apexClassType/c__EcwKnownIssuesData"
+}

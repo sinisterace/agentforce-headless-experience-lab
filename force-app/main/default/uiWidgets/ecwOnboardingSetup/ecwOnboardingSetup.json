@@ -1,0 +1,116 @@
+{
+  "type": "lightning__agentforceWidget",
+  "contentBody": {
+    "widgetBody": {
+      "definition": "tile/widget",
+      "children": [
+        {
+          "definition": "tile/container",
+          "children": [
+            {
+              "definition": "tile/column",
+              "attributes": { "gap": "md", "width": "stretch" },
+              "children": [
+                {
+                  "definition": "tile/row",
+                  "attributes": { "gap": "xs", "align": "center", "justify": "between" },
+                  "children": [
+                    {
+                      "definition": "tile/text",
+                      "attributes": { "text": "GET STARTED", "variant": "caption", "weight": "semibold", "color": "muted" }
+                    }
+                  ]
+                },
+                {
+                  "definition": "tile/text",
+                  "attributes": { "text": "{!$attrs.title}", "variant": "h3", "weight": "semibold" }
+                },
+                {
+                  "definition": "tile/text",
+                  "attributes": { "text": "{!$attrs.subtitle}", "variant": "body", "color": "muted" }
+                },
+                {
+                  "definition": "tile/separator",
+                  "attributes": { "orientation": "horizontal" }
+                },
+                {
+                  "definition": "tile/text",
+                  "attributes": { "text": "Setup steps", "variant": "body", "weight": "semibold" }
+                },
+                {
+                  "definition": "tile/column",
+                  "attributes": { "gap": "md", "width": "stretch" },
+                  "children": [
+                    {
+                      "definition": "tile/row",
+                      "meta": { "forEach": "{!$attrs.steps}", "forItem": "$step", "forIndex": "$i" },
+                      "attributes": { "gap": "sm", "align": "start" },
+                      "children": [
+                        {
+                          "definition": "tile/checkbox",
+                          "attributes": { "label": "", "isChecked": "{!$step.isCompleted}" }
+                        },
+                        {
+                          "definition": "tile/column",
+                          "attributes": { "gap": "xs", "width": "stretch" },
+                          "children": [
+                            {
+                              "definition": "tile/text",
+                              "attributes": { "text": "{!$step.title}", "variant": "body", "weight": "medium" }
+                            },
+                            {
+                              "definition": "tile/text",
+                              "attributes": { "text": "{!$step.description}", "variant": "caption", "color": "muted" }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "definition": "tile/separator",
+                  "attributes": { "orientation": "horizontal" }
+                },
+                {
+                  "definition": "tile/text",
+                  "attributes": { "text": "{!$attrs.completedCount} of {!$attrs.totalCount} steps complete", "variant": "body", "color": "muted" }
+                },
+                {
+                  "definition": "tile/row",
+                  "attributes": { "gap": "sm", "align": "center", "justify": "end" },
+                  "children": [
+                    {
+                      "definition": "tile/button",
+                      "attributes": {
+                        "label": "Save for later",
+                        "variant": "secondary",
+                        "actions": {
+                          "click": [
+                            { "definition": "action/sendMessage", "attributes": { "content": "Save my onboarding setup progress for later" } }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "definition": "tile/button",
+                      "attributes": {
+                        "label": "Complete setup",
+                        "variant": "primary",
+                        "actions": {
+                          "click": [
+                            { "definition": "action/sendMessage", "attributes": { "content": "I've completed my onboarding setup steps" } }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,97 @@
+<template>
+    <div class="asa-co">
+        <template if:true={title}>
+            <h3 class="asa-co-title">{title}</h3>
+        </template>
+        <template if:true={hasSubtitle}>
+            <p class="asa-co-sub">{subtitle}</p>
+        </template>
+
+        <template if:true={hasOptions}>
+            <div class="asa-co-list">
+                <template for:each={options} for:item="opt">
+                    <div key={opt.key} class={opt.cardClass}>
+                        <template if:true={opt.recommended}>
+                            <span class="asa-co-ribbon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>
+                                Recommended
+                            </span>
+                        </template>
+
+                        <div class="asa-co-top">
+                            <span class="asa-co-medallion" aria-hidden="true">
+                                <template if:true={opt.isNurseline}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.83 19.5a17.9 17.9 0 0 1-9.33-9.33l1.9-1.9a1.5 1.5 0 0 0 .35-1.56L5.8 3.4A1.5 1.5 0 0 0 4.38 2.5H2.5A1.5 1.5 0 0 0 1 4.15 18 18 0 0 0 19.85 23a1.5 1.5 0 0 0 1.65-1.5v-1.88a1.5 1.5 0 0 0-.9-1.42l-3.3-1a1.5 1.5 0 0 0-1.57.36z"></path><path d="M16 2a6 6 0 0 1 6 6"></path><path d="M16 6a2 2 0 0 1 2 2"></path></svg>
+                                </template>
+                                <template if:true={opt.isVideo}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8z"></path><rect x="2" y="6" width="14" height="12" rx="2"></rect></svg>
+                                </template>
+                                <template if:true={opt.isInperson}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path><path d="M12 14v4"></path><path d="M10 16h4"></path></svg>
+                                </template>
+                                <template if:true={opt.isUrgent}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 2a2 2 0 0 0-2 2v5H4a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h5v5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-5h5a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-5V4a2 2 0 0 0-2-2z"></path></svg>
+                                </template>
+                                <template if:true={opt.isEr}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10.29 3.86-8.4 14.55A2 2 0 0 0 3.62 21h16.76a2 2 0 0 0 1.73-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+                                </template>
+                                <template if:true={opt.isPharmacy}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"></path><path d="m8.5 8.5 7 7"></path></svg>
+                                </template>
+                                <template if:true={opt.isMessage}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                                </template>
+                            </span>
+                            <span class="asa-co-headtext">
+                                <span class="asa-co-label">{opt.label}</span>
+                                <template if:true={opt.hasDescription}>
+                                    <span class="asa-co-desc">{opt.description}</span>
+                                </template>
+                            </span>
+                        </div>
+
+                        <template if:true={opt.hasMeta}>
+                            <span class="asa-co-chip">
+                                <template if:true={opt.metaIsTime}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><polyline points="12 7 12 12 16 14"></polyline></svg>
+                                </template>
+                                <template if:true={opt.metaIsCost}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="2" x2="12" y2="22"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                                </template>
+                                <template if:true={opt.metaIsInfo}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                                </template>
+                                <span class="asa-co-chip-text">{opt.meta}</span>
+                            </span>
+                        </template>
+
+                        <template if:true={opt.isAnchor}>
+                            <a class="asa-co-action" href={opt.href} target={opt.ctaTarget} rel="noopener noreferrer" aria-label={opt.actionLabel}>
+                                <template if:true={opt.isCall}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13.83 19.5a17.9 17.9 0 0 1-9.33-9.33l1.9-1.9a1.5 1.5 0 0 0 .35-1.56L5.8 3.4A1.5 1.5 0 0 0 4.38 2.5H2.5A1.5 1.5 0 0 0 1 4.15 18 18 0 0 0 19.85 23a1.5 1.5 0 0 0 1.65-1.5v-1.88a1.5 1.5 0 0 0-.9-1.42l-3.3-1a1.5 1.5 0 0 0-1.57.36z"></path></svg>
+                                </template>
+                                <template if:true={opt.isExternal}>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
+                                </template>
+                                <span class="asa-co-action-text">{opt.actionLabel}</span>
+                            </a>
+                        </template>
+                        <template if:true={opt.isBook}>
+                            <button type="button" class="asa-co-action" data-value={opt.bookValue} onclick={handleBook} aria-label={opt.actionLabel}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
+                                <span class="asa-co-action-text">{opt.actionLabel}</span>
+                            </button>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={hasDisclaimer}>
+            <p class="asa-co-disclaimer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m10.29 3.86-8.4 14.55A2 2 0 0 0 3.62 21h16.76a2 2 0 0 0 1.73-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><path d="M12 9v4"></path><path d="M12 17h.01"></path></svg>
+                <span>{disclaimer}</span>
+            </p>
+        </template>
+    </div>
+</template>

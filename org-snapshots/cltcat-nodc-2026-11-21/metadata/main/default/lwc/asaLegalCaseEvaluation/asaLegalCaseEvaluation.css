@@ -1,0 +1,96 @@
+/* ASA Legal · Free Case Evaluation — the signature law-firm-site intake, styled
+   as a real sectioned form: matter banner → quick questions → your details →
+   consent → disclaimer → submit. Ported verbatim (same class names) from the
+   React catalogue's playground.css `.legal-eval-container` + `.asa-lce-*` rules,
+   scoped to this LWC. rem units + inherited font so it matches the host chat
+   theme in Enhanced Chat v2. Accent is a local custom prop for theming. */
+:host {
+    --customer-accent: #1f3a5f;
+    display: block;
+}
+
+/* --- shared live-preview base (ported from playground.css) --- */
+.clt-live-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    font-family: inherit;
+}
+.clt-live-preview .selector-title {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--asa-ink);
+}
+.clt-test-badge {
+    font-size: 0.72rem;
+    padding: 0.3rem 0.55rem;
+    border-radius: 0.5rem;
+    background: color-mix(in srgb, var(--customer-accent) 15%, transparent);
+    color: var(--customer-accent);
+    align-self: flex-start;
+}
+.asa-card-sub {
+    margin: 0;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    color: var(--asa-muted);
+    overflow-wrap: break-word;
+}
+
+/* --- container tokens (ported) --- */
+.legal-eval-container {
+    container-type: inline-size;
+    --asa-accent: var(--customer-accent, #1f3a5f);
+    --asa-brass: #b0863f;
+    --asa-ink: #1a2331;
+    --asa-muted: #5b6b82;
+    --asa-line: color-mix(in srgb, #1a2331 14%, transparent);
+    --asa-card: #ffffff;
+}
+.legal-eval-container *,
+.legal-eval-container *::before,
+.legal-eval-container *::after {
+    box-sizing: border-box;
+}
+.theme-dark .legal-eval-container {
+    --asa-ink: #e8eef7;
+    --asa-muted: #9fb0c9;
+    --asa-line: rgba(255, 255, 255, 0.14);
+    --asa-card: rgba(255, 255, 255, 0.05);
+}
+
+/* --- Free Case Evaluation (ported) --- */
+.legal-eval-container .asa-lce-matter { display: flex; align-items: center; gap: .5rem; min-width: 0; margin-top: .1rem; padding: .5rem .75rem; border-radius: .7rem; background: color-mix(in srgb, var(--asa-accent) 8%, transparent); border: 1px solid color-mix(in srgb, var(--asa-accent) 20%, transparent); }
+.legal-eval-container .asa-lce-matter-label { flex-shrink: 0; font-size: .6rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--asa-muted); }
+.legal-eval-container .asa-lce-matter-name { min-width: 0; font-weight: 650; font-size: .85rem; color: var(--asa-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.legal-eval-container .asa-lce-questions { display: flex; flex-direction: column; gap: .9rem; margin-top: .5rem; }
+.legal-eval-container .asa-lce-q { display: flex; flex-direction: column; gap: .45rem; min-width: 0; }
+.legal-eval-container .asa-lce-q-label { font-weight: 600; font-size: .82rem; color: var(--asa-ink); overflow-wrap: break-word; }
+.legal-eval-container .asa-lce-opts { display: flex; flex-wrap: wrap; gap: .4rem; }
+.legal-eval-container .asa-lce-opt { padding: .4rem .8rem; border-radius: 999px; border: 1px solid var(--asa-line); background: var(--asa-card); cursor: pointer; font: inherit; font-size: .78rem; color: var(--asa-ink); transition: border-color .15s, background .15s, color .15s; }
+.legal-eval-container .asa-lce-opt:hover { border-color: color-mix(in srgb, var(--asa-accent) 45%, var(--asa-line)); }
+.legal-eval-container .asa-lce-opt.is-selected { border-color: var(--asa-accent); background: color-mix(in srgb, var(--asa-accent) 12%, transparent); color: var(--asa-accent); font-weight: 650; }
+.legal-eval-container .asa-lce-date { display: flex; align-items: center; gap: .5rem; padding: .5rem .7rem; border-radius: .7rem; border: 1px solid var(--asa-line); background: var(--asa-card); }
+.legal-eval-container .asa-lce-date svg { width: 1rem; height: 1rem; flex-shrink: 0; color: var(--asa-accent); }
+.legal-eval-container .asa-lce-date input { border: 0; background: transparent; font: inherit; color: var(--asa-ink); min-width: 0; width: 100%; outline: none; }
+.legal-eval-container .asa-lce-textarea { width: 100%; resize: vertical; min-height: 3.4rem; padding: .6rem .7rem; border-radius: .7rem; border: 1px solid var(--asa-line); background: var(--asa-card); font: inherit; font-size: .82rem; color: var(--asa-ink); outline: none; }
+.legal-eval-container .asa-lce-textarea:focus { border-color: var(--asa-accent); }
+.legal-eval-container .asa-lce-privilege { display: flex; align-items: flex-start; gap: .45rem; margin: .5rem 0 0; padding: .55rem .7rem; border-radius: .7rem; font-size: .74rem; line-height: 1.35; color: var(--asa-muted); background: color-mix(in srgb, var(--asa-brass) 10%, transparent); border: 1px solid color-mix(in srgb, var(--asa-brass) 26%, transparent); }
+.legal-eval-container .asa-lce-privilege svg { width: .95rem; height: .95rem; flex-shrink: 0; margin-top: .05rem; color: var(--asa-brass); }
+.legal-eval-container .asa-lce-submit { width: 100%; min-height: 2.8rem; border: 0; border-radius: .8rem; cursor: pointer; font: inherit; font-weight: 650; font-size: .9rem; color: #fff; background: var(--asa-accent); }
+.legal-eval-container .asa-lce-form { display: flex; flex-direction: column; gap: 1rem; margin-top: .5rem; }
+.legal-eval-container .asa-lce-section { display: flex; flex-direction: column; gap: .6rem; }
+.legal-eval-container .asa-lce-section-title { font-size: .64rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--asa-muted); }
+.legal-eval-container .asa-lce-row { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+.legal-eval-container .asa-lce-field { display: flex; flex-direction: column; gap: .3rem; min-width: 0; }
+.legal-eval-container .asa-lce-flabel { font-size: .78rem; font-weight: 600; color: var(--asa-ink); }
+.legal-eval-container .asa-lce-flabel i { color: #c0392b; font-style: normal; }
+.legal-eval-container .asa-lce-input { width: 100%; min-width: 0; padding: .6rem .7rem; border-radius: .6rem; border: 1px solid var(--asa-line); background: var(--asa-card); font: inherit; font-size: .84rem; color: var(--asa-ink); outline: none; transition: border-color .15s, box-shadow .15s; }
+.legal-eval-container .asa-lce-input:focus { border-color: var(--asa-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--asa-accent) 15%, transparent); }
+.legal-eval-container .asa-lce-input::placeholder { color: color-mix(in srgb, var(--asa-muted) 70%, transparent); }
+.legal-eval-container .asa-lce-consent { display: flex; align-items: flex-start; gap: .55rem; cursor: pointer; }
+.legal-eval-container .asa-lce-consent input { flex-shrink: 0; width: 1.05rem; height: 1.05rem; margin-top: .12rem; accent-color: var(--asa-accent); cursor: pointer; }
+.legal-eval-container .asa-lce-consent span { font-size: .76rem; line-height: 1.4; color: var(--asa-muted); }
+.legal-eval-container .asa-lce-disclaimer { margin: 0; font-size: .7rem; line-height: 1.4; color: var(--asa-muted); }
+.legal-eval-container .asa-lce-footer { margin: .15rem 0 0; text-align: center; font-size: .72rem; color: var(--asa-muted); }
+@container (max-width: 300px) { .legal-eval-container .asa-lce-row { grid-template-columns: 1fr; } }

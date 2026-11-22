@@ -1,0 +1,14 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full money-movement payload as a JSON string, formatted EXACTLY like this:\n\n{\"title\":\"Send money\",\"fromAccount\":{\"label\":\"Everyday Checking\",\"mask\":\"1234\"},\"recipients\":[{\"id\":\"rcp-1\",\"name\":\"Alex Rivera\",\"type\":\"person\",\"mask\":\"4821\",\"detail\":\"Checking\"},{\"id\":\"rcp-2\",\"name\":\"Rewards Card\",\"type\":\"card\",\"mask\":\"9012\",\"detail\":\"Credit Card\"},{\"id\":\"rcp-3\",\"name\":\"High-Yield Savings\",\"type\":\"account\",\"mask\":\"5678\",\"detail\":\"Savings\"}],\"amountPresets\":[{\"id\":\"amt-1\",\"label\":\"$50\",\"amount\":50},{\"id\":\"amt-2\",\"label\":\"$100\",\"amount\":100},{\"id\":\"amt-3\",\"label\":\"$250\",\"amount\":250},{\"id\":\"amt-4\",\"label\":\"Minimum\",\"amount\":35}],\"currency\":\"USD\",\"allowOther\":true,\"otherText\":\"Other amount\",\"submitText\":\"Continue\"}\n\nRules:\n- 'title' (string, optional): the heading shown above the card.\n- 'fromAccount' (object, optional): the account the money comes FROM. Has 'label' (string, e.g. 'Everyday Checking') and optional 'mask' (string, last 4 digits). Shown as 'From Everyday Checking ••1234'.\n- 'recipients' (array, REQUIRED, at least one object): who the money can go TO. Each MUST have 'id' (string, unique, sent back on selection) and 'name' (string). Optional per recipient: 'type' (string; one of 'person','card','account','business','external' — drives the row icon; 'account' means one of the customer's own accounts), 'mask' (string, last 4 digits), 'detail' (string, a short descriptor like 'Checking' or 'Credit Card').\n- 'amountPresets' (array, optional but recommended): tappable amounts. Each has 'id' (string, unique), 'amount' (number), and optional 'label' (string; if omitted the amount is formatted as currency). Use contextual presets when relevant, e.g. {\"id\":\"amt-min\",\"label\":\"Minimum\",\"amount\":35} or {\"id\":\"amt-stmt\",\"label\":\"Statement balance\",\"amount\":742.18}.\n- 'currency' (string, optional): ISO code used to format amounts; defaults to 'USD'.\n- 'allowOther' (boolean, optional): set true to show an 'Other amount' chip that hands the custom amount back to the conversation.\n- 'otherText' (string, optional): the 'Other amount' chip label; defaults to 'Other amount'.\n- 'submitText' (string, optional): the confirm-button label; defaults to 'Continue'.\n\nNever emit an empty 'recipients' array. Use the customer's real payees/accounts from context; if none are known, ask the customer rather than inventing recipients. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

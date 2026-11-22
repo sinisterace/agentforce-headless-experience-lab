@@ -1,0 +1,92 @@
+<template>
+    <div class="asa-card">
+        <template if:true={title}>
+            <h3 class="asa-rx-title">{title}</h3>
+        </template>
+        <template if:true={hasSubtitle}>
+            <p class="asa-rx-sub">{subtitle}</p>
+        </template>
+
+        <template if:true={hasMeds}>
+            <div class="asa-rx-list">
+                <template for:each={medications} for:item="med">
+                    <button
+                        key={med.key}
+                        type="button"
+                        class={med.rowClass}
+                        data-key={med.key}
+                        data-index={med.index}
+                        aria-pressed={med.selected}
+                        disabled={med.disabled}
+                        onclick={handleToggle}>
+
+                        <!-- Rx label header -->
+                        <span class="asa-rx-head">
+                            <template if:true={med.hasImage}>
+                                <span class="asa-rx-thumb"><img src={med.imageUrl} alt={med.name} /></span>
+                            </template>
+                            <template if:false={med.hasImage}>
+                                <span class="asa-rx-mark" aria-hidden="true">&#8478;</span>
+                            </template>
+                            <span class="asa-rx-headtext">
+                                <span class="asa-rx-name">{med.name}</span>
+                                <template if:true={med.hasDosage}>
+                                    <span class="asa-rx-strength">{med.dosage}</span>
+                                </template>
+                            </span>
+                            <span class={med.tagClass}>{med.supply}</span>
+                            <template if:true={med.isOut}>
+                                <span class="asa-rx-stamp" aria-hidden="true">No Refills</span>
+                            </template>
+                        </span>
+
+                        <!-- Rx label data block (monospace) -->
+                        <span class="asa-rx-fields">
+                            <template if:true={med.hasDosage}>
+                                <span class="asa-rx-field">
+                                    <span class="asa-rx-flabel">Sig</span>
+                                    <span class="asa-rx-fval">{med.dosage}</span>
+                                </span>
+                            </template>
+                            <span class="asa-rx-field">
+                                <span class="asa-rx-flabel">Supply</span>
+                                <span class="asa-rx-fval">{med.supply}</span>
+                            </span>
+                            <template if:true={med.hasRefillsNote}>
+                                <span class="asa-rx-field">
+                                    <span class="asa-rx-flabel">Refills</span>
+                                    <span class="asa-rx-fval">{med.refillsNote}</span>
+                                </span>
+                            </template>
+                        </span>
+
+                        <!-- Select box -->
+                        <span class={med.checkClass} aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"></path></svg>
+                        </span>
+                    </button>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={hasPharmacy}>
+            <div class="asa-rx-pickup">
+                <span class="asa-rx-pickup-eyebrow">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 4.4-5.4 9.2-7.3 10.7a1 1 0 0 1-1.4 0C9.4 19.2 4 14.4 4 10a8 8 0 0 1 16 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    Pickup pharmacy
+                </span>
+                <span class="asa-rx-pickup-name">{pharmacyName}</span>
+                <template if:true={pharmacyAddress}>
+                    <span class="asa-rx-pickup-meta">{pharmacyAddress}</span>
+                </template>
+                <template if:true={pharmacyHours}>
+                    <span class="asa-rx-pickup-hours">{pharmacyHours}</span>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={showSubmit}>
+            <button type="button" class="asa-rx-submit" onclick={handleSubmit}>{submitLabel}</button>
+        </template>
+    </div>
+</template>

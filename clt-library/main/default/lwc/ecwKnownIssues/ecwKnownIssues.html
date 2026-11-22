@@ -1,0 +1,44 @@
+<template>
+    <div class="ecw-ki">
+
+        <!-- Hero: active-incident count -->
+        <div class="ecw-ki-hero">
+            <span class="ecw-ki-hero-label"><span class="ecw-ki-live"></span>Active incidents</span>
+            <div class="ecw-ki-hero-row">
+                <strong class="ecw-ki-hero-val">{count}</strong>
+                <span class="ecw-ki-hero-unit">{countUnit}</span>
+            </div>
+            <template if:true={headline}><span class="ecw-ki-hero-meta">{headline}</span></template>
+        </div>
+
+        <!-- Incident rows -->
+        <template if:true={hasIncidents}>
+            <ul class="ecw-ki-list">
+                <template for:each={incidents} for:item="i">
+                    <li key={i.key} class={i.rowClass}>
+                        <span class="ecw-ki-rail"></span>
+                        <div class="ecw-ki-content">
+                            <div class="ecw-ki-top">
+                                <span class={i.sevClass}>{i.sev}</span>
+                                <span class="ecw-ki-title">{i.title}</span>
+                            </div>
+                            <div class="ecw-ki-meta">
+                                <template if:true={i.hasState}><span class="ecw-ki-state">{i.state}</span></template>
+                                <template if:true={i.hasStarted}><span class="ecw-ki-started"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>{i.started}</span></template>
+                                <template if:true={i.id}><span class="ecw-ki-id">{i.id}</span></template>
+                            </div>
+                            <dl class="ecw-ki-fields">
+                                <template for:each={i.fields} for:item="f">
+                                    <div key={f.key} class="ecw-ki-field">
+                                        <dt>{f.label}</dt>
+                                        <dd>{f.value}</dd>
+                                    </div>
+                                </template>
+                            </dl>
+                        </div>
+                    </li>
+                </template>
+            </ul>
+        </template>
+    </div>
+</template>

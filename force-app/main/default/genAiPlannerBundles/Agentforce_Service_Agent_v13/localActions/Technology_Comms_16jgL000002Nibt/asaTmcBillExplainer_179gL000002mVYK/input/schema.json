@@ -1,0 +1,15 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full bill-explainer payload as a JSON string, formatted EXACTLY like this: {\"title\":\"Your September bill\",\"currency\":\"USD\",\"total\":118.4,\"dueDateText\":\"Due Sep 28\",\"periodText\":\"Sep 1 – Sep 30\",\"items\":[{\"id\":\"plan\",\"label\":\"Unlimited Plus plan\",\"amount\":70,\"category\":\"plan\"},{\"id\":\"device\",\"label\":\"iPhone installment\",\"amount\":27.08,\"category\":\"device\"},{\"id\":\"stream\",\"label\":\"Streaming add-on\",\"amount\":9.99,\"category\":\"streaming\"},{\"id\":\"taxes\",\"label\":\"Taxes & fees\",\"amount\":11.33,\"category\":\"taxes\"}],\"deltaAmount\":12.4,\"deltaText\":\"You added the Streaming add-on this cycle.\",\"note\":\"Autopay is on. This amount will be charged automatically.\",\"submitText\":\"Pay now\",\"submitValue\":\"I'd like to pay my bill now\",\"secondaryText\":\"Set up autopay\",\"secondaryValue\":\"Help me set up autopay\"} Rules: - 'title' (string, optional): heading at the top of the card. Defaults to 'Your bill'. - 'currency' (string, optional): ISO code (e.g. 'USD','EUR','GBP') for all amounts. Defaults to 'USD'. - 'total' (number, optional): the total amount due. When omitted it is computed by summing 'items'. - 'dueDateText' (string, optional): the due date shown as a pill, e.g. 'Due Sep 28'. - 'periodText' (string, optional): the billing period, e.g. 'Sep 1 – Sep 30'. - 'items' (array, REQUIRED, 2 to 7 objects): the itemized charges. Each MUST have 'label' (string) and 'amount' (number). Use a NEGATIVE amount, or 'category':'discount', for credits/discounts (shown in green as a credit). Optional per item: 'id' (string); 'category' (string; one of 'plan','data','device','streaming','taxes','onetime','discount','other' — drives the color used in the bar and the row dot). - 'deltaAmount' (number, optional): the change versus last month; positive means the bill went UP (tinted amber), negative means it went DOWN (tinted green). - 'deltaText' (string, optional): a short plain-language reason for the change, e.g. 'You added the Streaming add-on this cycle.' - 'note' (string, optional): a small footnote, e.g. an autopay reminder. - 'submitText' (string, optional): primary button label, e.g. 'Pay now'. Omit to hide it. - 'submitValue' (string, optional): the exact message sent back when the primary button is tapped; defaults to 'submitText'. - 'secondaryText' (string, optional): secondary button label, e.g. 'Set up autopay'. Omit to hide it. - 'secondaryValue' (string, optional): the message sent back when the secondary button is tapped; defaults to 'secondaryText'. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType",
+  "lightning:textIndexed" : true
+}

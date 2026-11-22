@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Financial Services · Recent Transactions",
+  "description" : "Shows a customer's recent transactions and lets them flag one to dispute.",
+  "lightning:type" : "@apexClassType/c__AsaFinServTransactionsData"
+}

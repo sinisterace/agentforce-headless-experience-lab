@@ -1,0 +1,7 @@
+{
+  "unevaluatedProperties": false,
+  "properties": {
+    "Options": { "title": "Options", "description": "Show to the user.", "lightning:type": "c__ecwOpenRoles", "lightning:isPII": false, "copilotAction:isDisplayable": true, "copilotAction:isUsedByPlanner": true, "copilotAction:useHydratedPrompt": false }
+  },
+  "lightning:type": "lightning__objectType"
+}

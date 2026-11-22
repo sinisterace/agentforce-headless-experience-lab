@@ -1,0 +1,5 @@
+{
+  "title" : "ASA Retail · Returns & Exchange",
+  "description" : "Shows the order's items to select, a reason picker, and refund/exchange/store-credit resolution options for a return.",
+  "lightning:type" : "@apexClassType/c__AsaRetailReturnsData"
+}

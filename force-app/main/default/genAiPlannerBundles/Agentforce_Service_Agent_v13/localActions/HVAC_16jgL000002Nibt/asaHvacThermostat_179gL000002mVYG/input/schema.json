@@ -1,0 +1,15 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full thermostat payload as a JSON string, formatted EXACTLY like this: {\"title\":\"Living room thermostat\",\"currentTemp\":71,\"targetTemp\":72,\"mode\":\"cool\",\"unit\":\"F\",\"humidity\":44,\"statusText\":\"Cooling to 72°\",\"minTemp\":50,\"maxTemp\":90,\"presets\":[{\"id\":\"eco\",\"label\":\"Eco\",\"targetTemp\":78,\"mode\":\"cool\"},{\"id\":\"comfort\",\"label\":\"Comfort\",\"targetTemp\":72,\"mode\":\"cool\"},{\"id\":\"away\",\"label\":\"Away\",\"targetTemp\":82,\"mode\":\"off\"},{\"id\":\"sleep\",\"label\":\"Sleep\",\"targetTemp\":68,\"mode\":\"cool\"}],\"submitText\":\"Set thermostat\",\"submitValue\":\"Set my thermostat\"} Rules: - 'title' (string, optional): heading, e.g. the thermostat/zone name. Defaults to 'Thermostat'. - 'currentTemp' (number, REQUIRED): the current indoor temperature; shown large in the center of the dial. If omitted, the card renders generic sample data. - 'targetTemp' (number, optional): the target setpoint; defaults to currentTemp. - 'mode' (string, optional): one of heat | cool | auto | off | fan; drives the dial + accent color (heat = orange, cool = blue, auto = green, off = muted). Defaults to auto. - 'unit' (string, optional): F or C. Defaults to F. - 'humidity' (number, optional): indoor humidity percent, shown as a small chip. - 'statusText' (string, optional): one short line under the dial, e.g. 'Cooling to 72°'. - 'minTemp' / 'maxTemp' (number, optional): dial + stepper bounds. Default 50 / 90 for F (10 / 32 for C). - 'presets' (array, optional): quick-set chips, each { 'id' (string, REQUIRED), 'label' (string, REQUIRED), 'targetTemp' (number, REQUIRED), 'mode' (string, optional) }. Max 4 shown. - 'submitText' (string, optional): confirm-button label; defaults to 'Set thermostat'. The customer adjusts the target + mode, then this button applies. - 'submitValue' (string, optional): a base message; the card appends the chosen target + mode when sending back. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType",
+  "lightning:textIndexed" : true
+}

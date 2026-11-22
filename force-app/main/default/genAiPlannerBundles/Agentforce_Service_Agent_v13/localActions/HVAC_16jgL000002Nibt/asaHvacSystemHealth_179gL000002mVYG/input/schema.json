@@ -1,0 +1,15 @@
+{
+  "required" : [ "Details" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Details" : {
+      "title" : "Details",
+      "description" : "The full comfort-system-health payload as a JSON string, formatted EXACTLY like this: {\"title\":\"Your comfort system checkup\",\"score\":82,\"scoreLabel\":\"Good\",\"statusText\":\"One item needs attention soon\",\"updatedText\":\"Checked today\",\"systems\":[{\"label\":\"Furnace\",\"status\":\"good\",\"detail\":\"Operating normally\",\"icon\":\"furnace\"},{\"label\":\"AC condenser\",\"status\":\"watch\",\"detail\":\"Coil could use a cleaning\",\"icon\":\"ac\"},{\"label\":\"Thermostat\",\"status\":\"good\",\"detail\":\"Firmware up to date\",\"icon\":\"thermostat\"},{\"label\":\"Air filter\",\"status\":\"due\",\"detail\":\"Replace within a week\",\"icon\":\"filter\"}],\"filter\":{\"lifePct\":18,\"daysLeft\":6,\"label\":\"20x25x1 filter\"},\"nextServiceText\":\"Next maintenance due Nov 3\",\"recommendationText\":\"Book a tune-up to clean the AC coil before summer.\",\"submitText\":\"Book maintenance\",\"submitValue\":\"I'd like to book a maintenance visit\"} Rules: - 'title' (string, optional): heading. Defaults to 'Your comfort system checkup'. - 'score' (number, REQUIRED, 0-100): overall comfort-system health; rendered as a radial gauge. The gauge is green at 80+, amber at 50-79, red below 50. If omitted the card shows its built-in sample. - 'scoreLabel' (string, optional): short label under the score (e.g. 'Good'). Derived from the score when omitted. - 'statusText' (string, optional): one short summary line under the gauge. - 'updatedText' (string, optional): small 'checked' timestamp shown by the title. - 'systems' (array, optional): per-system rows. Each { 'label' (string, REQUIRED); 'status' (string, REQUIRED — one of good | watch | due | fault; drives the pill + rail color); 'detail' (string, optional — one short line); 'icon' (string, optional — one of furnace | ac | thermostat | ductwork | filter | heatpump | water_heater; drives the glyph) }. - 'filter' (object, optional): the air-filter life bar — { 'lifePct' (number 0-100, REQUIRED within filter — the bar fill; green above 50, amber 20-50, red below 20); 'daysLeft' (number, optional); 'label' (string, optional — e.g. filter size) }. Omit the whole object to hide the bar. - 'nextServiceText' (string, optional): a scheduling callout, e.g. next maintenance due date. - 'recommendationText' (string, optional): a one-line recommendation callout. - 'submitText' (string, optional): CTA label; defaults to nothing (no button). 'submitValue' (string, optional): the message sent back when tapped; defaults to submitText. Use these EXACT field names — they are the single contract the card reads.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType",
+  "lightning:textIndexed" : true
+}
